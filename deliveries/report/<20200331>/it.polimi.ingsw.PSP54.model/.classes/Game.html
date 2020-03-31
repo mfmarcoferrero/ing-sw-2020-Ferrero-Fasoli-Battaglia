@@ -1,0 +1,167 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Game</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP54.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Game (it.polimi.ingsw.PSP54.model)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Game</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (2/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    70%
+  </span>
+  <span class="absValue">
+    (14/ 20)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Game$IllegalNumberOfPlayersException</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (14/ 21)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP54.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * Classe gestione del gioco
+<i>5</i>&nbsp; */
+<i>6</i>&nbsp;public class Game {
+<i>7</i>&nbsp;    private int numberOfPlayers;
+<i>8</i>&nbsp;    private Board board;
+<i>9</i>&nbsp;    private Player[] player;
+<b class="nc"><i>10</i>&nbsp;</b>
+<i>11</i>&nbsp;    /**
+<i>12</i>&nbsp;     * Costruttore della classe
+<i>13</i>&nbsp;     * istanzia i giocatori e la tabella
+<i>14</i>&nbsp;     * @param numberOfPlayers,name1,age1,color1,name2,age2,color2,name3,age3,color3
+<i>15</i>&nbsp;     * @throws IllegalNumberOfPlayersException
+<i>16</i>&nbsp;     */
+<i>17</i>&nbsp;    public Game (int numberOfPlayers,String name1, int age1, String color1, String name2, int age2, String color2, String name3, int age3, String color3)
+<b class="fc"><i>18</i>&nbsp;            throws IllegalNumberOfPlayersException {</b>
+<b class="fc"><i>19</i>&nbsp;        if (numberOfPlayers != 2 &amp;&amp; numberOfPlayers != 3){</b>
+<b class="nc"><i>20</i>&nbsp;            throw new IllegalNumberOfPlayersException();</b>
+<i>21</i>&nbsp;        }
+<b class="fc"><i>22</i>&nbsp;        this.numberOfPlayers = numberOfPlayers;</b>
+<b class="fc"><i>23</i>&nbsp;        this.player = new Player[numberOfPlayers];</b>
+<b class="fc"><i>24</i>&nbsp;        this.board = new Board();</b>
+<b class="fc"><i>25</i>&nbsp;        this.player[0] = new Player(name1,age1,color1);</b>
+<b class="fc"><i>26</i>&nbsp;        this.player[1] = new Player(name2,age2,color2);</b>
+<b class="fc"><i>27</i>&nbsp;        if (numberOfPlayers == 3) {</b>
+<b class="nc"><i>28</i>&nbsp;            this.player[2] = new Player(name3,age3,color3);</b>
+<i>29</i>&nbsp;        }
+<b class="fc"><i>30</i>&nbsp;    }</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    /**
+<i>33</i>&nbsp;     * Metodo per capire se un giocatore ha vinto
+<i>34</i>&nbsp;     * @return nome del giocatore vincente
+<i>35</i>&nbsp;     */
+<i>36</i>&nbsp;    public String displayWinner() {
+<b class="nc"><i>37</i>&nbsp;        for (int i = 0; i &lt; numberOfPlayers; i++) {</b>
+<b class="nc"><i>38</i>&nbsp;            if (player[i].isWinner()) {</b>
+<b class="nc"><i>39</i>&nbsp;                return player[i].getPlayerName();</b>
+<i>40</i>&nbsp;            }
+<i>41</i>&nbsp;        }
+<b class="nc"><i>42</i>&nbsp;        return null;</b>
+<i>43</i>&nbsp;    }
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    /**
+<i>46</i>&nbsp;     * Metodo per capire il giocatore più giovane
+<i>47</i>&nbsp;     * @return indice del giocatore più giovane
+<i>48</i>&nbsp;     */
+<i>49</i>&nbsp;    public int youngestPlayer(){
+<b class="fc"><i>50</i>&nbsp;        int min = player[0].age, ind = 0;</b>
+<b class="fc"><i>51</i>&nbsp;        for (int i = 0; i &lt; numberOfPlayers; i++){</b>
+<b class="fc"><i>52</i>&nbsp;            if (player[i].age &lt;= min){</b>
+<b class="fc"><i>53</i>&nbsp;                ind = i;</b>
+<i>54</i>&nbsp;            }
+<i>55</i>&nbsp;        }
+<b class="fc"><i>56</i>&nbsp;        return ind;</b>
+<i>57</i>&nbsp;    }
+<i>58</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-03-31 14:08</div>
+</div>
+</body>
+</html>
