@@ -6,6 +6,7 @@ package it.polimi.ingsw.PSP54.model;
 public class Worker {
     protected Player owner;
     protected Box pos;
+    protected boolean male;
 
     public Worker(Player owner, Box position){
         this.owner = owner;
@@ -17,7 +18,7 @@ public class Worker {
      * @param dest casella di destinazione
      */
     public void setPos (Box dest) throws invalidMoveException {
-            if (dest.isOccupied() == false) {
+            if (!dest.isOccupied()) {
                 pos.setWorker(null);
                 this.pos = dest;
                 dest.setWorker(this);
@@ -33,4 +34,11 @@ public class Worker {
         return owner;
     }
 
+    public boolean isMale() {
+        return male;
+    }
+
+    public void setMale(boolean male) {
+        this.male = male;
+    }
 }

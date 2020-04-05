@@ -13,12 +13,18 @@ public class Game {
      */
     public Game (){
 
+
     }
     public void newPlayer(String name, int age){
        Player player= new Player(name, age);
        players.add(player);
+       player.setPlayer_index(players.indexOf(player));
        for (int i=0;i<2;i++){
            Worker worker=new Worker(player,null);
+           if(i==0)
+               worker.setMale(true);
+           else
+               worker.setMale(false);
            player.worker[i]=worker;
        }
     }
@@ -29,19 +35,6 @@ public class Game {
                 board[i][j]=new Box(i,j);
             }
         }
-    }
-
-    /**
-     * Metodo per capire se un giocatore ha vinto
-     * @return nome del giocatore vincente
-     */
-    public String displayWinner() {
-        for (Player player : players) {
-            if (player.isWinner()) {
-                return player.getPlayerName();
-            }
-        }
-        return null;
     }
 
     /**
@@ -60,22 +53,18 @@ public class Game {
 
     public void ordinamentoPlayers(int val){
         players.add(0,players.get(val));
+        players.get(0).setPlayer_index(0);
         players.remove(val+1);
+        for (int i=0;i<players.size();i++)
+            players.get(i).setPlayer_index(i);
     }
 
-    public void setTurns() {
-            for (int i = 0; i < players.size(); i++) {
-                System.out.println("è il turno di:" + players.get(i).getPlayerName());
-                players.get(i).myTurn();
-                if (players.get(i).isWinner()) {
-                    System.out.println(players.get(i).getPlayerName() + "è il vincitore");
-                    break;
-                }
-                if (players.get(i).isLose()){
-                    players.remove(i);
-                    System.out.println("il giocatore:"+players.get(i).getPlayerName()+"è eliminato");
-                }
+    public void eliminaPerdente(int index){
+        players.remove(index);
+    }
 
-            }
+    public void setTurns(int index) {
+        System.out.println("turno di:"+players.get(index).getPlayerName());
+        players.get(index).myTurn();
     }
 }

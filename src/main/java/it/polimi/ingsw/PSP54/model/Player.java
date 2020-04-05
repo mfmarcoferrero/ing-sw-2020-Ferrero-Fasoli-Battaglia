@@ -3,16 +3,16 @@ package it.polimi.ingsw.PSP54.model;
 /**
  * Classe giocatore
  */
-public class Player {
+public class Player extends Game {
+    protected int player_index;
     protected static int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
     God power;
     protected String playerName;
     protected int age;
     protected int godID;
-    protected Worker worker[] = new Worker[2];
+    protected Worker[] worker = new Worker[2];
     protected boolean isWinner ;
     protected boolean lose;
-
 
 
     /**
@@ -25,6 +25,14 @@ public class Player {
         this.isWinner=false;
         this.lose=false;
         this.playerName=playerName;
+    }
+
+    public void setPlayer_index(int player_index) {
+        this.player_index = player_index;
+    }
+
+    public int getPlayer_index() {
+        return player_index;
     }
 
     public void setWorker(Worker[] worker) {
@@ -109,8 +117,20 @@ public class Player {
     }
 
     public void myTurn(){
-
-
     }
+
+    public void endTurn() throws InterruptedException {
+        if (isWinner){
+            System.out.println(playerName+"ha vinto");
+            wait(10000000);
+            System.exit(0);
+        }
+        if (lose){
+            System.out.println(playerName+"non può piu giocare");
+            players.remove(player_index);
+        }
+        setTurns(player_index+1);
+    }
+
 
 }
