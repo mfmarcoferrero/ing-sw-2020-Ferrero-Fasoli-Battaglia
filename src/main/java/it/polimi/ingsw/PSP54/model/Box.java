@@ -4,28 +4,36 @@ package it.polimi.ingsw.PSP54.model;
  * Classe casella della tabella
  */
 public class Box {
-    protected int column;
-    protected int row;
-    protected int level;
-    public boolean dome;
+    public static final int BOARD_SIZE = 5;
+    protected int x, y, level;
+    public boolean dome, completed;
     private Worker worker;
 
     /**
      * Costruttore della casella
      * Istanzia la casella senza livelli cupole o operai
      */
-    public Box(int x, int y) {
-        column=y;
-        row=x;
+    public Box(int x, int y) throws InvalidBoxException {
         this.level = 0;
         this.dome = false;
         this.worker = null;
+        this.completed = false;
+        this.x = x;
+        this.y = y;
+        if (x >= BOARD_SIZE || x < 0 || y >= BOARD_SIZE || y < 0){
+            throw new InvalidBoxException();
+        }
     }
-    /**
-     *
-     */
+    public void setBox (int level,boolean dome,Worker worker){
+        this.level = level;
+        this.dome = dome;
+        if(this.dome == false) {
+            this.worker = worker;
+        }
+    }
+
     public void setWorker(Worker worker) {
-        if(this.dome == false){
+        if(this.dome == false) {
             this.worker = worker;
         }
     }
@@ -34,19 +42,11 @@ public class Box {
      * Metodo che verifica se la casella é occupata
      * @return boolean in base al risultato
      */
-    public boolean isOccupied(){
-        if(this.dome==true || this.worker!=null)
+    public boolean isOccupied (){
+        if (worker != null){
             return true;
-        else
-            return false;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
+        }
+        else return false;
     }
 
     public Worker getWorker() {

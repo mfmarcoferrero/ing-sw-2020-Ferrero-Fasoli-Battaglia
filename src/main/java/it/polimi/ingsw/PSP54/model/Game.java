@@ -8,31 +8,33 @@ import java.util.Vector;
 public class Game {
     Vector<Player> players = new Vector<>();
     Box[][] board = new Box[5][5];
+
     /**
      * Costruttore della classe
      */
-    public Game (){
-
-
+    public Game () {
     }
-    public void newPlayer(String name, int age){
-       Player player= new Player(name, age);
+
+    /**
+     * Istanzia un nuovo giocatore
+     * @param name
+     * @param age
+     * @param workerColour
+     */
+    public void newPlayer(String name, int age , String workerColour){
+       Player player = new Player(name, age, workerColour);
        players.add(player);
        player.setPlayer_index(players.indexOf(player));
-       for (int i=0;i<2;i++){
-           Worker worker=new Worker(player,null);
-           if(i==0)
-               worker.setMale(true);
-           else
-               worker.setMale(false);
-           player.worker[i]=worker;
-       }
     }
 
-    public void startGame(){
-        for (int i=0;i<5;i++){
-            for (int j=0;j<5;j++){
-                board[i][j]=new Box(i,j);
+    /**
+     * Costruisce la board
+     * @throws InvalidBoxException se le coordinate della box non sono valide
+     */
+    public void startGame() throws InvalidBoxException {
+        for (int i = 0;i < Box.BOARD_SIZE;i++) {
+            for (int j = 0; j < Box.BOARD_SIZE; j++) {
+                board[i][j] = new Box(i, j);
             }
         }
     }
@@ -51,7 +53,7 @@ public class Game {
         return ind;
     }
 
-    public void ordinamentoPlayers(int val){
+    public void ordinamentoPlayers (int val){
         players.add(0,players.get(val));
         players.get(0).setPlayer_index(0);
         players.remove(val+1);
@@ -59,12 +61,12 @@ public class Game {
             players.get(i).setPlayer_index(i);
     }
 
-    public void eliminaPerdente(int index){
+    public void eliminaPerdente (int index){
         players.remove(index);
     }
 
     public void setTurns(int index) {
-        System.out.println("turno di:"+players.get(index).getPlayerName());
+        System.out.println("turno di:" + players.get(index).getPlayerName());
         players.get(index).myTurn();
     }
 }
