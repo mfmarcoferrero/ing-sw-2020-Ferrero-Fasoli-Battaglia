@@ -4,7 +4,9 @@ package it.polimi.ingsw.PSP54.model;
  * Classe casella della tabella
  */
 public class Box {
-    public int level;
+    protected int column;
+    protected int row;
+    protected int level;
     public boolean dome;
     private Worker worker;
 
@@ -12,7 +14,9 @@ public class Box {
      * Costruttore della casella
      * Istanzia la casella senza livelli cupole o operai
      */
-    public Box() {
+    public Box(int x, int y) {
+        column=y;
+        row=x;
         this.level = 0;
         this.dome = false;
         this.worker = null;
@@ -20,14 +24,6 @@ public class Box {
     /**
      *
      */
-    public void setBox (int level,boolean dome,Worker worker){
-        this.level = level;
-        this.dome = dome;
-        if(this.dome == false) {
-            this.worker = worker;
-        }
-    }
-
     public void setWorker(Worker worker) {
         if(this.dome == false){
             this.worker = worker;
@@ -38,10 +34,30 @@ public class Box {
      * Metodo che verifica se la casella é occupata
      * @return boolean in base al risultato
      */
-    public boolean isOccupied (){
-        if (worker != null){
+    public boolean isOccupied(){
+        if(this.dome==true || this.worker!=null)
             return true;
-        }
-        else return false;
+        else
+            return false;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public Worker getWorker() {
+        return worker;
+    }
+
+    public boolean isDome() {
+        return dome;
+    }
+
+    public void setDome(boolean dome) {
+        this.dome = dome;
     }
 }
