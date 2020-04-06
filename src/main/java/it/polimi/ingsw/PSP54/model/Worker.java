@@ -26,6 +26,10 @@ public class Worker {
         }
     }
 
+    /**
+     * Metodo per posizionare la costruzione
+     * @param dest
+     */
     public void setBuilding (Box dest){
         if (dest.isOccupied() == false){
             if (dest.level == 3){

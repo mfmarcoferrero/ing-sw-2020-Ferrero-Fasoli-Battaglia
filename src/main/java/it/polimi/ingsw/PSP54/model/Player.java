@@ -90,24 +90,6 @@ public class Player {
         }
     }
 
-    /**
-     * Metodo per la verifica di due caselle adiacenti
-     * @param box1
-     * @param box2
-     * @return
-     */
-    private boolean adjacentBoxes (Box box1, Box box2){
-        if ((box2.x - box1.x == 1) && (box1.y == box2.y)){
-            return true;
-        }
-        if ((box2.y - box1.y == 1) && (box1.x == box2.x)){
-            return true;
-        }
-        if ((box2.x - box1.x == 1) && (box2.y - box1.y == 1)) {
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Metodo che verifica la validità di una mossa spostamento normale
@@ -116,7 +98,11 @@ public class Player {
      * @return
      */
     public boolean normalValidMove(Box source, Box dest) {
-        if(adjacentBoxes(source,dest) && (dest.level - source.level == 1) && (!dest.isOccupied())){
+        int deltaLevel = Math.abs(dest.level - source.level);
+        if(power.adjacentBoxes(source,dest) && (deltaLevel <= 1) && (!dest.isOccupied())){
+            if(dest.level == 3 && source.level == 2){
+                this.isWinner = true;
+            }
             return true;
         }
         return false;
@@ -129,7 +115,7 @@ public class Player {
      * @return
      */
     public boolean normalValidBuilding(Box source, Box dest) {
-        if(adjacentBoxes(source,dest) && (!dest.isOccupied()) && (!dest.completed)){
+        if(power.adjacentBoxes(source,dest) && (!dest.isOccupied()) && (!dest.completed)){
             return true;
         }
         return false;

@@ -8,7 +8,7 @@ public class Demeter extends God {
     }
 
     @Override
-    public boolean specialValidBuilding(Box pos) {
+    public boolean specialValidBuilding(Box source, Box dest) {
         return false;
     }
 

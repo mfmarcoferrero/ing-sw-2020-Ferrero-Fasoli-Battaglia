@@ -3,11 +3,12 @@ package it.polimi.ingsw.PSP54.model;
 /**
  * Classe casella della tabella
  */
+
 public class Box {
-    public static final int BOARD_SIZE = 5;
+    protected static final int BOARD_SIZE = 5;
     protected int x, y, level;
-    public boolean dome, completed;
-    private Worker worker;
+    protected boolean dome, completed;
+    protected Worker worker;
 
     /**
      * Costruttore della casella
@@ -24,6 +25,7 @@ public class Box {
             throw new InvalidBoxException();
         }
     }
+
     public void setBox (int level,boolean dome,Worker worker){
         this.level = level;
         this.dome = dome;
@@ -59,5 +61,19 @@ public class Box {
 
     public void setDome(boolean dome) {
         this.dome = dome;
+    }
+
+    public void setX(int x) throws InvalidBoxException {
+        if(x < 0 || x >= BOARD_SIZE){
+            throw new InvalidBoxException();
+        }
+        this.x = x;
+    }
+
+    public void setY(int y) throws InvalidBoxException {
+        if(y < 0 || y >= BOARD_SIZE){
+            throw new InvalidBoxException();
+        }
+        this.y = y;
     }
 }
