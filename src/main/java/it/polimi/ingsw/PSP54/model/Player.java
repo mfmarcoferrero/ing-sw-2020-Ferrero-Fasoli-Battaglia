@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * Classe giocatore
  */
-public class Player {
+public class Player extends Game {
     public static int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
     God power;
     private String playerName;
@@ -14,6 +14,8 @@ public class Player {
     private int godID;
     private ArrayList <Worker> workerList = new ArrayList<>(2);
     private boolean isWinner = false, lose = false;
+    protected int movetoken;
+    protected int buildtoken;
 
     /**
      * Costruttore della classe
@@ -23,12 +25,14 @@ public class Player {
      * @param workerColour
      */
 
-    public Player (String playerName, int age, String workerColour) {
+    public Player (String playerName, int age, String workerColour){
         this.playerName = playerName;
         this.age = age;
         this.workerColour = workerColour;
         this.workerList.add(new Worker(this, workerColour, 1));
         this.workerList.add(new Worker(this, workerColour, 2));
+        movetoken=0;
+        buildtoken=0;
     }
 
     public void setGodID(int godID) {
@@ -99,7 +103,7 @@ public class Player {
      */
     public boolean normalValidMove(Box source, Box dest) {
         int deltaLevel = Math.abs(dest.level - source.level);
-        if(power.adjacentBoxes(source,dest) && (deltaLevel <= 1) && (!dest.isOccupied())){
+        if(power.adjacentBoxes(source,dest) && (deltaLevel <= 1) && (!dest.isOccupied()) && movetoken==1){
             if(dest.level == 3 && source.level == 2){
                 this.isWinner = true;
             }
@@ -115,7 +119,7 @@ public class Player {
      * @return
      */
     public boolean normalValidBuilding(Box source, Box dest) {
-        if(power.adjacentBoxes(source,dest) && (!dest.isOccupied()) && (!dest.completed)){
+        if(power.adjacentBoxes(source,dest) && (!dest.isOccupied()) && (!dest.completed)&& buildtoken==1){
             return true;
         }
         return false;
@@ -131,6 +135,7 @@ public class Player {
         Worker w = workerList.get(worker_ind);
         if (normalValidMove(w.pos, dest) || power.specialValidMove(w.pos,dest)) {
             w.setPos(dest);
+            movetoken--;
         }
         else
             throw new InvalidMoveException();
@@ -146,14 +151,15 @@ public class Player {
         Worker w = workerList.get(worker_ind);
         if (normalValidBuilding(w.pos, dest) || power.specialValidBuilding(w.pos,dest)) {
             w.setBuilding(dest);
+            buildtoken--;
         } else
             throw new InvalidBuildingException();
     }
 
-    public void myTurn(){
-    }
-
     public void endTurn() throws InterruptedException {
+        if (movetoken+buildtoken>0) {
+            lose=true;
+        }
         if (isWinner){
             System.out.println(playerName + "ha vinto");
             wait(10000000);

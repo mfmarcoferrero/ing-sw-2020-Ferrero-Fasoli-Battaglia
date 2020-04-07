@@ -61,13 +61,16 @@ public class Game {
             players.get(i).setPlayer_index(i);
     }
 
-    public void eliminaPerdente (int index){
-        players.remove(index);
-    }
-
     public void setTurns(int index) {
         System.out.println("turno di:" + players.get(index).getPlayerName());
-        players.get(index).myTurn();
+        players.get(index).buildtoken=1;
+        players.get(index).movetoken=1;
+        System.out.println("hai"+players.get(index).movetoken+"mosse");
+        System.out.println("puoi costruire"+players.get(index).buildtoken+"volte");
+    }
+
+    public Box[][] getBoard() {
+        return board;
     }
 
     public Box[][] getBoard() {
