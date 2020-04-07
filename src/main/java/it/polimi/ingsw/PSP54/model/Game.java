@@ -69,4 +69,8 @@ public class Game {
         System.out.println("turno di:" + players.get(index).getPlayerName());
         players.get(index).myTurn();
     }
+
+    public Box[][] getBoard() {
+        return board;
+    }
 }

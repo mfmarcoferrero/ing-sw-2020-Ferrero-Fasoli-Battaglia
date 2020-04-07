@@ -29,13 +29,13 @@ public class Box {
     public void setBox (int level,boolean dome,Worker worker){
         this.level = level;
         this.dome = dome;
-        if(this.dome == false) {
+        if(!this.dome) {
             this.worker = worker;
         }
     }
 
     public void setWorker(Worker worker) {
-        if(this.dome == false) {
+        if(!this.dome) {
             this.worker = worker;
         }
     }
@@ -45,9 +45,8 @@ public class Box {
      * @return boolean in base al risultato
      */
     public boolean isOccupied (){
-        if (worker != null){
+        if (worker != null)
             return true;
-        }
         else return false;
     }
 
@@ -79,5 +78,8 @@ public class Box {
 
     public int getLevel() {
         return level;
+    }
+
+    public void setLevel(int i) {
     }
 }
