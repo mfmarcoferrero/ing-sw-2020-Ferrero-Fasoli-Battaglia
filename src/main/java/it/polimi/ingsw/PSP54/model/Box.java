@@ -76,4 +76,8 @@ public class Box {
         }
         this.y = y;
     }
+
+    public int getLevel() {
+        return level;
+    }
 }

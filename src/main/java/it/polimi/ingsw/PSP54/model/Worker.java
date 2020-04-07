@@ -6,6 +6,7 @@ package it.polimi.ingsw.PSP54.model;
 public class Worker {
     private int workerID;
     private Player owner;
+    private boolean male;
     private String color;
     public Box pos;
 
@@ -39,6 +40,14 @@ public class Worker {
             else
                 dest.level++;
         }
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public boolean isMale() {
+        return male;
     }
 }
 
