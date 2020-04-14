@@ -1,9 +1,8 @@
 	package it.polimi.ingsw.PSP54.view;
 
 	import it.polimi.ingsw.PSP54.model.Box;
-	import it.polimi.ingsw.PSP54.model.InvalidBoxException;
 
-	import java.io.PrintStream;
+    import java.io.PrintStream;
 	import java.util.InputMismatchException;
 	import java.util.Scanner;
 
@@ -356,7 +355,7 @@
 		 * asks coordinates which player wants to move
 		 * @return destination box
 		 */
-		public Box acquireCoordinates() throws InvalidBoxException {
+		public Box acquireCoordinates() {
 
 			boolean loopX = true;
 			boolean loopY = true;
