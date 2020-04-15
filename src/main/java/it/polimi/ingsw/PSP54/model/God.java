@@ -1,15 +1,16 @@
 package it.polimi.ingsw.PSP54.model;
 
 public abstract class God {
-    private boolean hasMoved;
-    private boolean wentUp;
+    private boolean canMoveUp;
+    protected Player player;
 
-    public God() {
-        this.hasMoved = false;
-        this.wentUp = false;
+    public God(Player player) {
+        this.player = player;
+        this.canMoveUp = true;
     }
-    public abstract boolean specialValidBuilding (Box source, Box pos);
-    public abstract boolean specialValidMove (Box source, Box dest);
+
+    public abstract boolean validBuilding (Box source, Box dest, boolean setDome);
+    public abstract boolean validMove (Box source, Box dest);
 
     /**
      * Metodo per la verifica di caselle adiacenti
@@ -25,6 +26,48 @@ public abstract class God {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Metodo che verifica la validità di una mossa spostamento normale
+     * @param source
+     * @param dest
+     * @return
+     */
+    public boolean normalValidMove(Box source, Box dest) {
+        int deltaLevel = Math.abs(dest.level - source.level);
+        int deltaLevelUp = dest.level - source.level;
+        if(adjacentBoxes(source,dest) && (deltaLevel <= 1) && (!dest.isDome()) && (!dest.isOccupied()) && player.moveToken == 1){
+            if(dest.level == 3 && source.level == 2){
+                player.isWinner = true;
+            }
+            if (canMoveUp == false && deltaLevelUp > 0){
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Metodo che verifica la validità di una mossa costruzione normale
+     * @param source
+     * @param dest
+     * @return
+     */
+    public boolean normalValidBuilding(Box source, Box dest) {
+        if(adjacentBoxes(source,dest) && (!dest.isOccupied()) && (!dest.isDome()) && player.buildToken == 1){
+            return true;
+        }
+        return false;
+    }
+
+    public void setCanMoveUp(boolean canMoveUp) {
+        this.canMoveUp = canMoveUp;
+    }
+
+    public boolean isCanMoveUp() {
+        return canMoveUp;
     }
 }
 

@@ -1,44 +1,44 @@
 package it.polimi.ingsw.PSP54.model;
 
 public class Artemis extends God {
+    private Box firstSource;
+    private Worker firstWorkerMoved;
+
+    public Artemis(Player player) {
+        super(player);
+    }
 
     /**
      * Artemis non modifica le modalità di costruzione
      * @param source
      * @param dest
+     * @param setDome
      * @return
      */
     @Override
-    public boolean specialValidBuilding(Box source,Box dest) {
-        return false;
+    public boolean validBuilding(Box source,Box dest, boolean setDome) {
+        return normalValidBuilding(source,dest);
     }
 
     /**
-     * Può muoversi due volte
+     * Può muoversi due volte con lo stesso worker senza tornare nella casella di partenza
      * @param source
      * @param dest
      * @return
      */
     @Override
-    public boolean specialValidMove(Box source, Box dest) {
+    public boolean validMove(Box source, Box dest) {
         int deltaLevel = Math.abs(dest.level - source.level);
-        if(doubleAdjacentBoxes(source,dest) && (deltaLevel <= 2) && (!dest.isOccupied())){
+        int deltaLevelUp = dest.level - source.level;
+        if(normalValidMove(source,dest)){
+            firstSource = source;
+            firstWorkerMoved = source.worker;
             return true;
         }
-        return false;
-    }
-
-    /**
-     * Metodo per verificare la doppia adiacenza di due caselle
-     * @param box1
-     * @param box2
-     * @return
-     */
-    private boolean doubleAdjacentBoxes (Box box1,Box box2){
-        int deltaX, deltaY;
-        deltaX = Math.abs(box1.x - box2.x);
-        deltaY = Math.abs(box1.y - box2.y);
-        if (deltaX <= 2 && deltaY <= 2){
+        else if (adjacentBoxes(source,dest) && (deltaLevel <= 1) && (!dest.isOccupied()) && (!dest.isDome()) && player.moveToken == 0 && firstSource != source && firstWorkerMoved == source.worker){
+            if (this.isCanMoveUp() == false && deltaLevelUp > 0){
+                return false;
+            }
             return true;
         }
         else

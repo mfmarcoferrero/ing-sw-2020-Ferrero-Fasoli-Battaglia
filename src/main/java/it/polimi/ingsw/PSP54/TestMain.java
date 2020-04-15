@@ -1,7 +1,6 @@
 package it.polimi.ingsw.PSP54;
 
 import it.polimi.ingsw.PSP54.model.Game;
-import it.polimi.ingsw.PSP54.model.InvalidBoxException;
 import it.polimi.ingsw.PSP54.view.CliView;
 
 public class TestMain {
@@ -11,11 +10,7 @@ public class TestMain {
         CliView view = new CliView();
         Game game = new Game();
 
-        try {
-            game.startGame();
-        } catch (InvalidBoxException e) {
-            e.printStackTrace();
-        }
+        game.startGame();
 
         for (int i = 0; i < 5; i++)
             for (int j = 0; j < 5; j++) {

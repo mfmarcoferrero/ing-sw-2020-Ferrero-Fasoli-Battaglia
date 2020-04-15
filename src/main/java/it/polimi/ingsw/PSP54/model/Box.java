@@ -7,36 +7,40 @@ package it.polimi.ingsw.PSP54.model;
 public class Box {
     protected static final int BOARD_SIZE = 5;
     protected int x, y, level;
-    protected boolean dome, completed;
+    protected boolean dome;
     protected Worker worker;
 
     /**
      * Costruttore della casella
      * Istanzia la casella senza livelli cupole o operai
      */
-    public Box(int x, int y) throws InvalidBoxException {
+    public Box(int x, int y) {
         this.level = 0;
         this.dome = false;
         this.worker = null;
-        this.completed = false;
         this.x = x;
         this.y = y;
-        if (x >= BOARD_SIZE || x < 0 || y >= BOARD_SIZE || y < 0){
-            throw new InvalidBoxException();
-        }
     }
 
-    public void setBox (int level,boolean dome,Worker worker){
-        this.level = level;
-        this.dome = dome;
-        if(!this.dome) {
-            this.worker = worker;
-        }
-    }
-
+    /**
+     * Setting della posizione del worker
+     * @param worker
+     */
     public void setWorker(Worker worker) {
-        if(!this.dome) {
             this.worker = worker;
+            worker.pos = this;
+    }
+
+    /**
+     * Metodo per posizionare la costruzione
+     */
+    public void setBuilding (){
+        if (!this.isOccupied()){
+            if (level == 3){
+                this.dome = true;
+            }
+            else
+                this.level++;
         }
     }
 
@@ -45,8 +49,9 @@ public class Box {
      * @return boolean in base al risultato
      */
     public boolean isOccupied (){
-        if (worker != null)
+        if (worker != null){
             return true;
+        }
         else return false;
     }
 
@@ -62,17 +67,11 @@ public class Box {
         this.dome = dome;
     }
 
-    public void setX(int x) throws InvalidBoxException {
-        if(x < 0 || x >= BOARD_SIZE){
-            throw new InvalidBoxException();
-        }
+    public void setX(int x) {
         this.x = x;
     }
 
-    public void setY(int y) throws InvalidBoxException {
-        if(y < 0 || y >= BOARD_SIZE){
-            throw new InvalidBoxException();
-        }
+    public void setY(int y) {
         this.y = y;
     }
 
@@ -80,6 +79,20 @@ public class Box {
         return level;
     }
 
-    public void setLevel(int i) {
+    public void setLevel(int level){
+        this.level=level;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public String toString (){
+        return "BOX con coordinate: X = " + this.x + " Y = " + this.y;
     }
 }
