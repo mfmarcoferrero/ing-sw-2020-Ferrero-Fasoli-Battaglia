@@ -1,171 +1,58 @@
 package it.polimi.ingsw.PSP54.model;
-import java.util.ArrayList;
 
-/**
- * Classe giocatore
- */
-public class Player {
-    public static int NORMAL_POWER = 0, APOLLO = 1, ARTEMIS = 2, ATHENA = 3, ATLAS = 4, DEMETER = 5;
-    public God power = null;
-    public Game game;
-    private String playerName, workerColour;
-    protected int player_index, moveToken, buildToken, godID, age;
-    private ArrayList <Worker> workerList = new ArrayList<>(2);
-    protected boolean isWinner = false, lose = false;
+import java.util.Vector;
 
+public interface Player {
 
-    /**
-     * Costruttore della classe
-     * @param playerName
-     * @param age
-     * @param workerColour
-     */
+    //TODO:Setters & getters
 
-    public Player (String playerName, int age, String workerColour, Game game){
-        this.playerName = playerName;
-        this.age = age;
-        this.workerColour = workerColour;
-        this.workerList.add(new Worker(this, workerColour, 0));
-        this.workerList.add(new Worker(this, workerColour, 1));
-        this.moveToken = 0;
-        this.buildToken = 0;
-        this.game = game;
-    }
+    Worker choseWorker(Boolean male);
 
-    public ArrayList<Worker> getWorkerList() {
-        return workerList;
-    }
+    Vector setWorkerBoxesToMove(Worker worker);
 
-    public void setGodID(int godID) {
-        this.godID = godID;
-    }
+    Vector setWorkerBoxesToBuild(Worker worker);
 
-    public String getPlayerName() {
-        return playerName;
-    }
+    Worker turnInit(Boolean male);
 
-    public void setMoveToken(int moveToken) {
-        this.moveToken = moveToken;
-    }
+    void move(Worker worker, Box dest) throws InvalidMoveException;
 
-    public void setBuildToken(int buildToken) {
-        this.buildToken = buildToken;
-    }
+    void build(Worker worker, Box dest);
 
-    public int getAge() {
-        return age;
-    }
+    void endTurn();
 
-    public String getWorkerColour() {
-        return workerColour;
-    }
+    String getPlayerName();
 
-    public int getGodID() {
-        return godID;
-    }
+    void setAge(int age);
 
-    public boolean isWinner() {
-        return isWinner;
-    }
+    int getAge();
 
-    public void setPlayer_index(int player_index) {
-        this.player_index = player_index;
-    }
+    void setColor(String color);
 
-    public int getPlayer_index() {
-        return player_index;
-    }
+    String getColor();
 
-    /**
-     * Metodo per la posizione del worker all'inizio del gioco
-     * @param numWorker indice dell'operaio da spostare
-     * @param dest casella di destinazione
-     */
-    public void setInitialPosition (int ind_worker, Box dest) {
-        dest.setWorker(workerList.get(ind_worker));
-    }
+    void setGame(Game game);
 
-    /**
-     * Metodo per decidere quale strategy utilizzare
-     * @param godID
-     */
-    public void setPower() {
-        if (this.godID == NORMAL_POWER){
-            this.power = new NormalPower(this);
-        } else if (this.godID == APOLLO) {
-            this.power = new Apollo(this);
-        } else if (this.godID == ARTEMIS) {
-            this.power = new Artemis(this);
-        } else if (this.godID == ATHENA) {
-            this.power = new Athena(this);
-        } else if (this.godID == ATLAS) {
-            this.power = new Atlas(this);
-        } else if (this.godID == DEMETER) {
-            this.power = new Demeter(this);
-        }
-    }
+    Game getGame();
 
+    boolean isWinner();
 
-    /**
-     * Metodo per muovere l'operaio
-     * @param worker_ind indice del worker
-     * @param dest casella di destinazione
-     * @throws InvalidMoveException se la mossa non è valida
-     */
-    public void move(int worker_ind, Box dest) throws InvalidMoveException {
-        if (power.validMove(workerList.get(worker_ind).pos, dest)) {
-            dest.setWorker(getWorkerList().get(worker_ind));
-            moveToken--;
-        }
-        else
-            throw new InvalidMoveException();
-    }
+    void setWinner(boolean winner);
 
-    /**
-     * Metodo per far costruire all'operaio*
-     * @param worker_ind indice del worker
-     * @param dest casella dove costruire
-     * @throws InvalidBuildingException se la mossa di costruzione non è valida
-     */
-    public void build(int worker_ind, Box dest, boolean buildDome) throws InvalidBuildingException {
-        if (power.validBuilding(workerList.get(worker_ind).pos, dest, buildDome)) {
-            if (buildDome == false) {
-                dest.setBuilding();
-            } else if (buildDome){
-                dest.setDome(true);
-            }
-            buildToken--;
-        } else
-            throw new InvalidBuildingException();
-    }
+    boolean isLoser();
 
-    /**
-     * Metodo per la gestione della fine di un turno
-     * Controlla le condizioni di vittoria
-     * @throws InterruptedException
-     */
-    public void endTurn() throws InterruptedException {
-        if (moveToken + buildToken > 0) {
-            lose = true;
-        }
-        if (isWinner){
-            System.out.println(playerName + "ha vinto");
-            wait(10000000);
-            System.exit(0);
-        }
-        if (lose){
-            System.out.println(playerName + "non può piu giocare");
-            game.players.remove(player_index);
-        }
-        if (player_index == game.players.size() - 1) {
-            game.setTurns(0);
-        }
-        else
-            game.setTurns(player_index + 1);
-    }
+    void setLoser(boolean loser);
 
-    @Override
-    public String toString (){
-        return "NOME: " + playerName + " GOD ID: " + godID + " INDICE NELL'ARRAY: " + player_index;
-    }
+    Player assignPower(int cardID);
+
+    int getCardID();
+
+    void setCardID(int cardID);
+
+    //Only for debug purpose
+
+    void addSideEffect ();
+
+    void rmvSideEffect ();
+
+    void printPower();
 }

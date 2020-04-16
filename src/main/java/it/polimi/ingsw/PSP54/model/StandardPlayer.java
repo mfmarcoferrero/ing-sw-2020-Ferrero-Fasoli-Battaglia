@@ -1,0 +1,292 @@
+package it.polimi.ingsw.PSP54.model;
+
+import java.util.Vector;
+//TODO: Test
+
+/**
+ * Class representing the player whit his default actions and turn administration
+ */
+public class StandardPlayer implements Player {
+
+    private static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
+    private int cardID;
+    private Game game;
+    private String playerName;
+    private int age;
+    private String color;
+    private Worker[] workers = new Worker[2];
+    private boolean winner;
+    private boolean loser;
+
+    public StandardPlayer(String playerName) {
+        this.playerName = playerName;
+        this.workers[0] = new Worker(true, this, null);
+        this.workers[1] = new Worker(false, this, null);
+        this.winner = false;
+        this.loser = false;
+    }
+
+
+    /**
+     * Set standard available boxes for the worker to build
+     * @param worker current worker in use
+     * @return the vector containing buildable boxes
+     */
+    @Override
+    public Vector setWorkerBoxesToBuild (Worker worker){
+
+        Vector<Box> boxes = new Vector<>(1, 1); //TODO: optimize
+        int deltaX, deltaY;
+        Box[][] board = getGame().getBoard();
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());
+                deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
+                if ((deltaX == 1 || deltaY == 1) && !board[i][j].isOccupied() && !board[i][j].isDome())
+                    boxes.add(board[i][j]);
+            }
+        }
+
+        worker.setBoxesToBuild(boxes);
+        return boxes;
+    }
+
+    /**
+     * Sets standard available boxes for the worker to move
+     * @param worker current worker in use
+     * @return the vector containing available boxes
+     */
+    @Override
+    public Vector setWorkerBoxesToMove (Worker worker){
+
+        Vector<Box> boxes = new Vector<>(1, 1); //TODO: optimize
+        int deltaX, deltaY, deltaH;
+        Box[][] board = getGame().getBoard();
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());
+                deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
+                deltaH =  (board[i][j].getLevel() - worker.getPos().getLevel());
+                if ((deltaX == 1 || deltaY ==1) && deltaH == 1 && !board[i][j].isOccupied() && !board[i][j].isDome())
+                    boxes.add(board[i][j]);
+            }
+        }
+        worker.setBoxesToMove(boxes);
+        return boxes;
+    }
+
+    /**
+     * Decorates the current player
+     * @param cardID the number of the card
+     * @return the decorated player
+     */
+    @Override
+    public Player assignPower(int cardID){ //where to be performed?
+
+        Player actualPlayer = new StandardPlayer(null);
+
+        if (cardID == APOLLO) {
+            actualPlayer = new ApolloDecorator(this);
+            actualPlayer.setCardID(APOLLO);
+        } else if (cardID == ARTEMIS) {
+            actualPlayer = new ArtemisDecorator(this);
+            actualPlayer.setCardID(ARTEMIS);
+        } else if (cardID == ATHENA) {
+            actualPlayer = new AthenaDecorator(this);
+            actualPlayer.setCardID(ATHENA);
+        } else if (cardID == ATLAS) {
+            actualPlayer = new AtlasDecorator(this);
+            actualPlayer.setCardID(ATLAS);
+        } else if (cardID == DEMETER) {
+            actualPlayer = new DemeterDecorator(this);
+            actualPlayer.setCardID(DEMETER);
+
+        }
+
+        return actualPlayer;
+    }
+
+    /**
+     * Select the worker which player is going to use depending on the worker's sex
+     * @param male the worker's sex
+     * @return the chosen worker
+     */
+    @Override
+    public Worker choseWorker(Boolean male) { //TODO: male acquisition performed by Controller
+
+
+        if (male)
+            return this.workers[0];
+        else
+            return this.workers[1];
+
+    }
+
+    /**
+     *Initialize current player's turn
+     * @param male represent the sex of the worker which the player is going to use
+     * @return the chosen worker with updated tokens
+     */
+    @Override
+    public Worker turnInit(Boolean male){
+
+        Worker currentWorker = choseWorker(male);
+        currentWorker.setMoveToken(1);
+        currentWorker.setBuildToken(0);
+        return currentWorker;
+    }
+
+    /**
+     * Standard move action
+     * @param worker selected worker which the player wants to move
+     * @param dest selected destination box
+     * @throws InvalidMoveException if the move can't be done
+     */
+    @Override
+    public void move(Worker worker, Box dest) throws InvalidMoveException{ //TODO: throw incorrect move exception
+
+        Vector<Box> valid = worker.getBoxesToMove();
+        int currentMoveToken = worker.getMoveToken();
+
+        if (currentMoveToken >= 0 && valid.contains(dest)){
+            //perform move
+            worker.setPos(dest);
+            dest.setWorker(worker);
+            //decrement token
+            worker.setMoveToken(currentMoveToken-1);
+            //set buildable boxes
+            worker.setBoxesToBuild(setWorkerBoxesToBuild(worker));
+        }else throw new InvalidMoveException();
+
+    }
+
+    /**
+     *Standard build action
+     * @param worker selected worker which the player wants to move
+     * @param dest selected box where to build
+     */
+    @Override
+    public void build (Worker worker, Box dest){ //TODO: throw incorrect building exception
+
+        Vector<Box> valid = worker.getBoxesToBuild();
+        int currentMoveToken = worker.getMoveToken();
+        int currentBuildToken = worker.getBuildToken();
+
+        if (currentBuildToken >= 1 && currentMoveToken == 0 && valid.contains(dest)){
+            if (dest.getLevel() == 3)
+                dest.setDome(true);
+            else {
+                int currentLevel = dest.getLevel();
+                dest.setLevel(currentLevel+1);
+            }
+
+            worker.setBuildToken(currentBuildToken-1);
+        }
+    }
+
+    /**
+     *checks if player has won
+     */
+    @Override
+    public void endTurn () {
+
+        for (int i = 0; i < 2; i++) {
+            if(workers[i].getPos().getLevel() == 3)
+                this.setWinner(true);
+        }
+    }
+
+    //setters & getters
+
+    @Override
+    public void setGame(Game game) {
+
+        this.game = game;
+    } //TODO: player.game has to be a reference to the game the player is actually playing, so it needs to be invoked by Game or by Controller
+
+    @Override
+    public Game getGame() {
+
+        return game;
+    }
+
+    @Override
+    public boolean isWinner() {
+        return winner;
+    }
+
+    @Override
+    public void setWinner(boolean winner) {
+        this.winner = winner;
+    }
+
+    @Override
+    public boolean isLoser() {
+        return loser;
+    }
+
+    @Override
+    public void setLoser(boolean loser) {
+        this.loser = loser;
+    }
+
+    @Override
+    public int getAge() {
+        return age;
+    }
+
+    @Override
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    @Override
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    @Override
+    public String getColor() {
+        return color;
+    }
+
+    @Override
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    @Override
+    public int getCardID() {
+        return cardID;
+    }
+
+    @Override
+    public void setCardID(int cardID) {
+        this.cardID = cardID;
+    }
+
+    //only for debug purpose
+
+    @Override
+    public void addSideEffect() {
+        System.out.println("You Failed");
+
+    }
+
+    @Override
+    public void rmvSideEffect() {
+        System.out.println("You Failed!");
+    }
+
+    @Override
+    public void printPower() {
+        System.out.println("None");
+    }
+
+}

@@ -1,8 +1,6 @@
 	package it.polimi.ingsw.PSP54.view;
-
-	import it.polimi.ingsw.PSP54.model.Box;
-
-    import java.io.PrintStream;
+	import it.polimi.ingsw.PSP54.model.*;
+	import java.io.PrintStream;
 	import java.util.InputMismatchException;
 	import java.util.Scanner;
 
@@ -24,22 +22,22 @@
 
 			//TODO: define Worker colors and add an attribute in the Worker class containing them
 			else if(box.getWorker() != null) {
-				switch (box.getWorker().getColor()) {
+				switch (box.getWorker().getOwner().getColor()) {
 					case "BLUE":
-						if (box.getWorker().isMale())
+						if (box.getWorker().getMale())
 							string = string + Color.ANSI_P1 + Symbol.UNICODE_MALE_WORKER;
 						else
 							string = string + Color.ANSI_P1 + Symbol.UNICODE_FEMALE_WORKER;
 						break;
 					case "RED":
-						if (box.getWorker().isMale())
+						if (box.getWorker().getMale())
 							string = string + Color.ANSI_P2 + Symbol.UNICODE_MALE_WORKER;
 						else
 							string = string + Color.ANSI_P2 + Symbol.UNICODE_FEMALE_WORKER;
 
 						break;
 					case "YELLOW":
-						if (box.getWorker().isMale())
+						if (box.getWorker().getMale())
 							string = string + Color.ANSI_P3 + Symbol.UNICODE_MALE_WORKER;
 						else
 							string = string + Color.ANSI_P3 + Symbol.UNICODE_FEMALE_WORKER;
@@ -57,17 +55,17 @@
 		 * @param endGround String containing the right border
 		 */
 		private void printGround(String initGround, String endGround) {
-			String line;
-			String toPrint = "";
+			StringBuilder line;
+			StringBuilder toPrint = new StringBuilder();
 			for (int j = 0; j < 5; j++) {
-				line = initGround;
-				for (int k = 0; k < 9; k++) {
-					line = line + Symbol.UNICODE_SQUARE;
-				}
-				line = line + endGround;
-				toPrint = toPrint + line;
+				line = new StringBuilder(initGround);
+				for (int k = 0; k < 9; k++)
+					line.append(Symbol.UNICODE_SQUARE);
+
+				line.append(endGround);
+				toPrint.append(line);
 			}
-			outputStream.println(toPrint);
+			outputStream.println(toPrint.toString());
 		}
 
 		//TODO: Implement StringBuilder rather than concatenation
@@ -77,8 +75,8 @@
 		 */
 		public void printBoard (Box[][] board) {
 
-			String line = null;
-			String toPrint;
+			StringBuilder line = null;
+			StringBuilder toPrint;
 
 			//String containing upper border
 			String upperBorder = Color.ANSI_BORDER + "____________________________________________________________________________________________________";
@@ -118,133 +116,133 @@
 
 					//generate and print the five strings containing the representation of the of the first line of boxes
 					if (l == 0 || l == 6) {
-						toPrint = "";
+						toPrint = new StringBuilder();
 						for (int j = 0; j < 5; j++) {
 							if (board[i][j].getLevel() == 0) {
-								line = initGround;
+								line = new StringBuilder(initGround);
 								for (int k = 0; k < 9; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
-								line = line + endGround;
+								line.append(endGround);
 							} else if (board[i][j].getLevel() > 0) {
-								line = initFirst;
+								line = new StringBuilder(initFirst);
 								for (int k = 0; k < 7; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
-								line = line + endFirst;
+								line.append(endFirst);
 							}
-							toPrint = toPrint + line;
+							toPrint.append(line);
 						}
-						outputStream.println(toPrint);
+						outputStream.println(toPrint.toString());
 						l++;
 					}
 					else if (l == 1 || l == 5){
-						toPrint = "";
+						toPrint = new StringBuilder();
 						for (int j = 0; j < 5; j++) {
 							if (board[i][j].getLevel() == 0) {
-								line = initGround;
+								line = new StringBuilder(initGround);
 								for (int k = 0; k < 9; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
-								line = line + endGround;
+								line.append(endGround);
 							} else if (board[i][j].getLevel() == 1) {
-								line = initFirst;
+								line = new StringBuilder(initFirst);
 								for (int k = 0; k < 7; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
-								line = line + endFirst;
+								line.append(endFirst);
 							}else if (board[i][j].getLevel() > 1){
-								line = initSecond;
+								line = new StringBuilder(initSecond);
 								for (int k = 0; k < 5; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
-								line = line + endSecond;
+								line.append(endSecond);
 							}
-							toPrint = toPrint + line;
+							toPrint.append(line);
 						}
-						outputStream.println(toPrint);
+						outputStream.println(toPrint.toString());
 						l++;
 					}
 					else if (l == 2 || l == 4){
-						toPrint = "";
+						toPrint = new StringBuilder();
 						for (int j = 0; j < 5; j++) {
 							if (board[i][j].getLevel() == 0) {
-								line = initGround;
+								line = new StringBuilder(initGround);
 								for (int k = 0; k < 9; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
-								line = line + endGround;
+								line.append(endGround);
 							} else if (board[i][j].getLevel() == 1) {
-								line = initFirst;
+								line = new StringBuilder(initFirst);
 								for (int k = 0; k < 7; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
-								line = line + endFirst;
+								line.append(endFirst);
 							}else if (board[i][j].getLevel() == 2){
-								line = initSecond;
+								line = new StringBuilder(initSecond);
 								for (int k = 0; k < 5; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
-								line = line + endSecond;
+								line.append(endSecond);
 							}else if (board[i][j].getLevel() == 3){
-								line = initThird;
+								line = new StringBuilder(initThird);
 								for (int k = 0; k < 3; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
-								line = line + endThird;
+								line.append(endThird);
 						}
-						toPrint = toPrint + line;
+						toPrint.append(line);
 					}
-					outputStream.println(toPrint);
+					outputStream.println(toPrint.toString());
 					l++;
 				}
 					else if (l == 3){
-						toPrint="";
+						toPrint = new StringBuilder();
 						for (int j = 0; j < 5; j++){
 							if (board[i][j].getLevel() == 0) {
-								line = initGround;
+								line = new StringBuilder(initGround);
 								for (int k = 0; k < 4; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
 								String center = getBoxCenter(board[i][j]);
-								line = line + center + Color.ANSI_GROUND;
+								line.append(center).append(Color.ANSI_GROUND);
 								for (int k = 0; k < 4; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
-								line = line + endGround;
+								line.append(endGround);
 							} else if (board[i][j].getLevel() == 1) {
-								line = initFirst;
+								line = new StringBuilder(initFirst);
 								for (int k = 0; k < 3; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
 								String center = getBoxCenter(board[i][j]);
-								line = line + center + Color.ANSI_FIRST;
+								line.append(center).append(Color.ANSI_FIRST);
 								for (int k = 0; k < 3; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
-								line = line + endFirst;
+								line.append(endFirst);
 							}else if (board[i][j].getLevel() == 2){
-								line = initSecond;
+								line = new StringBuilder(initSecond);
 								for (int k = 0; k < 2; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
 								String center = getBoxCenter(board[i][j]);
-								line = line + center + Color.ANSI_SECOND;
+								line.append(center).append(Color.ANSI_SECOND);
 								for (int k = 0; k < 2; k++) {
-									line = line + Symbol.UNICODE_SQUARE;
+									line.append(Symbol.UNICODE_SQUARE);
 								}
-								line = line + endSecond;
+								line.append(endSecond);
 							}else if (board[i][j].getLevel() == 3){
-								line = initThird;
-								line = line + Symbol.UNICODE_SQUARE;
+								line = new StringBuilder(initThird);
+								line.append(Symbol.UNICODE_SQUARE);
 								String center = getBoxCenter(board[i][j]);
-								line = line + center + Color.ANSI_THIRD;
-								line = line + Symbol.UNICODE_SQUARE;
-								line = line + endThird;
+								line.append(center).append(Color.ANSI_THIRD);
+								line.append(Symbol.UNICODE_SQUARE);
+								line.append(endThird);
 							}
-							toPrint = toPrint + line;
+							toPrint.append(line);
 						}
-						outputStream.println(toPrint);
+						outputStream.println(toPrint.toString());
 						l++;
 				}
 				}
@@ -355,9 +353,11 @@
 		 * asks coordinates which player wants to move
 		 * @return destination box
 		 */
-		public Box acquireCoordinates() {
+		public void acquireCoordinates() {
 
-			boolean loopX = true;
+			//TODO: return Box
+
+			/*boolean loopX = true;
 			boolean loopY = true;
 			Integer x = null;
 			Integer y = null;
@@ -390,9 +390,7 @@
 				}
 			}
 
-
-
-			return new Box(x,y);
+			return new Box(x,y);*/
 		}
 
 		/**

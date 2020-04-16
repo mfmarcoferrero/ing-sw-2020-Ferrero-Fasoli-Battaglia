@@ -1,122 +1,129 @@
 package it.polimi.ingsw.PSP54.model;
 
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
 
-/**
- * Classe gestione del gioco
- */
 public class Game {
-    protected Vector<Player> players = new Vector<>();
-    protected Box[][] board = new Box[5][5];
+
+    public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
+    public static String[] colors = {"Blue", "Red", "Yellow"};
+    public final int cardNumber = 5;
+    public final int boardSize = 5;
+    private Vector<Player> players;
+    private Box[][] board;
 
     public Game(){
-    }
 
-    /**
-     * Istanzia un nuovo giocatore
-     * @param name
-     * @param age
-     * @param workerColour
-     */
-    public void newPlayer(String name, int age , String workerColour){
-       Player player = new Player(name, age, workerColour,this);
-       players.add(player);
-       player.setPlayer_index(players.indexOf(player));
-    }
+        players = new Vector<>(2, 1);
+        board = new Box[boardSize][boardSize];
 
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+                board[i][j] = new Box(i, j, 0, false);
 
-    /**
-     * Costruisce la board
-     */
-    public void startGame(){
-        for (int i = 0;i < Box.BOARD_SIZE;i++) {
-            for (int j = 0; j < Box.BOARD_SIZE; j++) {
-                board[i][j] = new Box(i, j);
             }
         }
-    }
-
-    /**
-     * Assegna ad ogni giocatore una carta God in modo casuale
-     */
-    public void godAssignment () {
-        Random randomGenerator = new Random();
-        int num = randomGenerator.nextInt(5) + 1;
-        for (Player p : players){
-            while (godIdCheck(num)){
-                num = randomGenerator.nextInt(5) + 1;
-            }
-            p.setGodID(num);
-            p.setPower();
-        }
-    }
-
-    /**
-     * Controlla se il godId è già stato assegnato a un altro giocatore
-     */
-    public boolean godIdCheck(int num){
-        for (Player p : players){
-            if (num == p.godID){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Metodo per capire il giocatore più giovane
-     * @return indice del giocatore più giovane
-     */
-    public int youngestPlayer(){
-        int min = players.get(0).age, ind = 0;
-        for (int i = 0; i < players.size(); i++){
-            if (players.get(i).age <= min){
-                ind = i;
-            }
-        }
-        return ind;
-    }
-
-    /**
-     * Metodo per ordinare l'ArrayList di giocatori in ordine d'età
-     */
-    public void bubbleSortPlayers (){
-        for (int i = 0; i < players.size() ;i++){
-            boolean flag = false;
-            for (int j = 0; j < players.size() - 1; j++){
-                if(players.get(j).age > players.get(j + 1).age) {
-                    Player provElem = players.get(j);
-                    players.set(j,players.get(j+1));
-                    players.set(j+1,provElem);
-                    flag = true;
-                }
-            }
-            if(!flag) break;
-        }
-        for (int i = 0; i < players.size(); i++){
-            players.get(i).player_index = i;
-        }
-    }
-
-    /**
-     * Metodo per impostare il turno del player
-     * @param index indice del player
-     */
-    public void setTurns(int index) {
-        System.out.println("Turno di: " + players.get(index).getPlayerName());
-        players.get(index).buildToken = 1;
-        players.get(index).moveToken = 1;
-        System.out.println("Hai " + players.get(index).moveToken + " mosse");
-        System.out.println("Puoi costruire " + players.get(index).buildToken + " volte");
     }
 
     public Box[][] getBoard() {
         return board;
     }
 
+    public Box getBox(int x, int y){
+        return board[x][y];
+    }
+
+    /**
+     * Adds a player to the players Vector
+     * @param name the name of the player
+     */
+    public void newPlayer ( String name){
+
+        Player player = new StandardPlayer(name);
+        players.add(player);
+    }
+
+    /**
+     *Sorts elements of players vector depending on players age
+     * @param players the players vector
+     */
+    public void sortPlayers(Vector<Player> players){ //TODO: if player1.age == player2.age => alphabetic order?
+
+        Comparator<Player> comp = new Comparator<Player>(){
+            @Override
+            public int compare(Player o1, Player o2) {
+                int result = 0;
+                if (o1.getAge() < o2.getAge())
+                    result = -1;
+                else if (o1.getAge() > o2.getAge())
+                    result = 1;
+                return result;
+            }
+        };
+
+        Collections.sort(players, comp);
+    }
+
+    public void assignColors(Vector<Player> players){
+
+        int numberOfPlayers = players.capacity();
+
+        for (int i = 0; i < numberOfPlayers; i++) {
+            players.get(i).setColor(colors[i]);
+        }
+    }
+
+    /**
+     *Extract a random god card for each player in the game
+     * @return the array containing the extracted god cards
+     */
+    public int[] extractCards (){
+
+        Random randomSelector = new Random();
+        int numberOfPlayers = players.capacity();
+        ArrayList<Integer> deck = new ArrayList<>();
+        int [] selectedCards = new int[numberOfPlayers];
+
+        for (int i = 0; i < cardNumber; i++) {
+            deck.add(i);
+        }
+
+        Collections.shuffle(deck);
+
+        for (int i = 0; i < selectedCards.length; i++) {
+            selectedCards[i] = deck.get(i);
+        }
+
+        return selectedCards;
+    }
+
+    public String [] nameExtractedCards (int[] extractedCards){
+        String [] cardsNames = new String[extractedCards.length];
+
+        for (int i = 0; i < extractedCards.length; i++) {
+            if (extractedCards[i] == APOLLO) {
+                cardsNames[i] = "Apollo";
+            } else if (extractedCards[i] == ARTEMIS) {
+                cardsNames[i] = "Artemis";
+            } else if (extractedCards[i] == ATHENA) {
+                cardsNames[i] = "Athena";
+            } else if (extractedCards[i] == ATLAS) {
+                cardsNames[i] = "Atlas";
+            } else if (extractedCards[i] == DEMETER) {
+                cardsNames[i] = "Demeter";
+            }
+        }
+
+        return cardsNames;
+    }
+
+    //setters & getters
+
     public Vector<Player> getPlayers() {
         return players;
+    }
+
+    public void setPlayers(Vector<Player> players) {
+        this.players = players;
     }
 
 }

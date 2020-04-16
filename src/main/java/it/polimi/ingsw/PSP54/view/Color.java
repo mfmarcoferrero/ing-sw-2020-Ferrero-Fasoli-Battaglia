@@ -6,7 +6,6 @@ public enum Color {
     ANSI_FIRST("\u001B[38;5;244m"),
     ANSI_SECOND("\u001B[38;5;248m"),
     ANSI_THIRD("\u001B[38;5;252m"),
-    ANSI_BACKGROUND("\u001B[48;5;252m"),
     ANSI_BACKGROUND_RESET("\u001B[48;5;0m"),
     ANSI_DOME("\u001B[38;5;20m"),
     ANSI_RESET("\u001B[0m"),
