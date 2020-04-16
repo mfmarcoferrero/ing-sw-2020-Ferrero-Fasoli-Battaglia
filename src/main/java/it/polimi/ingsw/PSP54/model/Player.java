@@ -166,6 +166,6 @@ public class Player {
 
     @Override
     public String toString (){
-        return "NOME: " + playerName + "GOD ID: " + godID + "INDICE NELL'ARRAY: " + player_index;
+        return "NOME: " + playerName + " GOD ID: " + godID + " INDICE NELL'ARRAY: " + player_index;
     }
 }

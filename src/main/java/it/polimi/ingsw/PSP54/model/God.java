@@ -22,7 +22,7 @@ public abstract class God {
         int deltaX,deltaY;
         deltaX = Math.abs(box1.x - box2.x);
         deltaY = Math.abs(box1.y - box2.y);
-        if (deltaX == 1 || deltaY == 1){
+        if (deltaX <= 1 && deltaY <= 1){
             return true;
         }
         return false;

@@ -35,7 +35,6 @@ public class Game {
                 board[i][j] = new Box(i, j);
             }
         }
-
     }
 
     /**
@@ -81,7 +80,6 @@ public class Game {
 
     /**
      * Metodo per ordinare l'ArrayList di giocatori in ordine d'età
-     * @param val
      */
     public void bubbleSortPlayers (){
         for (int i = 0; i < players.size() ;i++){
@@ -106,11 +104,11 @@ public class Game {
      * @param index indice del player
      */
     public void setTurns(int index) {
-        System.out.println("turno di:" + players.get(index).getPlayerName());
+        System.out.println("Turno di: " + players.get(index).getPlayerName());
         players.get(index).buildToken = 1;
         players.get(index).moveToken = 1;
-        System.out.println("hai" + players.get(index).moveToken + "mosse");
-        System.out.println("puoi costruire" + players.get(index).buildToken + "volte");
+        System.out.println("Hai " + players.get(index).moveToken + " mosse");
+        System.out.println("Puoi costruire " + players.get(index).buildToken + " volte");
     }
 
     public Box[][] getBoard() {
