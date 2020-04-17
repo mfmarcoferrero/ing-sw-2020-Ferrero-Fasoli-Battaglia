@@ -8,65 +8,65 @@ import it.polimi.ingsw.PSP54.model.*;
 import static org.junit.Assert.*;
 
 public class DemeterTest {
-    Player p = new Player("Giovanni",0,null,null);
-    Box box_source,box_dest;
+    Game gameDemo;
+    Box [][] board;
 
     @Before
-    public void setUp() throws Exception {
-        p.setGodID(Player.DEMETER);
-        p.setPower();
-        p.setMoveToken(1);
-        p.setBuildToken(1);
-        box_source = new Box(2,2);
-        box_source.setWorker(p.getWorkerList().get(0));
-        box_dest = new Box(2,1);
+    public void setUp() {
+        gameDemo = new Game();
+        gameDemo.startGame();
+        board = gameDemo.getBoard();
+        gameDemo.newPlayer("Matteo",22,null);
+        gameDemo.getPlayers().get(0).setPower(Player.DEMETER);
+        gameDemo.getPlayers().get(0).setInitialPosition(0,board[2][2]);
     }
 
     @After
     public void tearDown() throws Exception {
-        p = null;
-        box_source = null;
-        box_dest = null;
+        gameDemo = null;
+        board = null;
     }
 
     @Test
     public void validBuilding_doubleBuildingSameBox_buildingSet() throws Exception {
-        p.build(0,box_dest,false);
-        p.build(0,box_dest,false);
-        assertEquals(box_dest.getLevel(),2);
+        gameDemo.setTurns(0);
+        gameDemo.getPlayers().get(0).build(0,board[2][3],false);
+        gameDemo.getPlayers().get(0).build(0,board[2][3],false);
+        assertEquals(board[2][3].getLevel(),2);
     }
 
     @Test
     public void validBuilding_doubleBuildingDifferentBox_buildingSet() throws Exception {
-        Box box_dest_2 = new Box(3,3);
-        p.build(0,box_dest,false);
-        p.build(0,box_dest_2,false);
-        assertEquals(box_dest.getLevel(),1);
-        assertEquals(box_dest_2.getLevel(),1);
+        gameDemo.setTurns(0);
+        gameDemo.getPlayers().get(0).build(0,board[2][3],false);
+        gameDemo.getPlayers().get(0).build(0,board[3][2],false);
+        assertEquals(board[2][3].getLevel(),1);
+        assertEquals(board[3][2].getLevel(),1);
     }
 
     @Test
     public void validBuilding_differentWorkerChoose_throwsInvalidBuildingException() throws Exception {
-        Box box_source_worker1 = new Box(0,0);
-        box_source_worker1.setWorker(p.getWorkerList().get(1));
+        gameDemo.setTurns(0);
+        gameDemo.getPlayers().get(0).setInitialPosition(1,board[0][0]);
         try {
-            p.build(0,box_dest,false);
-            p.build(1,new Box(1,1),false);
+            gameDemo.getPlayers().get(0).build(0,board[2][3],false);
+            gameDemo.getPlayers().get(0).build(1,board[0][1],false);
         }
-        catch (InvalidBuildingException e ){
+        catch (InvalidBuildingException e){
             assertTrue(true); ;
         }
     }
 
     @Test
     public void validBuilding_boxCompleted_throwsInvalidBuildingException() throws Exception {
+        gameDemo.setTurns(0);
         try {
-            box_dest.setLevel(3);
-            p.build(0,box_dest,false);
-            p.build(0,box_dest,false);
+            board[2][3].setLevel(3);
+            gameDemo.getPlayers().get(0).build(0,board[2][3],false);
+            gameDemo.getPlayers().get(0).build(0,board[2][3],false);
         }
         catch (InvalidBuildingException e ){
-            assertTrue(true); ;
+            assertTrue(true);
         }
     }
 }

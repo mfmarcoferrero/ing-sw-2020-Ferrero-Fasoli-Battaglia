@@ -10,13 +10,16 @@ import static org.junit.Assert.*;
 public class GodTest {
     Player p = new Player(null,0,null,null);
     Box box_source,box_dest;
+    Game gameDemo;
+    Box [][]board;
 
     @Before
     public void setUp() throws Exception {
+        gameDemo = new Game();
+        board = gameDemo.getBoard();
         box_source = new Box(2,2);
         box_dest = new Box(2,1);
-        p.setGodID(Player.NORMAL_POWER);
-        p.setPower();
+        p.setPower(Player.NORMAL_POWER);
         p.setMoveToken(1);
         p.setBuildToken(1);
     }
@@ -64,5 +67,18 @@ public class GodTest {
         box_dest.setWorker(new Worker(null,null,0));
         box_dest.setLevel(1);
         assertFalse(p.power.normalValidMove(box_source,box_dest));
+    }
+
+    @Test
+    public void normalValidMove_backOnPreviousBox_moveAllowed() throws Exception {
+        gameDemo.startGame();
+        gameDemo.newPlayer("Matteo",22,null);
+        gameDemo.getPlayers().get(0).setPower(Player.NORMAL_POWER);
+        gameDemo.getPlayers().get(0).setInitialPosition(0,board[2][2]);
+        gameDemo.setTurns(0);
+        gameDemo.getPlayers().get(0).move(0,board[2][3]);
+        gameDemo.setTurns(0);
+        gameDemo.getPlayers().get(0).move(0,board[2][2]);
+        assertTrue(gameDemo.getPlayers().get(0).getWorkerList().get(0).pos == board[2][2]);
     }
 }

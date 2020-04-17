@@ -55,9 +55,13 @@ public class Worker {
         return male;
     }
 
+    public void setPos(Box pos) {
+        this.pos = pos;
+    }
+
     @Override
     public String toString(){
-        return "Sono il worker con ID " + workerID;
+        return "ID: " + workerID + " PLAYER: " + owner.getPlayerName();
     }
 }
 

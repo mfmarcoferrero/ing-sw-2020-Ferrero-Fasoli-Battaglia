@@ -20,8 +20,7 @@ public class WorkerTest {
         gameDemo.startGame();
         board = gameDemo.getBoard();
         gameDemo.newPlayer("Matteo",0,null);
-        gameDemo.getPlayers().get(0).setGodID(Player.NORMAL_POWER);
-        gameDemo.getPlayers().get(0).setPower();
+        gameDemo.getPlayers().get(0).setPower(Player.NORMAL_POWER);
         gameDemo.getPlayers().get(0).setInitialPosition(0,board[2][2]);
     }
 

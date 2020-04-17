@@ -12,6 +12,14 @@ public abstract class God {
     public abstract boolean validBuilding (Box source, Box dest, boolean setDome);
     public abstract boolean validMove (Box source, Box dest);
 
+
+    public void moveWorker(Worker worker, Box dest){
+        Box source = worker.pos;
+        dest.setWorker(worker);
+        worker.setPos(dest);
+        source.setWorker(null);
+    }
+
     /**
      * Metodo per la verifica di caselle adiacenti
      * @param box1

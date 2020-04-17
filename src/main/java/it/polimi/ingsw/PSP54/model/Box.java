@@ -28,7 +28,6 @@ public class Box {
      */
     public void setWorker(Worker worker) {
             this.worker = worker;
-            worker.pos = this;
     }
 
     /**

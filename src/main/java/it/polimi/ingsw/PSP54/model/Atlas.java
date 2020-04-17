@@ -18,7 +18,7 @@ public class Atlas extends God {
         if (setDome == false){
             return normalValidBuilding(source,dest);
         }
-        else if (setDome && adjacentBoxes(source,dest) && !(dest.isOccupied()) && !(dest.isDome())){
+        else if (setDome && adjacentBoxes(source,dest) && !(dest.isOccupied()) && !(dest.isDome()) && player.buildToken == 1){
             return true;
         }
         else

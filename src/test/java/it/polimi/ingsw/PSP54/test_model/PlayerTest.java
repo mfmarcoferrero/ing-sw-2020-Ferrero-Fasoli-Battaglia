@@ -17,8 +17,7 @@ public class PlayerTest {
     public void setUp() throws Exception {
         p.setBuildToken(1);
         p.setMoveToken(1);
-        p.setGodID(Player.NORMAL_POWER);
-        p.setPower();
+        p.setPower(Player.NORMAL_POWER);
     }
 
     @After

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.PSP54.test_model;
 
 import it.polimi.ingsw.PSP54.model.Box;
+import it.polimi.ingsw.PSP54.model.Game;
 import it.polimi.ingsw.PSP54.model.InvalidMoveException;
 import it.polimi.ingsw.PSP54.model.Player;
 import org.junit.After;
@@ -12,40 +13,56 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ArtemisTest {
-    Player p = new Player("Giovanni",0,null,null);
-    Box box_source,box_dest;
+    Game gameDemo;
+    Box [][] board;
 
     @Before
     public void setUp() {
-        p.setGodID(Player.ARTEMIS);
-        p.setPower();
-        p.setMoveToken(1);
-        p.setBuildToken(1);
-        box_source = new Box(2,2);
-        box_source.setWorker(p.getWorkerList().get(0));
-        box_dest = new Box(2,1);
+        gameDemo = new Game();
+        gameDemo.startGame();
+        board = gameDemo.getBoard();
+        gameDemo.newPlayer("Marco",22,null);
+        gameDemo.getPlayers().get(0).setPower(Player.ARTEMIS);
+        gameDemo.getPlayers().get(0).setInitialPosition(0,board[2][2]);
     }
 
     @After
     public void tearDown() {
-        p = null;
-        box_dest = null;
+        gameDemo = null;
+        board = null;
     }
 
     @Test
-    public void specialValidMove_doubleMove_correctMove() throws InvalidMoveException {
-        p.move(0,box_dest);
-        Box box_dest_2 = new Box(2,0);
-        p.move(0,box_dest_2);
-        assertEquals(p.getWorkerList().get(0).pos, box_dest_2);
+    public void validMove_doubleMove_correctMove() throws InvalidMoveException {
+        gameDemo.setTurns(0);
+        gameDemo.getPlayers().get(0).move(0,board[2][3]);
+        gameDemo.getPlayers().get(0).move(0,board[2][4]);
+        assertTrue(gameDemo.getPlayers().get(0).getWorkerList().get(0).pos == board[2][4]);
     }
 
     @Test
-    public void specialValidMove_inCorrectInput_inCorrectOutput() {
-        box_source.setX(0);
-        box_source.setY(0);
-        box_dest.setX(0);
-        box_dest.setY(4);
-        assertFalse(p.power.validMove(box_source,box_dest));
+    public void validMove_doubleMoveBackInPreviousBox_notAllowed() throws Exception {
+        gameDemo.setTurns(0);
+        gameDemo.getPlayers().get(0).move(0,board[2][3]);
+        try{
+            gameDemo.getPlayers().get(0).move(0,board[2][2]);
+        } catch (InvalidMoveException e){
+            assertTrue(true);
+        }
     }
+
+    @Test
+    public void validMove_doubleMoveWithDifferentWorker_notAllowed() throws Exception {
+        gameDemo.setTurns(0);
+        gameDemo.getPlayers().get(0).setInitialPosition(1,board[0][0]);
+        gameDemo.getPlayers().get(0).move(0,board[2][3]);
+        try{
+            gameDemo.getPlayers().get(0).move(1,board[1][1]);
+        } catch (InvalidMoveException e){
+            assertTrue(true);
+        }
+    }
+
+
+
 }
