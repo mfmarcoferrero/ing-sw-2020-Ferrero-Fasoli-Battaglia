@@ -14,67 +14,20 @@ public class StandardPlayer implements Player {
     private String playerName;
     private int age;
     private String color;
-    private Worker[] workers = new Worker[2];
+    private final Worker[] workers = new Worker[2];
     private boolean winner;
     private boolean loser;
 
+    /**
+     * Instantiates a new Player with corresponding workers
+     * @param playerName the name of the Player
+     */
     public StandardPlayer(String playerName) {
         this.playerName = playerName;
         this.workers[0] = new Worker(true, this, null);
         this.workers[1] = new Worker(false, this, null);
         this.winner = false;
         this.loser = false;
-    }
-
-
-    /**
-     * Set standard available boxes for the worker to build
-     * @param worker current worker in use
-     * @return the vector containing buildable boxes
-     */
-    @Override
-    public Vector setWorkerBoxesToBuild (Worker worker){
-
-        Vector<Box> boxes = new Vector<>(1, 1); //TODO: optimize
-        int deltaX, deltaY;
-        Box[][] board = getGame().getBoard();
-
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());
-                deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
-                if ((deltaX == 1 || deltaY == 1) && !board[i][j].isOccupied() && !board[i][j].isDome())
-                    boxes.add(board[i][j]);
-            }
-        }
-
-        worker.setBoxesToBuild(boxes);
-        return boxes;
-    }
-
-    /**
-     * Sets standard available boxes for the worker to move
-     * @param worker current worker in use
-     * @return the vector containing available boxes
-     */
-    @Override
-    public Vector setWorkerBoxesToMove (Worker worker){
-
-        Vector<Box> boxes = new Vector<>(1, 1); //TODO: optimize
-        int deltaX, deltaY, deltaH;
-        Box[][] board = getGame().getBoard();
-
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());
-                deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
-                deltaH =  (board[i][j].getLevel() - worker.getPos().getLevel());
-                if ((deltaX == 1 || deltaY ==1) && deltaH == 1 && !board[i][j].isOccupied() && !board[i][j].isDome())
-                    boxes.add(board[i][j]);
-            }
-        }
-        worker.setBoxesToMove(boxes);
-        return boxes;
     }
 
     /**
@@ -114,18 +67,16 @@ public class StandardPlayer implements Player {
      * @return the chosen worker
      */
     @Override
-    public Worker choseWorker(Boolean male) { //TODO: male acquisition performed by Controller
-
+    public Worker choseWorker(Boolean male) {
 
         if (male)
             return this.workers[0];
         else
             return this.workers[1];
-
     }
 
     /**
-     *Initialize current player's turn
+     *Initialize current player's turn by setting worker's action tokens
      * @param male represent the sex of the worker which the player is going to use
      * @return the chosen worker with updated tokens
      */
@@ -139,13 +90,63 @@ public class StandardPlayer implements Player {
     }
 
     /**
+     * Sets standard available boxes for the worker to move
+     * @param worker current worker in use
+     * @return the vector containing available boxes
+     */
+    @Override
+    public Vector<Box> setWorkerBoxesToMove (Worker worker){
+
+        Vector<Box> boxes = new Vector<>(1, 1); //TODO: optimize || ArrayList?
+        int deltaX, deltaY, deltaH;
+        Box[][] board = getGame().getBoard();
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());
+                deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
+                deltaH =  (board[i][j].getLevel() - worker.getPos().getLevel());
+                if ((deltaX == 1 || deltaY ==1) && deltaH == 1 && !board[i][j].isOccupied() && !board[i][j].isDome())
+                    boxes.add(board[i][j]);
+            }
+        }
+        worker.setBoxesToMove(boxes);
+        return boxes;
+    }
+
+    /**
+     * Set standard available boxes for the worker to build and stores them in worker's attribute
+     * @param worker current worker in use
+     * @return the vector containing buildable boxes
+     */
+    @Override
+    public Vector<Box> setWorkerBoxesToBuild (Worker worker){
+
+        Vector<Box> boxes = new Vector<>(1, 1); //TODO: optimize
+        int deltaX, deltaY;
+        Box[][] board = getGame().getBoard();
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());
+                deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
+                if ((deltaX == 1 || deltaY == 1) && !board[i][j].isOccupied() && !board[i][j].isDome())
+                    boxes.add(board[i][j]);
+            }
+        }
+
+        worker.setBoxesToBuild(boxes);
+        return boxes;
+    }
+
+    /**
      * Standard move action
      * @param worker selected worker which the player wants to move
      * @param dest selected destination box
      * @throws InvalidMoveException if the move can't be done
      */
     @Override
-    public void move(Worker worker, Box dest) throws InvalidMoveException{ //TODO: throw incorrect move exception
+    public void move(Worker worker, Box dest) throws InvalidMoveException{
 
         Vector<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
@@ -168,7 +169,7 @@ public class StandardPlayer implements Player {
      * @param dest selected box where to build
      */
     @Override
-    public void build (Worker worker, Box dest){ //TODO: throw incorrect building exception
+    public void build (Worker worker, Box dest){
 
         Vector<Box> valid = worker.getBoxesToBuild();
         int currentMoveToken = worker.getMoveToken();
@@ -200,11 +201,15 @@ public class StandardPlayer implements Player {
 
     //setters & getters
 
+    /**
+     * Creates a reference to the current Game, in order to access board's and other players' info
+     * @param game the current Game
+     */
     @Override
-    public void setGame(Game game) {
+    public void setGame(Game game) { //it has to be invoked by Controller or Game class
 
         this.game = game;
-    } //TODO: player.game has to be a reference to the game the player is actually playing, so it needs to be invoked by Game or by Controller
+    }
 
     @Override
     public Game getGame() {

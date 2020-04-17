@@ -29,7 +29,7 @@ public class ApolloDecorator extends GodDecorator {
      * @return the vector containing available boxes
      */
     @Override
-    public Vector setWorkerBoxesToMove (Worker worker){
+    public Vector<Box> setWorkerBoxesToMove (Worker worker){
 
         Vector<Box> boxes = new Vector<>(1, 1);
         int deltaX, deltaY, deltaH;

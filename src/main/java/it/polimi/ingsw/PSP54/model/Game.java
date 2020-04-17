@@ -5,11 +5,11 @@ import java.util.*;
 public class Game {
 
     public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
-    public static String[] colors = {"Blue", "Red", "Yellow"};
+    public static final String[] colors = {"blue", "red", "yellow"};
     public final int cardNumber = 5;
     public final int boardSize = 5;
     private Vector<Player> players;
-    private Box[][] board;
+    private final Box[][] board;
 
     public Game(){
 
@@ -22,14 +22,6 @@ public class Game {
 
             }
         }
-    }
-
-    public Box[][] getBoard() {
-        return board;
-    }
-
-    public Box getBox(int x, int y){
-        return board[x][y];
     }
 
     /**
@@ -63,6 +55,10 @@ public class Game {
         Collections.sort(players, comp);
     }
 
+    /**
+     * Sets the color of the players' workers according to the order: first player is blue, second is red, third is yellow
+     * @param players the players Vector
+     */
     public void assignColors(Vector<Player> players){
 
         int numberOfPlayers = players.capacity();
@@ -73,12 +69,11 @@ public class Game {
     }
 
     /**
-     *Extract a random god card for each player in the game
+     *Extract an unique random god card for each player in the game
      * @return the array containing the extracted god cards
      */
     public int[] extractCards (){
 
-        Random randomSelector = new Random();
         int numberOfPlayers = players.capacity();
         ArrayList<Integer> deck = new ArrayList<>();
         int [] selectedCards = new int[numberOfPlayers];
@@ -96,6 +91,11 @@ public class Game {
         return selectedCards;
     }
 
+    /**
+     *Associates cards ID with the cards name
+     * @param extractedCards the array containing extracted cards for the game
+     * @return an array of String containing the names of extracted cards
+     */
     public String [] nameExtractedCards (int[] extractedCards){
         String [] cardsNames = new String[extractedCards.length];
 
@@ -124,6 +124,14 @@ public class Game {
 
     public void setPlayers(Vector<Player> players) {
         this.players = players;
+    }
+
+    public Box[][] getBoard() {
+        return board;
+    }
+
+    public Box getBox(int x, int y){
+        return board[x][y];
     }
 
 }

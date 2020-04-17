@@ -5,8 +5,8 @@ import java.util.Vector;
 //TODO: Test
 public class AthenaDecorator extends GodDecorator{
 
-    boolean movedUp; //settled on the previous turn
-    int[] playersPowers = new int[3];
+    private boolean movedUp; //settled on the previous turn
+    private final int[] playersPowers = new int[3];
 
     public AthenaDecorator(Player player) {
         super(player);

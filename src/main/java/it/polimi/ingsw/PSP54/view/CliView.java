@@ -20,23 +20,22 @@
 			if(box.isDome())
 				string = string + Color.ANSI_DOME + Symbol.UNICODE_DOME;
 
-			//TODO: define Worker colors and add an attribute in the Worker class containing them
 			else if(box.getWorker() != null) {
 				switch (box.getWorker().getOwner().getColor()) {
-					case "BLUE":
+					case "blue":
 						if (box.getWorker().getMale())
 							string = string + Color.ANSI_P1 + Symbol.UNICODE_MALE_WORKER;
 						else
 							string = string + Color.ANSI_P1 + Symbol.UNICODE_FEMALE_WORKER;
 						break;
-					case "RED":
+					case "red":
 						if (box.getWorker().getMale())
 							string = string + Color.ANSI_P2 + Symbol.UNICODE_MALE_WORKER;
 						else
 							string = string + Color.ANSI_P2 + Symbol.UNICODE_FEMALE_WORKER;
 
 						break;
-					case "YELLOW":
+					case "yellow":
 						if (box.getWorker().getMale())
 							string = string + Color.ANSI_P3 + Symbol.UNICODE_MALE_WORKER;
 						else

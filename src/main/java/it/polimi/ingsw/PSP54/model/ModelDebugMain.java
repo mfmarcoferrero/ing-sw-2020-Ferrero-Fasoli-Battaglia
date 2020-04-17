@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP54.model;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class ModelTestMain {
+public class ModelDebugMain {
 
     public static void main(String[] args){
 

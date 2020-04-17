@@ -2,6 +2,9 @@ package it.polimi.ingsw.PSP54.model;
 
 import java.util.Vector;
 
+/**
+ * Abstract decorator class that delegates all methods
+ */
 public abstract class GodDecorator implements Player {
 
     private final Player playerToDecorate;
@@ -16,12 +19,12 @@ public abstract class GodDecorator implements Player {
     }
 
     @Override
-    public Vector setWorkerBoxesToMove(Worker worker) {
+    public Vector<Box> setWorkerBoxesToMove(Worker worker) {
         return playerToDecorate.setWorkerBoxesToMove(worker);
     }
 
     @Override
-    public Vector setWorkerBoxesToBuild(Worker worker) {
+    public Vector<Box> setWorkerBoxesToBuild(Worker worker) {
         return playerToDecorate.setWorkerBoxesToBuild(worker);
     }
 

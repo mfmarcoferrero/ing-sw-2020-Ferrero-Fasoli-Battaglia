@@ -18,13 +18,13 @@ public class AthenaSideEffectDecorator extends GodDecorator {
 
     //TODO: JavaDoc
     @Override
-    public Vector setWorkerBoxesToMove(Worker worker) {
+    public Vector<Box> setWorkerBoxesToMove(Worker worker) {
 
         //get standard vector
-        Vector<Box> def = new Vector<>();
-                def = super.setWorkerBoxesToMove(worker);
+        Vector<Box> def = super.setWorkerBoxesToMove(worker);
 
-        for (int i = 0; i < def.capacity(); i++) { //affects the vector
+        //affects the vector
+        for (int i = 0; i < def.capacity(); i++) { //TODO: use Iterator
             if (def.get(i).getLevel() == worker.getPos().getLevel()+1)
                 def.remove(i);
         }

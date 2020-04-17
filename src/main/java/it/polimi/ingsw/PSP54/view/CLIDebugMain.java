@@ -1,9 +1,9 @@
-package it.polimi.ingsw.PSP54;
+package it.polimi.ingsw.PSP54.view;
 
 import it.polimi.ingsw.PSP54.view.*;
 import it.polimi.ingsw.PSP54.model.*;
 
-public class TestMain {
+public class CLIDebugMain {
 
     public static void main ( String [] args){
 
