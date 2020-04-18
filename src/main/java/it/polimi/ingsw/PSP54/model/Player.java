@@ -78,7 +78,6 @@ public class Player {
 
     /**
      * Metodo per la posizione del worker all'inizio del gioco
-     * @param numWorker indice dell'operaio da spostare
      * @param dest casella di destinazione
      */
     public void setInitialPosition (int ind_worker, Box dest) {
@@ -87,7 +86,6 @@ public class Player {
 
     /**
      * Metodo per decidere quale strategy utilizzare
-     * @param godID
      */
     public void setPower() {
         if (this.godID == NORMAL_POWER){
