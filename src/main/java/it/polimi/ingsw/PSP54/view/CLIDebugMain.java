@@ -1,9 +1,7 @@
 package it.polimi.ingsw.PSP54.view;
 
 import it.polimi.ingsw.PSP54.model.Game;
-import it.polimi.ingsw.PSP54.view.CliView;
 
-import java.util.Random;
 
 public class CLIDebugMain {
 
@@ -11,12 +9,12 @@ public class CLIDebugMain {
 
         CliView view = new CliView();
         Game game = new Game();
-
         game.startGame();
+        int levels = view.acquireLevel();
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                game.getBoard()[i][j].setLevel(3);
+                game.getBoard()[i][j].setLevel(levels);
                 game.getBoard()[i][j].setDome(false);
             }
         }

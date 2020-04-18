@@ -3,7 +3,6 @@
 	import it.polimi.ingsw.PSP54.model.Box;
 
 	import java.io.PrintStream;
-	import java.util.InputMismatchException;
 	import java.util.Scanner;
 
 	public class CliView {
@@ -260,23 +259,24 @@
 		}
 
 		/**
-		 *asks the age of the player until input is an integer
+		 *asks the age of the player until input is a valid integer
 		 * @return player age
 		 */
 		public int acquireAge(){
 
 			boolean loop = true;
-			Integer playerAge = null;
+			int playerAge = 0;
 
+			outputStream.println("Enter your age:");
 			while (loop) {
-				outputStream.println("Enter your age:");
+				String age = scanner.next();
 				try{
-					playerAge = scanner.nextInt();
+					playerAge = Integer.parseInt(age);
 					if (playerAge > 0 && playerAge < 100)
 						loop = false;
 					else
 						outputStream.println("Incorrect Input!");
-				}catch (InputMismatchException e){
+				}catch (IllegalArgumentException e){
 					outputStream.println("Incorrect input!");
 				}
 			}
@@ -285,16 +285,14 @@
 		}
 
 		/**
-		 * asks the name of the player until input is a string
-		 * @return player name
+		 * asks the username of the player
+		 * @return the player name
 		 */
 
 		public String acquireName(){
 
 			outputStream.println("Enter your name:");
-			String playerName = scanner.next();
-
-			return playerName;
+			return scanner.next();
 		}
 
 		/**
@@ -341,11 +339,10 @@
 
 		/**
 		 * asks coordinates which player wants to move
-		 * @return destination box
+		 * @return an array containing the selected coordinates
 		 */
 		public int[] acquireCoordinates() {
 
-			boolean loopX = true;
 			boolean loopY = true;
 			int x = 0;
 			int y = 0;
@@ -353,44 +350,40 @@
 
 			outputStream.println("Set cell coordinates");
 			//set x
-			while (loopX) {
-				outputStream.println("Enter x:");
-				try{
-					x = scanner.nextInt();
-					if (0<x && x<6)
-						loopX = false;
-					else
-						outputStream.println("Incorrect Coordinates! [x must be 1<=x<=5]");
-				}catch (InputMismatchException e){
-					outputStream.println("Incorrect input!");
-				}
-			}
+			outputStream.println("Enter x:");
+			x = getCoordinate( x);
 			//set y
-			while (loopY) {
-				outputStream.println("Enter y:");
-				try {
-					y = scanner.nextInt();
-					if (y>0 && y<6)
-						loopY = false;
-					else
-						outputStream.println("Incorrect Coordinates! [y must be 1<=y<=5]");
-				} catch (InputMismatchException e) {
-					outputStream.println("Incorrect input!");
-				}
-			}
+			outputStream.println("Enter y:");
+			y = getCoordinate(y);
 
 			coordinates[0] = x;
 			coordinates[1] = y;
 
-
 			return coordinates;
+		}
+
+		private int getCoordinate(int k) {
+			boolean loop = true;
+			while (loop) {
+				String component  = scanner.next();
+				try{
+					k = Integer.parseInt(component);
+					if (0<k && k<6)
+						loop = false;
+					else
+						outputStream.println("Incorrect Input!");
+				}catch (IllegalArgumentException e){
+					outputStream.println("Incorrect input!");
+				}
+			}
+			return k-1; //return coordinate translated to array index
 		}
 
 		/**
 		 *asks player which level he wants to build
 		 * @return the acquired level
 		 */
-		public int acquireLevel(){
+		public int acquireLevel(){ //TODO:level = 4 handling
 
 			Integer level = null;
 			boolean loop = true;
@@ -405,7 +398,7 @@
 					if (level>0 && level<4)
 						loop = false;
 					else
-						outputStream.println("Incorrect Level! [level bust be 1<=level<=3");
+						outputStream.println("Incorrect Level! [level bust be 1<=level<=3]");
 				}catch (IllegalArgumentException e){
 					if (tempLev.equals("d")) {
 						level = 4;
