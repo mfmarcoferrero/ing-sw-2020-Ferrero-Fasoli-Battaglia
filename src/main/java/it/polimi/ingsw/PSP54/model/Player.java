@@ -36,10 +36,6 @@ public class Player {
         return workerList;
     }
 
-    public void setGodID(int godID) {
-        this.godID = godID;
-    }
-
     public String getPlayerName() {
         return playerName;
     }
@@ -78,16 +74,21 @@ public class Player {
 
     /**
      * Metodo per la posizione del worker all'inizio del gioco
+     * @param ind_worker indice dell'operaio da spostare
      * @param dest casella di destinazione
      */
     public void setInitialPosition (int ind_worker, Box dest) {
+        workerList.get(ind_worker).setPos(dest);
         dest.setWorker(workerList.get(ind_worker));
     }
 
     /**
      * Metodo per decidere quale strategy utilizzare
+     * @param godID
      */
-    public void setPower() {
+    public void setPower(int godID) {
+        this.godID = godID;
+
         if (this.godID == NORMAL_POWER){
             this.power = new NormalPower(this);
         } else if (this.godID == APOLLO) {
@@ -111,8 +112,9 @@ public class Player {
      * @throws InvalidMoveException se la mossa non è valida
      */
     public void move(int worker_ind, Box dest) throws InvalidMoveException {
-        if (power.validMove(workerList.get(worker_ind).pos, dest)) {
-            dest.setWorker(getWorkerList().get(worker_ind));
+        Worker w = getWorkerList().get(worker_ind);
+        if (power.validMove(w.pos, dest)) {
+            power.moveWorker(w,dest);
             moveToken--;
         }
         else

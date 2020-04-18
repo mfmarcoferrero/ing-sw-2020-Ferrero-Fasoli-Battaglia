@@ -21,9 +21,10 @@ public class Apollo extends God {
             return false;
         }
         if (normalValidBuilding(source,dest)){
+            source.setWorker(null);
             return true;
         }
-        else if(adjacentBoxes(source,dest) && (deltaLevel <= 1) && (dest.isOccupied()) && (!dest.isDome())){
+        else if(adjacentBoxes(source,dest) && (deltaLevel <= 1) && (dest.isOccupied()) && (!dest.isDome()) && player.moveToken == 1){
             source.setWorker(dest.worker);
             return true;
         }
@@ -40,4 +41,11 @@ public class Apollo extends God {
     public boolean validBuilding(Box source, Box dest, boolean setDome) {
         return normalValidBuilding(source,dest);
     }
+
+    @Override
+    public void moveWorker (Worker worker, Box dest) {
+        dest.setWorker(worker);
+        worker.setPos(dest);
+    }
+
 }

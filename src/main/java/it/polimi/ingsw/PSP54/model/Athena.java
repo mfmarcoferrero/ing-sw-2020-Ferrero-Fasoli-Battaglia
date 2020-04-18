@@ -34,12 +34,14 @@ public  class Athena extends God {
                     }
                 }
             }
-            else
+            else {
                 for (Player p : player.game.players) {
-                    if (p.getGodID() != Player.ATHENA){
+                    if (p.getGodID() != Player.ATHENA) {
                         p.power.setCanMoveUp(true);
                     }
                 }
+            }
+            source.worker = null;
             return true;
         }
         else

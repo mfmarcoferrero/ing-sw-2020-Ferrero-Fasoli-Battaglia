@@ -47,8 +47,7 @@ public class Game {
             while (godIdCheck(num)){
                 num = randomGenerator.nextInt(5) + 1;
             }
-            p.setGodID(num);
-            p.setPower();
+            p.setPower(num);
         }
     }
 
@@ -109,6 +108,7 @@ public class Game {
         players.get(index).moveToken = 1;
         System.out.println("Hai " + players.get(index).moveToken + " mosse");
         System.out.println("Puoi costruire " + players.get(index).buildToken + " volte");
+        System.out.println("---------------------------------------");
     }
 
     public Box[][] getBoard() {

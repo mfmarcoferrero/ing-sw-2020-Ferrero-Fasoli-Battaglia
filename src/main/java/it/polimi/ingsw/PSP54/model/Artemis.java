@@ -30,12 +30,12 @@ public class Artemis extends God {
     public boolean validMove(Box source, Box dest) {
         int deltaLevel = Math.abs(dest.level - source.level);
         int deltaLevelUp = dest.level - source.level;
-        if(normalValidMove(source,dest)){
+        if (normalValidMove(source,dest)){
             firstSource = source;
-            firstWorkerMoved = source.worker;
+            firstWorkerMoved = source.getWorker();
             return true;
         }
-        else if (adjacentBoxes(source,dest) && (deltaLevel <= 1) && (!dest.isOccupied()) && (!dest.isDome()) && player.moveToken == 0 && firstSource != source && firstWorkerMoved == source.worker){
+        else if (adjacentBoxes(source,dest) && (deltaLevel <= 1) && (!dest.isOccupied()) && (!dest.isDome()) && player.moveToken == 0 && firstSource != dest && firstWorkerMoved == source.worker){
             if (this.isCanMoveUp() == false && deltaLevelUp > 0){
                 return false;
             }
