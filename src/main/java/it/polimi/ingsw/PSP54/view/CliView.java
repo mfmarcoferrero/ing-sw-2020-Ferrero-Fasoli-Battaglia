@@ -16,19 +16,38 @@
 		 * @return the String containing ANSI/UNICODE codes representing the Dome, the Workers or the level of the current box
 		 */
 		private String getBoxCenter(Box box){
+
+			String background = null;
 			String string = "";
+
+			switch (box.getLevel()){
+				case 0 :
+					background = Color.ANSI_GROUND_BACKGROUND.toString();
+					break;
+				case 1 :
+					background = Color.ANSI_FIRST_BACKGROUND.toString();
+					break;
+				case 2 :
+					background = Color.ANSI_SECOND_BACKGROUND.toString();
+					break;
+				case 3 :
+					background = Color.ANSI_THIRD_BACKGROUND.toString();
+					break;
+
+			}
 
 			if(box.isDome())
 				string = string + Color.ANSI_DOME + Symbol.UNICODE_DOME;
 
 			//TODO: colors need to be final and settled in Game class according to players' order
+			//TODO: workers' array needs to be setted final and attribute male needs to be setted wen creating a new player
 			else if(box.getWorker() != null) {
 				switch (box.getWorker().getColor()) {
 					case "blue":
 						if (box.getWorker().isMale())
-							string = string + Color.ANSI_P1 + Symbol.UNICODE_MALE_WORKER;
+							string = string + background + Color.ANSI_P1 + Symbol.UNICODE_MALE_WORKER;
 						else
-							string = string + Color.ANSI_P1 + Symbol.UNICODE_FEMALE_WORKER;
+							string = string + background + Color.ANSI_P1 + Symbol.UNICODE_FEMALE_WORKER;
 						break;
 					case "red":
 						if (box.getWorker().isMale())
@@ -49,6 +68,8 @@
 				string = Symbol.UNICODE_SQUARE.toString();
 			return string;
 		}
+
+
 
 		/**
 		 * Prints the ground line of every box in the same line of the board
@@ -80,26 +101,26 @@
 			StringBuilder toPrint;
 
 			//String containing upper border
-			String upperBorder = Color.ANSI_BORDER + "____________________________________________________________________________________________________";
+			String upperBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "____________________________________________________________________________________________________";
 
 			//String containing lower border
-			String lowerBorder = Color.ANSI_BORDER + "⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺";
+			String lowerBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺";
 
 			//String containing middle border
-			String middleBorder = Color.ANSI_BORDER + "----------------------------------------------------------------------------------------------------";
+			String middleBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "----------------------------------------------------------------------------------------------------";
 
-			//Strings containing beginning/end of lines, it contains border and blocks with
-			String initGround = Color.ANSI_BORDER + "|" + Color.ANSI_GROUND;
-			String endGround = Color.ANSI_BORDER + "|";
+			//Strings containing beginning/end of lines, it contains border and blocks with corresponding colors
+			String initGround = Color.ANSI_BORDER + "|" + Color.ANSI_GROUND_BACKGROUND + Color.ANSI_GROUND;
+			String endGround = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "|";
 
-			String initFirst = initGround + Symbol.UNICODE_SQUARE + Color.ANSI_FIRST;
-			String endFirst = Color.ANSI_GROUND.toString() + Symbol.UNICODE_SQUARE + endGround;
+			String initFirst = initGround + Symbol.UNICODE_SQUARE + Color.ANSI_FIRST_BACKGROUND + Color.ANSI_FIRST ;
+			String endFirst = Color.ANSI_GROUND_BACKGROUND.toString() + Color.ANSI_GROUND.toString() + Symbol.UNICODE_SQUARE + endGround;
 
-			String initSecond = initFirst + Symbol.UNICODE_SQUARE + Color.ANSI_SECOND;
-			String endSecond = Color.ANSI_FIRST.toString() + Symbol.UNICODE_SQUARE + endFirst;
+			String initSecond = initFirst + Symbol.UNICODE_SQUARE + Color.ANSI_SECOND_BACKGROUND + Color.ANSI_SECOND;
+			String endSecond = Color.ANSI_FIRST_BACKGROUND.toString() + Color.ANSI_FIRST.toString() + Symbol.UNICODE_SQUARE + endFirst;
 
-			String initThird = initSecond + Symbol.UNICODE_SQUARE + Color.ANSI_THIRD;
-			String endThird = Color.ANSI_SECOND.toString() + Symbol.UNICODE_SQUARE + endSecond;
+			String initThird = initSecond + Symbol.UNICODE_SQUARE + Color.ANSI_THIRD_BACKGROUND + Color.ANSI_THIRD;
+			String endThird = Color.ANSI_SECOND_BACKGROUND.toString() + Color.ANSI_SECOND.toString() + Symbol.UNICODE_SQUARE + endSecond;
 
 			//print border and first ground level
 			outputStream.println(upperBorder);
@@ -343,7 +364,6 @@
 		 */
 		public int[] acquireCoordinates() {
 
-			boolean loopY = true;
 			int x = 0;
 			int y = 0;
 			int[] coordinates = new int[2];
@@ -383,7 +403,7 @@
 		 *asks player which level he wants to build
 		 * @return the acquired level
 		 */
-		public int acquireLevel(){ //TODO:level = 4 handling
+		public int acquireLevel(){ //TODO:model level 4 handling
 
 			Integer level = null;
 			boolean loop = true;

@@ -2,6 +2,8 @@ package it.polimi.ingsw.PSP54.view;
 
 import it.polimi.ingsw.PSP54.model.Game;
 
+import java.util.Random;
+
 
 public class CLIDebugMain {
 
@@ -10,11 +12,12 @@ public class CLIDebugMain {
         CliView view = new CliView();
         Game game = new Game();
         game.startGame();
-        int levels = view.acquireLevel();
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                game.getBoard()[i][j].setLevel(levels);
+                Random selector = new Random();
+                int level = selector.nextInt(4);
+                game.getBoard()[i][j].setLevel(level);
                 game.getBoard()[i][j].setDome(false);
             }
         }
@@ -24,6 +27,7 @@ public class CLIDebugMain {
         int[] coordinates = view.acquireCoordinates();
         //set worker 1 in coordinates
         game.getBoard()[coordinates[0]][coordinates[1]].setWorker(game.getPlayers().get(0).getWorkerList().get(0));
+
         //print worker color
         System.out.println(game.getPlayers().get(0).getWorkerList().get(0).getColor());
         //print Board
