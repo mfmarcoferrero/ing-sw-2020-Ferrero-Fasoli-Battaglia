@@ -13,7 +13,7 @@ public class Game {
 
     public Game(){
 
-        players = new Vector<>(2, 1);
+        players = new Vector<>(1, 1);
         board = new Box[boardSize][boardSize];
 
         for (int i = 0; i < board.length; i++) {

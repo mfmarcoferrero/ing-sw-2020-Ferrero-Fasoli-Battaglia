@@ -1,6 +1,6 @@
 package it.polimi.ingsw.PSP54.model;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 //TODO: Test
 public class AthenaSideEffectDecorator extends GodDecorator {
@@ -18,13 +18,13 @@ public class AthenaSideEffectDecorator extends GodDecorator {
 
     //TODO: JavaDoc
     @Override
-    public Vector<Box> setWorkerBoxesToMove(Worker worker) {
+    public ArrayList<Box> setWorkerBoxesToMove(Worker worker) {
 
         //get standard vector
-        Vector<Box> def = super.setWorkerBoxesToMove(worker);
+        ArrayList<Box> def = super.setWorkerBoxesToMove(worker);
 
         //affects the vector
-        for (int i = 0; i < def.capacity(); i++) { //TODO: use Iterator
+        for (int i = 0; i < def.size(); i++) { //TODO: use Iterator
             if (def.get(i).getLevel() == worker.getPos().getLevel()+1)
                 def.remove(i);
         }

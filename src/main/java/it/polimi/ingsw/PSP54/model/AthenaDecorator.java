@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.model;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 //TODO: Test
@@ -63,7 +64,7 @@ public class AthenaDecorator extends GodDecorator{
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
 
-        Vector<Box> valid = worker.getBoxesToMove();
+        ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
 
         if (currentMoveToken >= 0 && valid.contains(dest)){

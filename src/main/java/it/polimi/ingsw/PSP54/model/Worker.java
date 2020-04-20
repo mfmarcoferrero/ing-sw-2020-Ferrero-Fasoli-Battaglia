@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.model;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class Worker {
@@ -9,8 +10,8 @@ public class Worker {
     private int moveToken;
     private int buildToken;
     private boolean available;
-    private Vector<Box> boxesToBuild;
-    private Vector<Box> boxesToMove;
+    private ArrayList<Box> boxesToBuild;
+    private ArrayList<Box> boxesToMove;
 
     public Worker(Boolean male, StandardPlayer owner, Box pos) {
         this.male = male;
@@ -68,19 +69,19 @@ public class Worker {
         this.available = available;
     }
 
-    public Vector<Box> getBoxesToBuild() {
+    public ArrayList<Box> getBoxesToBuild() {
         return boxesToBuild;
     }
 
-    public void setBoxesToBuild(Vector<Box> boxesToBuild) {
+    public void setBoxesToBuild(ArrayList<Box> boxesToBuild) {
         this.boxesToBuild = boxesToBuild;
     }
 
-    public Vector<Box> getBoxesToMove() {
+    public ArrayList<Box> getBoxesToMove() {
         return boxesToMove;
     }
 
-    public void setBoxesToMove(Vector<Box> boxesToMove) {
+    public void setBoxesToMove(ArrayList<Box> boxesToMove) {
         this.boxesToMove = boxesToMove;
     }
 }

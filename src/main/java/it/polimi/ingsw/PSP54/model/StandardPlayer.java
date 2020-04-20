@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.model;
 
+import java.util.ArrayList;
 import java.util.Vector;
 //TODO: Test
 
@@ -62,6 +63,17 @@ public class StandardPlayer implements Player {
     }
 
     /**
+     * Sets initial position on the board for the selected worker
+     * @param worker the selected worker
+     * @param x the board abscissa
+     * @param y the board ordinate
+     */
+    @Override
+    public void setWorkerPos (Worker worker, int x, int y){
+        worker.setPos(game.getBoard()[x][y]);
+    }
+
+    /**
      * Select the worker which player is going to use depending on the worker's sex
      * @param male the worker's sex
      * @return the chosen worker
@@ -95,9 +107,9 @@ public class StandardPlayer implements Player {
      * @return the vector containing available boxes
      */
     @Override
-    public Vector<Box> setWorkerBoxesToMove (Worker worker){
+    public ArrayList<Box> setWorkerBoxesToMove (Worker worker){
 
-        Vector<Box> boxes = new Vector<>(1, 1); //TODO: optimize || ArrayList?
+        ArrayList<Box> boxes = new ArrayList<>();
         int deltaX, deltaY, deltaH;
         Box[][] board = getGame().getBoard();
 
@@ -106,7 +118,7 @@ public class StandardPlayer implements Player {
                 deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());
                 deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
                 deltaH =  (board[i][j].getLevel() - worker.getPos().getLevel());
-                if ((deltaX == 1 || deltaY ==1) && deltaH == 1 && !board[i][j].isOccupied() && !board[i][j].isDome())
+                if ((deltaX <= 1 && deltaY <= 1) && (deltaH == 0 || deltaH == 1) && !board[i][j].isOccupied() && !board[i][j].isDome())
                     boxes.add(board[i][j]);
             }
         }
@@ -120,9 +132,9 @@ public class StandardPlayer implements Player {
      * @return the vector containing buildable boxes
      */
     @Override
-    public Vector<Box> setWorkerBoxesToBuild (Worker worker){
+    public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){
 
-        Vector<Box> boxes = new Vector<>(1, 1); //TODO: optimize
+        ArrayList<Box> boxes = new ArrayList<>(); //TODO: optimize
         int deltaX, deltaY;
         Box[][] board = getGame().getBoard();
 
@@ -130,7 +142,7 @@ public class StandardPlayer implements Player {
             for (int j = 0; j < 5; j++) {
                 deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());
                 deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
-                if ((deltaX == 1 || deltaY == 1) && !board[i][j].isOccupied() && !board[i][j].isDome())
+                if ((deltaX <= 1 && deltaY <= 1) && !board[i][j].isOccupied() && !board[i][j].isDome())
                     boxes.add(board[i][j]);
             }
         }
@@ -148,7 +160,7 @@ public class StandardPlayer implements Player {
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException{
 
-        Vector<Box> valid = worker.getBoxesToMove();
+        ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
 
         if (currentMoveToken >= 0 && valid.contains(dest)){
@@ -171,7 +183,7 @@ public class StandardPlayer implements Player {
     @Override
     public void build (Worker worker, Box dest){
 
-        Vector<Box> valid = worker.getBoxesToBuild();
+        ArrayList<Box> valid = worker.getBoxesToBuild();
         int currentMoveToken = worker.getMoveToken();
         int currentBuildToken = worker.getBuildToken();
 

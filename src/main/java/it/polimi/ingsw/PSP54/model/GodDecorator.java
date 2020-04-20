@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.model;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -19,12 +20,12 @@ public abstract class GodDecorator implements Player {
     }
 
     @Override
-    public Vector<Box> setWorkerBoxesToMove(Worker worker) {
+    public ArrayList<Box> setWorkerBoxesToMove(Worker worker) {
         return playerToDecorate.setWorkerBoxesToMove(worker);
     }
 
     @Override
-    public Vector<Box> setWorkerBoxesToBuild(Worker worker) {
+    public ArrayList<Box> setWorkerBoxesToBuild(Worker worker) {
         return playerToDecorate.setWorkerBoxesToBuild(worker);
     }
 
@@ -118,6 +119,11 @@ public abstract class GodDecorator implements Player {
         return playerToDecorate.getCardID();
     }
 
+    @Override
+    public void setWorkerPos(Worker worker, int x, int y) {
+        playerToDecorate.setWorkerPos(worker, x, y);
+    }
+
     //only for debug purpose
 
     @Override
@@ -134,5 +140,6 @@ public abstract class GodDecorator implements Player {
     public void printPower() {
         playerToDecorate.printPower();
     }
+
 }
 

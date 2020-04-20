@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.model;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class ApolloDecorator extends GodDecorator {
@@ -29,9 +30,9 @@ public class ApolloDecorator extends GodDecorator {
      * @return the vector containing available boxes
      */
     @Override
-    public Vector<Box> setWorkerBoxesToMove (Worker worker){
+    public ArrayList<Box> setWorkerBoxesToMove (Worker worker){
 
-        Vector<Box> boxes = new Vector<>(1, 1);
+        ArrayList<Box> boxes = new ArrayList<>();
         int deltaX, deltaY, deltaH;
         Box[][] board = getGame().getBoard();
 
@@ -52,7 +53,7 @@ public class ApolloDecorator extends GodDecorator {
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
 
-        Vector<Box> valid = worker.getBoxesToMove();
+        ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
         Box currentPos = worker.getPos();
 

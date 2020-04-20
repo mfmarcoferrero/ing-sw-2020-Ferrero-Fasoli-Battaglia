@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.model;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 public interface Player {
@@ -10,6 +11,14 @@ public interface Player {
      * @return the decorated player
      */
     Player assignPower(int cardID);
+
+    /**
+     * Sets initial position on the board for the selected worker
+     * @param worker the selected worker
+     * @param x the board abscissa
+     * @param y the board ordinate
+     */
+    void setWorkerPos (Worker worker, int x, int y);
 
     /**
      * Select the worker which player is going to use depending on the worker's sex
@@ -30,14 +39,14 @@ public interface Player {
      * @param worker current worker in use
      * @return the vector containing available boxes
      */
-    Vector<Box> setWorkerBoxesToMove(Worker worker);
+    ArrayList<Box> setWorkerBoxesToMove(Worker worker);
 
     /**
      * Set standard available boxes for the worker to build and stores them in worker's attribute
      * @param worker current worker in use
      * @return the vector containing buildable boxes
      */
-    Vector<Box> setWorkerBoxesToBuild(Worker worker);
+    ArrayList<Box> setWorkerBoxesToBuild(Worker worker);
 
     /**
      * Standard move action
