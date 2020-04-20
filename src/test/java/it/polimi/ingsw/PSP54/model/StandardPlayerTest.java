@@ -34,26 +34,47 @@ public class StandardPlayerTest {
     @Test
     public void setWorkerBoxesToMove_EmptyBoardsCenter_AllAdjacentBoxes() {
 
-        x = 3;
-        y= 3;
+        //initialize worker position
+        x = 2;
+        y = 2;
+        currentWorker = game.getPlayers().get(0).choseWorker(true);
+        currentWorker.setPos(game.getBoard()[x][y]);
+        game.getBoard()[x][y].setWorker(currentWorker);
+
+        //set boxes level
+
+        ArrayList<Box> expected = new ArrayList<>();
+        expected.add(board[1][1]);
+        expected.add(board[1][2]);
+        expected.add(board[1][3]);
+        expected.add(board[2][1]);
+        expected.add(board[2][3]);
+        expected.add(board[3][1]);
+        expected.add(board[3][2]);
+        expected.add(board[3][3]);
+
+        ArrayList<Box> result = game.getPlayers().get(0).setWorkerBoxesToMove(currentWorker);
+
+        assertEquals(expected, result );
+    }
+
+    @Test
+    public void setWorkerBoxesToMove_EmptyBoardsEdge_CornerBoxes() {
+
+        x = 4;
+        y = 4;
         currentWorker = game.getPlayers().get(0).choseWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         game.getBoard()[x][y].setWorker(currentWorker);
 
         ArrayList<Box> expected = new ArrayList<>();
-        expected.add(board[2][2]);
-        expected.add(board[2][3]);
-        expected.add(board[2][4]);
-        expected.add(board[3][2]);
+        expected.add(board[3][3]);
         expected.add(board[3][4]);
-        expected.add(board[4][2]);
         expected.add(board[4][3]);
-        expected.add(board[4][4]);
-
 
         ArrayList<Box> result = game.getPlayers().get(0).setWorkerBoxesToMove(currentWorker);
 
-        assertEquals(expected, result );
+        assertEquals(expected, result);
     }
 
     @Test
