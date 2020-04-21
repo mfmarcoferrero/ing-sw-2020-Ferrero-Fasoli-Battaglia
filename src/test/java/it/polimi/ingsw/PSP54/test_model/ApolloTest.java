@@ -1,6 +1,6 @@
 package it.polimi.ingsw.PSP54.test_model;
 
-import it.polimi.ingsw.PSP54.model.*;
+import it.polimi.ingsw.PSP54.server.model.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ public class ApolloTest {
     Box [][] board;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         gameDemo = new Game();
         gameDemo.startGame();
         board = gameDemo.getBoard();
@@ -22,6 +22,12 @@ public class ApolloTest {
         gameDemo.getPlayers().get(0).setInitialPosition(0,board[2][2]);
         gameDemo.getPlayers().get(1).setPower(Player.NORMAL_POWER);
         gameDemo.getPlayers().get(1).setInitialPosition(0,board[2][3]);
+    }
+
+    @After
+    public void tearDown() {
+        gameDemo = null;
+        board = null;
     }
 
     @Test

@@ -1,9 +1,9 @@
 package it.polimi.ingsw.PSP54.test_model;
 
-import it.polimi.ingsw.PSP54.model.Box;
-import it.polimi.ingsw.PSP54.model.Game;
-import it.polimi.ingsw.PSP54.model.InvalidMoveException;
-import it.polimi.ingsw.PSP54.model.Player;
+import it.polimi.ingsw.PSP54.server.model.Box;
+import it.polimi.ingsw.PSP54.server.model.Game;
+import it.polimi.ingsw.PSP54.server.model.InvalidMoveException;
+import it.polimi.ingsw.PSP54.server.model.Player;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ public class ArtemisTest {
     Box [][] board;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         gameDemo = new Game();
         gameDemo.startGame();
         board = gameDemo.getBoard();

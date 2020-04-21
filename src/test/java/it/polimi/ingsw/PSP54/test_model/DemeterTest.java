@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP54.test_model;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import it.polimi.ingsw.PSP54.model.*;
+import it.polimi.ingsw.PSP54.server.model.*;
 
 import static org.junit.Assert.*;
 
@@ -12,7 +12,7 @@ public class DemeterTest {
     Box [][] board;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception{
         gameDemo = new Game();
         gameDemo.startGame();
         board = gameDemo.getBoard();
