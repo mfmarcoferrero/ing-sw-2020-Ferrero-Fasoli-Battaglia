@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP54.test_model;
 
-import it.polimi.ingsw.PSP54.model.Game;
-import it.polimi.ingsw.PSP54.model.IllegalNumberOfPlayersException;
+import it.polimi.ingsw.PSP54.server.model.Game;
+import it.polimi.ingsw.PSP54.server.model.IllegalNumberOfPlayersException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ public class GameTest {
     Game gameDemo = new Game();
 
     @Before
-    public void setUp()  {
+    public void setUp() throws IllegalNumberOfPlayersException {
         gameDemo.newPlayer("Marco",21,null);
         gameDemo.newPlayer("Alessandro",16,null);
         gameDemo.newPlayer("Matteo",27,null);

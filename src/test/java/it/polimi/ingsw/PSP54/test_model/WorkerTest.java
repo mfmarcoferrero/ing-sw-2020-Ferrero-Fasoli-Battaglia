@@ -1,9 +1,9 @@
 package it.polimi.ingsw.PSP54.test_model;
 
-import it.polimi.ingsw.PSP54.model.Box;
-import it.polimi.ingsw.PSP54.model.Game;
-import it.polimi.ingsw.PSP54.model.Player;
-import it.polimi.ingsw.PSP54.model.Worker;
+import it.polimi.ingsw.PSP54.server.model.Box;
+import it.polimi.ingsw.PSP54.server.model.Game;
+import it.polimi.ingsw.PSP54.server.model.Player;
+import it.polimi.ingsw.PSP54.server.model.Worker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,7 +64,7 @@ public class WorkerTest {
     }
 
     @Test
-    public void canWorkerMove_normalMoveOnEdge_returnFalse(){
+    public void canWorkerMove_normalMoveOnEdge_returnFalse() throws Exception{
         gameDemo.setTurns(0);
         gameDemo.getPlayers().get(0).setInitialPosition(0,board[0][0]);
         board[0][1].setDome(true);
@@ -118,7 +118,7 @@ public class WorkerTest {
         assertFalse(gameDemo.getPlayers().get(0).getWorkerList().get(0).canWorkerMove());
     }
     @Test
-    public void canWorkerBuild_normalBuildOnEdge_returnFalse(){
+    public void canWorkerBuild_normalBuildOnEdge_returnFalse() throws Exception {
         gameDemo.setTurns(0);
         gameDemo.getPlayers().get(0).setInitialPosition(0,board[0][0]);
         board[0][1].setDome(true);

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.PSP54.test_model;
 
-import it.polimi.ingsw.PSP54.model.*;
+import it.polimi.ingsw.PSP54.server.model.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ public class AtlasTest {
     Box [][] board;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception{
         gameDemo = new Game();
         gameDemo.startGame();
         board = gameDemo.getBoard();

@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"it.polimi.ingsw.PSP54"},{"l":"it.polimi.ingsw.PSP54.model"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"it.polimi.ingsw.PSP54"},{"l":"it.polimi.ingsw.PSP54.server.model"}]
