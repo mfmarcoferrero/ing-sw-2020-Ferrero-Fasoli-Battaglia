@@ -46,7 +46,7 @@ public class ArtemisDecorator extends GodDecorator{
     }
 
     @Override
-    public void build(Worker worker, Box dest) {
+    public void build(Worker worker, Box dest) throws InvalidBuildingException {
         super.build(worker, dest);
     }
 

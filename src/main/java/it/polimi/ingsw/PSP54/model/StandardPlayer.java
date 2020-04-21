@@ -134,7 +134,7 @@ public class StandardPlayer implements Player {
     @Override
     public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){
 
-        ArrayList<Box> boxes = new ArrayList<>(); //TODO: optimize
+        ArrayList<Box> boxes = new ArrayList<>();
         int deltaX, deltaY;
         Box[][] board = getGame().getBoard();
 
@@ -163,7 +163,7 @@ public class StandardPlayer implements Player {
         ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
 
-        if (currentMoveToken >= 0 && valid.contains(dest)){
+        if (currentMoveToken > 0 && valid.contains(dest)){
             //perform move
             worker.setPos(dest);
             dest.setWorker(worker);
@@ -181,13 +181,13 @@ public class StandardPlayer implements Player {
      * @param dest selected box where to build
      */
     @Override
-    public void build (Worker worker, Box dest){
+    public void build (Worker worker, Box dest) throws InvalidBuildingException{
 
         ArrayList<Box> valid = worker.getBoxesToBuild();
         int currentMoveToken = worker.getMoveToken();
         int currentBuildToken = worker.getBuildToken();
 
-        if (currentBuildToken >= 1 && currentMoveToken == 0 && valid.contains(dest)){
+        if (currentBuildToken > 0 && currentMoveToken == 0 && valid.contains(dest)){
             if (dest.getLevel() == 3)
                 dest.setDome(true);
             else {
@@ -196,7 +196,7 @@ public class StandardPlayer implements Player {
             }
 
             worker.setBuildToken(currentBuildToken-1);
-        }
+        }else throw new InvalidBuildingException();
     }
 
     /**
@@ -293,7 +293,6 @@ public class StandardPlayer implements Player {
     @Override
     public void addSideEffect() {
         System.out.println("You Failed");
-
     }
 
     @Override

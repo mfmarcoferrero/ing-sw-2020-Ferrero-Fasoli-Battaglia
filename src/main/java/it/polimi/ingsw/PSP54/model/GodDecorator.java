@@ -40,7 +40,7 @@ public abstract class GodDecorator implements Player {
     }
 
     @Override
-    public void build(Worker worker, Box dest) {
+    public void build(Worker worker, Box dest) throws InvalidBuildingException {
         playerToDecorate.build(worker, dest);
     }
 
