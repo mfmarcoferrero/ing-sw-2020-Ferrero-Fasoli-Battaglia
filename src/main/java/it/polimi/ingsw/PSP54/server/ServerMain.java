@@ -7,6 +7,7 @@ import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 
 public class ServerMain {
     public static void main(String[] args) {
+
         VirtualView virtualView = new VirtualView();
         Game game = new Game();
         Controller controller = new Controller(game,virtualView);

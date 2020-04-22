@@ -1,4 +1,4 @@
-package it.polimi.ingsw.PSP54.test_model;
+package it.polimi.ingsw.PSP54.server.test_model;
 
 import org.junit.After;
 import org.junit.Before;

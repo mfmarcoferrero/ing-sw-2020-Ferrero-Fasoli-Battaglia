@@ -9,7 +9,6 @@ public class Worker {
     private boolean male;
     private String color;
     public Box pos;
-    private int i,j;
 
     public Worker(Player player,String color, int wID){
         this.owner = player;
