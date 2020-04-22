@@ -131,11 +131,11 @@ public class Player {
      */
     public void build(int worker_ind, Box dest, boolean buildDome) throws InvalidBuildingException {
         if (power.validBuilding(workerList.get(worker_ind).pos, dest, buildDome)) {
-            if (buildDome == false) {
+            if (!buildDome) {
                 dest.setBuilding();
-            } else if (buildDome){
+            } else
                 dest.setDome(true);
-            }
+
             buildToken--;
         } else
             throw new InvalidBuildingException();

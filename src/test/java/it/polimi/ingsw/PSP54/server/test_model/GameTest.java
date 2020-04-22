@@ -1,4 +1,4 @@
-package it.polimi.ingsw.PSP54.test_model;
+package it.polimi.ingsw.PSP54.server.test_model;
 
 import it.polimi.ingsw.PSP54.server.model.Game;
 import it.polimi.ingsw.PSP54.server.model.IllegalNumberOfPlayersException;
