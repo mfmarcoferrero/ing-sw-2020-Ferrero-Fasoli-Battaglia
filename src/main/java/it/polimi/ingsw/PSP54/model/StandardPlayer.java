@@ -117,7 +117,7 @@ public class StandardPlayer implements Player {
             for (int j = 0; j < 5; j++) {
                 deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());
                 deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
-                deltaH =  (board[i][j].getLevel() - worker.getPos().getLevel());
+                deltaH =  board[i][j].getLevel() - worker.getPos().getLevel();
                 if ((deltaX <= 1 && deltaY <= 1) && deltaH <= 1 && !board[i][j].isOccupied() && !board[i][j].isDome())
                     boxes.add(board[i][j]);
             }

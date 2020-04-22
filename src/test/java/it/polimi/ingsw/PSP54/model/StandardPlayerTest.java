@@ -143,7 +143,7 @@ public class StandardPlayerTest {
         board[2][1].setLevel(3);
         board[3][1].setLevel(3);
         board[3][1].setDome(true);
-        board[3][3].setWorker(game.getPlayers().get(0).choseWorker(false));
+        board[3][3].setWorker(player_2.choseWorker(false));
 
         //generate expected result
         ArrayList<Box> expected = new ArrayList<>();
@@ -152,7 +152,7 @@ public class StandardPlayerTest {
         expected.add(board[2][3]);
         expected.add(board[3][2]);
 
-        ArrayList<Box> result = game.getPlayers().get(0).setWorkerBoxesToMove(currentWorker);
+        ArrayList<Box> result = player_1.setWorkerBoxesToMove(currentWorker);
 
         assertEquals(expected, result);
     }
@@ -307,8 +307,7 @@ public class StandardPlayerTest {
         game.getBoard()[x][y].setWorker(currentWorker);
 
         //set boxes occupation
-        //TODO
-        board[1][1].setWorker(game.getPlayers().get(0).choseWorker(false));
+        board[1][1].setWorker(player_1.choseWorker(false));
 
         //generate expected result
         ArrayList<Box> expected = new ArrayList<>();

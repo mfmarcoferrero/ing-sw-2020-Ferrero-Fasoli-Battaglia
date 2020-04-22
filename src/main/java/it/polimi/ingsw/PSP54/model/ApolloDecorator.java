@@ -3,27 +3,15 @@ package it.polimi.ingsw.PSP54.model;
 import java.util.ArrayList;
 import java.util.Vector;
 
+/**
+ * Your worker may move into an opponent worker's space by forcing their worker to the space just vacated
+ */
 public class ApolloDecorator extends GodDecorator {
 
     public ApolloDecorator(Player player) {
         super(player);
     }
 
-    /*your worker may move into an opponent worker's space by forcing their worker to the space just vacated
-
-    PSEUDOCODE:
-
-    set:
-        if (isOccupied)
-            valid.add()
-
-    move:
-        if(isOccupied)
-            perform move
-            perform swap
-
-
-    */
     /**
      * Sets Apollo's available boxes for the worker to move
      * @param worker current worker in use
@@ -41,7 +29,7 @@ public class ApolloDecorator extends GodDecorator {
                 deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());
                 deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
                 deltaH =  (board[i][j].getLevel() - worker.getPos().getLevel());
-                if ((deltaX == 1 || deltaY ==1) && deltaH == 1 && !board[i][j].isDome())
+                if ((deltaX <= 1 && deltaY <= 1) && board[i][j] != worker.getPos() && deltaH <= 1 && !board[i][j].isDome())
                     boxes.add(board[i][j]);
             }
         }
@@ -49,20 +37,27 @@ public class ApolloDecorator extends GodDecorator {
         return boxes;
     }
 
-    //TODO:JavaDoc
+    /**
+     * Performs Apollo special move: if destination box is occupied  swaps
+     * @param worker selected worker which the player wants to move
+     * @param dest selected destination box
+     * @throws InvalidMoveException
+     */
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
 
+        //sets validity indicators
         ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
-        Box currentPos = worker.getPos();
 
-        if (currentMoveToken >= 0 && valid.contains(dest)){
+        if (currentMoveToken > 0 && valid.contains(dest)){
             if (dest.isOccupied()){
                 //perform swap
+                Box current = worker.getPos();
                 Worker opponent = dest.getWorker();
-                dest.getWorker().setPos(currentPos);
-                currentPos.setWorker(opponent);
+                opponent.setPos(current);
+                current.setWorker(dest.getWorker());
+
             }
             //perform move
             worker.setPos(dest);
