@@ -1,53 +1,49 @@
 package it.polimi.ingsw.PSP54.model;
-//TODO: Test
+
+import java.util.ArrayList;
+
+/**
+ * Your worker MAY move an additional time but NOT BACK to its initial space
+ */
 public class ArtemisDecorator extends GodDecorator{
 
+    private Box initialPos;
 
     public ArtemisDecorator(Player player) {
         super(player);
     }
 
-    /*your worker MAY move an additional time but NOT BACK to its initial space
-
-    PSEUDOCODE:
-
-    set moveToken to 2
-    set buildToken to 1
-
-    move:
-
-        if (moveToken == 2)
-            perform move
-            moveToken --
-        else if (moveToken == 1)
-            perform move
-            moveToken --
-        setBoxToMove & setBoxToBuild
-
-    build:
-
-        if (moveToken = 2 || buildToken <= 0)
-            exception
-        else if(moveToken = 1 && buildToken > 0)
-            perform build
-            moveToken--; buildToken--;
-
-     */
-
-    //TODO: Implement & JavaDoc
     @Override
-    public Worker turnInit(Boolean male) {
-        return super.turnInit(male);
+    public Worker turnInit(Boolean male){
+
+        Worker currentWorker = choseWorker(male);
+        currentWorker.setMoveToken(2);
+        currentWorker.setBuildToken(0);
+        return currentWorker;
     }
 
     @Override
-    public void move(Worker worker, Box dest) throws InvalidMoveException {
-        super.move(worker, dest);
+    public ArrayList<Box> setWorkerBoxesToMove (Worker worker) {
+
+        ArrayList<Box> valid;
+
+        if (worker.getMoveToken() == 2){
+            initialPos = worker.getPos();
+            valid = super.setWorkerBoxesToMove(worker);
+        }else {
+            valid = super.setWorkerBoxesToMove(worker);
+            valid.remove(initialPos);
+        }
+        worker.setBoxesToMove(valid);
+        return valid;
     }
 
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
+
         super.build(worker, dest);
+        if (worker.getMoveToken()!=0)
+            worker.setMoveToken(0);
     }
 
     //only for debug purpose

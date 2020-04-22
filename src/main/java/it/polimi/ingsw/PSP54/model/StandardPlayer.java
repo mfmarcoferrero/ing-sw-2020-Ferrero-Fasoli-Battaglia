@@ -163,14 +163,17 @@ public class StandardPlayer implements Player {
         ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
 
+
         if (currentMoveToken > 0 && valid.contains(dest)){
+            //free current box
+            worker.getPos().setWorker(null);
             //perform move
             worker.setPos(dest);
             dest.setWorker(worker);
             //decrement token
             worker.setMoveToken(currentMoveToken-1);
-            //set buildable boxes
-            worker.setBoxesToBuild(setWorkerBoxesToBuild(worker));
+            worker.setBuildToken(1);
+
         }else throw new InvalidMoveException();
 
     }
@@ -183,11 +186,12 @@ public class StandardPlayer implements Player {
     @Override
     public void build (Worker worker, Box dest) throws InvalidBuildingException{
 
+        worker.setBoxesToBuild(setWorkerBoxesToBuild(worker));
         ArrayList<Box> valid = worker.getBoxesToBuild();
         int currentMoveToken = worker.getMoveToken();
         int currentBuildToken = worker.getBuildToken();
 
-        if (currentBuildToken > 0 && currentMoveToken == 0 && valid.contains(dest)){
+        if (currentBuildToken > 0 && valid.contains(dest)){
             if (dest.getLevel() == 3)
                 dest.setDome(true);
             else {

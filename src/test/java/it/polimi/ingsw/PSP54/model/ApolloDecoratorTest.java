@@ -10,6 +10,7 @@ import java.util.Vector;
 import static org.junit.Assert.*;
 
 public class ApolloDecoratorTest {
+
     private Game game;
     Vector<Player> players;
     Player player_1, player_2, player_3;
@@ -52,7 +53,7 @@ public class ApolloDecoratorTest {
         y = 2;
         apolloWorker = players.get(0).choseWorker(true);
         apolloWorker.setPos(game.getBoard()[x][y]);
-        game.getBoard()[x][y].setWorker(apolloWorker);
+        board[x][y].setWorker(apolloWorker);
 
         //generate expected result
         ArrayList<Box> expected = new ArrayList<>();
@@ -78,7 +79,7 @@ public class ApolloDecoratorTest {
         y = 2;
         apolloWorker = player_1.choseWorker(true);
         apolloWorker.setPos(game.getBoard()[x][y]);
-        game.getBoard()[x][y].setWorker(apolloWorker);
+        board[x][y].setWorker(apolloWorker);
 
         //set boxes levels
         board[1][2].setDome(true);
@@ -108,7 +109,7 @@ public class ApolloDecoratorTest {
         y = 2;
         apolloWorker = player_1.choseWorker(true);
         apolloWorker.setPos(game.getBoard()[x][y]);
-        game.getBoard()[x][y].setWorker(apolloWorker);
+        board[x][y].setWorker(apolloWorker);
 
         //set boxes levels
         board[1][1].setLevel(1);;
@@ -145,7 +146,7 @@ public class ApolloDecoratorTest {
         board[1][1].setWorker(victimWorker);
 
         //set available boxes
-        apolloWorker.setBoxesToMove(player_1.setWorkerBoxesToMove(apolloWorker));
+        //apolloWorker.setBoxesToMove(player_1.setWorkerBoxesToMove(apolloWorker));
 
         //invoke move() method
         player_1.move(apolloWorker, board[1][1]);
@@ -160,6 +161,42 @@ public class ApolloDecoratorTest {
 
         assertEquals(victimWorker.getPos(), victimExpected);
         assertEquals(victimExpected.getWorker(), victimWorker);
+
+    }
+
+    @Test
+    public void move_GroundLevelCenter_OccupiedThrowException() {
+
+        //set workers initial position
+        apolloWorker = player_1.turnInit(true);
+        apolloWorker.setPos(board[2][2]);
+        board[2][2].setWorker(apolloWorker);
+
+        victimWorker = player_2.turnInit(false);
+        board[1][1].setLevel(2);
+        victimWorker.setPos(board[1][1]);
+        board[1][1].setWorker(victimWorker);
+
+        Exception thrown = null;
+
+        //invoke move() method
+        try {
+            player_1.move(apolloWorker, board[1][1]);
+        }catch (InvalidMoveException e){
+            thrown = e;
+        }
+
+        //set result
+        Box apolloExpected = board [2][2];
+        Box victimExpected = board[1][1];
+
+        assertEquals(apolloWorker.getPos(), apolloExpected);
+        assertEquals(apolloExpected.getWorker(), apolloWorker);
+
+        assertEquals(victimWorker.getPos(), victimExpected);
+        assertEquals(victimExpected.getWorker(), victimWorker);
+
+        assertNotNull(thrown);
 
     }
 }
