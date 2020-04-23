@@ -1,7 +1,6 @@
 package it.polimi.ingsw.PSP54.model;
 
 import java.util.ArrayList;
-//TODO: Test
 
 /**
  * Class representing the player whit his default actions and turn administration

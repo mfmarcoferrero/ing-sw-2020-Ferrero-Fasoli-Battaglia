@@ -32,7 +32,10 @@ public class AthenaDecorator extends GodDecorator{
 
     */
 
-    //TODO:JavaDoc
+    /**
+     * Decorates other players with AtenaSideEffectDecorator
+     * @param players the vector containing all players
+     */
     public void assignAthenaSideEffect(Vector<Player> players){
 
         int numberOfPlayers = players.capacity();
@@ -45,7 +48,10 @@ public class AthenaDecorator extends GodDecorator{
         }
     }
 
-    //TODO:JavaDoc
+    /**
+     * Redecorates other players with their original decorator
+     * @param players the vector containing all players
+     */
     public void reassignPreviousPowers(Vector<Player> players){
 
         int numberOfPlayers = players.capacity();

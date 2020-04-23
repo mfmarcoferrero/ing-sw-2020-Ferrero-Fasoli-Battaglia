@@ -8,15 +8,19 @@ public class AthenaSideEffectDecorator extends GodDecorator {
         super(player);
     }
 
-    //TODO: JavaDoc
-    @Override
+
+    /**
+     * Sets available boxes for the worker to move and stores them in worker's attribute
+     * @param worker current worker in use
+     * @return the vector containing available boxes
+     */
     public ArrayList<Box> setWorkerBoxesToMove(Worker worker) {
 
         //get standard vector
         ArrayList<Box> valid = super.setWorkerBoxesToMove(worker);
 
         //affects the vector
-        for (int i = 0; i < valid.size(); i++) { //TODO: use Iterator(?)
+        for (int i = 0; i < valid.size(); i++) { //TODO: use Iterator
             if (valid.get(i).getLevel() == worker.getPos().getLevel()+1)
                 valid.remove(i);
         }

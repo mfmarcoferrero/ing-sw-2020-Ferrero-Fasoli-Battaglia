@@ -38,7 +38,7 @@ public class Game {
      *Sorts elements of players vector depending on players age
      * @param players the players vector
      */
-    public void sortPlayers(Vector<Player> players){ //TODO: if player1.age == player2.age => alphabetic order?
+    public void sortPlayers(Vector<Player> players){
 
         Comparator<Player> comp = new Comparator<Player>(){
             @Override
