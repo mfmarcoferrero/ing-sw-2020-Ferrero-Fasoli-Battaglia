@@ -13,7 +13,6 @@ public class StandardPlayerTest {
 
     private Game game;
     Vector<Player> players;
-    Player player_1, player_2, player_3;
     Box[][] board;
     Worker currentWorker;
     int x;
@@ -30,10 +29,9 @@ public class StandardPlayerTest {
         game.newPlayer("2");
         game.newPlayer("3");
         players = game.getPlayers();
-        player_1 = players.get(0);
-        player_2 = players.get(1);
-        player_3 = players.get(2);
         players.get(0).setGame(game);
+        players.get(1).setGame(game);
+        players.get(2).setGame(game);
     }
 
     @After
@@ -48,7 +46,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = player_1.choseWorker(true);
+        currentWorker = players.get(0).choseWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         game.getBoard()[x][y].setWorker(currentWorker);
 
@@ -63,7 +61,7 @@ public class StandardPlayerTest {
         expected.add(board[3][2]);
         expected.add(board[3][3]);
 
-        ArrayList<Box> result = player_1.setWorkerBoxesToMove(currentWorker);
+        ArrayList<Box> result = players.get(0).setWorkerBoxesToMove(currentWorker);
 
         assertEquals(expected, result );
     }
@@ -74,7 +72,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = player_1.choseWorker(true);
+        currentWorker = players.get(0).choseWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         game.getBoard()[x][y].setWorker(currentWorker);
 
@@ -95,7 +93,7 @@ public class StandardPlayerTest {
         expected.add(board[3][2]);
         expected.add(board[3][3]);
 
-        ArrayList<Box> result = player_1.setWorkerBoxesToMove(currentWorker);
+        ArrayList<Box> result = players.get(0).setWorkerBoxesToMove(currentWorker);
 
         assertEquals(expected, result);
     }
@@ -106,7 +104,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = player_1.choseWorker(true);
+        currentWorker = players.get(0).choseWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -123,7 +121,7 @@ public class StandardPlayerTest {
         expected.add(board[3][1]);
         expected.add(board[3][3]);
 
-        ArrayList<Box> result = player_1.setWorkerBoxesToMove(currentWorker);
+        ArrayList<Box> result = players.get(0).setWorkerBoxesToMove(currentWorker);
 
         assertEquals(expected, result);
     }
@@ -134,7 +132,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = player_1.choseWorker(true);
+        currentWorker = players.get(0).choseWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -143,7 +141,7 @@ public class StandardPlayerTest {
         board[2][1].setLevel(3);
         board[3][1].setLevel(3);
         board[3][1].setDome(true);
-        board[3][3].setWorker(player_2.choseWorker(false));
+        board[3][3].setWorker(players.get(1).choseWorker(false));
 
         //generate expected result
         ArrayList<Box> expected = new ArrayList<>();
@@ -152,7 +150,7 @@ public class StandardPlayerTest {
         expected.add(board[2][3]);
         expected.add(board[3][2]);
 
-        ArrayList<Box> result = player_1.setWorkerBoxesToMove(currentWorker);
+        ArrayList<Box> result = players.get(0).setWorkerBoxesToMove(currentWorker);
 
         assertEquals(expected, result);
     }
@@ -164,7 +162,7 @@ public class StandardPlayerTest {
         x = 2;
         y = 2;
         board[2][2].setLevel(2);
-        currentWorker = player_1.choseWorker(true);
+        currentWorker = players.get(0).choseWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -190,7 +188,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 4;
         y = 4;
-        currentWorker = player_1.choseWorker(true);
+        currentWorker = players.get(0).choseWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -199,7 +197,7 @@ public class StandardPlayerTest {
         expected.add(board[3][4]);
         expected.add(board[4][3]);
 
-        ArrayList<Box> result = player_1.setWorkerBoxesToMove(currentWorker);
+        ArrayList<Box> result = players.get(0).setWorkerBoxesToMove(currentWorker);
 
         assertEquals(expected, result);
     }
@@ -212,7 +210,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = player_1.choseWorker(true);
+        currentWorker = players.get(0).choseWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -227,7 +225,7 @@ public class StandardPlayerTest {
         expected.add(board[3][2]);
         expected.add(board[3][3]);
 
-        ArrayList<Box> result = player_1.setWorkerBoxesToBuild(currentWorker);
+        ArrayList<Box> result = players.get(0).setWorkerBoxesToBuild(currentWorker);
 
         assertEquals(expected, result);
     }
@@ -238,7 +236,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = player_1.choseWorker(true);
+        currentWorker = players.get(0).choseWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -263,7 +261,7 @@ public class StandardPlayerTest {
         expected.add(board[3][2]);
         expected.add(board[3][3]);
 
-        ArrayList<Box> result = player_1.setWorkerBoxesToBuild(currentWorker);
+        ArrayList<Box> result = players.get(0).setWorkerBoxesToBuild(currentWorker);
 
         assertEquals(expected, result);
     }
@@ -274,7 +272,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = player_1.choseWorker(true);
+        currentWorker = players.get(0).choseWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -291,7 +289,7 @@ public class StandardPlayerTest {
         expected.add(board[2][3]);
         expected.add(board[3][2]);
 
-        ArrayList<Box> result = player_1.setWorkerBoxesToBuild(currentWorker);
+        ArrayList<Box> result = players.get(0).setWorkerBoxesToBuild(currentWorker);
 
         assertEquals(expected, result);
     }
@@ -302,12 +300,12 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = player_1.choseWorker(true);
+        currentWorker = players.get(0).choseWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
         //set boxes occupation
-        board[1][1].setWorker(player_1.choseWorker(false));
+        board[1][1].setWorker(players.get(0).choseWorker(false));
 
         //generate expected result
         ArrayList<Box> expected = new ArrayList<>();
@@ -320,7 +318,7 @@ public class StandardPlayerTest {
         expected.add(board[3][3]);
 
 
-        ArrayList<Box> result = player_1.setWorkerBoxesToBuild(currentWorker);
+        ArrayList<Box> result = players.get(0).setWorkerBoxesToBuild(currentWorker);
 
         assertEquals(expected, result);
     }
@@ -329,13 +327,13 @@ public class StandardPlayerTest {
     public void move_EmptyBoardCenter_NorthWest() throws InvalidMoveException {
 
         //set workers initial position
-        currentWorker = player_1.turnInit(true);
+        currentWorker = players.get(0).turnInit(true);
         currentWorker.setPos(board[2][2]);
         board[2][2].setWorker(currentWorker);
-        currentWorker.setBoxesToMove(player_1.setWorkerBoxesToMove(currentWorker));
+        currentWorker.setBoxesToMove(players.get(0).setWorkerBoxesToMove(currentWorker));
 
         //invoke move() method
-        player_1.move(currentWorker, board[1][1]);
+        players.get(0).move(currentWorker, board[1][1]);
 
         //set result
         Box result = board [1][1];
@@ -349,7 +347,7 @@ public class StandardPlayerTest {
     public void move_GroundLevelCenter_NorthWestOneUp() throws InvalidMoveException {
 
         //set workers initial position
-        currentWorker = player_1.turnInit(true);
+        currentWorker = players.get(0).turnInit(true);
         currentWorker.setPos(board[2][2]);
         board[2][2].setWorker(currentWorker);
 
@@ -357,10 +355,10 @@ public class StandardPlayerTest {
         board[1][1].setLevel(1);
 
         //set available boxes
-        currentWorker.setBoxesToMove(player_1.setWorkerBoxesToMove(currentWorker));
+        currentWorker.setBoxesToMove(players.get(0).setWorkerBoxesToMove(currentWorker));
 
         //invoke move() method
-        player_1.move(currentWorker, board[1][1]);
+        players.get(0).move(currentWorker, board[1][1]);
 
         //set result
         Box result = board [1][1];
@@ -374,7 +372,7 @@ public class StandardPlayerTest {
     public void move_GroundLevelCenter_UpperLevelThrowsException() {
 
         //set workers initial position
-        currentWorker = player_1.turnInit(true);
+        currentWorker = players.get(0).turnInit(true);
         currentWorker.setPos(board[2][2]);
         board[2][2].setWorker(currentWorker);
 
@@ -382,13 +380,13 @@ public class StandardPlayerTest {
         board[1][1].setLevel(2);
 
         //set available boxes
-        currentWorker.setBoxesToMove(player_1.setWorkerBoxesToMove(currentWorker));
+        currentWorker.setBoxesToMove(players.get(0).setWorkerBoxesToMove(currentWorker));
 
         Exception thrown = null;
 
         //invoke move() method
         try {
-            player_1.move(currentWorker, board[1][1]);
+            players.get(0).move(currentWorker, board[1][1]);
         }catch (InvalidMoveException e){
             thrown = e;
         }
@@ -407,21 +405,21 @@ public class StandardPlayerTest {
     public void move_GroundLevelCenter_OccupiedThrowException() {
 
         //set workers initial position
-        currentWorker = player_1.turnInit(true);
+        currentWorker = players.get(0).turnInit(true);
         currentWorker.setPos(board[2][2]);
         board[2][2].setWorker(currentWorker);
 
         //set box levels
-        board[1][1].setWorker(player_2.choseWorker(false));
+        board[1][1].setWorker(players.get(1).choseWorker(false));
 
         //set available boxes
-        currentWorker.setBoxesToMove(player_1.setWorkerBoxesToMove(currentWorker));
+        currentWorker.setBoxesToMove(players.get(0).setWorkerBoxesToMove(currentWorker));
 
         Exception thrown = null;
 
         //invoke move() method
         try {
-            player_1.move(currentWorker, board[1][1]);
+            players.get(0).move(currentWorker, board[1][1]);
         }catch (InvalidMoveException e){
             thrown = e;
         }
@@ -440,7 +438,7 @@ public class StandardPlayerTest {
     public void build_EmptyBoardCenter_SouthEastLevelUp() throws InvalidBuildingException{
 
         //set workers initial position
-        currentWorker = player_1.turnInit(true);
+        currentWorker = players.get(0).turnInit(true);
         currentWorker.setBuildToken(1);
         currentWorker.setMoveToken(0);
         currentWorker.setPos(board[2][2]);
@@ -448,10 +446,10 @@ public class StandardPlayerTest {
 
 
         //set available boxes
-        currentWorker.setBoxesToBuild(player_1.setWorkerBoxesToMove(currentWorker));
+        currentWorker.setBoxesToBuild(players.get(0).setWorkerBoxesToMove(currentWorker));
 
         //invoke build() method
-        player_1.build(currentWorker, board[3][3]);
+        players.get(0).build(currentWorker, board[3][3]);
 
         assertEquals(1, board[3][3].getLevel());
 
@@ -461,7 +459,7 @@ public class StandardPlayerTest {
     public void build_EmptyBoardCenter_SouthEastDomed() throws InvalidBuildingException{
 
         //set workers initial position
-        currentWorker = player_1.turnInit(true);
+        currentWorker = players.get(0).turnInit(true);
         currentWorker.setBuildToken(1);
         currentWorker.setMoveToken(0);
         currentWorker.setPos(board[2][2]);
@@ -471,10 +469,10 @@ public class StandardPlayerTest {
         board[3][3].setLevel(3);
 
         //set available boxes
-        currentWorker.setBoxesToBuild(player_1.setWorkerBoxesToBuild(currentWorker));
+        currentWorker.setBoxesToBuild(players.get(0).setWorkerBoxesToBuild(currentWorker));
 
         //invoke build() method
-        player_1.build(currentWorker, board[3][3]);
+        players.get(0).build(currentWorker, board[3][3]);
 
         assertEquals(3, board[3][3].getLevel());
         assertTrue(board[3][3].isDome());
@@ -485,7 +483,7 @@ public class StandardPlayerTest {
     public void build_EmptyBoardCenter_AlreadyDomedThrowException() {
 
         //set workers initial position
-        currentWorker = player_1.turnInit(true);
+        currentWorker = players.get(0).turnInit(true);
         currentWorker.setBuildToken(1);
         currentWorker.setMoveToken(0);
         currentWorker.setPos(board[2][2]);
@@ -496,13 +494,13 @@ public class StandardPlayerTest {
         board[3][3].setDome(true);
 
         //set available boxes
-        currentWorker.setBoxesToBuild(player_1.setWorkerBoxesToBuild(currentWorker));
+        currentWorker.setBoxesToBuild(players.get(0).setWorkerBoxesToBuild(currentWorker));
 
         Exception thrown = null;
 
         //invoke build() method
         try {
-            player_1.build(currentWorker, board[3][3]);
+            players.get(0).build(currentWorker, board[3][3]);
         } catch (InvalidBuildingException e) {
             thrown = e;
         }

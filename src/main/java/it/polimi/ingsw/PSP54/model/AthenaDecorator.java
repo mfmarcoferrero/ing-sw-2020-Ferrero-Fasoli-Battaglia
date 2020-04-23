@@ -3,7 +3,6 @@ package it.polimi.ingsw.PSP54.model;
 import java.util.ArrayList;
 import java.util.Vector;
 
-//TODO: Test
 public class AthenaDecorator extends GodDecorator{
 
     private boolean movedUp; //settled on the previous turn
@@ -26,7 +25,6 @@ public class AthenaDecorator extends GodDecorator{
 
         else
             reassignPreviousPowers
-
 
     assign:
 
@@ -60,30 +58,32 @@ public class AthenaDecorator extends GodDecorator{
         }
     }
 
-    //TODO:JavaDoc
+    /**
+     * If valid performs move and modify action tokes
+     * @param worker selected worker which the player wants to move
+     * @param dest selected destination box
+     * @throws InvalidMoveException if the move can't be done
+     */
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
 
         ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
 
-        if (currentMoveToken >= 0 && valid.contains(dest)){
-            if (dest.getLevel() == worker.getPos().getLevel()+1)
-                if (!movedUp){
-                    this.assignAthenaSideEffect(getGame().getPlayers());
-                    movedUp = true;
+        if (currentMoveToken > 0 && valid.contains(dest)) {
+            if (movedUp) {
+                if (dest.getLevel() <= worker.getPos().getLevel()) {
+                    this.reassignPreviousPowers(getGame().getPlayers());
+                    movedUp = false;
                 }
-            else
-                this.reassignPreviousPowers(getGame().getPlayers());
+            } else if (dest.getLevel() > worker.getPos().getLevel()) {
+                this.assignAthenaSideEffect(getGame().getPlayers());
+                movedUp = true;
+            }
+            super.move(worker, dest);
 
-            //perform move
-            worker.setPos(dest);
-            dest.setWorker(worker);
-            //decrement token
-            worker.setMoveToken(currentMoveToken-1);
-            //set buildable boxes
-            worker.setBoxesToBuild(setWorkerBoxesToBuild(worker));
         }else throw new InvalidMoveException();
+
     }
 
     //Only for debug purpose

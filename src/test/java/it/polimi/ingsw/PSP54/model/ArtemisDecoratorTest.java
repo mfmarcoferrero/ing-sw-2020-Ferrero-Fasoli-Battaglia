@@ -47,7 +47,7 @@ public class ArtemisDecoratorTest {
     @Test
     public void setWorkerBoxesToMove_EmptyBoardsCenter_AllAdjacentBoxes() {
 
-        //initialize worker and sets position
+        //initialize artemisWorker and set position
         x = 2;
         y = 2;
         artemisWorker = player_1.turnInit(true);
@@ -73,7 +73,7 @@ public class ArtemisDecoratorTest {
     @Test
     public void setWorkerBoxesToMove_EmptyBoardsCenterWithMove_AdjacentBoxesExceptPreviousPosition() throws InvalidMoveException {
 
-        //initialize worker and sets position
+        //initialize worker and set position
         x = 2;
         y = 2;
         artemisWorker = player_1.turnInit(true);

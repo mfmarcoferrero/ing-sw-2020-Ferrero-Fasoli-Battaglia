@@ -1,7 +1,6 @@
 package it.polimi.ingsw.PSP54.model;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * Your worker may move into an opponent worker's space by forcing their worker to the space just vacated
@@ -41,7 +40,7 @@ public class ApolloDecorator extends GodDecorator {
      * Performs Apollo special move: if destination box is occupied  swaps
      * @param worker selected worker which the player wants to move
      * @param dest selected destination box
-     * @throws InvalidMoveException
+     * @throws InvalidMoveException if the move can't be done
      */
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {

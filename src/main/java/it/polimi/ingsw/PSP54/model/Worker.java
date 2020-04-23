@@ -1,7 +1,6 @@
 package it.polimi.ingsw.PSP54.model;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class Worker {
     private Boolean male;

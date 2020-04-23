@@ -1,7 +1,6 @@
 package it.polimi.ingsw.PSP54.model;
 
 import java.util.ArrayList;
-import java.util.Vector;
 //TODO: Test
 
 /**
@@ -102,7 +101,7 @@ public class StandardPlayer implements Player {
     }
 
     /**
-     * Sets standard available boxes for the worker to move
+     * Sets available boxes for the worker to move and stores them in worker's attribute
      * @param worker current worker in use
      * @return the vector containing available boxes
      */
@@ -127,7 +126,7 @@ public class StandardPlayer implements Player {
     }
 
     /**
-     * Set standard available boxes for the worker to build and stores them in worker's attribute
+     * Set available boxes for the worker to build and stores them in worker's attribute
      * @param worker current worker in use
      * @return the vector containing buildable boxes
      */
@@ -152,7 +151,7 @@ public class StandardPlayer implements Player {
     }
 
     /**
-     * Standard move action
+     * If valid performs move and modify action tokes
      * @param worker selected worker which the player wants to move
      * @param dest selected destination box
      * @throws InvalidMoveException if the move can't be done
@@ -170,7 +169,7 @@ public class StandardPlayer implements Player {
             //perform move
             worker.setPos(dest);
             dest.setWorker(worker);
-            //decrement token
+            //set tokens
             worker.setMoveToken(currentMoveToken-1);
             worker.setBuildToken(1);
 
@@ -179,7 +178,7 @@ public class StandardPlayer implements Player {
     }
 
     /**
-     *Standard build action
+     *If valid performs build and modify action tokens
      * @param worker selected worker which the player wants to move
      * @param dest selected box where to build
      */

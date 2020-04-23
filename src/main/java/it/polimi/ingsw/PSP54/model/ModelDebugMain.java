@@ -38,6 +38,7 @@ public class ModelDebugMain {
         for (int i = 0; i < 2; i++) {
             game.getPlayers().set(i , game.getPlayers().get(i).assignPower(extractedCards[i]));
         }
+        //assign Athena to player 3
         game.getPlayers().set(2 , game.getPlayers().get(2).assignPower(2));
 
         printPlayersSpecs(output, game, numberOfPLayers);

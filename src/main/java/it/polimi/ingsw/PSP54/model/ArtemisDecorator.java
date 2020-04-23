@@ -13,6 +13,11 @@ public class ArtemisDecorator extends GodDecorator{
         super(player);
     }
 
+    /**
+     *Initialize current player's turn by setting worker's action tokens
+     * @param male represent the sex of the worker which the player is going to use
+     * @return the chosen worker with updated tokens
+     */
     @Override
     public Worker turnInit(Boolean male){
 
@@ -22,6 +27,11 @@ public class ArtemisDecorator extends GodDecorator{
         return currentWorker;
     }
 
+    /**
+     * Set available boxes for the worker to move and stores them in worker's attribute
+     * @param worker current worker in use
+     * @return the vector containing available boxes
+     */
     @Override
     public ArrayList<Box> setWorkerBoxesToMove (Worker worker) {
 
@@ -38,6 +48,11 @@ public class ArtemisDecorator extends GodDecorator{
         return valid;
     }
 
+    /**
+     *If valid performs build and modify action tokens
+     * @param worker selected worker which the player wants to move
+     * @param dest selected box where to build
+     */
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
 
