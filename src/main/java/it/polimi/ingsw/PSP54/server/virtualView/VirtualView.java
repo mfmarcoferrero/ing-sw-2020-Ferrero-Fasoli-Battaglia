@@ -1,16 +1,20 @@
 package it.polimi.ingsw.PSP54.server.virtualView;
 
 import java.io.PrintStream;
+import java.net.Socket;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
+import java.util.Vector;
+
+import it.polimi.ingsw.PSP54.server.ClientHandler;
 import it.polimi.ingsw.PSP54.server.controller.*;
 import it.polimi.ingsw.PSP54.server.model.Box;
 import it.polimi.ingsw.PSP54.server.model.Game;
 import it.polimi.ingsw.PSP54.server.model.Player;
 
 public class VirtualView extends Observable implements Observer {
-
+    private Vector<Socket>Client= new Vector<>(3);
     private Scanner scanner;
     private PrintStream outputStream;
     private Move move;
