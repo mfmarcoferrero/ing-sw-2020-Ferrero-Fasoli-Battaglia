@@ -7,11 +7,11 @@ import java.net.Socket;
 
 public class ClientHandler implements Runnable {
     private Socket client;
-    boolean matchMaster;
-    public ClientHandler(Socket player, boolean matchmaster)
+    boolean gameMaster;
+    public ClientHandler(Socket player, boolean gamemaster)
     {
         this.client = player;
-        this.matchMaster=matchmaster;
+        this.gameMaster =gamemaster;
     }
 
 
