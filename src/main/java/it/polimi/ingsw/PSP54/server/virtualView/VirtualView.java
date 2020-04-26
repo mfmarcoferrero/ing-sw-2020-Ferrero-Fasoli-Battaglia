@@ -1,63 +1,87 @@
 package it.polimi.ingsw.PSP54.server.virtualView;
 
 import java.io.PrintStream;
-import java.net.Socket;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
-import java.util.Vector;
 
-import it.polimi.ingsw.PSP54.server.ClientHandler;
-import it.polimi.ingsw.PSP54.server.controller.*;
+import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.server.model.Box;
 import it.polimi.ingsw.PSP54.server.model.Game;
 import it.polimi.ingsw.PSP54.server.model.Player;
+import it.polimi.ingsw.PSP54.utils.Build;
+import it.polimi.ingsw.PSP54.utils.Move;
 
 public class VirtualView extends Observable implements Observer {
-    private Vector<Socket>Client= new Vector<>(3);
-    private Scanner scanner;
-    private PrintStream outputStream;
-    private Move move;
-    private Build build;
+
     private Box [][] board;
     private boolean moveDone = false, buildDone = false, firstWorkerSetDone = false;
+    private int virtualViewId;
+    private Connection connection;
+    private MessageReceiver messageReceiver;
+    private Player player;
 
-    public VirtualView() {
-        scanner = new Scanner(System.in);
-        outputStream = new PrintStream(System.out);
+    /**
+     * Viene istanziata una virtualView con la sua connessione e messageReceiver che permette
+     * la lettura degli oggetti inviati dal client
+     * @param virtualViewId
+     * @param p
+     * @param connection
+     * @param opponent
+     */
+    public VirtualView(int virtualViewId,Player p ,Connection connection, String opponent) {
+        this.virtualViewId = virtualViewId;
+        this.connection = connection;
+        this.messageReceiver = new MessageReceiver(this.connection,this);
+        this.player = p;
+        connection.addObserver(this.messageReceiver);
+        connection.asyncSend("Your opponent is: " + opponent + "\nDigit 'show' to show the current board");
     }
 
-    public void addPlayer(Player p) {
+    /**
+     * Notifica il controller con un oggetto di tipo Player che contiene solo le
+     * credenziali
+     */
+    public void addPlayer () {
         setChanged();
-        notifyObservers(p);
+        notifyObservers(player);
     }
 
-    public void setWorker() {
+    /**
+     * Notifica il controller con un oggetto di tipo Move verificando che la mossa
+     * sia un set iniziale di un worker
+     * @param move
+     */
+    public void setWorker(Move move) {
         while (firstWorkerSetDone == false && move.isSetFirstPos()){
             setChanged();
             notifyObservers(move);
         }
     }
 
-    public void playerTurn() {
-        while (moveDone == false || buildDone == false) {
-            if (moveDone == false && !(move.isSetFirstPos())) {
+    /**
+     * Notifica il controller con un oggetto di tipo Move verificando che la mossa
+     * non sia un set iniziale di un worker
+     * @param move
+     */
+    public void handleMove(Move move) {
+        while (moveDone == false) {
+            if (!(move.isSetFirstPos())) {
                 setChanged();
                 notifyObservers(move);
-            }
-            if(buildDone == false){
-                setChanged();
-                notifyObservers(build);
             }
         }
     }
 
-    public void setMove(Move move) {
-        this.move = move;
-    }
-
-    public void setBuild(Build build) {
-        this.build = build;
+    /**
+     * Notifica il controller con un oggetto di tipo Build
+     * @param build
+     */
+    public void handleBuild(Build build) {
+        while (buildDone == false) {
+            setChanged();
+            notifyObservers(build);
+        }
     }
 
     public void setMoveDone(boolean moveDone) {
@@ -72,11 +96,33 @@ public class VirtualView extends Observable implements Observer {
         this.firstWorkerSetDone = workerSet;
     }
 
+    public int getVirtualViewId() {
+        return virtualViewId;
+    }
+
+    public void showMessage(Object message) {
+        connection.asyncSend(message);
+    }
+
+    public void showBoard() {
+        connection.asyncSend(board);
+    }
+
+    /**
+     * Viene notificato dal model che invia sempre una board per ogni metodo del model chiamato dal controller
+     * @param o
+     * @param arg
+     */
     @Override
     public void update(Observable o, Object arg) {
         if(!(o instanceof Game) || !(arg instanceof Box[][])){
             throw new IllegalArgumentException();
         }
-        board = (Box[][])arg;
+        this.board = (Box[][]) arg;
     }
+
+    public Box[][] getBoard() {
+        return board;
+    }
+
 }
