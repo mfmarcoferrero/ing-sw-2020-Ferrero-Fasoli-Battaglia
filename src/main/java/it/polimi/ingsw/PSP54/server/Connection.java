@@ -18,6 +18,8 @@ public class Connection extends Observable <String> implements Runnable {
     private int age;
     private String name;
     private boolean active = true;
+    boolean gamemaster=false;
+    int numberofplayers;
 
     public Connection(Socket socket, Server server) {
         this.socket = socket;
@@ -84,6 +86,15 @@ public class Connection extends Observable <String> implements Runnable {
             name = in.nextLine();
             send("What's your age?");
             age = in.nextInt();
+            if(gamemaster==true) {
+                send("hey, set the number of player");
+                numberofplayers=in.nextInt();
+                while (numberofplayers<2 || numberofplayers>3) {
+                    send("illegal number of player must be 2 or 3, insert a new number of player");
+                    numberofplayers=in.nextInt();
+                }
+                server.setNumberofplayer(numberofplayers);
+            }
             server.lobby(this, new Player(name,age,null,null));
             while(isActive()) {
                 String read = in.next();
@@ -97,4 +108,9 @@ public class Connection extends Observable <String> implements Runnable {
             close();
         }
     }
+
+    public void setGamemaster(boolean gamemaster) {
+        this.gamemaster = gamemaster;
+    }
+
 }

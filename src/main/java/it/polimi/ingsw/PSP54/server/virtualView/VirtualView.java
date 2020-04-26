@@ -20,6 +20,8 @@ public class VirtualView extends Observable implements Observer {
     private Connection connection;
     private MessageReceiver messageReceiver;
     private Player player;
+    private String opponent1=null;
+    private String opponent2=null;
 
     /**
      * Viene istanziata una virtualView con la sua connessione e messageReceiver che permette
@@ -27,15 +29,14 @@ public class VirtualView extends Observable implements Observer {
      * @param virtualViewId
      * @param p
      * @param connection
-     * @param opponent
      */
-    public VirtualView(int virtualViewId,Player p ,Connection connection, String opponent) {
+    public VirtualView(int virtualViewId,Player p ,Connection connection, String opponent1, String opponent2) {
         this.virtualViewId = virtualViewId;
         this.connection = connection;
         this.messageReceiver = new MessageReceiver(this.connection,this);
         this.player = p;
         connection.addObserver(this.messageReceiver);
-        connection.asyncSend("Your opponent is: " + opponent + "\nDigit 'show' to show the current board");
+        connection.asyncSend("opponent 1 is:"+ opponent1+"\nopponent 2 is "+ opponent2+ "\n digit show to see your board");
     }
 
     /**
@@ -125,4 +126,14 @@ public class VirtualView extends Observable implements Observer {
         return board;
     }
 
+
+    public void setOpponent1(String opponent1) {
+        this.opponent1 = opponent1;
+        connection.asyncSend("your opponent is:"+ opponent1+"\n");
+    }
+
+    public void setOpponent2(String opponent2) {
+        this.opponent2 = opponent2;
+        connection.asyncSend("Your opponent is: " + opponent2 + "\nDigit 'show' to show the current board");
+    }
 }

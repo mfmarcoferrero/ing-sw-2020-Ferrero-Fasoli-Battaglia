@@ -21,7 +21,13 @@ public class Server {
 
     private List<Connection> connections = new ArrayList<Connection>();
     private Map<Player, Connection> waitingConnection = new HashMap<>();
-    private Map<Connection, Connection> playingConnection = new HashMap<>();
+    private Vector<Connection> playingConnection = new Vector<>(0,1);
+    private Vector<Socket> client = new Vector<>();
+    private Vector<VirtualView> virtualViews = new Vector<>(0);
+    private Vector<Connection> currentconnections =new Vector<>(0,1);
+
+    private int numberofplayer=3;
+
 
     //Register connection
     private synchronized void registerConnection(Connection c){
@@ -31,7 +37,7 @@ public class Server {
     //Deregister connection
     public synchronized void deregisterConnection(Connection c){
         connections.remove(c);
-        Connection opponent = playingConnection.get(c);
+        /*Connection opponent = playingConnection.get(c);
         if(opponent != null){
             opponent.closeConnection();
             playingConnection.remove(c);
@@ -42,7 +48,13 @@ public class Server {
             //        iterator.remove();
             //    }
             //}
+        }*/
+        playingConnection.remove(c);
+        if (playingConnection.size()==1){
+            playingConnection.firstElement().send("hai vinto");
         }
+        else if (playingConnection.size()<1)
+            System.exit(1);
     }
 
     /**
@@ -55,24 +67,40 @@ public class Server {
      */
     public synchronized void lobby(Connection c, Player p){
         waitingConnection.put(p, c);
-        if(waitingConnection.size() == 2) {
+        if(waitingConnection.size() == numberofplayer && numberofplayer<=3 && numberofplayer>=2) {
             List<Player> keys = new ArrayList<>(waitingConnection.keySet());
-            Connection c1 = waitingConnection.get(keys.get(0));
-            Connection c2 = waitingConnection.get(keys.get(1));
-            VirtualView virtualViewPlayer1 = new VirtualView(0, keys.get(0),c1,keys.get(1).getPlayerName());
-            VirtualView virtualViewPlayer2 = new VirtualView(1, keys.get(1),c2,keys.get(0).getPlayerName());
+            for(int i=0;i<keys.size();i++) {
+                Connection client = waitingConnection.get(keys.get(i));
+
+                currentconnections.remove(waitingConnection.get(keys.get(i)));
+                if (i==0){
+                    VirtualView virtualView = new VirtualView(i,keys.get(i),client,keys.get(i+1).getPlayerName(),keys.get(i+2).getPlayerName());
+                    virtualViews.add(i,virtualView);
+                    /*virtualViews.get(i).setOpponent1(keys.get(1).getPlayerName());
+                    virtualViews.get(i).setOpponent2(keys.get(2).getPlayerName());*/
+                }
+                else if(i==1){
+                    VirtualView virtualView = new VirtualView(i,keys.get(i),client,keys.get(i-1).getPlayerName(),keys.get(i+1).getPlayerName());
+                    virtualViews.add(i,virtualView);
+                   /* virtualViews.get(i).setOpponent1(keys.get(0).getPlayerName());
+                    virtualViews.get(i).setOpponent2(keys.get(2).getPlayerName());*/
+                }
+                else {
+                    VirtualView virtualView = new VirtualView(i,keys.get(i),client,keys.get(i-2).getPlayerName(),keys.get(i-1).getPlayerName());
+                    virtualViews.add(i,virtualView);
+                   /* virtualViews.get(i).setOpponent1(keys.get(0).getPlayerName());
+                    virtualViews.get(i).setOpponent2(keys.get(1).getPlayerName());*/
+                }
+                playingConnection.add(client);
+            }
             Game model = new Game();
             Controller controller = new Controller(model);
-            controller.addVirtualView(virtualViewPlayer1);
-            controller.addVirtualView(virtualViewPlayer2);
-            virtualViewPlayer1.addObserver(controller);
-            virtualViewPlayer2.addObserver(controller);
-            model.addObserver(virtualViewPlayer1);
-            model.addObserver(virtualViewPlayer2);
-            virtualViewPlayer1.addPlayer();
-            virtualViewPlayer2.addPlayer();
-            playingConnection.put(c1, c2);
-            playingConnection.put(c2, c1);
+            for (int i=0;i<numberofplayer;i++){
+                controller.addVirtualView(virtualViews.get(i));
+                virtualViews.get(i).addObserver(controller);
+                model.addObserver(virtualViews.get(i));
+                virtualViews.get(i).addPlayer();
+            }
             waitingConnection.clear();
         }
     }
@@ -92,12 +120,19 @@ public class Server {
             try {
                 Socket socket = serverSocket.accept();
                 Connection connection = new Connection(socket, this);
+                currentconnections.add(connection);
+                if(currentconnections.size()==1)
+                    connection.setGamemaster(true);
                 registerConnection(connection);
                 executor.submit(connection);
+
             } catch (IOException e) {
                 System.err.println("Connection error!");
             }
         }
     }
 
+    public void setNumberofplayer(int numberofplayer) {
+        this.numberofplayer = numberofplayer;
+    }
 }
