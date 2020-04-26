@@ -1,10 +1,12 @@
 package it.polimi.ingsw.PSP54.server.model;
 
+import java.io.Serializable;
+
 /**
  * Classe casella della tabella
  */
 
-public class Box {
+public class Box implements Cloneable, Serializable {
     public static final int BOARD_SIZE = 5;
     protected int x, y, level;
     protected boolean dome;
@@ -88,6 +90,15 @@ public class Box {
 
     public int getY() {
         return y;
+    }
+
+    @Override
+    protected final Box clone() {
+        final Box result = new Box(this.x,this.y);
+        result.dome = this.dome;
+        result.worker = this.worker;
+        result.level = this.level;
+        return result;
     }
 
     @Override

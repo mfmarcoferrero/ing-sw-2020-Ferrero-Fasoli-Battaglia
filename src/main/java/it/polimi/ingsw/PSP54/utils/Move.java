@@ -1,7 +1,10 @@
-package it.polimi.ingsw.PSP54.server.controller;
+package it.polimi.ingsw.PSP54.utils;
 
 import it.polimi.ingsw.PSP54.server.model.Box;
 
+/**
+ * Classe utilizzata come messaggio per notificare spostamenti
+ */
 public class Move {
     private int player_ind, worker_ind, x, y;
     private boolean setFirstPos = true;

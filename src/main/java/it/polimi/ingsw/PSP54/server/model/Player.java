@@ -1,4 +1,5 @@
 package it.polimi.ingsw.PSP54.server.model;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -165,6 +166,7 @@ public class Player {
         else
             game.setTurns(player_index + 1);
     }
+
 
     @Override
     public String toString (){

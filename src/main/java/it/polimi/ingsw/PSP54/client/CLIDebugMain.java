@@ -13,7 +13,6 @@ public class CLIDebugMain {
 
         CliView view = new CliView();
         Game game = new Game();
-        game.startGame();
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {

@@ -1,9 +1,12 @@
-package it.polimi.ingsw.PSP54.server.controller;
+package it.polimi.ingsw.PSP54.utils;
 
 import it.polimi.ingsw.PSP54.server.model.Box;
 
+/**
+ * Classe utilizzata come messsaggio per notificare costruzioni
+ */
 public class Build {
-    private int player_ind, worker_ind, x, y;
+    private int player_ind, worker_ind, x, y, virtualViewId;
     private boolean setDome;
 
     public Build(int player_ind, int worker_ind, int x, int y, boolean setDome) {

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-import it.polimi.ingsw.PSP54.server.controller.Move;
-import it.polimi.ingsw.PSP54.server.controller.Build;
+import it.polimi.ingsw.PSP54.utils.Move;
+import it.polimi.ingsw.PSP54.utils.Build;
 
 import java.util.Observable;
 import java.util.Random;
@@ -14,11 +14,21 @@ public class Game extends Observable {
     protected Vector<Player> players = new Vector<>();
     protected Box[][] board = new Box[5][5];
 
-    public Game(){
+    public Game() {
+        for (int i = 0;i < Box.BOARD_SIZE;i++) {
+            for (int j = 0; j < Box.BOARD_SIZE; j++) {
+                board[i][j] = new Box(i, j);
+            }
+        }
+    }
+
+    public void startGame (){
+        return;
     }
 
     /**
      * Istanzia un nuovo giocatore
+     * Notifica le virtualView che lo osservano con una board
      * @param name
      * @param age
      * @param workerColour
@@ -26,20 +36,11 @@ public class Game extends Observable {
     public void newPlayer(String name, int age , String workerColour) throws IllegalNumberOfPlayersException {
        if (players.size() < 3) {
            players.add(new Player(name,age,workerColour,this));
+           setChanged();
+           notifyObservers(board.clone());
        }
        else
            throw new IllegalNumberOfPlayersException();
-    }
-
-    /**
-     * Costruisce la board
-     */
-    public void startGame(){
-        for (int i = 0;i < Box.BOARD_SIZE;i++) {
-            for (int j = 0; j < Box.BOARD_SIZE; j++) {
-                board[i][j] = new Box(i, j);
-            }
-        }
     }
 
     /**

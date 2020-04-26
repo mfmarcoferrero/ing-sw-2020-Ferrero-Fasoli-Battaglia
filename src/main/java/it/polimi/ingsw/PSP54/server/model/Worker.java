@@ -1,9 +1,11 @@
 package it.polimi.ingsw.PSP54.server.model;
 
+import java.io.Serializable;
+
 /**
  * Classe operaio
  */
-public class Worker {
+public class Worker implements Serializable, Cloneable{
     private int workerID;
     private Player owner;
     private boolean male;
