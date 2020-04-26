@@ -25,7 +25,8 @@ public class CLIDebugMain {
         //add player
         try {
             game.newPlayer(view.acquireName(), view.acquireAge(), "blue");
-        } catch (IllegalNumberOfPlayersException e){
+        } catch (IllegalNumberOfPlayersException e) {
+            e.printStackTrace();
         }
         //set worker coordinates
         int[] coordinates = view.acquireCoordinates();

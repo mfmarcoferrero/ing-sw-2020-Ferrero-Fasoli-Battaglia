@@ -2,7 +2,7 @@ package it.polimi.ingsw.PSP54.server.model;
 
 public abstract class God {
     private boolean canMoveUp;
-    protected Player player;
+    protected final Player player;
 
     public God(Player player) {
         this.player = player;
@@ -30,10 +30,7 @@ public abstract class God {
         int deltaX,deltaY;
         deltaX = Math.abs(box1.x - box2.x);
         deltaY = Math.abs(box1.y - box2.y);
-        if (deltaX <= 1 && deltaY <= 1){
-            return true;
-        }
-        return false;
+        return deltaX <= 1 && deltaY <= 1;
     }
 
     /**
@@ -49,10 +46,7 @@ public abstract class God {
             if(dest.level == 3 && source.level == 2){
                 player.isWinner = true;
             }
-            if (canMoveUp == false && deltaLevelUp > 0){
-                return false;
-            }
-            return true;
+            return canMoveUp || deltaLevelUp <= 0;
         }
         return false;
     }
@@ -64,10 +58,7 @@ public abstract class God {
      * @return
      */
     public boolean normalValidBuilding(Box source, Box dest) {
-        if(adjacentBoxes(source,dest) && (!dest.isOccupied()) && (!dest.isDome()) && player.buildToken == 1){
-            return true;
-        }
-        return false;
+        return adjacentBoxes(source, dest) && (!dest.isOccupied()) && (!dest.isDome()) && player.buildToken == 1;
     }
 
     public void setCanMoveUp(boolean canMoveUp) {

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.PSP54.utils;
 
-import it.polimi.ingsw.PSP54.server.model.Box;
-
 /**
  * Classe utilizzata come messaggio per notificare spostamenti
  */

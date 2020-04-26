@@ -1,17 +1,26 @@
 package it.polimi.ingsw.PSP54.server.model;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Classe giocatore
  */
 public class Player {
-    public static int NORMAL_POWER = 0, APOLLO = 1, ARTEMIS = 2, ATHENA = 3, ATLAS = 4, DEMETER = 5;
+    public static final int NORMAL_POWER = 0;
+    public static final int APOLLO = 1;
+    public static final int ARTEMIS = 2;
+    public static final int ATHENA = 3;
+    public static final int ATLAS = 4;
+    public static final int DEMETER = 5;
     public God power = null;
-    public Game game;
-    private String playerName, workerColour;
-    protected int player_index, moveToken, buildToken, godID, age;
-    private ArrayList <Worker> workerList = new ArrayList<>(2);
+    public final Game game;
+    private final String playerName;
+    private final String workerColour;
+    protected int player_index;
+    protected int moveToken;
+    protected int buildToken;
+    protected int godID;
+    protected final int age;
+    private final ArrayList <Worker> workerList = new ArrayList<>(2);
     protected boolean isWinner = false, lose = false;
 
 

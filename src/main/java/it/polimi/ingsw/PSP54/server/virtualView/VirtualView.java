@@ -1,9 +1,7 @@
 package it.polimi.ingsw.PSP54.server.virtualView;
 
-import java.io.PrintStream;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Scanner;
 
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.server.model.Box;
@@ -54,7 +52,7 @@ public class VirtualView extends Observable implements Observer {
      * @param move
      */
     public void setWorker(Move move) {
-        while (firstWorkerSetDone == false && move.isSetFirstPos()){
+        while (!firstWorkerSetDone && move.isSetFirstPos()){
             setChanged();
             notifyObservers(move);
         }
@@ -66,7 +64,7 @@ public class VirtualView extends Observable implements Observer {
      * @param move
      */
     public void handleMove(Move move) {
-        while (moveDone == false) {
+        while (!moveDone) {
             if (!(move.isSetFirstPos())) {
                 setChanged();
                 notifyObservers(move);
@@ -79,7 +77,7 @@ public class VirtualView extends Observable implements Observer {
      * @param build
      */
     public void handleBuild(Build build) {
-        while (buildDone == false) {
+        while (!buildDone) {
             setChanged();
             notifyObservers(build);
         }

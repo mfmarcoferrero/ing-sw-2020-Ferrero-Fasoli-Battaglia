@@ -17,7 +17,7 @@ public class Apollo extends God {
         int deltaLevel = Math.abs(dest.level - source.level);
         int deltaLevelUp = dest.level - source.level;
 
-        if (this.isCanMoveUp() == false && deltaLevelUp > 0){
+        if (!this.isCanMoveUp() && deltaLevelUp > 0){
             return false;
         }
         if (normalValidBuilding(source,dest)){

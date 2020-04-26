@@ -6,10 +6,10 @@ import java.io.Serializable;
  * Classe operaio
  */
 public class Worker implements Serializable, Cloneable{
-    private int workerID;
-    private Player owner;
+    private final int workerID;
+    private final Player owner;
     private boolean male;
-    private String color;
+    private final String color;
     public Box pos;
 
     public Worker(Player player,String color, int wID){

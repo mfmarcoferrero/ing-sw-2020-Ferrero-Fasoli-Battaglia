@@ -15,14 +15,10 @@ public class Atlas extends God {
      */
     @Override
     public boolean validBuilding(Box source,Box dest,boolean setDome) {
-        if (setDome == false){
+        if (!setDome){
             return normalValidBuilding(source,dest);
         }
-        else if (setDome && adjacentBoxes(source,dest) && !(dest.isOccupied()) && !(dest.isDome()) && player.buildToken == 1){
-            return true;
-        }
-        else
-            return false;
+        else return setDome && adjacentBoxes(source, dest) && !(dest.isOccupied()) && !(dest.isDome()) && player.buildToken == 1;
     }
 
     /**

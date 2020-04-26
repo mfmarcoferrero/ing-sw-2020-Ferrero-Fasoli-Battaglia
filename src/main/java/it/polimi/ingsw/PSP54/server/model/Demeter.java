@@ -31,10 +31,6 @@ public class Demeter extends God {
             firstWorker = source.worker;
             return true;
         }
-        else if (adjacentBoxes(source,dest) && (!dest.isOccupied()) && (!dest.isDome()) && player.buildToken == 0 && firstWorker == source.worker) {
-            return true;
-        }
-        else
-            return false;
+        else return adjacentBoxes(source, dest) && (!dest.isOccupied()) && (!dest.isDome()) && player.buildToken == 0 && firstWorker == source.worker;
     }
 }

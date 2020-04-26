@@ -36,10 +36,7 @@ public class Artemis extends God {
             return true;
         }
         else if (adjacentBoxes(source,dest) && (deltaLevel <= 1) && (!dest.isOccupied()) && (!dest.isDome()) && player.moveToken == 0 && firstSource != dest && firstWorkerMoved == source.worker){
-            if (this.isCanMoveUp() == false && deltaLevelUp > 0){
-                return false;
-            }
-            return true;
+            return (this.isCanMoveUp() || deltaLevelUp <= 0);
         }
         else
             return false;

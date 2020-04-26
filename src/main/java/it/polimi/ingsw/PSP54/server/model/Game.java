@@ -11,8 +11,8 @@ import java.util.Vector;
  * Classe gestione del gioco
  */
 public class Game extends Observable {
-    protected Vector<Player> players = new Vector<>();
-    protected Box[][] board = new Box[5][5];
+    protected final Vector<Player> players = new Vector<>();
+    protected final Box[][] board = new Box[5][5];
 
     public Game() {
         for (int i = 0;i < Box.BOARD_SIZE;i++) {

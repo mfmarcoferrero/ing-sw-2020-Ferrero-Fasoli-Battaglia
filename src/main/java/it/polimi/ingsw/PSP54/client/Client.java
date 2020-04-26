@@ -3,8 +3,6 @@ package it.polimi.ingsw.PSP54.client;
 
 import it.polimi.ingsw.PSP54.client.view.*;
 import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.server.model.Game;
-import it.polimi.ingsw.PSP54.server.model.Player;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -47,13 +45,12 @@ public class Client {
                 try {
                     while (isActive()) {
                         Object inputObject = socketIn.readObject();
-                        if (inputObject != null){
+                        /*if (inputObject != null){
                             System.out.println("(Ho ricevuto un messaggio)");
-                        }
+                        }*/
                         if(inputObject instanceof String) {
                             System.out.println((String)inputObject);
                         } else if (inputObject instanceof Box[][]){
-                            System.out.println("(Mi è arrivata la board)");
                             view.printBoard((Box[][])inputObject);
                         } else {
                             throw new IllegalArgumentException();
@@ -101,7 +98,7 @@ public class Client {
      * Ogni thread viene eseguito in modo asincrono e il client si disconnette quando terminano
      * @throws IOException
      */
-    public void run() throws IOException {
+    public void startClient() throws IOException {
         Socket socket = new Socket(ip, port);
         System.out.println("Connection established");
         ObjectInputStream socketIn = new ObjectInputStream(socket.getInputStream());

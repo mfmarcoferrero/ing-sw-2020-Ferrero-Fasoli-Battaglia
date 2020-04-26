@@ -5,7 +5,6 @@ import it.polimi.ingsw.PSP54.server.model.Player;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 

@@ -50,10 +50,7 @@ public class Box implements Cloneable, Serializable {
      * @return boolean in base al risultato
      */
     public boolean isOccupied (){
-        if (worker != null){
-            return true;
-        }
-        else return false;
+        return worker != null;
     }
 
     public Worker getWorker() {
