@@ -26,7 +26,7 @@ public class Server {
     private Vector<Connection> playingConnection = new Vector<>(0,1);
     private Vector<Socket> client = new Vector<>();
     private Vector<VirtualView> virtualViews = new Vector<>(0);
-    private Vector<Connection> currentConnections =new Vector<>(0,1);
+    protected Vector<Connection> currentConnections =new Vector<>(0,1);
 
     private int numberOfPlayers;
 
@@ -38,26 +38,21 @@ public class Server {
 
     //Deregister connection
     public synchronized void deregisterConnection(Connection c){
-        connections.remove(c);
-        /*
-        Connection opponent = playingConnection.get(c);
-        if(opponent != null){
-            opponent.closeConnection();
+        currentConnections.remove(c);
+        if (waitingConnection.containsValue(c))
+            waitingConnection.remove(c);
+        if (playingConnection.contains(c)){
             playingConnection.remove(c);
-            playingConnection.remove(opponent);
-            //Iterator<String> iterator = waitingConnection.keySet().iterator();
-            //while(iterator.hasNext()){
-            //    if(waitingConnection.get(iterator.next())==c){
-            //        iterator.remove();
-            //    }
-            //}
-        }*/
-        playingConnection.remove(c);
-        if (playingConnection.size()==1){
-            playingConnection.firstElement().send("hai vinto");
+            if(playingConnection.size()>=1)
+            {
+                for(int i=0;i<playingConnection.size();i++)
+                    playingConnection.get(i).send(c.getName()+" non è più il tuo avversario");
+            }
+            if (playingConnection.size()==1){
+                playingConnection.firstElement().send("hai vinto");
+            }
         }
-        else if (playingConnection.size()<1)
-            System.exit(1);
+
     }
 
     /**

@@ -85,7 +85,8 @@ public class Connection extends Observable <String> implements Runnable {
             name = in.nextLine();
             send("What's your age?");
             int age = in.nextInt();
-            if(gameMaster) {
+            send("currentsize"+server.currentConnections.size());
+            if(gameMaster || this==server.currentConnections.firstElement()) {
                 send("hey, set the number of player");
                 numberOfPlayers =in.nextInt();
                 while (numberOfPlayers <2 || numberOfPlayers >3) {
@@ -110,6 +111,10 @@ public class Connection extends Observable <String> implements Runnable {
 
     public void setGameMaster(boolean gameMaster) {
         this.gameMaster = gameMaster;
+    }
+
+    public String getName(){
+        return name;
     }
 
 }
