@@ -85,11 +85,10 @@ public class Connection extends Observable <String> implements Runnable {
             name = in.nextLine();
             send("What's your age?");
             int age = in.nextInt();
-            send("current size" + server.currentConnections.size());
             if(gameMaster || this==server.currentConnections.firstElement()) {
-                send("hey, set the number of players: "); //TODO: replace with actual View methods
-                numberOfPlayers = in.nextInt();
-                while (numberOfPlayers < 2 || numberOfPlayers > 3) {
+                send("hey, set the number of player");
+                numberOfPlayers =in.nextInt();
+                while (numberOfPlayers <2 || numberOfPlayers >3) {
                     send("illegal number of player must be 2 or 3, insert a new number of player");
                     numberOfPlayers = in.nextInt();
                 }

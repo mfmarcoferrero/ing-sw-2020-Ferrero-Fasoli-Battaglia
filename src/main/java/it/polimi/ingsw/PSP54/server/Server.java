@@ -12,19 +12,18 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+import java.util.Map;
 //TODO: case: 3 already connected clients, gameMaster sets numberOfPlayers to 2
 
 public class Server {
     private static final int PORT= 12345;
     private ServerSocket serverSocket;
-    private Vector<Player> players;
+
     private ExecutorService executor = Executors.newCachedThreadPool();
 
     private List<Connection> connections = new ArrayList<>();
     private Map<Player, Connection> waitingConnection = new HashMap<>();
     private Vector<Connection> playingConnection = new Vector<>(0,1);
-    private Vector<Socket> client = new Vector<>();
     private Vector<VirtualView> virtualViews = new Vector<>(0);
     protected Vector<Connection> currentConnections =new Vector<>(0,1);
 
@@ -39,11 +38,13 @@ public class Server {
     //Deregister connection
     public synchronized void deregisterConnection(Connection c){
         currentConnections.remove(c);
-        if (waitingConnection.containsValue(c)) {
-            waitingConnection.remove(c);
+        /*every time a client disconnects if it has already entered the lobby and is in the waitingconnections vector
+         we create a collection that allows to implement the iterator interface so is possible to search the element that refers to the client
+         and delete it*/
+        if (waitingConnection.containsValue(c)){
             Iterator<Player> iterator = waitingConnection.keySet().iterator();
-            while(iterator.hasNext()){
-                if(waitingConnection.get(iterator.next())==c){
+            while(iterator.hasNext()) {
+                if (waitingConnection.get(iterator.next()) == c) {
                     iterator.remove();
                 }
             }
@@ -55,23 +56,19 @@ public class Server {
                 for (Connection connection : playingConnection)
                     connection.send(c.getName() + " non è più il tuo avversario");
             }
-
             if (playingConnection.size()==1){
                 playingConnection.firstElement().send("hai vinto");
             }
-
         }
-
     }
-
 
     /**
      * Ogni thread di connection inserisce nella HashMap waitingConnection un istanza del giocatore
      * con le proprie credenziali e la corrispondente connection
      * Quando i giocatori in attesa raggiungono il numero desiderato per giocare viene istanziato completamente
      * gli oggetti necessari per avviare una partita
-     * @param c
-     * @param p
+     * @param c refernce to client
+     * @param p reference to in game player associated to client
      */
     public synchronized void lobby(Connection c, Player p){
         waitingConnection.put(p, c);
@@ -89,44 +86,29 @@ public class Server {
                 if (i==0){
 
                     if (numberOfPlayers == 2){
-
                         VirtualView virtualView = new VirtualView (i, keys.get(i), client, keys.get(i+1).getPlayerName());
-                        virtualViews.add(i, virtualView);
-
+                        virtualViews.add(i,virtualView);
                     }else { //numberOfPlayers == 3
-
                         VirtualView virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName(), keys.get(i + 2).getPlayerName());
-                        virtualViews.add(i, virtualView);
-                        /*virtualViews.get(i).setOpponent1(keys.get(1).getPlayerName());
-                        virtualViews.get(i).setOpponent2(keys.get(2).getPlayerName());*/
+                        virtualViews.add(i,virtualView);
                     }
-
-                }else if(i==1){
-
+                }
+                else if(i==1){
                     if (numberOfPlayers == 2){
-
                         VirtualView virtualView = new VirtualView( i, keys.get(i), client, keys.get(i-1).getPlayerName());
                         virtualViews.add(i,virtualView);
-
-                    }else {
-
-                        VirtualView virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName(), keys.get(i + 1).getPlayerName());
-                        virtualViews.add(i, virtualView);
-                        /* virtualViews.get(i).setOpponent1(keys.get(0).getPlayerName());
-                        virtualViews.get(i).setOpponent2(keys.get(2).getPlayerName());*/
                     }
-
-                }else {
-
+                    else {
+                        VirtualView virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName(), keys.get(i + 1).getPlayerName());
+                        virtualViews.add(i,virtualView);
+                    }
+                }
+                else {
                     VirtualView virtualView = new VirtualView( i, keys.get(i), client, keys.get(i-2).getPlayerName(), keys.get(i-1).getPlayerName());
                     virtualViews.add(i,virtualView);
-                   /* virtualViews.get(i).setOpponent1(keys.get(0).getPlayerName());
-                    virtualViews.get(i).setOpponent2(keys.get(1).getPlayerName());*/
                 }
-
                 playingConnection.add(client);
             }
-
             Game model = new Game();
             Controller controller = new Controller(model);
             for (int i = 0; i< numberOfPlayers; i++){
@@ -135,7 +117,6 @@ public class Server {
                 model.addObserver(virtualViews.get(i));
                 virtualViews.get(i).addPlayer();
             }
-
             waitingConnection.clear();
         }
     }
@@ -151,16 +132,15 @@ public class Server {
      */
     public void run(){
         System.out.println("Server listening on port: " + PORT);
-        while(true){
+        while(true) {
             try {
                 Socket socket = serverSocket.accept();
                 Connection connection = new Connection(socket, this);
                 currentConnections.add(connection);
-                if(currentConnections.size()==1)
+                if (currentConnections.size() == 1)
                     connection.setGameMaster(true);
                 registerConnection(connection);
                 executor.submit(connection);
-
             } catch (IOException e) {
                 System.err.println("Connection error!");
             }
