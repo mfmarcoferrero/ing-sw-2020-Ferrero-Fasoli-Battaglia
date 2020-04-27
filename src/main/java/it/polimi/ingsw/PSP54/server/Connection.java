@@ -85,7 +85,6 @@ public class Connection extends Observable <String> implements Runnable {
             name = in.nextLine();
             send("What's your age?");
             int age = in.nextInt();
-            send("currentsize"+server.currentConnections.size());
             if(gameMaster || this==server.currentConnections.firstElement()) {
                 send("hey, set the number of player");
                 numberOfPlayers =in.nextInt();
