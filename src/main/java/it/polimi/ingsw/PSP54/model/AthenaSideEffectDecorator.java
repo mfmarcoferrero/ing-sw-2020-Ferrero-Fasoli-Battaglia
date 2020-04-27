@@ -1,6 +1,7 @@
 package it.polimi.ingsw.PSP54.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class AthenaSideEffectDecorator extends GodDecorator {
 
@@ -20,11 +21,13 @@ public class AthenaSideEffectDecorator extends GodDecorator {
         ArrayList<Box> valid = super.setWorkerBoxesToMove(worker);
 
         //affects the vector
-        for (int i = 0; i < valid.size(); i++) { //TODO: use Iterator
-            if (valid.get(i).getLevel() == worker.getPos().getLevel()+1)
-                valid.remove(i);
-        }
+        Iterator<Box> iterator = valid.iterator();
+        while (iterator.hasNext()) {
+            Box check = iterator.next();
 
+            if (check.getLevel() == worker.getPos().getLevel() + 1)
+                iterator.remove();
+        }
         return valid;
     }
 

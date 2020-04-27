@@ -350,7 +350,6 @@
 
 		/**
 		 * asks coordinates which player wants to move
-		 * @return destination box
 		 */
 		public void acquireCoordinates() {
 
