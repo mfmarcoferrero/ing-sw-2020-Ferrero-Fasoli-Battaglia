@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 public class Server {
     private static final int PORT= 12345;
     private ServerSocket serverSocket;
-
+    private Vector<Player> players;
     private ExecutorService executor = Executors.newCachedThreadPool();
 
     private List<Connection> connections = new ArrayList<>();
@@ -39,21 +39,31 @@ public class Server {
     //Deregister connection
     public synchronized void deregisterConnection(Connection c){
         currentConnections.remove(c);
-        if (waitingConnection.containsValue(c))
+        if (waitingConnection.containsValue(c)) {
             waitingConnection.remove(c);
+            Iterator<Player> iterator = waitingConnection.keySet().iterator();
+            while(iterator.hasNext()){
+                if(waitingConnection.get(iterator.next())==c){
+                    iterator.remove();
+                }
+            }
+        }
         if (playingConnection.contains(c)){
             playingConnection.remove(c);
             if(playingConnection.size()>=1)
             {
-                for(int i=0;i<playingConnection.size();i++)
-                    playingConnection.get(i).send(c.getName()+" non è più il tuo avversario");
+                for (Connection connection : playingConnection)
+                    connection.send(c.getName() + " non è più il tuo avversario");
             }
+
             if (playingConnection.size()==1){
                 playingConnection.firstElement().send("hai vinto");
             }
+
         }
 
     }
+
 
     /**
      * Ogni thread di connection inserisce nella HashMap waitingConnection un istanza del giocatore

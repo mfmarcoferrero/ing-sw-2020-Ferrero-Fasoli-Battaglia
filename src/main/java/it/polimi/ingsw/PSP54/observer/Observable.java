@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP54.observer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Observable<T> {
+public class  Observable<T> {
 
     private final List<Observer<T>> observers = new ArrayList<>();
 
