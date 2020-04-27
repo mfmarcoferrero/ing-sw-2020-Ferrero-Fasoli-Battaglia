@@ -14,11 +14,10 @@ public class Connection extends Observable <String> implements Runnable {
     private Scanner in;
     private ObjectOutputStream out;
     private Server server;
-    private int age;
     private String name;
     private boolean active = true;
-    boolean gamemaster=false;
-    int numberofplayers;
+    boolean gameMaster  = false;
+    int numberOfPlayers;
 
     public Connection(Socket socket, Server server) {
         this.socket = socket;
@@ -77,6 +76,7 @@ public class Connection extends Observable <String> implements Runnable {
      * Fino a quando isActive() il thread rimane in ascolto di ciò che viene inviato dal client
      * e per ogni messaggio ricevuto notifica MessageReceiver
      */
+    @Override
     public void run() {
         try {
             in = new Scanner(socket.getInputStream());
@@ -84,17 +84,17 @@ public class Connection extends Observable <String> implements Runnable {
             send("Welcome! What's your name?");
             name = in.nextLine();
             send("What's your age?");
-            age = in.nextInt();
-            if(gamemaster==true) {
+            int age = in.nextInt();
+            if(gameMaster) {
                 send("hey, set the number of player");
-                numberofplayers=in.nextInt();
-                while (numberofplayers<2 || numberofplayers>3) {
+                numberOfPlayers =in.nextInt();
+                while (numberOfPlayers <2 || numberOfPlayers >3) {
                     send("illegal number of player must be 2 or 3, insert a new number of player");
-                    numberofplayers=in.nextInt();
+                    numberOfPlayers = in.nextInt();
                 }
-                server.setNumberofplayer(numberofplayers);
+                server.setNumberOfPlayers(numberOfPlayers);
             }
-            server.lobby(this, new Player(name,age,null,null));
+            server.lobby(this, new Player(name, age,null,null));
             while(isActive()) {
                 String read = in.next();
                 notify(read);
@@ -108,8 +108,8 @@ public class Connection extends Observable <String> implements Runnable {
         }
     }
 
-    public void setGamemaster(boolean gamemaster) {
-        this.gamemaster = gamemaster;
+    public void setGameMaster(boolean gameMaster) {
+        this.gameMaster = gameMaster;
     }
 
 }

@@ -18,23 +18,40 @@ public class VirtualView extends Observable implements Observer {
     private Connection connection;
     private MessageReceiver messageReceiver;
     private Player player;
-    private String opponent1=null;
-    private String opponent2=null;
+    private String opponent1;
+    private String opponent2;
 
     /**
-     * Viene istanziata una virtualView con la sua connessione e messageReceiver che permette
-     * la lettura degli oggetti inviati dal client
+     * Instantiates a VirtualView with corresponding Connection and MessageReceiver for a 2 players game
      * @param virtualViewId
      * @param p
      * @param connection
      */
-    public VirtualView(int virtualViewId,Player p ,Connection connection, String opponent1, String opponent2) {
+    public VirtualView(int virtualViewId, Player p, Connection connection, String opponent1) {
         this.virtualViewId = virtualViewId;
         this.connection = connection;
         this.messageReceiver = new MessageReceiver(this.connection,this);
         this.player = p;
+        this.opponent1 = opponent1;
         connection.addObserver(this.messageReceiver);
-        connection.asyncSend("opponent 1 is:"+ opponent1+"\nopponent 2 is "+ opponent2+ "\n digit show to see your board");
+        connection.asyncSend("opponent 1 is: " + opponent1 + "\ndigit show to see your board");
+    }
+
+    /**
+     * Instantiates a VirtualView with corresponding Connection and MessageReceiver for a 3 players game
+     * @param virtualViewId
+     * @param p
+     * @param connection
+     */
+    public VirtualView(int virtualViewId, Player p, Connection connection, String opponent1, String opponent2) {
+        this.virtualViewId = virtualViewId;
+        this.connection = connection;
+        this.messageReceiver = new MessageReceiver(this.connection,this);
+        this.player = p;
+        this.opponent1 = opponent1;
+        this.opponent2 = opponent2;
+        connection.addObserver(this.messageReceiver);
+        connection.asyncSend("opponent 1 is: "+ opponent1+"\nopponent 2 is: "+ opponent2+ "\ndigit show to see your board");
     }
 
     /**
