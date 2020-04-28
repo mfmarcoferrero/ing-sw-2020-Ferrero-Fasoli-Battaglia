@@ -24,10 +24,6 @@ public class Worker {
         return male;
     }
 
-    public void setMale(Boolean male) {
-        this.male = male;
-    }
-
     public StandardPlayer getOwner() {
         return owner;
     }

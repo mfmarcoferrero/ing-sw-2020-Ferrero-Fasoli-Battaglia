@@ -60,12 +60,4 @@ public class ArtemisDecorator extends GodDecorator{
         if (worker.getMoveToken()!=0)
             worker.setMoveToken(0);
     }
-
-    //only for debug purpose
-
-    @Override
-    public void printPower() {
-        System.out.println("Artemis");
-
-    }
 }

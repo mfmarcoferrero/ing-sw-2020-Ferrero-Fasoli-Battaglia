@@ -123,22 +123,5 @@ public abstract class GodDecorator implements Player {
         playerToDecorate.setWorkerPos(worker, x, y);
     }
 
-    //only for debug purpose
-
-    @Override
-    public void addSideEffect() {
-        playerToDecorate.addSideEffect();
-    }
-
-    @Override
-    public void rmvSideEffect() {
-        playerToDecorate.rmvSideEffect();
-    }
-
-    @Override
-    public void printPower() {
-        playerToDecorate.printPower();
-    }
-
 }
 

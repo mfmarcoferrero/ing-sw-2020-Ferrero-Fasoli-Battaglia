@@ -70,12 +70,4 @@ public class ApolloDecorator extends GodDecorator {
             worker.setBoxesToBuild(setWorkerBoxesToBuild(worker));
         }else throw new InvalidMoveException();
     }
-
-    //only for debug purpose
-
-    @Override
-    public void printPower() {
-        System.out.println("Apollo");
-
-    }
 }

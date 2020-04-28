@@ -12,28 +12,8 @@ public class AthenaDecorator extends GodDecorator{
         super(player);
     }
 
-    /*if one of your worked moved up on your last turn, opponent players cannot move up this turn
-
-    PSEUDOCODE:
-
-    move:
-
-        if (goesUp)
-            if (!movedUp)
-                assignAthenaSideEffectDecorator(player)
-                movedUp = true
-
-        else
-            reassignPreviousPowers
-
-    assign:
-
-        assignSideEffect(game.players)
-
-    */
-
     /**
-     * Decorates other players with AtenaSideEffectDecorator
+     * Decorates other players with AthenaSideEffectDecorator
      * @param players the vector containing all players
      */
     public void assignAthenaSideEffect(Vector<Player> players){
@@ -90,22 +70,5 @@ public class AthenaDecorator extends GodDecorator{
 
         }else throw new InvalidMoveException();
 
-    }
-
-    //Only for debug purpose
-    @Override
-    public void addSideEffect() {
-        this.assignAthenaSideEffect(getGame().getPlayers());
-
-    }
-
-    @Override
-    public void rmvSideEffect() {
-        this.reassignPreviousPowers(getGame().getPlayers());
-    }
-
-    @Override
-    public void printPower() {
-        System.out.println("Athena");
     }
 }

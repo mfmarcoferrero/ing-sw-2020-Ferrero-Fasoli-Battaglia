@@ -63,7 +63,7 @@ public class ArtemisDecoratorTest {
         expected.add(board[3][2]);
         expected.add(board[3][3]);
 
-        ArrayList<Box> result = player_1.setWorkerBoxesToMove(artemisWorker);
+        ArrayList<Box> result = players.get(0).setWorkerBoxesToMove(artemisWorker);
 
         assertEquals(expected, result);
     }
@@ -97,7 +97,7 @@ public class ArtemisDecoratorTest {
         assertEquals(artemisWorker.getPos(), board[1][1]);
         assertEquals(board[1][1].getWorker(), artemisWorker);
         assertEquals(expected, result);
-        assertEquals(artemisWorker.getMoveToken(), 1);
+        assertEquals(1, artemisWorker.getMoveToken());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class ArtemisDecoratorTest {
             thrown = e;
         }
 
-        assertEquals(artemisWorker.getMoveToken(), 1);
+        assertEquals(1, artemisWorker.getMoveToken());
 
         assertNotNull(thrown);
 
@@ -137,8 +137,8 @@ public class ArtemisDecoratorTest {
         assertEquals(artemisWorker.getPos(), board[0][0]);
         assertEquals(board[0][0].getWorker(), artemisWorker);
 
-        assertEquals(board[1][1].getLevel(), 1);
-        assertEquals(artemisWorker.getMoveToken() + artemisWorker.getBuildToken(), 0);
+        assertEquals(1, board[1][1].getLevel());
+        assertEquals(0, artemisWorker.getMoveToken() + artemisWorker.getBuildToken());
     }
 
     private void doubleMove(Worker worker, Box dest1, Box dest2) throws InvalidMoveException {

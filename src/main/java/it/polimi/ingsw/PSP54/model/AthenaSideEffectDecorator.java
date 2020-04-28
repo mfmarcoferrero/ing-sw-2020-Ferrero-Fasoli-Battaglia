@@ -30,11 +30,4 @@ public class AthenaSideEffectDecorator extends GodDecorator {
         }
         return valid;
     }
-
-    //only for debug purpose
-
-    @Override
-    public void printPower() {
-        System.out.println("Athena Side Effect");
-    }
 }

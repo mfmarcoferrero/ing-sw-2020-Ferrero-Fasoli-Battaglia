@@ -288,22 +288,4 @@ public class StandardPlayer implements Player {
     public void setCardID(int cardID) {
         this.cardID = cardID;
     }
-
-    //only for debug purpose
-
-    @Override
-    public void addSideEffect() {
-        System.out.println("You Failed");
-    }
-
-    @Override
-    public void rmvSideEffect() {
-        System.out.println("You Failed!");
-    }
-
-    @Override
-    public void printPower() {
-        System.out.println("None");
-    }
-
 }

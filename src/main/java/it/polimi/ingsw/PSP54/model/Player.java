@@ -98,12 +98,4 @@ public interface Player {
     int getCardID();
 
     void setCardID(int cardID);
-
-    //Only for debug purpose
-
-    void addSideEffect ();
-
-    void rmvSideEffect ();
-
-    void printPower();
 }

@@ -25,7 +25,7 @@ public class DemeterDecorator extends GodDecorator{
             while (iterator.hasNext()) {
 
                 Box check = iterator.next();
-                if (check == lastBuilding)
+                if (check == getLastBuilding())
                     iterator.remove();
             }
 
@@ -69,12 +69,5 @@ public class DemeterDecorator extends GodDecorator{
 
     public void setLastBuilding(Box lastBuilding) {
         this.lastBuilding = lastBuilding;
-    }
-
-    //only for debug purpose
-    @Override
-    public void printPower() {
-        System.out.println("Demeter");
-
     }
 }

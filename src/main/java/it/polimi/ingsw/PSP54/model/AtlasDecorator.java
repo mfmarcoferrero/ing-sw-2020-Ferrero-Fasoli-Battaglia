@@ -11,12 +11,4 @@ public class AtlasDecorator extends GodDecorator {
     /* your worker can build a dome on every level
 
      */
-
-    //only for debug purpose
-
-    @Override
-    public void printPower() {
-        System.out.println("Atlas");
-
-    }
 }
