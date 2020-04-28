@@ -13,7 +13,7 @@ public class ArtemisDecoratorTest {
 
     private Game game;
     Vector<Player> players;
-    Player player_1, player_2, player_3;
+    Player player_1;
     Box[][] board;
     Worker artemisWorker;
     int x;
@@ -31,12 +31,10 @@ public class ArtemisDecoratorTest {
         players = game.getPlayers();
 
         //set Artemis power to player_1
-        player_1 = players.get(0);
-        player_1 = player_1.assignPower(1);
-
-        player_2 = players.get(1);
-        player_3 = players.get(2);
-        player_1.setGame(game);
+        players.set(0, players.get(0).assignPower(1));
+        players.get(0).setGame(game);
+        players.get(1).setGame(game);
+        players.get(2).setGame(game);
     }
 
     @After
@@ -50,7 +48,7 @@ public class ArtemisDecoratorTest {
         //initialize artemisWorker and set position
         x = 2;
         y = 2;
-        artemisWorker = player_1.turnInit(true);
+        artemisWorker = players.get(0).turnInit(true);
         artemisWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(artemisWorker);
 
@@ -76,13 +74,13 @@ public class ArtemisDecoratorTest {
         //initialize worker and set position
         x = 2;
         y = 2;
-        artemisWorker = player_1.turnInit(true);
+        artemisWorker = players.get(0).turnInit(true);
         artemisWorker.setPos(board[x][y]);
         board[x][y].setWorker(artemisWorker);
 
-        player_1.setWorkerBoxesToMove(artemisWorker);
+        players.get(0).setWorkerBoxesToMove(artemisWorker);
 
-        player_1.move(artemisWorker, board[1][1]);
+        players.get(0).move(artemisWorker, board[1][1]);
 
         //generate expected result
         ArrayList<Box> expected = new ArrayList<>();
@@ -94,7 +92,7 @@ public class ArtemisDecoratorTest {
         expected.add(board[2][0]);
         expected.add(board[2][1]);
 
-        ArrayList<Box> result = player_1.setWorkerBoxesToMove(artemisWorker);
+        ArrayList<Box> result = players.get(0).setWorkerBoxesToMove(artemisWorker);
 
         assertEquals(artemisWorker.getPos(), board[1][1]);
         assertEquals(board[1][1].getWorker(), artemisWorker);
@@ -106,7 +104,7 @@ public class ArtemisDecoratorTest {
     public void setWorkerBoxesToMove_DoubleMove_TryToGetBackThrowsException() {
         x = 2;
         y = 2;
-        artemisWorker = player_1.turnInit(true);
+        artemisWorker = players.get(0).turnInit(true);
         artemisWorker.setPos(board[x][y]);
         board[x][y].setWorker(artemisWorker);
 
@@ -128,13 +126,13 @@ public class ArtemisDecoratorTest {
     public void build_DoubleMove_CorrectBuildingAndTokensToZero() throws InvalidMoveException, InvalidBuildingException {
         x = 2;
         y = 2;
-        artemisWorker = player_1.turnInit(true);
+        artemisWorker = players.get(0).turnInit(true);
         artemisWorker.setPos(board[x][y]);
         board[x][y].setWorker(artemisWorker);
 
         doubleMove(artemisWorker, board[1][1], board[0][0]);
 
-        player_1.build(artemisWorker, board[1][1]);
+        players.get(0).build(artemisWorker, board[1][1]);
 
         assertEquals(artemisWorker.getPos(), board[0][0]);
         assertEquals(board[0][0].getWorker(), artemisWorker);
@@ -144,10 +142,10 @@ public class ArtemisDecoratorTest {
     }
 
     private void doubleMove(Worker worker, Box dest1, Box dest2) throws InvalidMoveException {
-        player_1.setWorkerBoxesToMove(worker);
-        player_1.move(worker, dest1);
-        player_1.setWorkerBoxesToMove(worker);
-        player_1.move(worker, dest2);
+        players.get(0).setWorkerBoxesToMove(worker);
+        players.get(0).move(worker, dest1);
+        players.get(0).setWorkerBoxesToMove(worker);
+        players.get(0).move(worker, dest2);
 
     }
 }

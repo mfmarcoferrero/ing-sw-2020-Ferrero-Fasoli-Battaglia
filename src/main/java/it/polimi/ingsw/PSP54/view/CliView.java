@@ -1,5 +1,5 @@
 	package it.polimi.ingsw.PSP54.view;
-	import it.polimi.ingsw.PSP54.model.*;
+	import it.polimi.ingsw.PSP54.model.Box;
 	import java.io.PrintStream;
 	import java.util.InputMismatchException;
 	import java.util.Scanner;

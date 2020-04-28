@@ -1,6 +1,6 @@
 package it.polimi.ingsw.PSP54.view;
 
-import it.polimi.ingsw.PSP54.model.*;
+import it.polimi.ingsw.PSP54.model.Game;
 
 public class CLIDebugMain {
 

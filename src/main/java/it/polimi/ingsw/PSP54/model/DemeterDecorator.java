@@ -2,38 +2,17 @@ package it.polimi.ingsw.PSP54.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-//TODO: JavaDoc
+
+/**
+ * Your worker may build an additional time but not on the same space
+ */
 public class DemeterDecorator extends GodDecorator{
 
-    private Box lastBuild;
+    private Box lastBuilding;
 
     public DemeterDecorator(Player player) {
         super(player);
     }
-
-    /*your worker may build an additional time but not on the same space
-
-    PSEUDOCODE:
-
-    move:
-
-        super.move()
-        setBuildToken(2)
-
-    setValidBoxesToBuild:
-
-        if(buildToken == 2)
-            super.setValidBoxesToBuild
-        else
-            super - lastBuild
-
-    build:
-
-        if (buildToken == 2)
-            setLastBuild
-
-
-     */
 
     @Override
     public ArrayList<Box> setWorkerBoxesToBuild(Worker worker) {
@@ -46,13 +25,12 @@ public class DemeterDecorator extends GodDecorator{
             while (iterator.hasNext()) {
 
                 Box check = iterator.next();
-                if (check.getLevel() == worker.getPos().getLevel() + 1)
+                if (check == lastBuilding)
                     iterator.remove();
             }
 
             return def;
         }
-
     }
 
     @Override
@@ -63,29 +41,34 @@ public class DemeterDecorator extends GodDecorator{
 
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
-        if (worker.getBuildToken()==2) {
-            setLastBuild(dest);
-            super.build(worker, dest);
-        }else{
-            ArrayList<Box> def = super.setWorkerBoxesToBuild(worker);
-            Iterator<Box> iterator = def.iterator();
-            while (iterator.hasNext()) {
 
-                Box check = iterator.next();
-                if (check == getLastBuild())
-                    iterator.remove();
+        worker.setBoxesToBuild(setWorkerBoxesToBuild(worker));
+        ArrayList<Box> valid = worker.getBoxesToBuild();
+        int currentBuildToken = worker.getBuildToken();
+
+        if (valid.contains(dest)){
+            if (dest.getLevel() == 3)
+                dest.setDome(true);
+            else {
+                int currentLevel = dest.getLevel();
+                dest.setLevel(currentLevel+1);
             }
-        }
+            if (currentBuildToken == 2)
+                setLastBuilding(dest);
+
+            worker.setBuildToken(currentBuildToken-1);
+
+            }else throw new InvalidBuildingException();
     }
 
     //getters & setters
 
-    public Box getLastBuild() {
-        return lastBuild;
+    public Box getLastBuilding() {
+        return lastBuilding;
     }
 
-    public void setLastBuild(Box lastBuild) {
-        this.lastBuild = lastBuild;
+    public void setLastBuilding(Box lastBuilding) {
+        this.lastBuilding = lastBuilding;
     }
 
     //only for debug purpose

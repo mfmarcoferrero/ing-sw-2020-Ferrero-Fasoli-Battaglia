@@ -186,7 +186,6 @@ public class StandardPlayer implements Player {
 
         worker.setBoxesToBuild(setWorkerBoxesToBuild(worker));
         ArrayList<Box> valid = worker.getBoxesToBuild();
-        int currentMoveToken = worker.getMoveToken();
         int currentBuildToken = worker.getBuildToken();
 
         if (currentBuildToken > 0 && valid.contains(dest)){
