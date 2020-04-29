@@ -170,7 +170,11 @@ public class StandardPlayer implements Player {
             dest.setWorker(worker);
             //set tokens
             worker.setMoveToken(currentMoveToken-1);
-            worker.setBuildToken(1);
+
+            if (dest.getLevel() == 3){
+                endTurn();
+            }else
+                worker.setBuildToken(1);
 
         }else throw new InvalidMoveException();
 

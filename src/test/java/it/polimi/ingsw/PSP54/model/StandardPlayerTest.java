@@ -15,6 +15,7 @@ public class StandardPlayerTest {
     Vector<Player> players;
     Box[][] board;
     Worker currentWorker;
+    Worker pendingWorker;
     int x;
     int y;
 
@@ -508,6 +509,33 @@ public class StandardPlayerTest {
         assertTrue(board[3][3].isDome());
         assertNotNull(thrown);
 
+    }
+
+    @Test
+    public void endTurn_TurnSimulation_IsWinner() throws InvalidMoveException {
+        x = 3;
+        y = 4;
+
+        board[x][y].setLevel(2);
+        board[2][4].setLevel(3);
+
+        pendingWorker = players.get(0).choseWorker(false);
+        pendingWorker.setPos(board[3][3]);
+        board[3][3].setWorker(pendingWorker);
+
+        currentWorker = players.get(0).turnInit(true);
+        currentWorker.setPos(board[x][y]);
+        board[x][y].setWorker(currentWorker);
+
+        board[x][y].setLevel(2);
+        board[2][4].setLevel(3);
+
+        players.get(0).setWorkerBoxesToMove(currentWorker);
+        players.get(0).move(currentWorker, board[2][4]);
+
+        assertEquals(board[2][4], currentWorker.getPos());
+        assertEquals(0, currentWorker.getMoveToken()+currentWorker.getBuildToken());
+        assertEquals(true, players.get(0).isWinner());
     }
 
 }

@@ -43,7 +43,7 @@ public class DemeterDecoratorTest {
     }
 
     @Test
-    public void setWorkerBoxesToBuild_EmptyBoardSecondBuild_AllExceptLastBuilding() throws InvalidMoveException, InvalidBuildingException {
+    public void build_EmptyBoardSecondBuild_CorrectOutput() throws InvalidMoveException, InvalidBuildingException {
 
         x = 2;
         y = 2;
@@ -52,6 +52,9 @@ public class DemeterDecoratorTest {
         demeterWorker.setPos(board[x][y]);
         board[x][y].setWorker(demeterWorker);
 
+        //set boxes level
+        board[4][4].setLevel(3);
+
         players.get(0).setWorkerBoxesToMove(demeterWorker);
         players.get(0).move(demeterWorker, board[3][3]);
         players.get(0).build(demeterWorker, board[2][2]);
@@ -59,12 +62,12 @@ public class DemeterDecoratorTest {
 
         assertEquals(board[3][3], demeterWorker.getPos());
         assertEquals(1, board[2][2].getLevel());
-        assertEquals(1, board[4][4].getLevel());
+        assertEquals(true, board[4][4].isDome());
 
     }
 
     @Test
-    public void setWorkerBoxesToBuild_EmptyBoardSecondBuildInLastBuilding_ShouldThrowException() throws InvalidMoveException, InvalidBuildingException {
+    public void build_EmptyBoardSecondBuildInLastBuilding_ShouldThrowException() throws InvalidMoveException, InvalidBuildingException {
 
         x = 2;
         y = 2;
@@ -90,15 +93,25 @@ public class DemeterDecoratorTest {
         assertNotNull(thrown);
         assertEquals(board[2][1], demeterWorker.getPos());
         assertEquals(1, board[3][1].getLevel());
-
-
     }
 
     @Test
-    public void move() {
-    }
+    public void move() throws InvalidMoveException {
 
-    @Test
-    public void build() {
+        x = 0;
+        y = 0;
+
+        demeterWorker = players.get(0).turnInit(false);
+        demeterWorker.setPos(board[x][y]);
+        board[0][0].setWorker(demeterWorker);
+
+        players.get(0).setWorkerBoxesToMove(demeterWorker);
+        players.get(0).move(demeterWorker, board[1][0]);
+
+        assertEquals(board[1][0], demeterWorker.getPos());
+        assertEquals(demeterWorker, board[1][0].getWorker());
+        assertEquals(2, demeterWorker.getBuildToken());
+        assertEquals(0, demeterWorker.getMoveToken());
+
     }
 }

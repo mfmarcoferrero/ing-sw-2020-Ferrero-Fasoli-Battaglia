@@ -11,15 +11,10 @@ public class ApolloDecorator extends GodDecorator {
         super(player);
     }
 
-    /**
-     * Sets Apollo's available boxes for the worker to move
-     * @param worker current worker in use
-     * @return the vector containing available boxes
-     */
     @Override
     public ArrayList<Box> setWorkerBoxesToMove (Worker worker){
 
-        ArrayList<Box> boxes = new ArrayList<>();
+        ArrayList<Box> valid = new ArrayList<>();
         int deltaX, deltaY, deltaH;
         Box[][] board = getGame().getBoard();
 
@@ -29,19 +24,13 @@ public class ApolloDecorator extends GodDecorator {
                 deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
                 deltaH =  (board[i][j].getLevel() - worker.getPos().getLevel());
                 if ((deltaX <= 1 && deltaY <= 1) && board[i][j] != worker.getPos() && deltaH <= 1 && !board[i][j].isDome())
-                    boxes.add(board[i][j]);
+                    valid.add(board[i][j]);
             }
         }
-        worker.setBoxesToMove(boxes);
-        return boxes;
+        worker.setBoxesToMove(valid);
+        return valid;
     }
 
-    /**
-     * Performs Apollo special move: if destination box is occupied  swaps
-     * @param worker selected worker which the player wants to move
-     * @param dest selected destination box
-     * @throws InvalidMoveException if the move can't be done
-     */
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
         worker.setBoxesToMove(setWorkerBoxesToMove(worker));

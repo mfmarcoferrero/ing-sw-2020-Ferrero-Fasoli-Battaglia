@@ -17,11 +17,11 @@ public class DemeterDecorator extends GodDecorator{
     @Override
     public ArrayList<Box> setWorkerBoxesToBuild(Worker worker) {
 
-        if (worker.getMoveToken() == 2)
+        if (worker.getBuildToken() == 2)
             return super.setWorkerBoxesToBuild(worker);
         else {
-            ArrayList<Box> def = super.setWorkerBoxesToBuild(worker);
-            Iterator<Box> iterator = def.iterator();
+            ArrayList<Box> valid = super.setWorkerBoxesToBuild(worker);
+            Iterator<Box> iterator = valid.iterator();
             while (iterator.hasNext()) {
 
                 Box check = iterator.next();
@@ -29,7 +29,7 @@ public class DemeterDecorator extends GodDecorator{
                     iterator.remove();
             }
 
-            return def;
+            return valid;
         }
     }
 
