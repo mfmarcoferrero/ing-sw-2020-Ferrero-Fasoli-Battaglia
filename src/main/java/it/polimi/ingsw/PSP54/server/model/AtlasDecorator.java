@@ -1,4 +1,4 @@
-package it.polimi.ingsw.PSP54.model;
+package it.polimi.ingsw.PSP54.server.model;
 
 /**
  * Your worker can build a dome on every level

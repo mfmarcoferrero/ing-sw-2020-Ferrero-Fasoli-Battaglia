@@ -114,7 +114,7 @@ public class Server {
             for (int i = 0; i< numberOfPlayers; i++){
                 controller.addVirtualView(virtualViews.get(i));
                 virtualViews.get(i).addObserver(controller);
-                model.addObserver(virtualViews.get(i));
+                //model.addObserver(virtualViews.get(i)); //TODO
                 virtualViews.get(i).addPlayer();
             }
             waitingConnection.clear();

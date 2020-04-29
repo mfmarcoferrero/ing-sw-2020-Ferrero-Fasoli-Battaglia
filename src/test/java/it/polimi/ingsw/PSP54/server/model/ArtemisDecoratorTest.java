@@ -1,4 +1,4 @@
-package it.polimi.ingsw.PSP54.model;
+package it.polimi.ingsw.PSP54.server.model;
 
 import org.junit.After;
 import org.junit.Before;

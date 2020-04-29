@@ -1,8 +1,11 @@
-package it.polimi.ingsw.PSP54.model;
+package it.polimi.ingsw.PSP54.server.model;
+
+import it.polimi.ingsw.PSP54.observer.Observable;
+import it.polimi.ingsw.PSP54.observer.Observer;
 
 import java.util.*;
 
-public class Game {
+public class Game extends Observable {
 
     public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
     public static final String[] colors = {"blue", "red", "yellow"};
@@ -133,5 +136,4 @@ public class Game {
     public Box getBox(int x, int y){
         return board[x][y];
     }
-
 }
