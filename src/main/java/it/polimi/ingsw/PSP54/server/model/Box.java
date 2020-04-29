@@ -1,72 +1,32 @@
-package it.polimi.ingsw.PSP54.server.model;
+package it.polimi.ingsw.PSP54.model;
 
-import java.io.Serializable;
+public class Box {
+    private int x;
+    private int y;
+    private int level;
+    private boolean dome;
+    private boolean complete;
+    private Worker worker;
 
-/**
- * Classe casella della tabella
- */
-
-public class Box implements Cloneable, Serializable {
-    public static final int BOARD_SIZE = 5;
-    protected int x, y, level;
-    protected boolean dome;
-    protected Worker worker;
-
-    /**
-     * Costruttore della casella
-     * Istanzia la casella senza livelli cupole o operai
-     */
-    public Box(int x, int y) {
-        this.level = 0;
-        this.dome = false;
-        this.worker = null;
+    public Box(int x, int y, int level, boolean dome) {
         this.x = x;
         this.y = y;
-    }
-
-    /**
-     * Setting della posizione del worker
-     * @param worker
-     */
-    public void setWorker(Worker worker) {
-            this.worker = worker;
-    }
-
-    /**
-     * Metodo per posizionare la costruzione
-     */
-    public void setBuilding (){
-        if (!this.isOccupied()){
-            if (level == 3){
-                this.dome = true;
-            }
-            else
-                this.level++;
-        }
-    }
-
-    /**
-     * Metodo che verifica se la casella é occupata
-     * @return boolean in base al risultato
-     */
-    public boolean isOccupied (){
-        return worker != null;
-    }
-
-    public Worker getWorker() {
-        return worker;
-    }
-
-    public boolean isDome() {
-        return dome;
-    }
-
-    public void setDome(boolean dome) {
+        this.level = level;
         this.dome = dome;
+    }
+
+    //getters & setters
+
+    public int getX() {
+        return x;
     }
 
     public void setX(int x) {
         this.x = x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public void setY(int y) {
@@ -77,29 +37,41 @@ public class Box implements Cloneable, Serializable {
         return level;
     }
 
-    public void setLevel(int level){
-        this.level=level;
+    public void setLevel(int level) {
+        this.level = level;
     }
 
-    public int getX() {
-        return x;
+    public boolean isDome() {
+        return dome;
     }
 
-    public int getY() {
-        return y;
+    public void setDome(boolean dome) {
+        this.dome = dome;
     }
 
-    @Override
-    protected final Box clone() {
-        final Box result = new Box(this.x,this.y);
-        result.dome = this.dome;
-        result.worker = this.worker;
-        result.level = this.level;
-        return result;
+    public boolean isComplete() {
+        return complete;
     }
 
-    @Override
-    public String toString (){
-        return "BOX con coordinate: X = " + this.x + " Y = " + this.y;
+    public void setComplete(boolean complete) {
+        this.complete = complete;
     }
+
+    public Worker getWorker() {
+        return worker;
+    }
+
+    public void setWorker(Worker worker) {
+        this.worker = worker;
+    }
+
+    //TODO: return the worker which is occupying the box?
+    public boolean isOccupied(){
+
+        boolean occupied = false;
+        if (this.getWorker()!= null)
+            occupied = true;
+        return occupied;
+    }
+
 }
