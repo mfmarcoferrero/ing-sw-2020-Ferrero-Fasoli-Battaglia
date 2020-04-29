@@ -5,10 +5,11 @@ import it.polimi.ingsw.PSP54.server.model.Player;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Connection extends Observable <String> implements Runnable {
+public class Connection extends Observable <String> implements Runnable, Serializable {
 
     private Socket socket;
     private Scanner in;

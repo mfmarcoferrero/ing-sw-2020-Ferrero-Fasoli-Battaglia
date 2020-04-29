@@ -19,7 +19,7 @@ public class CLIDebugMain {
                 Random selector = new Random();
                 int level = selector.nextInt(4);
                 game.getBoard()[i][j].setLevel(level);
-                game.getBoard()[i][j].setDome(false);
+                game.getBoard()[i][j].setDome(true);
             }
         }
         //add player
