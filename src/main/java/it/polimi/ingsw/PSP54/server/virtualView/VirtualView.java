@@ -1,15 +1,15 @@
 package it.polimi.ingsw.PSP54.server.virtualView;
 
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Vector;
 
+import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.server.model.Box;
 import it.polimi.ingsw.PSP54.server.model.Game;
 import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.utils.Build;
 import it.polimi.ingsw.PSP54.utils.Move;
+import it.polimi.ingsw.PSP54.observer.Observable;
 
 public class VirtualView extends Observable implements Observer {
 
@@ -69,8 +69,7 @@ public class VirtualView extends Observable implements Observer {
      * credenziali
      */
     public void addPlayer () {
-        setChanged();
-        notifyObservers(player);
+        notify(player);
     }
 
     /**
@@ -80,8 +79,7 @@ public class VirtualView extends Observable implements Observer {
      */
     public void setWorker(Move move) {
         while (!firstWorkerSetDone && move.isSetFirstPos()){
-            setChanged();
-            notifyObservers(move);
+            notify(move);
         }
     }
 
@@ -93,8 +91,7 @@ public class VirtualView extends Observable implements Observer {
     public void handleMove(Move move) {
         while (!moveDone) {
             if (!(move.isSetFirstPos())) {
-                setChanged();
-                notifyObservers(move);
+                notify(move);
             }
         }
     }
@@ -105,8 +102,7 @@ public class VirtualView extends Observable implements Observer {
      */
     public void handleBuild(Build build) {
         while (!buildDone) {
-            setChanged();
-            notifyObservers(build);
+            notify(build);
         }
     }
 
@@ -134,20 +130,14 @@ public class VirtualView extends Observable implements Observer {
         connection.asyncSend(board);
     }
 
-    /**
-     * Viene notificato dal model che invia sempre una board per ogni metodo del model chiamato dal controller
-     * @param o
-     * @param arg
-     */
-    @Override
-    public void update(Observable o, Object arg) {
-        if(!(o instanceof Game) || !(arg instanceof Box[][])){
-            throw new IllegalArgumentException();
-        }
-        this.board = (Box[][]) arg;
-    }
+
 
     public Box[][] getBoard() {
         return board;
+    }
+
+    @Override
+    public void update(Object message) {
+        this.board=(Box[][])message;
     }
 }

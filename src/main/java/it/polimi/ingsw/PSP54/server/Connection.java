@@ -96,7 +96,6 @@ public class Connection extends Observable <String> implements Runnable, Seriali
                 }
                 server.setNumberOfPlayers(numberOfPlayers);
             }
-            // Player initialized in Connection vs. Struct{String name; int age} passed and initialized by Model
             Player player = new StandardPlayer(name);
             player.setAge(age);
             server.lobby(this, player);
@@ -108,6 +107,7 @@ public class Connection extends Observable <String> implements Runnable, Seriali
             System.err.println(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Err");
         } finally {
             close();
         }

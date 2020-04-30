@@ -13,7 +13,6 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.Map;
-//TODO: case: 3 already connected clients, gameMaster sets numberOfPlayers to 2
 
 public class Server {
     private static final int PORT= 12345;
@@ -85,7 +84,7 @@ public class Server {
             if (lobbyBuffer.size()>0){
                 c.send("3lobbysize:" + lobbyBuffer.size());
                 c.send("3waitingsize:" + waitingConnection.size());
-                sizeisok = freeBuffer(lobbyBuffer);
+                sizeisok=freeBuffer(lobbyBuffer);
                 c.send("4lobbysize:" + lobbyBuffer.size());
                 c.send("4waitingsize:" + waitingConnection.size());
             }
@@ -169,34 +168,22 @@ public class Server {
 
     private boolean freeBuffer(Map<Player, Connection> buffer){
         boolean check=false;
-        int j=0;
+        int j;
         Vector<Player> bufferkeys= new Vector(buffer.keySet());
         Vector<Connection> buffervalues = new Vector(buffer.values());
-        for (int i=0;bufferkeys.size()>i;i++){
-            System.out.println("chiave:"+bufferkeys.get(i)+"\n");
-        }
-        for (int i=0;buffervalues.size()>i;i++){
-            System.out.println("chiave:"+buffervalues.get(i)+"\n");
-        }
-        System.out.println("qui1");
-        for(int i=0; waitingConnection.size()<numberOfPlayers && lobbyBuffer.size()>0;i++){
-            System.out.println("qui2");
-            waitingConnection.put(bufferkeys.get(i),buffervalues.get(i));
-            System.out.println("qui3");
-            lobbyBuffer.remove(bufferkeys.get(i),buffervalues.get(i));
-            System.out.println("qui4");
-            bufferkeys.remove(i);
-            System.out.println("qui5");
-            buffervalues.remove(i);
-            System.out.println("qui");
+        while (waitingConnection.size()<numberOfPlayers && lobbyBuffer.size()>0){
+            j=0;
+            waitingConnection.put(bufferkeys.get(j),buffervalues.get(j));
+            lobbyBuffer.remove(bufferkeys.get(j),buffervalues.get(j));
+            bufferkeys.remove(j);
+            buffervalues.remove(j);
         }
         for(int i=0;lobbyBuffer.size()>0;i++){
-            System.out.println("sono qui 1");
             buffervalues.get(i).send("the lobby you were has closed, please login again");
             buffervalues.get(i).closeConnection();
+            executor.submit(buffervalues.get(i));
             lobbyBuffer.remove(bufferkeys.get(i),buffervalues.get(i));
         }
-        System.out.println("sono qui 3");
         return check;
     }
 }

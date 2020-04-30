@@ -1,6 +1,8 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-public class Box {
+import java.io.Serializable;
+
+public class Box implements Serializable, Cloneable {
     private int x;
     private int y;
     private int level;
