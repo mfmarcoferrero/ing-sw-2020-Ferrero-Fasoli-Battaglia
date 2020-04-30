@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP54.observer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Observable<T> {
+public class  Observable<T> {
 
     private final List<Observer<T>> observers = new ArrayList<>();
 
@@ -19,7 +19,7 @@ public class Observable<T> {
         }
     }
 
-    protected void notify(T message) throws Exception {
+    protected void notify(T message) {
         synchronized (observers) {
             for(Observer<T> observer : observers){
                 observer.update(message);

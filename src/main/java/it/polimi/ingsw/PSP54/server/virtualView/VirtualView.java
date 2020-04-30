@@ -2,6 +2,7 @@ package it.polimi.ingsw.PSP54.server.virtualView;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
 
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.server.model.Box;
@@ -17,9 +18,18 @@ public class VirtualView extends Observable implements Observer {
     private int virtualViewId;
     private Connection connection;
     private MessageReceiver messageReceiver;
+    private Vector<Player> players;
     private Player player;
     private String opponent1;
     private String opponent2;
+
+    public VirtualView(int virtualViewId, Vector<Player> players, Connection connection){
+        this.virtualViewId = virtualViewId;
+        this.connection = connection;
+        this.messageReceiver = new MessageReceiver(this.connection,this);
+        this.players = players;
+        connection.addObserver(this.messageReceiver);
+    }
 
     /**
      * Instantiates a VirtualView with corresponding Connection and MessageReceiver for a 2 players game

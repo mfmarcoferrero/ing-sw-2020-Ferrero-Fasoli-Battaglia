@@ -42,22 +42,22 @@ public class CliView {
 			//TODO: colors need to be final and settled in Game class according to players' order
 			//TODO: workers' array needs to be setted final and attribute male needs to be setted wen creating a new player
 		else if(box.getWorker() != null) {
-			switch (box.getWorker().getColor()) {
+			switch (box.getWorker().getOwner().getColor()) {
 				case "blue":
-					if (box.getWorker().isMale())
+					if (box.getWorker().getMale())
 						string = string + background + Color.ANSI_P1 + Symbol.UNICODE_MALE_WORKER;
 					else
 						string = string + background + Color.ANSI_P1 + Symbol.UNICODE_FEMALE_WORKER;
 					break;
 				case "red":
-					if (box.getWorker().isMale())
+					if (box.getWorker().getMale())
 						string = string + Color.ANSI_P2 + Symbol.UNICODE_MALE_WORKER;
 					else
 						string = string + Color.ANSI_P2 + Symbol.UNICODE_FEMALE_WORKER;
 
 					break;
 				case "yellow":
-					if (box.getWorker().isMale())
+					if (box.getWorker().getMale())
 						string = string + Color.ANSI_P3 + Symbol.UNICODE_MALE_WORKER;
 					else
 						string = string + Color.ANSI_P3 + Symbol.UNICODE_FEMALE_WORKER;

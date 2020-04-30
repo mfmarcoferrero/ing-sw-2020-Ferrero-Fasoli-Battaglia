@@ -1,68 +1,82 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 
-/**
- * Classe operaio
- */
-public class Worker implements Serializable, Cloneable{
-    private final int workerID;
-    private final Player owner;
-    private boolean male;
-    private final String color;
-    public Box pos;
+public class Worker {
+    private Boolean male;
+    private StandardPlayer owner;
+    private Box pos;
+    private int moveToken;
+    private int buildToken;
+    private boolean available;
+    private ArrayList<Box> boxesToBuild;
+    private ArrayList<Box> boxesToMove;
 
-    public Worker(Player player,String color, int wID){
-        this.owner = player;
-        this.color = color;
-        this.workerID = wID;
+    public Worker(Boolean male, StandardPlayer owner, Box pos) {
+        this.male = male;
+        this.owner = owner;
+        this.pos = pos;
     }
 
-    /**
-     * Metodo per verificare se il worker è bloccato nel movimento
-     * @return
-     */
-    public boolean canWorkerMove() {
-        for (int i = 0 ; i < Box.BOARD_SIZE ; i++){
-            for (int j = 0; j < Box.BOARD_SIZE; j++){
-                if (owner.power.validMove(pos,owner.game.board[i][j])){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+    //setters & getters
 
-    /**
-     * Metodo per verificare se il worker può costruire
-     * @return
-     */
-    public boolean canWorkerBuild() {
-        for (int i = 0 ; i < Box.BOARD_SIZE ; i++){
-            for (int j = 0; j < Box.BOARD_SIZE; j++){
-                if (owner.power.validBuilding(pos,owner.game.board[i][j],false)){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public boolean isMale() {
+    public Boolean getMale() {
         return male;
+    }
+
+    public StandardPlayer getOwner() {
+        return owner;
+    }
+
+    public void setOwner(StandardPlayer owner) {
+        this.owner = owner;
+    }
+
+    public Box getPos() {
+        return pos;
     }
 
     public void setPos(Box pos) {
         this.pos = pos;
     }
 
-    @Override
-    public String toString(){
-        return "ID: " + workerID + " PLAYER: " + owner.getPlayerName();
+    public int getMoveToken() {
+        return moveToken;
+    }
+
+    public void setMoveToken(int moveToken) {
+        this.moveToken = moveToken;
+    }
+
+    public int getBuildToken() {
+        return buildToken;
+    }
+
+    public void setBuildToken(int buildToken) {
+        this.buildToken = buildToken;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public ArrayList<Box> getBoxesToBuild() {
+        return boxesToBuild;
+    }
+
+    public void setBoxesToBuild(ArrayList<Box> boxesToBuild) {
+        this.boxesToBuild = boxesToBuild;
+    }
+
+    public ArrayList<Box> getBoxesToMove() {
+        return boxesToMove;
+    }
+
+    public void setBoxesToMove(ArrayList<Box> boxesToMove) {
+        this.boxesToMove = boxesToMove;
     }
 }
-

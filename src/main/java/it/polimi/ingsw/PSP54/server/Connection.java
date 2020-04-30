@@ -2,6 +2,7 @@ package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.observer.*;
 import it.polimi.ingsw.PSP54.server.model.Player;
+import it.polimi.ingsw.PSP54.server.model.StandardPlayer;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -95,7 +96,10 @@ public class Connection extends Observable <String> implements Runnable, Seriali
                 }
                 server.setNumberOfPlayers(numberOfPlayers);
             }
-            server.lobby(this, new Player(name, age,null,null));
+            // Player initialized in Connection vs. Struct{String name; int age} passed and initialized by Model
+            Player player = new StandardPlayer(name);
+            player.setAge(age);
+            server.lobby(this, player);
             while(isActive()) {
                 String read = in.next();
                 notify(read);
