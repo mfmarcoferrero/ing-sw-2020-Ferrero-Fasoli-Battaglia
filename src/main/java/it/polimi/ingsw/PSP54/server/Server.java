@@ -71,6 +71,7 @@ public class Server {
      * @param p reference to in game player associated to client
      */
     public synchronized void lobby(Connection c, Player p){
+
         waitingConnection.put(p, c);
 
         if(waitingConnection.size() == numberOfPlayers) {
@@ -78,30 +79,29 @@ public class Server {
             List<Player> keys = new ArrayList<>(waitingConnection.keySet());
 
             for(int i=0 ; i<keys.size() ; i++) {
-
                 Connection client = waitingConnection.get(keys.get(i));
                 currentConnections.remove(waitingConnection.get(keys.get(i)));
 
                 //initialize a VirtualView for each player, manage dispatching depending on numberOfPlayers
                 if (i==0){
 
+                    VirtualView virtualView;
                     if (numberOfPlayers == 2){
-                        VirtualView virtualView = new VirtualView (i, keys.get(i), client, keys.get(i+1).getPlayerName());
-                        virtualViews.add(i,virtualView);
+                        virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName());
                     }else { //numberOfPlayers == 3
-                        VirtualView virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName(), keys.get(i + 2).getPlayerName());
-                        virtualViews.add(i,virtualView);
+                        virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName(), keys.get(i + 2).getPlayerName());
                     }
+                    virtualViews.add(i,virtualView);
                 }
                 else if(i==1){
+                    VirtualView virtualView;
                     if (numberOfPlayers == 2){
-                        VirtualView virtualView = new VirtualView( i, keys.get(i), client, keys.get(i-1).getPlayerName());
-                        virtualViews.add(i,virtualView);
+                        virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName());
                     }
                     else {
-                        VirtualView virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName(), keys.get(i + 1).getPlayerName());
-                        virtualViews.add(i,virtualView);
+                        virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName(), keys.get(i + 1).getPlayerName());
                     }
+                    virtualViews.add(i,virtualView);
                 }
                 else {
                     VirtualView virtualView = new VirtualView( i, keys.get(i), client, keys.get(i-2).getPlayerName(), keys.get(i-1).getPlayerName());
@@ -114,7 +114,7 @@ public class Server {
             for (int i = 0; i< numberOfPlayers; i++){
                 controller.addVirtualView(virtualViews.get(i));
                 virtualViews.get(i).addObserver(controller);
-                //model.addObserver(virtualViews.get(i)); //TODO
+                model.addObserver(virtualViews.get(i));
                 virtualViews.get(i).addPlayer();
             }
             waitingConnection.clear();

@@ -94,8 +94,11 @@ public class Connection extends Observable <String> implements Runnable {
                     numberOfPlayers = in.nextInt();
                 }
                 server.setNumberOfPlayers(numberOfPlayers);
-            }//TODO
-            //server.lobby(this, new StandardPlayer(name, age,null,null));
+            }
+            // Player initialized in Connection vs. Struct{String name; int age} passed and initialized by Model
+            Player player = new StandardPlayer(name);
+            player.setAge(age);
+            server.lobby(this, player);
             while(isActive()) {
                 String read = in.next();
                 notify(read);

@@ -140,10 +140,10 @@ public class VirtualView extends Observable implements Observer {
      * @param arg
      */
     @Override
-    public void update(Observable o, Object arg) { //TODO
-        /*if(!(o instanceof Game) || !(arg instanceof Box[][])){
+    public void update(Observable o, Object arg) {
+        if(!(o instanceof Game) || !(arg instanceof Box[][])){
             throw new IllegalArgumentException();
-        }*/
+        }
         this.board = (Box[][]) arg;
     }
 
