@@ -17,14 +17,14 @@ public class GameTest {
     private Box[][] board;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         //initialize game
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1");
-        game.newPlayer("2");
-        game.newPlayer("3");
+        game.newPlayer("1",0);
+        game.newPlayer("2",0);
+        game.newPlayer("3",0);
         players = game.getPlayers();
         players.get(0).setGame(game);
         players.get(1).setGame(game);
@@ -91,14 +91,14 @@ public class GameTest {
     }
 
     @Test
-    public void extractCards_2PlayersExtraction_AllDifferent() {
+    public void extractCards_2PlayersExtraction_AllDifferent() throws Exception{
 
         //initialize game
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1");
-        game.newPlayer("2");
+        game.newPlayer("1",0);
+        game.newPlayer("2",0);
         players = game.getPlayers();
         players.get(0).setGame(game);
         players.get(1).setGame(game);

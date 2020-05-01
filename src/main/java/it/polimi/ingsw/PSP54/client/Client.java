@@ -2,6 +2,7 @@ package it.polimi.ingsw.PSP54.client;
 
 
 import it.polimi.ingsw.PSP54.client.view.*;
+import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.server.model.Box;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ import java.net.Socket;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class Client {
+public class Client extends Observable {
 
     private String ip;
     private int port;
@@ -20,6 +21,7 @@ public class Client {
     public Client(String ip, int port){
         this.ip = ip;
         this.port = port;
+        addObserver(view);
     }
 
     private boolean active = true;
@@ -45,16 +47,8 @@ public class Client {
                 try {
                     while (isActive()) {
                         Object inputObject = socketIn.readObject();
-                        /*if (inputObject != null){
-                            System.out.println("(Ho ricevuto un messaggio)");
-                        }*/
-                        if(inputObject instanceof String) {
-                            System.out.println((String)inputObject);
-                        } else if (inputObject instanceof Box[][]){
-                            view.printBoard((Box[][])inputObject);
-                        } else {
-                            throw new IllegalArgumentException();
-                        }
+                        Client.this.notify(inputObject);
+                        //System.out.println("Indice nell'array: " + player_ind);
                     }
                 } catch (Exception e) {
                     setActive(false);

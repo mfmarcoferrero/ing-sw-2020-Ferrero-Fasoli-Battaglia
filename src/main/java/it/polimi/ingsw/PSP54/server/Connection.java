@@ -1,8 +1,8 @@
 package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.observer.*;
-import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.server.model.StandardPlayer;
+import it.polimi.ingsw.PSP54.utils.PlayerMessage;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Connection extends Observable <String> implements Runnable, Serializable {
+public class Connection extends Observable <String> implements Runnable {
 
     private Socket socket;
     private Scanner in;
@@ -87,7 +87,7 @@ public class Connection extends Observable <String> implements Runnable, Seriali
             name = in.nextLine();
             send("What's your age?");
             int age = in.nextInt();
-            if(gameMaster || this==server.currentConnections.firstElement()) {
+            if(gameMaster || this == server.currentConnections.firstElement()) {
                 send("hey, set the number of player");
                 numberOfPlayers =in.nextInt();
                 while (numberOfPlayers <2 || numberOfPlayers >3) {
@@ -96,8 +96,7 @@ public class Connection extends Observable <String> implements Runnable, Seriali
                 }
                 server.setNumberOfPlayers(numberOfPlayers);
             }
-            Player player = new StandardPlayer(name);
-            player.setAge(age);
+            PlayerMessage player = new PlayerMessage(name,age,0);
             server.lobby(this, player);
             while(isActive()) {
                 String read = in.next();

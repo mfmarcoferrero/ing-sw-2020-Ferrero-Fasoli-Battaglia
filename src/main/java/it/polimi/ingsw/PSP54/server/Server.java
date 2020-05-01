@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.server.controller.Controller;
 import it.polimi.ingsw.PSP54.server.model.Game;
-import it.polimi.ingsw.PSP54.server.model.Player;
+import it.polimi.ingsw.PSP54.utils.PlayerMessage;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 
 import java.io.IOException;
@@ -21,8 +21,8 @@ public class Server {
     private ExecutorService executor = Executors.newCachedThreadPool();
 
     private List<Connection> connections = new ArrayList<>();
-    private Map<Player, Connection> lobbyBuffer = new HashMap<>(0);
-    private Map<Player, Connection> waitingConnection = new HashMap<>();
+    private Map<PlayerMessage, Connection> lobbyBuffer = new HashMap<>(0);
+    private Map<PlayerMessage, Connection> waitingConnection = new HashMap<>();
     private Vector<Connection> playingConnection = new Vector<>(0,1);
     private Vector<VirtualView> virtualViews = new Vector<>(0);
     protected Vector<Connection> currentConnections =new Vector<>(0,1);
@@ -42,7 +42,7 @@ public class Server {
          we create a collection that allows to implement the iterator interface so is possible to search the element that refers to the client
          and delete it*/
         if (waitingConnection.containsValue(c)){
-            Iterator<Player> iterator = waitingConnection.keySet().iterator();
+            Iterator<PlayerMessage> iterator = waitingConnection.keySet().iterator();
             while(iterator.hasNext()) {
                 if (waitingConnection.get(iterator.next()) == c) {
                     iterator.remove();
@@ -71,28 +71,29 @@ public class Server {
      * @param c refernce to client
      * @param p reference to in game player associated to client
      */
-    public synchronized void lobby(Connection c, Player p) {
-        boolean sizeisok=false;
+    public synchronized void lobby(Connection c, PlayerMessage p) throws Exception {
+        boolean sizeisok = false;
+
         if (numberOfPlayers < 2 || numberOfPlayers > 3) {
             lobbyBuffer.put(p, c);
-            c.send("1lobbysize:" + lobbyBuffer.size());
+            //c.send("1lobbysize:" + lobbyBuffer.size());
         }
         else {
             waitingConnection.put(p, c);
-            c.send("2lobbysize:" + lobbyBuffer.size());
-            c.send("2waitingsize:" + waitingConnection.size());
-            if (lobbyBuffer.size()>0){
-                c.send("3lobbysize:" + lobbyBuffer.size());
-                c.send("3waitingsize:" + waitingConnection.size());
-                sizeisok=freeBuffer(lobbyBuffer);
-                c.send("4lobbysize:" + lobbyBuffer.size());
-                c.send("4waitingsize:" + waitingConnection.size());
+            //c.send("2lobbysize:" + lobbyBuffer.size());
+            //c.send("2waitingsize:" + waitingConnection.size());
+            if (lobbyBuffer.size() > 0){
+                //c.send("3lobbysize:" + lobbyBuffer.size());
+                //c.send("3waitingsize:" + waitingConnection.size());
+                sizeisok = freeBuffer(lobbyBuffer);
+                //c.send("4lobbysize:" + lobbyBuffer.size());
+                //c.send("4waitingsize:" + waitingConnection.size());
             }
             if (waitingConnection.size() == numberOfPlayers || sizeisok) {
-                c.send("5lobbysize:" + lobbyBuffer.size());
-                c.send("5waitingsize:" + waitingConnection.size());
+                //c.send("5lobbysize:" + lobbyBuffer.size());
+                //c.send("5waitingsize:" + waitingConnection.size());
 
-                List<Player> keys = new ArrayList<>(waitingConnection.keySet());
+                List<PlayerMessage> keys = new ArrayList<>(waitingConnection.keySet());
 
                 for (int i = 0; i < keys.size(); i++) {
 
@@ -166,10 +167,10 @@ public class Server {
         this.numberOfPlayers = numberOfPlayers;
     }
 
-    private boolean freeBuffer(Map<Player, Connection> buffer){
+    private boolean freeBuffer(Map<PlayerMessage, Connection> buffer){
         boolean check=false;
         int j;
-        Vector<Player> bufferkeys= new Vector(buffer.keySet());
+        Vector<PlayerMessage> bufferkeys= new Vector(buffer.keySet());
         Vector<Connection> buffervalues = new Vector(buffer.values());
         while (waitingConnection.size()<numberOfPlayers && lobbyBuffer.size()>0){
             j=0;

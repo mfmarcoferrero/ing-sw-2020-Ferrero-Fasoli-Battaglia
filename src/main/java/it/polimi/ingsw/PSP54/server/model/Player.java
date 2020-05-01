@@ -98,4 +98,10 @@ public interface Player {
     int getCardID();
 
     void setCardID(int cardID);
+
+    Worker[] getWorkers();
+
+    int getVirtualViewID ();
+
+    boolean isTurn();
 }
