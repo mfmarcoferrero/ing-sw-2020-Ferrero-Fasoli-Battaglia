@@ -123,5 +123,17 @@ public abstract class GodDecorator implements Player {
         playerToDecorate.setWorkerPos(worker, x, y);
     }
 
+    @Override
+    public Worker[] getWorkers() { return playerToDecorate.getWorkers();}
+
+    @Override
+    public int getVirtualViewID() {
+        return playerToDecorate.getVirtualViewID();
+    }
+
+    @Override
+    public boolean isTurn() {
+        return playerToDecorate.isTurn();
+    }
 }
 

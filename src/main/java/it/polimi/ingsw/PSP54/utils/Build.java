@@ -27,6 +27,14 @@ public class Build {
         return setDome;
     }
 
+    public void setVirtualViewId(int virtualViewId) {
+        this.virtualViewId = virtualViewId;
+    }
+
+    public int getVirtualViewId() {
+        return virtualViewId;
+    }
+
     public int getX() {
         return x;
     }

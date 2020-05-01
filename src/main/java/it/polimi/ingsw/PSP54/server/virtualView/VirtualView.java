@@ -1,15 +1,14 @@
 package it.polimi.ingsw.PSP54.server.virtualView;
 
-import java.util.Vector;
-
+import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.server.model.Game;
-import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.utils.Build;
 import it.polimi.ingsw.PSP54.utils.Move;
-import it.polimi.ingsw.PSP54.observer.Observable;
+import it.polimi.ingsw.PSP54.utils.PlayerMessage;
+
+import java.util.Vector;
 
 public class VirtualView extends Observable implements Observer {
 
@@ -18,12 +17,12 @@ public class VirtualView extends Observable implements Observer {
     private int virtualViewId;
     private Connection connection;
     private MessageReceiver messageReceiver;
-    private Vector<Player> players;
-    private Player player;
+    private Vector<PlayerMessage> players;
+    private PlayerMessage player;
     private String opponent1;
     private String opponent2;
 
-    public VirtualView(int virtualViewId, Vector<Player> players, Connection connection){
+    public VirtualView(int virtualViewId, Vector<PlayerMessage> players, Connection connection){
         this.virtualViewId = virtualViewId;
         this.connection = connection;
         this.messageReceiver = new MessageReceiver(this.connection,this);
@@ -37,7 +36,7 @@ public class VirtualView extends Observable implements Observer {
      * @param p
      * @param connection
      */
-    public VirtualView(int virtualViewId, Player p, Connection connection, String opponent) {
+    public VirtualView(int virtualViewId, PlayerMessage p, Connection connection, String opponent) {
         this.virtualViewId = virtualViewId;
         this.connection = connection;
         this.messageReceiver = new MessageReceiver(this.connection,this);
@@ -53,7 +52,7 @@ public class VirtualView extends Observable implements Observer {
      * @param p
      * @param connection
      */
-    public VirtualView(int virtualViewId, Player p, Connection connection, String opponent1, String opponent2) {
+    public VirtualView(int virtualViewId, PlayerMessage p, Connection connection, String opponent1, String opponent2) {
         this.virtualViewId = virtualViewId;
         this.connection = connection;
         this.messageReceiver = new MessageReceiver(this.connection,this);
@@ -68,7 +67,7 @@ public class VirtualView extends Observable implements Observer {
      * Notifica il controller con un oggetto di tipo Player che contiene solo le
      * credenziali
      */
-    public void addPlayer () {
+    public void addPlayer() throws Exception {
         notify(player);
     }
 
@@ -77,7 +76,7 @@ public class VirtualView extends Observable implements Observer {
      * sia un set iniziale di un worker
      * @param move
      */
-    public void setWorker(Move move) {
+    public void setWorker(Move move) throws Exception{
         while (!firstWorkerSetDone && move.isSetFirstPos()){
             notify(move);
         }
@@ -88,7 +87,7 @@ public class VirtualView extends Observable implements Observer {
      * non sia un set iniziale di un worker
      * @param move
      */
-    public void handleMove(Move move) {
+    public void handleMove(Move move) throws Exception{
         while (!moveDone) {
             if (!(move.isSetFirstPos())) {
                 notify(move);
@@ -100,7 +99,7 @@ public class VirtualView extends Observable implements Observer {
      * Notifica il controller con un oggetto di tipo Build
      * @param build
      */
-    public void handleBuild(Build build) {
+    public void handleBuild(Build build) throws Exception {
         while (!buildDone) {
             notify(build);
         }
@@ -131,13 +130,33 @@ public class VirtualView extends Observable implements Observer {
     }
 
 
-
     public Box[][] getBoard() {
         return board;
     }
 
     @Override
-    public void update(Object message) {
-        this.board=(Box[][])message;
+    public void update(Box[][] message) throws Exception {
+        this.board = message;
     }
+
+    @Override
+    public void update(String message) throws Exception {
+        showMessage(message);
+    }
+
+    @Override
+    public void update(Move message) throws Exception {
+        return;
+    }
+
+    @Override
+    public void update(Build message) throws Exception {
+        return;
+    }
+
+    @Override
+    public void update(PlayerMessage message) throws Exception {
+        return;
+    }
+
 }

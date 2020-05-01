@@ -1,11 +1,17 @@
 package it.polimi.ingsw.PSP54.client.view;
 
+import it.polimi.ingsw.PSP54.observer.Observable;
+import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
+import it.polimi.ingsw.PSP54.server.model.Player;
+import it.polimi.ingsw.PSP54.utils.Build;
+import it.polimi.ingsw.PSP54.utils.Move;
+import it.polimi.ingsw.PSP54.utils.PlayerMessage;
 
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class CliView {
+public class CliView implements Observer {
 
 	private final Scanner scanner = new Scanner(System.in);
 	private final PrintStream outputStream = new PrintStream(System.out);
@@ -427,7 +433,32 @@ public class CliView {
 					outputStream.println("Incorrect input!");
 			}
 		}
-
 		return level;
 	}
+
+	@Override
+	public void update(Box[][] message) throws Exception {
+		printBoard(message);
+	}
+
+	@Override
+	public void update(String message) throws Exception {
+		System.out.println(message);
+	}
+
+	@Override
+	public void update(Move message) throws Exception {
+		return;
+	}
+
+	@Override
+	public void update(Build message) throws Exception {
+		return;
+	}
+
+	@Override
+	public void update(PlayerMessage message) throws Exception {
+		return;
+	}
+
 }

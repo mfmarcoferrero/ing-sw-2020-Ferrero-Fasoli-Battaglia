@@ -4,7 +4,7 @@ package it.polimi.ingsw.PSP54.utils;
  * Classe utilizzata come messaggio per notificare spostamenti
  */
 public class Move {
-    private int player_ind, worker_ind, x, y;
+    private int player_ind, worker_ind, x, y, virtualViewId;
     private boolean setFirstPos = true;
 
     public Move(int player_ind, int worker_ind, int x, int y) {
@@ -16,6 +16,14 @@ public class Move {
 
     public int getWorker_ind() {
         return worker_ind;
+    }
+
+    public void setVirtualViewId(int virtualViewId) {
+        this.virtualViewId = virtualViewId;
+    }
+
+    public int getVirtualViewId() {
+        return virtualViewId;
     }
 
     public int getPlayer_ind() {

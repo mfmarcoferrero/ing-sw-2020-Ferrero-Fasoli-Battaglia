@@ -1,8 +1,8 @@
 package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.observer.*;
-import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.server.model.StandardPlayer;
+import it.polimi.ingsw.PSP54.utils.PlayerMessage;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Connection extends Observable <String> implements Runnable, Serializable {
+public class Connection extends Observable <String> implements Runnable {
 
     private Socket socket;
     private Scanner in;
@@ -32,7 +32,6 @@ public class Connection extends Observable <String> implements Runnable, Seriali
 
     public void send(Object message) {
         try {
-            System.out.println("(Invio un messaggio a: " + name + ")");
             out.reset();
             out.writeObject(message);
             out.flush();
@@ -47,12 +46,7 @@ public class Connection extends Observable <String> implements Runnable, Seriali
      * @param message
      */
     public void asyncSend(final Object message){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                send(message);
-            }
-        }).start();
+        new Thread(() -> send(message)).start();
     }
 
     public synchronized void closeConnection(){
@@ -67,9 +61,7 @@ public class Connection extends Observable <String> implements Runnable, Seriali
 
     private void close() {
         closeConnection();
-        System.out.println("Deregistering client...");
         server.deregisterConnection(this);
-        System.out.println("Done!");
     }
 
     /**
@@ -87,7 +79,7 @@ public class Connection extends Observable <String> implements Runnable, Seriali
             name = in.nextLine();
             send("What's your age?");
             int age = in.nextInt();
-            if(gameMaster || this==server.currentConnections.firstElement()) {
+            if(gameMaster || this == server.currentConnections.firstElement()) {
                 send("hey, set the number of player");
                 numberOfPlayers =in.nextInt();
                 while (numberOfPlayers <2 || numberOfPlayers >3) {
@@ -96,8 +88,7 @@ public class Connection extends Observable <String> implements Runnable, Seriali
                 }
                 server.setNumberOfPlayers(numberOfPlayers);
             }
-            Player player = new StandardPlayer(name);
-            player.setAge(age);
+            PlayerMessage player = new PlayerMessage(name,age,0);
             server.lobby(this, player);
             while(isActive()) {
                 String read = in.next();
@@ -107,7 +98,6 @@ public class Connection extends Observable <String> implements Runnable, Seriali
             System.err.println(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Err");
         } finally {
             close();
         }
@@ -121,4 +111,7 @@ public class Connection extends Observable <String> implements Runnable, Seriali
         return name;
     }
 
+    public Socket getSocket() {
+        return socket;
+    }
 }

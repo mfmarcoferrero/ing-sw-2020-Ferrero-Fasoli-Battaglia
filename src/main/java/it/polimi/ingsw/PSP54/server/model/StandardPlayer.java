@@ -11,7 +11,7 @@ public class StandardPlayer implements Player {
     private int cardID;
     private Game game;
     private String playerName;
-    private int age;
+    private int age, virtualViewId;
     private String color;
     private final Worker[] workers = new Worker[2];
     private boolean winner;
@@ -21,8 +21,9 @@ public class StandardPlayer implements Player {
      * Instantiates a new Player with corresponding workers
      * @param playerName the name of the Player
      */
-    public StandardPlayer(String playerName) {
+    public StandardPlayer(String playerName, int virtualViewId) {
         this.playerName = playerName;
+        this.virtualViewId = virtualViewId;
         this.workers[0] = new Worker(true, this, null);
         this.workers[1] = new Worker(false, this, null);
         this.winner = false;
@@ -37,7 +38,7 @@ public class StandardPlayer implements Player {
     @Override
     public Player assignPower(int cardID){ //where to be performed?
 
-        Player actualPlayer = new StandardPlayer(null);
+        Player actualPlayer = new StandardPlayer(null,0);
 
         if (cardID == APOLLO) {
             actualPlayer = new ApolloDecorator(this);
@@ -54,7 +55,6 @@ public class StandardPlayer implements Player {
         } else if (cardID == DEMETER) {
             actualPlayer = new DemeterDecorator(this);
             actualPlayer.setCardID(DEMETER);
-
         }
 
         return actualPlayer;
@@ -91,12 +91,13 @@ public class StandardPlayer implements Player {
      * @return the chosen worker with updated tokens
      */
     @Override
-    public Worker turnInit(Boolean male){
+    public Worker turnInit(Boolean male) {
 
         Worker currentWorker = choseWorker(male);
         currentWorker.setMoveToken(1);
         currentWorker.setBuildToken(0);
         return currentWorker;
+
     }
 
     /**
@@ -176,7 +177,7 @@ public class StandardPlayer implements Player {
             }else
                 worker.setBuildToken(1);
 
-        }else throw new InvalidMoveException();
+        } else throw new InvalidMoveException();
 
     }
 
@@ -200,8 +201,21 @@ public class StandardPlayer implements Player {
                 dest.setLevel(currentLevel+1);
             }
 
-            worker.setBuildToken(currentBuildToken-1);
-        }else throw new InvalidBuildingException();
+            worker.setBuildToken(currentBuildToken - 1);
+        } else throw new InvalidBuildingException();
+    }
+
+    @Override
+    public boolean isTurn() {
+        for (Worker w : workers){
+            if (w.getMoveToken() == 1 && w.getBuildToken() == 0){
+                return true;
+            }
+            if (w.getMoveToken() == 0 && w.getBuildToken() == 1){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -224,13 +238,11 @@ public class StandardPlayer implements Player {
      */
     @Override
     public void setGame(Game game) { //it has to be invoked by Controller or Game class
-
         this.game = game;
     }
 
     @Override
     public Game getGame() {
-
         return game;
     }
 
@@ -292,4 +304,13 @@ public class StandardPlayer implements Player {
     public void setCardID(int cardID) {
         this.cardID = cardID;
     }
+
+    @Override
+    public Worker[] getWorkers() { return workers; }
+
+    @Override
+    public int getVirtualViewID() {
+        return this.virtualViewId;
+    }
+
 }
