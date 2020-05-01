@@ -1,16 +1,14 @@
 package it.polimi.ingsw.PSP54.server.virtualView;
 
-import java.util.Vector;
-
+import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.server.model.Game;
-import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.utils.Build;
 import it.polimi.ingsw.PSP54.utils.Move;
-import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.utils.PlayerMessage;
+
+import java.util.Vector;
 
 public class VirtualView extends Observable implements Observer {
 

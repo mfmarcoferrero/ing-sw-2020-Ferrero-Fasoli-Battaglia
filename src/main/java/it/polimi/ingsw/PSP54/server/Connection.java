@@ -32,7 +32,6 @@ public class Connection extends Observable <String> implements Runnable {
 
     public void send(Object message) {
         try {
-            System.out.println("(Invio un messaggio a: " + name + ")");
             out.reset();
             out.writeObject(message);
             out.flush();
@@ -47,12 +46,7 @@ public class Connection extends Observable <String> implements Runnable {
      * @param message
      */
     public void asyncSend(final Object message){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                send(message);
-            }
-        }).start();
+        new Thread(() -> send(message)).start();
     }
 
     public synchronized void closeConnection(){
@@ -67,9 +61,7 @@ public class Connection extends Observable <String> implements Runnable {
 
     private void close() {
         closeConnection();
-        System.out.println("Deregistering client...");
         server.deregisterConnection(this);
-        System.out.println("Done!");
     }
 
     /**
@@ -106,7 +98,6 @@ public class Connection extends Observable <String> implements Runnable {
             System.err.println(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Err");
         } finally {
             close();
         }
@@ -120,4 +111,7 @@ public class Connection extends Observable <String> implements Runnable {
         return name;
     }
 
+    public Socket getSocket() {
+        return socket;
+    }
 }

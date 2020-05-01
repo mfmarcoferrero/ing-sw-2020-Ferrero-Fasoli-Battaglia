@@ -41,14 +41,9 @@ public class Server {
         /*every time a client disconnects if it has already entered the lobby and is in the waitingconnections vector
          we create a collection that allows to implement the iterator interface so is possible to search the element that refers to the client
          and delete it*/
-        if (waitingConnection.containsValue(c)){
-            Iterator<PlayerMessage> iterator = waitingConnection.keySet().iterator();
-            while(iterator.hasNext()) {
-                if (waitingConnection.get(iterator.next()) == c) {
-                    iterator.remove();
-                }
-            }
-        }
+        if (waitingConnection.containsValue(c))
+            waitingConnection.keySet().removeIf(playerMessage -> waitingConnection.get(playerMessage) == c);
+
         if (playingConnection.contains(c)){
             c.send("i'm sorry but you lose, wish to you good luck for the next time");
             playingConnection.remove(c);
@@ -72,27 +67,17 @@ public class Server {
      * @param p reference to in game player associated to client
      */
     public synchronized void lobby(Connection c, PlayerMessage p) throws Exception {
-        boolean sizeisok = false;
 
-        if (numberOfPlayers < 2 || numberOfPlayers > 3) {
+        if (numberOfPlayers < 2 || numberOfPlayers > 3)
             lobbyBuffer.put(p, c);
-            //c.send("1lobbysize:" + lobbyBuffer.size());
-        }
+
         else {
             waitingConnection.put(p, c);
-            //c.send("2lobbysize:" + lobbyBuffer.size());
-            //c.send("2waitingsize:" + waitingConnection.size());
-            if (lobbyBuffer.size() > 0){
-                //c.send("3lobbysize:" + lobbyBuffer.size());
-                //c.send("3waitingsize:" + waitingConnection.size());
-                sizeisok = freeBuffer(lobbyBuffer);
-                //c.send("4lobbysize:" + lobbyBuffer.size());
-                //c.send("4waitingsize:" + waitingConnection.size());
-            }
-            if (waitingConnection.size() == numberOfPlayers || sizeisok) {
-                //c.send("5lobbysize:" + lobbyBuffer.size());
-                //c.send("5waitingsize:" + waitingConnection.size());
 
+            if (lobbyBuffer.size() > 0)
+                freeBuffer(lobbyBuffer);
+
+            if (waitingConnection.size() == numberOfPlayers ) {
                 List<PlayerMessage> keys = new ArrayList<>(waitingConnection.keySet());
 
                 for (int i = 0; i < keys.size(); i++) {
@@ -167,24 +152,22 @@ public class Server {
         this.numberOfPlayers = numberOfPlayers;
     }
 
-    private boolean freeBuffer(Map<PlayerMessage, Connection> buffer){
-        boolean check=false;
-        int j;
+    private void freeBuffer(Map<PlayerMessage, Connection> buffer){
         Vector<PlayerMessage> bufferkeys= new Vector(buffer.keySet());
         Vector<Connection> buffervalues = new Vector(buffer.values());
         while (waitingConnection.size()<numberOfPlayers && lobbyBuffer.size()>0){
-            j=0;
-            waitingConnection.put(bufferkeys.get(j),buffervalues.get(j));
-            lobbyBuffer.remove(bufferkeys.get(j),buffervalues.get(j));
-            bufferkeys.remove(j);
-            buffervalues.remove(j);
+            waitingConnection.put(bufferkeys.get(0),buffervalues.get(0));
+            lobbyBuffer.remove(bufferkeys.get(0),buffervalues.get(0));
+            bufferkeys.remove(0);
+            buffervalues.remove(0);
         }
-        for(int i=0;lobbyBuffer.size()>0;i++){
-            buffervalues.get(i).send("the lobby you were has closed, please login again");
-            buffervalues.get(i).closeConnection();
-            executor.submit(buffervalues.get(i));
-            lobbyBuffer.remove(bufferkeys.get(i),buffervalues.get(i));
+        while(lobbyBuffer.size()>0){
+            currentConnections.remove(buffervalues.get(0));
+            buffervalues.get(0).send("the lobby you were has closed, please login again");
+            buffervalues.get(0).closeConnection();
+            lobbyBuffer.remove(bufferkeys.get(0),buffervalues.get(0));
+            buffervalues.remove(0);
+            bufferkeys.remove(0);
         }
-        return check;
     }
 }
