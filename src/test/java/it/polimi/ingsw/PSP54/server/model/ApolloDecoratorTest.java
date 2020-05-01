@@ -20,14 +20,14 @@ public class ApolloDecoratorTest {
     int y;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         //initialize game
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1");
-        game.newPlayer("2");
-        game.newPlayer("3");
+        game.newPlayer("1",0);
+        game.newPlayer("2",0);
+        game.newPlayer("3",0);
         players = game.getPlayers();
 
         //set Apollo power to player_1

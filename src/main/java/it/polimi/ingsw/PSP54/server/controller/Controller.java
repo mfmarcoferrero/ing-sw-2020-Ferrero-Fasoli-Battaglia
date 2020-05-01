@@ -1,12 +1,12 @@
 package it.polimi.ingsw.PSP54.server.controller;
 
+import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.*;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 import it.polimi.ingsw.PSP54.utils.*;
 
 import java.util.ArrayList;
 import java.util.Observable;
-import java.util.Observer;
 
 
 public class Controller implements Observer {
@@ -28,32 +28,85 @@ public class Controller implements Observer {
     }
 
     /**
-     * In base al tipo di messaggio che viene notificato dalla virtual view
-     * esegue un operazione sul model
-     * @param o
-     * @param arg
+     * Metodo per effettuare una mossa
+     * @param move
      */
-    @Override
-    public void update(Observable o, Object arg) {
-        for (VirtualView v : virtualViewList){
-            if (!(o instanceof VirtualView)){
-                throw new IllegalArgumentException();
+    private synchronized void performMove(Move move) throws Exception {
+        if(!game.getPlayers().get(move.getPlayer_ind()).isTurn()){
+            virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
+            return;
+        }
+        try{
+            if (move.isSetFirstPos()){
+                try {
+                    game.setWorker(move);
+                    virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
+                }
+                catch (InvalidMoveException e){
+                    virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
+                    return;
+                }
             }
-        }
-        if(!((arg instanceof Move) || (arg instanceof Build) || (arg instanceof Player))) {
-            throw new IllegalArgumentException();
-        }
-        if (arg instanceof Player) {
-            Player p = (Player) arg;
-            game.newPlayer(p.getPlayerName());
+            else
+                game.move(move);
+        } catch (InvalidMoveException e) {
+            virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
             return;
         }
+    }
 
-        if (arg instanceof Move && ((Move) arg).isSetFirstPos()) {
-            Move m = (Move) arg;
-            virtualViewList.get(((Move) arg).getPlayer_ind()).setFirstWorkerSetDone(true);
+    /**
+     * Metodo per effettuare una costruzione
+     * @param build
+     */
+    private synchronized void performBuild(Build build) throws Exception{
+        if(!game.getPlayers().get(build.getPlayer_ind()).isTurn()){
+            virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
             return;
         }
+        try{
+            game.build(build);
+        } catch (InvalidBuildingException e) {
+            virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.invalidBuildingMessage);
+            return;
+        }
+    }
 
+    /**
+     * Metodo per inserire un giocatore nel model
+     * @param p
+     * @throws Exception
+     */
+    private synchronized void addPlayer (PlayerMessage p) throws Exception {
+        try {
+            game.newPlayer(p.getPlayerName(),p.getVirtualViewID());
+        } catch (Exception e) {
+            return;
+        }
+    }
+
+    @Override
+    public void update(Move message) throws Exception {
+        performMove(message);
+    }
+
+    @Override
+    public void update(Build message) throws Exception {
+        performBuild(message);
+    }
+
+    @Override
+    public void update(PlayerMessage message) throws Exception {
+        addPlayer(message);
+    }
+
+    @Override
+    public void update(String message) throws Exception {
+        return;
+    }
+
+    @Override
+    public void update(Box[][] message) throws Exception {
+        return;
     }
 }

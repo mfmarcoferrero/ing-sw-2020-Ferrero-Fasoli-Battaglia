@@ -16,14 +16,14 @@ public class DemeterDecoratorTest {
     int y;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception{
         //initialize game
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1");
-        game.newPlayer("2");
-        game.newPlayer("3");
+        game.newPlayer("1",0);
+        game.newPlayer("2",0);
+        game.newPlayer("3",0);
         players = game.getPlayers();
 
         //set Demeter power to player 1

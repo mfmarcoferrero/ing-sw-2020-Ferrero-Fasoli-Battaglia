@@ -2,6 +2,8 @@ package it.polimi.ingsw.PSP54.server.model;
 
 import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
+import it.polimi.ingsw.PSP54.utils.Build;
+import it.polimi.ingsw.PSP54.utils.Move;
 
 import java.util.*;
 
@@ -14,32 +16,32 @@ public class Game extends Observable {
     private Vector<Player> players;
     private final Box[][] board;
 
-    public Game(){
+    public Game() {
 
         players = new Vector<>(1, 1);
         board = new Box[boardSize][boardSize];
-
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board.length; j++) {
                 board[i][j] = new Box(i, j, 0, false);
-
             }
         }
+
     }
 
     /**
      * Adds a player to the players Vector
      * @param name the name of the player
      */
-    public void newPlayer ( String name){
+    public void newPlayer (String name,int virtualViewId) throws Exception {
 
-        Player player = new StandardPlayer(name);
+        Player player = new StandardPlayer(name,virtualViewId);
         players.add(player);
         notify(board.clone());
+
     }
 
     /**
-     *Sorts elements of players vector depending on players age
+     * Sorts elements of players vector depending on players age
      * @param players the players vector
      */
     public void sortPlayers(Vector<Player> players){
@@ -118,6 +120,36 @@ public class Game extends Observable {
         }
 
         return cardsNames;
+    }
+
+    /**
+     * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
+     * @param move oggetto che contiene le informazioni per eseguire lo spostamento
+     * @throws InvalidMoveException
+     */
+    public void move (Move move) throws Exception {
+        players.get(move.getPlayer_ind()).move(players.get(move.getPlayer_ind()).getWorkers()[move.getPlayer_ind()],board[move.getX()][move.getY()]);
+        notify(board.clone());
+    }
+
+    /**
+     * Metodo per chiamare la costruzione e restituire alla view la board che ha subito il cambiamento
+     * @param build oggetto che contiene le informazioni per costruire
+     * @throws InvalidBuildingException
+     */
+    public void build (Build build) throws Exception {
+        players.get(build.getPlayer_ind()).build(players.get(build.getPlayer_ind()).getWorkers()[build.getPlayer_ind()],board[build.getX()][build.getY()]);
+        notify(board.clone());
+    }
+
+    /**
+     * Metodo per settare la posizione iniziale di un worker
+     * @param move
+     * @throws InvalidMoveException
+     */
+    public void setWorker (Move move) throws Exception {
+        players.get(move.getPlayer_ind()).setWorkerPos(players.get(move.getPlayer_ind()).getWorkers()[move.getPlayer_ind()], move.getX(), move.getY());
+        notify(board.clone());
     }
 
     //setters & getters
