@@ -33,6 +33,9 @@ public interface Player {
      */
     Worker turnInit(Boolean male);
 
+    //TODO JavaDoc
+    void firstTurnInit();
+
     /**
      * Sets standard available boxes for the worker to move and stores them in worker's attribute
      * @param worker current worker in use
@@ -103,5 +106,9 @@ public interface Player {
 
     int getVirtualViewID ();
 
-    boolean isTurn();
+    //boolean isTurn();
+
+    boolean isPlaying();
+
+    void setPlaying(boolean playing);
 }

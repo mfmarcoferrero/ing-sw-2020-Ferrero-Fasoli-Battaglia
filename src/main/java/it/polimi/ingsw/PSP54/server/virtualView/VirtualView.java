@@ -8,7 +8,6 @@ import it.polimi.ingsw.PSP54.utils.Build;
 import it.polimi.ingsw.PSP54.utils.Move;
 import it.polimi.ingsw.PSP54.utils.PlayerMessage;
 
-import java.util.Vector;
 
 public class VirtualView extends Observable implements Observer {
 
@@ -17,18 +16,16 @@ public class VirtualView extends Observable implements Observer {
     private int virtualViewId;
     private Connection connection;
     private MessageReceiver messageReceiver;
-    private Vector<PlayerMessage> players;
     private PlayerMessage player;
     private String opponent1;
-    private String opponent2;
 
-    public VirtualView(int virtualViewId, Vector<PlayerMessage> players, Connection connection){
+    /*public VirtualView(int virtualViewId, Vector<PlayerMessage> players, Connection connection){
         this.virtualViewId = virtualViewId;
         this.connection = connection;
         this.messageReceiver = new MessageReceiver(this.connection,this);
         this.players = players;
         connection.addObserver(this.messageReceiver);
-    }
+    }*/
 
     /**
      * Instantiates a VirtualView with corresponding Connection and MessageReceiver for a 2 players game
@@ -43,7 +40,7 @@ public class VirtualView extends Observable implements Observer {
         this.player = p;
         this.opponent1 = opponent;
         connection.addObserver(this.messageReceiver);
-        connection.asyncSend("opponent is: " + opponent1 + "\ndigit show to see your board");
+        connection.asyncSend("opponent is: " + opponent1 + "\ndigit 'show' to see the board");
     }
 
     /**
@@ -58,9 +55,8 @@ public class VirtualView extends Observable implements Observer {
         this.messageReceiver = new MessageReceiver(this.connection,this);
         this.player = p;
         this.opponent1 = opponent1;
-        this.opponent2 = opponent2;
         connection.addObserver(this.messageReceiver);
-        connection.asyncSend("opponent 1 is: "+ opponent1+"\nopponent 2 is: "+ opponent2+ "\ndigit show to see your board");
+        connection.asyncSend("opponent 1 is: " + opponent1 + "\nopponent 2 is: " + opponent2 + "\ndigit 'show' to see the board");
     }
 
     /**
@@ -129,16 +125,25 @@ public class VirtualView extends Observable implements Observer {
         connection.asyncSend(board);
     }
 
-
     public Box[][] getBoard() {
         return board;
     }
 
+    /**
+     * Update the VirtualView's side board
+     * @param message the clone of model's board
+     * @throws Exception ??
+     */
     @Override
     public void update(Box[][] message) throws Exception {
         this.board = message;
     }
 
+    /**
+     * Update the message to be shown to the player
+     * @param message
+     * @throws Exception
+     */
     @Override
     public void update(String message) throws Exception {
         showMessage(message);

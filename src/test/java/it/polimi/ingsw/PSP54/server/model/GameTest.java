@@ -17,14 +17,14 @@ public class GameTest {
     private Box[][] board;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         //initialize game
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1",0);
-        game.newPlayer("2",0);
-        game.newPlayer("3",0);
+        game.newPlayer("1");
+        game.newPlayer("2");
+        game.newPlayer("3");
         players = game.getPlayers();
         players.get(0).setGame(game);
         players.get(1).setGame(game);
@@ -43,13 +43,12 @@ public class GameTest {
         players.get(1).setAge(23);
         players.get(2).setAge(23);
 
-        game.sortPlayers(players);
+        game.sortPlayers();
 
-        Integer i = 1;
-        Iterator<Player> itr = players.iterator();
-        while (itr.hasNext()){
-            String name = itr.next().getPlayerName();
-            assertEquals(i.toString(), name);
+        int i = 1;
+        for (Player player : players) {
+            String name = player.getPlayerName();
+            assertEquals(Integer.toString(i), name);
             i++;
         }
 
@@ -62,7 +61,7 @@ public class GameTest {
         players.get(1).setAge(32);
         players.get(2).setAge(5);
 
-        game.sortPlayers(players);
+        game.sortPlayers();
 
         int i = 3;
         for (Player player : players) {
@@ -81,9 +80,9 @@ public class GameTest {
             player.setAge(selector.nextInt());
         }
 
-        game.sortPlayers(players);
+        game.sortPlayers();
 
-        game.assignColors(players);
+        game.assignColors();
 
         assertEquals("blue", players.get(0).getColor());
         assertEquals("red", players.get(1).getColor());
@@ -91,19 +90,21 @@ public class GameTest {
     }
 
     @Test
-    public void extractCards_2PlayersExtraction_AllDifferent() throws Exception{
+    public void extractCards_2PlayersExtraction_AllDifferent() {
 
         //initialize game
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1",0);
-        game.newPlayer("2",0);
+        game.newPlayer("1");
+        game.newPlayer("2");
         players = game.getPlayers();
         players.get(0).setGame(game);
         players.get(1).setGame(game);
 
-        int[] cards = game.extractCards();
+        game.extractCards();
+
+        int[] cards = game.getExtractedCards();
 
         for (int i = 0; i < players.size(); i++) {
             for (int j = 0; j < players.size(); j++){
@@ -120,7 +121,9 @@ public class GameTest {
 
         int[] deck1 = {0, 2, 1};
 
-        String[] namedCards = game.nameExtractedCards(deck1);
+        game.setExtractedCards(deck1);
+
+        String[] namedCards = game.nameExtractedCards();
 
         assertEquals("Apollo", namedCards[0]);
         assertEquals("Athena", namedCards[1]);
@@ -128,7 +131,9 @@ public class GameTest {
 
         int[] deck2 = {3, 4};
 
-        namedCards = game.nameExtractedCards(deck2);
+        game.setExtractedCards(deck2);
+
+        namedCards = game.nameExtractedCards();
 
         assertEquals("Atlas", namedCards[0]);
         assertEquals("Demeter", namedCards[1]);

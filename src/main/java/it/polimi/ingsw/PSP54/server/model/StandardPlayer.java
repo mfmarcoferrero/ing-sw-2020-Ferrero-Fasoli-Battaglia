@@ -14,20 +14,28 @@ public class StandardPlayer implements Player {
     private int age, virtualViewId;
     private String color;
     private final Worker[] workers = new Worker[2];
+    private boolean playing;
     private boolean winner;
     private boolean loser;
+
+
+    public StandardPlayer(String playerName) {
+        this.playerName = playerName;
+    }
 
     /**
      * Instantiates a new Player with corresponding workers
      * @param playerName the name of the Player
      */
-    public StandardPlayer(String playerName, int virtualViewId) {
+    public StandardPlayer(String playerName, int age, int virtualViewId) {
         this.playerName = playerName;
         this.virtualViewId = virtualViewId;
+        this.age = age;
         this.workers[0] = new Worker(true, this, null);
         this.workers[1] = new Worker(false, this, null);
         this.winner = false;
         this.loser = false;
+        this.playing = false;
     }
 
     /**
@@ -38,7 +46,7 @@ public class StandardPlayer implements Player {
     @Override
     public Player assignPower(int cardID){ //where to be performed?
 
-        Player actualPlayer = new StandardPlayer(null,0);
+        Player actualPlayer = new StandardPlayer(null,0, 0);
 
         if (cardID == APOLLO) {
             actualPlayer = new ApolloDecorator(this);
@@ -92,11 +100,17 @@ public class StandardPlayer implements Player {
      */
     @Override
     public Worker turnInit(Boolean male) {
-
+        setPlaying(true);
         Worker currentWorker = choseWorker(male);
         currentWorker.setMoveToken(1);
         currentWorker.setBuildToken(0);
         return currentWorker;
+
+    }
+
+    @Override
+    public void firstTurnInit() {
+        setPlaying(true);
 
     }
 
@@ -205,7 +219,7 @@ public class StandardPlayer implements Player {
         } else throw new InvalidBuildingException();
     }
 
-    @Override
+    /*@Override
     public boolean isTurn() {
         for (Worker w : workers){
             if (w.getMoveToken() == 1 && w.getBuildToken() == 0){
@@ -216,10 +230,10 @@ public class StandardPlayer implements Player {
             }
         }
         return false;
-    }
+    }*/
 
     /**
-     *checks if player has won
+     *checks if player has won and ends the player's turn
      */
     @Override
     public void endTurn () {
@@ -228,6 +242,7 @@ public class StandardPlayer implements Player {
             if(workers[i].getPos().getLevel() == 3)
                 this.setWinner(true);
         }
+        setPlaying(false);
     }
 
     //setters & getters
@@ -311,6 +326,16 @@ public class StandardPlayer implements Player {
     @Override
     public int getVirtualViewID() {
         return this.virtualViewId;
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    @Override
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
     }
 
 }

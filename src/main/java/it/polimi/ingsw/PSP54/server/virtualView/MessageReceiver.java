@@ -2,7 +2,6 @@ package it.polimi.ingsw.PSP54.server.virtualView;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.utils.Move;
 import it.polimi.ingsw.PSP54.utils.Build;
 import it.polimi.ingsw.PSP54.utils.PlayerMessage;

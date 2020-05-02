@@ -16,14 +16,14 @@ public class DemeterDecoratorTest {
     int y;
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() {
         //initialize game
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1",0);
-        game.newPlayer("2",0);
-        game.newPlayer("3",0);
+        game.newPlayer("1");
+        game.newPlayer("2");
+        game.newPlayer("3");
         players = game.getPlayers();
 
         //set Demeter power to player 1
@@ -38,7 +38,7 @@ public class DemeterDecoratorTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         game = null;
     }
 
@@ -62,7 +62,7 @@ public class DemeterDecoratorTest {
 
         assertEquals(board[3][3], demeterWorker.getPos());
         assertEquals(1, board[2][2].getLevel());
-        assertEquals(true, board[4][4].isDome());
+        assertTrue(board[4][4].isDome());
 
     }
 

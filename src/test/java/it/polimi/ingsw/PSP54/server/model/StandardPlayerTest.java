@@ -21,14 +21,14 @@ public class StandardPlayerTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         //initialize game
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1",0);
-        game.newPlayer("2",0);
-        game.newPlayer("3",0);
+        game.newPlayer("1");
+        game.newPlayer("2");
+        game.newPlayer("3");
         players = game.getPlayers();
         players.get(0).setGame(game);
         players.get(1).setGame(game);
@@ -535,7 +535,7 @@ public class StandardPlayerTest {
 
         assertEquals(board[2][4], currentWorker.getPos());
         assertEquals(0, currentWorker.getMoveToken()+currentWorker.getBuildToken());
-        assertEquals(true, players.get(0).isWinner());
+        assertTrue(players.get(0).isWinner());
     }
 
 }

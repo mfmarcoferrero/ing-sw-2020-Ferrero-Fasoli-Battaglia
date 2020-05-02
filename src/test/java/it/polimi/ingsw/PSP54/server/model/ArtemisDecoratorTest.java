@@ -20,14 +20,14 @@ public class ArtemisDecoratorTest {
     int y;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         //initialize game
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1",0);
-        game.newPlayer("2",0);
-        game.newPlayer("3",0);
+        game.newPlayer("1");
+        game.newPlayer("2");
+        game.newPlayer("3");
         players = game.getPlayers();
 
         //set Artemis power to player_1

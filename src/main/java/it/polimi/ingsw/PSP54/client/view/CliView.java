@@ -39,14 +39,11 @@ public class CliView implements Observer {
 			case 3 :
 				background = Color.ANSI_THIRD_BACKGROUND.toString();
 				break;
-
 		}
 
 		if(box.isDome())
 			string = string + Color.ANSI_DOME + Symbol.UNICODE_DOME;
 
-			//TODO: colors need to be final and settled in Game class according to players' order
-			//TODO: workers' array needs to be setted final and attribute male needs to be setted wen creating a new player
 		else if(box.getWorker() != null) {
 			switch (box.getWorker().getOwner().getColor()) {
 				case "blue":
@@ -96,7 +93,6 @@ public class CliView implements Observer {
 		outputStream.println(toPrint);
 	}
 
-	//TODO: Implement StringBuilder rather than concatenation
 	/**
 	 *prints the board
 	 * @param board bi-dimensional array of boxes representing the game board
@@ -142,7 +138,7 @@ public class CliView implements Observer {
 			//print the seven conditioned line depending on level of the box or on the presence of a dome/worker in it
 			while (l < 7) {
 
-				//generate and print the five strings containing the representation of the of the first line of boxes
+				//generate and print the five strings containing the representation of the of the first row of boxes
 				if (l == 0 || l == 6) {
 					toPrint = new StringBuilder();
 					for (int j = 0; j < 5; j++) {

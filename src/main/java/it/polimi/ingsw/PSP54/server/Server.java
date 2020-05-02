@@ -88,21 +88,21 @@ public class Server {
                     //initialize a VirtualView for each player, manage dispatching depending on numberOfPlayers
                     if (i == 0) {
 
+                        VirtualView virtualView;
                         if (numberOfPlayers == 2) {
-                            VirtualView virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName());
-                            virtualViews.add(i, virtualView);
+                            virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName());
                         } else { //numberOfPlayers == 3
-                            VirtualView virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName(), keys.get(i + 2).getPlayerName());
-                            virtualViews.add(i, virtualView);
+                            virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName(), keys.get(i + 2).getPlayerName());
                         }
+                        virtualViews.add(i, virtualView);
                     } else if (i == 1) {
+                        VirtualView virtualView;
                         if (numberOfPlayers == 2) {
-                            VirtualView virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName());
-                            virtualViews.add(i, virtualView);
+                            virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName());
                         } else {
-                            VirtualView virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName(), keys.get(i + 1).getPlayerName());
-                            virtualViews.add(i, virtualView);
+                            virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName(), keys.get(i + 1).getPlayerName());
                         }
+                        virtualViews.add(i, virtualView);
                     } else {
                         VirtualView virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 2).getPlayerName(), keys.get(i - 1).getPlayerName());
                         virtualViews.add(i, virtualView);
@@ -153,21 +153,21 @@ public class Server {
     }
 
     private void freeBuffer(Map<PlayerMessage, Connection> buffer){
-        Vector<PlayerMessage> bufferkeys= new Vector(buffer.keySet());
-        Vector<Connection> buffervalues = new Vector(buffer.values());
+        Vector<PlayerMessage> bufferKeys= new Vector<>(buffer.keySet());
+        Vector<Connection> bufferValues = new Vector<>(buffer.values());
         while (waitingConnection.size()<numberOfPlayers && lobbyBuffer.size()>0){
-            waitingConnection.put(bufferkeys.get(0),buffervalues.get(0));
-            lobbyBuffer.remove(bufferkeys.get(0),buffervalues.get(0));
-            bufferkeys.remove(0);
-            buffervalues.remove(0);
+            waitingConnection.put(bufferKeys.get(0),bufferValues.get(0));
+            lobbyBuffer.remove(bufferKeys.get(0),bufferValues.get(0));
+            bufferKeys.remove(0);
+            bufferValues.remove(0);
         }
         while(lobbyBuffer.size()>0){
-            currentConnections.remove(buffervalues.get(0));
-            buffervalues.get(0).send("the lobby you were has closed, please login again");
-            buffervalues.get(0).closeConnection();
-            lobbyBuffer.remove(bufferkeys.get(0),buffervalues.get(0));
-            buffervalues.remove(0);
-            bufferkeys.remove(0);
+            currentConnections.remove(bufferValues.get(0));
+            bufferValues.get(0).send("the lobby you were has closed, please login again");
+            bufferValues.get(0).closeConnection();
+            lobbyBuffer.remove(bufferKeys.get(0),bufferValues.get(0));
+            bufferValues.remove(0);
+            bufferKeys.remove(0);
         }
     }
 }

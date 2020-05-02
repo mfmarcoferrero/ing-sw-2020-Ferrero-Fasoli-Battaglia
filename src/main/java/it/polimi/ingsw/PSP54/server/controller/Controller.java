@@ -6,7 +6,7 @@ import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 import it.polimi.ingsw.PSP54.utils.*;
 
 import java.util.ArrayList;
-import java.util.Observable;
+
 
 
 public class Controller implements Observer {
@@ -16,6 +16,13 @@ public class Controller implements Observer {
 
     public Controller (Game game) {
         this.game = game;
+
+        game.sortPlayers();
+        game.assignColors();
+        game.extractCards();
+        game.getPlayers().get(0).firstTurnInit();
+
+
     }
 
     /**
@@ -32,7 +39,7 @@ public class Controller implements Observer {
      * @param move
      */
     private synchronized void performMove(Move move) throws Exception {
-        if(!game.getPlayers().get(move.getPlayer_ind()).isTurn()){
+        if(!game.getPlayers().get(move.getPlayer_ind()).isPlaying()){
             virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
             return;
         }
@@ -60,7 +67,7 @@ public class Controller implements Observer {
      * @param build
      */
     private synchronized void performBuild(Build build) throws Exception{
-        if(!game.getPlayers().get(build.getPlayer_ind()).isTurn()){
+        if(!game.getPlayers().get(build.getPlayer_ind()).isPlaying()){
             virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
             return;
         }
@@ -72,6 +79,10 @@ public class Controller implements Observer {
         }
     }
 
+    private synchronized void handleTurnEnd() {
+        //TODO
+    }
+
     /**
      * Metodo per inserire un giocatore nel model
      * @param p
@@ -79,7 +90,7 @@ public class Controller implements Observer {
      */
     private synchronized void addPlayer (PlayerMessage p) throws Exception {
         try {
-            game.newPlayer(p.getPlayerName(),p.getVirtualViewID());
+            game.newPlayer(p.getPlayerName(), p.getAge(), p.getVirtualViewID());
         } catch (Exception e) {
             return;
         }

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Connection extends Observable <String> implements Runnable {
@@ -78,7 +79,14 @@ public class Connection extends Observable <String> implements Runnable {
             send("Welcome! What's your name?");
             name = in.nextLine();
             send("What's your age?");
-            int age = in.nextInt();
+            Integer age = null;
+            while (age == null) {
+                try {
+                    age = in.nextInt();
+                } catch (InputMismatchException e) {
+                    System.err.println("Incorrect input!");
+                }
+            }
             if(gameMaster || this == server.currentConnections.firstElement()) {
                 send("hey, set the number of player");
                 numberOfPlayers =in.nextInt();

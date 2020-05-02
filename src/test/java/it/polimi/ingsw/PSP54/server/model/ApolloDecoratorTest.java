@@ -20,14 +20,14 @@ public class ApolloDecoratorTest {
     int y;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         //initialize game
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1",0);
-        game.newPlayer("2",0);
-        game.newPlayer("3",0);
+        game.newPlayer("1");
+        game.newPlayer("2");
+        game.newPlayer("3");
         players = game.getPlayers();
 
         //set Apollo power to player_1
@@ -110,7 +110,7 @@ public class ApolloDecoratorTest {
         board[x][y].setWorker(apolloWorker);
 
         //set boxes levels
-        board[1][1].setLevel(1);;
+        board[1][1].setLevel(1);
         board[1][1].setWorker(players.get(1).choseWorker(true));
         board[1][2].setDome(true);
         board[2][1].setLevel(3);

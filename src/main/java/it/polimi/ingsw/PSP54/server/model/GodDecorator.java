@@ -132,8 +132,23 @@ public abstract class GodDecorator implements Player {
     }
 
     @Override
+    public boolean isPlaying() {
+        return playerToDecorate.isPlaying();
+    }
+
+    @Override
+    public void setPlaying(boolean playing) {
+        playerToDecorate.setPlaying(playing);
+    }
+
+    @Override
+    public void firstTurnInit() {
+        playerToDecorate.firstTurnInit();
+    }
+
+    /*@Override
     public boolean isTurn() {
         return playerToDecorate.isTurn();
-    }
+    }*/
 }
 
