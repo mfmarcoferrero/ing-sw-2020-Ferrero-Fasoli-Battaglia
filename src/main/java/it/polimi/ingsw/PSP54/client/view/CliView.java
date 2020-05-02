@@ -72,8 +72,6 @@ public class CliView implements Observer {
 		return string;
 	}
 
-
-
 	/**
 	 * Prints the ground line of every box in the same line of the board
 	 * @param initGround String containing the left border and the ANSI code for the ground
@@ -279,32 +277,6 @@ public class CliView implements Observer {
 
 		//print lower border
 		outputStream.println(lowerBorder);
-	}
-
-	/**
-	 *asks the age of the player until input is a valid integer
-	 * @return player age
-	 */
-	public int acquireAge(){
-
-		boolean loop = true;
-		int playerAge = 0;
-
-		outputStream.println("Enter your age:");
-		while (loop) {
-			String age = scanner.next();
-			try{
-				playerAge = Integer.parseInt(age);
-				if (playerAge > 0 && playerAge < 100)
-					loop = false;
-				else
-					outputStream.println("Incorrect Input!");
-			}catch (IllegalArgumentException e){
-				outputStream.println("Incorrect input!");
-			}
-		}
-
-		return playerAge;
 	}
 
 	/**

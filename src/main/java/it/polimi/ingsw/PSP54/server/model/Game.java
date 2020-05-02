@@ -137,6 +137,10 @@ public class Game extends Observable {
         notify(message);
     }
 
+    public void startGame() {
+
+    }
+
     /**
      * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
      * @param move oggetto che contiene le informazioni per eseguire lo spostamento

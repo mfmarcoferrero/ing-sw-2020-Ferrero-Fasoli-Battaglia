@@ -1,14 +1,11 @@
 package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.observer.*;
-import it.polimi.ingsw.PSP54.server.model.StandardPlayer;
 import it.polimi.ingsw.PSP54.utils.PlayerMessage;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.Socket;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Connection extends Observable <String> implements Runnable {
@@ -79,20 +76,13 @@ public class Connection extends Observable <String> implements Runnable {
             send("Welcome! What's your name?");
             name = in.nextLine();
             send("What's your age?");
-            Integer age = null;
-            while (age == null) {
-                try {
-                    age = in.nextInt();
-                } catch (InputMismatchException e) {
-                    System.err.println("Incorrect input!");
-                }
-            }
+            int age = acquireInteger(in);
             if(gameMaster || this == server.currentConnections.firstElement()) {
-                send("hey, set the number of player");
-                numberOfPlayers =in.nextInt();
+                send("Hey, set the number of player");
+                numberOfPlayers = acquireInteger(in);
                 while (numberOfPlayers <2 || numberOfPlayers >3) {
-                    send("illegal number of player must be 2 or 3, insert a new number of player");
-                    numberOfPlayers = in.nextInt();
+                    send("Illegal number of player! It must be '2' or '3', try again");
+                    numberOfPlayers = acquireInteger(in);
                 }
                 server.setNumberOfPlayers(numberOfPlayers);
             }
@@ -109,6 +99,26 @@ public class Connection extends Observable <String> implements Runnable {
         } finally {
             close();
         }
+    }
+
+    /**
+     * Asks an integer until input is valid
+     * @param in  the scanner that's being used to acquire the input
+     * @return player's age
+     */
+    public int acquireInteger(Scanner in) {
+        boolean loop = true;
+        int i = 0;
+        while (loop) {
+            String toParse = in.next();
+            try{
+                i = Integer.parseInt(toParse);
+                loop = false;
+            }catch (IllegalArgumentException e){
+                send("Incorrect input!");
+            }
+        }
+        return i;
     }
 
     public void setGameMaster(boolean gameMaster) {
