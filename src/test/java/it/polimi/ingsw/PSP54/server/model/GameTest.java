@@ -117,5 +117,32 @@ public class GameTest {
 
     }
 
+    @Test
+    public void displayCards_AllGods_CorrectOutput() {
+
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).setVirtualViewId(i);
+        }
+        game.setCurrentPlayer(players.get(0));
+
+        ArrayList<Integer> extract = new ArrayList<>();
+
+        extract.add(0);
+        extract.add(1);
+        extract.add(2);
+        extract.add(3);
+        extract.add(4);
+
+        game.setExtractedCards(extract);
+
+        String result = game.displayCards();
+
+        String expected = "Chose your card:\n1. Apollo\n2. Artemis\n3. Athena\n4. Atlas\n5. Demeter\n";
+
+        assertEquals(result, expected);
+
+    }
+
+
 
 }

@@ -142,8 +142,8 @@ public abstract class GodDecorator implements Player {
     }
 
     @Override
-    public void firstTurnInit() {
-        playerToDecorate.firstTurnInit();
+    public void setVirtualViewId(int virtualViewId) {
+        playerToDecorate.setVirtualViewId(virtualViewId);
     }
 
     /*@Override

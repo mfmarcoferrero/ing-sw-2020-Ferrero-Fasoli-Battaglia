@@ -121,12 +121,6 @@ public class StandardPlayer implements Player {
 
     }
 
-    @Override
-    public void firstTurnInit() {
-        setPlaying(true);
-
-    }
-
     /**
      * Sets available boxes for the worker to move and stores them in worker's attribute
      * @param worker current worker in use
@@ -339,6 +333,11 @@ public class StandardPlayer implements Player {
     @Override
     public int getVirtualViewID() {
         return this.virtualViewId;
+    }
+
+    @Override
+    public void setVirtualViewId(int virtualViewId) {
+        this.virtualViewId = virtualViewId;
     }
 
     @Override

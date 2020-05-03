@@ -105,7 +105,7 @@ public class Game extends Observable {
     /**
      * Creates a message for the player containing the extracted cards
      */
-    public void displayCards(){
+    public String displayCards(){
 
         String message = "Chose your card:\n";
         StringBuilder cardNames = new StringBuilder();
@@ -118,6 +118,7 @@ public class Game extends Observable {
 
         CardDisplayed cardDisplayed = new CardDisplayed(currentPlayer.getVirtualViewID(), message);
         notify(cardDisplayed); //TODO: fix not displayed when currentPLayer is players.get(2)
+        return message;
     }
 
     /**
@@ -205,6 +206,10 @@ public class Game extends Observable {
         return currentPlayer;
     }
 
+    /**
+     * Sets the playing attribute of currentPlayer to 'true' and notifies the VirtualView
+     * @param currentPlayer the member of the players Vector which is going to play
+     */
     public void setCurrentPlayer(Player currentPlayer) {
 
         for (Player player : players) {
