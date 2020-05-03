@@ -1,9 +1,8 @@
 package it.polimi.ingsw.PSP54.server.model;
 
 import it.polimi.ingsw.PSP54.observer.Observable;
-import it.polimi.ingsw.PSP54.observer.Observer;
-import it.polimi.ingsw.PSP54.utils.Build;
-import it.polimi.ingsw.PSP54.utils.Move;
+import it.polimi.ingsw.PSP54.utils.*;
+
 
 import java.util.*;
 
@@ -14,8 +13,9 @@ public class Game extends Observable {
     public final int cardNumber = 5;
     public final int boardSize = 5;
     private Vector<Player> players;
+    private Player currentPlayer;
     private final Box[][] board;
-    private int[] extractedCards;
+    private ArrayList<Integer> extractedCards;
 
     public Game() {
 
@@ -38,7 +38,7 @@ public class Game extends Observable {
      * Adds a player to the players Vector
      * @param name the name of the player
      */
-    public void newPlayer (String name, int age, int virtualViewId) throws Exception {
+    public void newPlayer (String name, int age, int virtualViewId) {
 
         Player player = new StandardPlayer(name, age, virtualViewId);
         players.add(player);
@@ -61,6 +61,7 @@ public class Game extends Observable {
         };
 
         players.sort(comp);
+        setCurrentPlayer(players.get(0));
     }
 
     /**
@@ -82,7 +83,7 @@ public class Game extends Observable {
 
         int numberOfPlayers = players.capacity();
         ArrayList<Integer> deck = new ArrayList<>();
-        extractedCards = new int[numberOfPlayers];
+        extractedCards = new ArrayList<>();
 
         for (int i = 0; i < cardNumber; i++) {
             deck.add(i);
@@ -90,8 +91,8 @@ public class Game extends Observable {
 
         Collections.shuffle(deck);
 
-        for (int i = 0; i < extractedCards.length; i++) {
-            extractedCards[i] = deck.get(i);
+        for (int i = 0; i < numberOfPlayers; i++) {
+            extractedCards.add(deck.get(i));
         }
 
     }
@@ -101,18 +102,18 @@ public class Game extends Observable {
      * @return an array of String containing the names of extracted cards
      */
     public String [] nameExtractedCards() {
-        String [] cardsNames = new String[extractedCards.length];
+        String [] cardsNames = new String[extractedCards.size()];
 
-        for (int i = 0; i < extractedCards.length; i++) {
-            if (extractedCards[i] == APOLLO) {
+        for (int i = 0; i < extractedCards.size(); i++) {
+            if (extractedCards.get(i) == APOLLO) {
                 cardsNames[i] = "Apollo";
-            } else if (extractedCards[i] == ARTEMIS) {
+            } else if (extractedCards.get(i) == ARTEMIS) {
                 cardsNames[i] = "Artemis";
-            } else if (extractedCards[i] == ATHENA) {
+            } else if (extractedCards.get(i) == ATHENA) {
                 cardsNames[i] = "Athena";
-            } else if (extractedCards[i] == ATLAS) {
+            } else if (extractedCards.get(i) == ATLAS) {
                 cardsNames[i] = "Atlas";
-            } else if (extractedCards[i] == DEMETER) {
+            } else if (extractedCards.get(i) == DEMETER) {
                 cardsNames[i] = "Demeter";
             }
         }
@@ -122,31 +123,45 @@ public class Game extends Observable {
 
     /**
      * Creates a message for the player containing the extracted cards
-     * @throws Exception ??
      */
-    public void cardsSelection() throws Exception { //TODO notify only the correct virtual view with the updated message
-
-        String[] cardsToDisplay = nameExtractedCards();
-        String message = "Chose your card: ";
+    public void displayCards(){
+        String[] cardsNames = nameExtractedCards();
+        String message = "Chose your card:\n";
         StringBuilder cardNames = new StringBuilder();
-        for (int i = 0; i < extractedCards.length; i++) {
-            cardNames.append(i).append(". ").append(extractedCards[i]).append("\n");
+        for (int i = 0; i < extractedCards.size(); i++) {
+            cardNames.append(i+1).append(". ").append(cardsNames[i]).append("\n");
         }
-        message = message +cardNames;
-        //send message with extracted cards to virtual view
-        notify(message);
+        message = message + cardNames;
+
+        CardDisplayed cardDisplayed = new CardDisplayed(currentPlayer.getVirtualViewID(), message);
+        notify(cardDisplayed); //TODO: fix not displayed when currentPLayer is players.get(2)
     }
 
-    public void startGame() {
+    /**
+     * Invoke the player decoration and remove the card from extractedCards ArrayList.
+     * @param cardIndex the index of the chosen card.
+     */
+    public void removeExtractedCard(int cardIndex){
+
+        getExtractedCards().remove(cardIndex);
+
+        //end of current player's turn
+        int i = players.indexOf(getCurrentPlayer());
+        if (i<2) {
+            setCurrentPlayer(players.get(i + 1));
+            displayCards();
+        }else
+            setCurrentPlayer(players.get(0));
 
     }
+
+    //TODO: maybe handle Invalid_Exception here?
 
     /**
      * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
      * @param move oggetto che contiene le informazioni per eseguire lo spostamento
-     * @throws Exception
      */
-    public void move(Move move) throws Exception {
+    public void move(Move move) throws InvalidMoveException {
         players.get(move.getPlayer_ind()).move(players.get(move.getPlayer_ind()).getWorkers()[move.getPlayer_ind()],board[move.getX()][move.getY()]);
         notify(board.clone());
     }
@@ -154,24 +169,48 @@ public class Game extends Observable {
     /**
      * Metodo per chiamare la costruzione e restituire alla view la board che ha subito il cambiamento
      * @param build oggetto che contiene le informazioni per costruire
-     * @throws Exception
      */
-    public void build (Build build) throws Exception {
+    public void build (Build build) throws InvalidBuildingException {
         players.get(build.getPlayer_ind()).build(players.get(build.getPlayer_ind()).getWorkers()[build.getPlayer_ind()],board[build.getX()][build.getY()]);
         notify(board.clone());
     }
 
     /**
-     * Metodo per settare la posizione iniziale di un worker
-     * @param move
-     * @throws Exception
+     * Sets the initial worker's position on the board.
+     * @param move the message containing information about the Box where the worker is going to be placed.
      */
-    public void setWorker(Move move) throws Exception {
+    public void setWorker(Move move){
         players.get(move.getPlayer_ind()).setWorkerPos(players.get(move.getPlayer_ind()).getWorkers()[move.getPlayer_ind()], move.getX(), move.getY());
         notify(board.clone());
     }
 
     //setters & getters
+
+    /**
+     * Search for the currently playing member of the player's Vector.
+     * @return the currently playing player.
+     */
+    public Player getCurrentPlayer() {
+
+        Player current = new StandardPlayer(null);
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).isPlaying())
+                current = players.get(i);
+        }
+        return current;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+
+        for (Player player : players) {
+            if (currentPlayer.equals(player))
+                player.setPlaying(true);
+        }
+
+        this.currentPlayer = currentPlayer;
+        GameMessage yourTurn = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.turnMessage);
+        notify(yourTurn);
+    }
 
     public Vector<Player> getPlayers() {
         return players;
@@ -189,11 +228,12 @@ public class Game extends Observable {
         return board[x][y];
     }
 
-    public int[] getExtractedCards() {
+    public ArrayList<Integer> getExtractedCards() {
         return extractedCards;
     }
 
-    public void setExtractedCards(int[] extractedCards) {
+    public void setExtractedCards(ArrayList<Integer> extractedCards) {
         this.extractedCards = extractedCards;
     }
+
 }

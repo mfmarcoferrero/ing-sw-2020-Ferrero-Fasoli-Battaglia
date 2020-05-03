@@ -1,20 +1,26 @@
 package it.polimi.ingsw.PSP54.observer;
 
 import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.server.model.Player;
-import it.polimi.ingsw.PSP54.utils.Build;
-import it.polimi.ingsw.PSP54.utils.Move;
-import it.polimi.ingsw.PSP54.utils.PlayerMessage;
+import it.polimi.ingsw.PSP54.utils.*;
 
-public interface Observer<T> {
+public interface Observer {
 
-    void update(String message) throws Exception;
+    //bi-directional
+    void update(String message);
 
-    void update(Move message) throws Exception;
+    //from Client to Server
+    void update(CardChoice message);
 
-    void update(Build message) throws Exception;
+    void update(Move message);
 
-    void update(PlayerMessage message) throws Exception;
+    void update(Build message);
 
-    void update(Box[][] message) throws Exception;
+    void update(PlayerMessage message);
+
+    void update(Box[][] message);
+
+    //from Server to Client
+    void update(CardDisplayed message);
+
+    void update(GameMessage message);
 }

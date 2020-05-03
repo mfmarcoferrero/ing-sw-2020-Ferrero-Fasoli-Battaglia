@@ -14,15 +14,9 @@ public class Controller implements Observer {
     private Game game;
     private ArrayList<VirtualView> virtualViewList = new ArrayList<>();
 
+
     public Controller (Game game) {
         this.game = game;
-
-        game.sortPlayers();
-        game.assignColors();
-        game.extractCards();
-        game.getPlayers().get(0).firstTurnInit();
-
-
     }
 
     /**
@@ -31,34 +25,58 @@ public class Controller implements Observer {
      * @param virtualView
      */
     public void addVirtualView (VirtualView virtualView) {
-        this.virtualViewList.add(virtualView.getVirtualViewId(),virtualView);
+        this.virtualViewList.add(virtualView.getId(),virtualView);
+    }
+
+    public void startGame(){
+        game.sortPlayers();
+        game.assignColors();
+        game.extractCards();
+        game.displayCards();
+        if (game.getExtractedCards().isEmpty()){
+            //go on
+        }
+
+    }
+
+    /**
+     * Remove already assigned cards from Model's extractedCards list
+     * @param choice the message containing the card to remove
+     */
+    private synchronized void performCardChoice(CardChoice choice) {
+
+        ArrayList<Integer> extractedCards = game.getExtractedCards();
+
+        if (game.getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()){
+            for (int i = 0; i < game.nameExtractedCards().length; i++) {
+                if (game.nameExtractedCards()[i].equals(choice.getName())) {
+                    game.removeExtractedCard(i);
+                }
+            }
+            game.setExtractedCards(extractedCards);
+        }else
+            virtualViewList.get(choice.getVirtualViewID()).notify(GameMessage.wrongTurnMessage);
+
     }
 
     /**
      * Metodo per effettuare una mossa
      * @param move
      */
-    private synchronized void performMove(Move move) throws Exception {
+    private synchronized void performMove(Move move){
         if(!game.getPlayers().get(move.getPlayer_ind()).isPlaying()){
             virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
             return;
         }
         try{
             if (move.isSetFirstPos()){
-                try {
                     game.setWorker(move);
                     virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
-                }
-                catch (InvalidMoveException e){
-                    virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
-                    return;
-                }
             }
             else
                 game.move(move);
         } catch (InvalidMoveException e) {
             virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
-            return;
         }
     }
 
@@ -66,7 +84,7 @@ public class Controller implements Observer {
      * Metodo per effettuare una costruzione
      * @param build
      */
-    private synchronized void performBuild(Build build) throws Exception{
+    private synchronized void performBuild(Build build){
         if(!game.getPlayers().get(build.getPlayer_ind()).isPlaying()){
             virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
             return;
@@ -75,12 +93,7 @@ public class Controller implements Observer {
             game.build(build);
         } catch (InvalidBuildingException e) {
             virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.invalidBuildingMessage);
-            return;
         }
-    }
-
-    private synchronized void handleTurnEnd() {
-        //TODO
     }
 
     /**
@@ -88,36 +101,51 @@ public class Controller implements Observer {
      * @param p
      * @throws Exception
      */
-    private synchronized void addPlayer (PlayerMessage p) throws Exception {
-        try {
-            game.newPlayer(p.getPlayerName(), p.getAge(), p.getVirtualViewID());
-        } catch (Exception e) {
-            return;
-        }
+    private synchronized void addPlayer (PlayerMessage p) {
+
+        game.newPlayer(p.getPlayerName(), p.getAge(), p.getVirtualViewID());
+
     }
 
+
+
     @Override
-    public void update(Move message) throws Exception {
+    public void update(Move message){
         performMove(message);
     }
 
     @Override
-    public void update(Build message) throws Exception {
+    public void update(Build message){
         performBuild(message);
     }
 
     @Override
-    public void update(PlayerMessage message) throws Exception {
+    public void update(PlayerMessage message){
         addPlayer(message);
     }
 
     @Override
-    public void update(String message) throws Exception {
-        return;
+    public void update(String message){
+
     }
 
     @Override
-    public void update(Box[][] message) throws Exception {
-        return;
+    public void update(CardChoice message){
+        performCardChoice(message);
+    }
+
+    @Override
+    public void update(Box[][] message) {
+
+    }
+
+    @Override
+    public void update(CardDisplayed message) {
+
+    }
+
+    @Override
+    public void update(GameMessage message) {
+
     }
 }

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.PSP54.observer;
 
 import it.polimi.ingsw.PSP54.utils.*;
-import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.server.model.Box;
 
 import java.util.ArrayList;
@@ -9,23 +8,26 @@ import java.util.List;
 
 public class Observable<T> {
 
-    private final List<Observer<T>> observers = new ArrayList<>();
+    private final List<Observer> observers = new ArrayList<>();
 
-    public void addObserver(Observer<T> observer){
+    public void addObserver(Observer observer){
         synchronized (observers) {
             observers.add(observer);
         }
     }
 
-    public void removeObserver(Observer<T> observer){
+    public void removeObserver(Observer observer){
         synchronized (observers) {
             observers.remove(observer);
         }
     }
 
-    protected void notify(T message) throws Exception {
+    public void notify(T message){
         synchronized (observers) {
-            for(Observer<T> observer : observers) {
+            for(Observer observer : observers) {
+                if (message instanceof GameMessage){
+                    observer.update((GameMessage) message);
+                }
                 if (message instanceof Move) {
                     observer.update((Move) message);
                 }
@@ -40,6 +42,12 @@ public class Observable<T> {
                 }
                 if (message instanceof String) {
                     observer.update((String) message);
+                }
+                if (message instanceof CardChoice){
+                    observer.update((CardChoice) message);
+                }
+                if (message instanceof CardDisplayed){
+                    observer.update((CardDisplayed) message);
                 }
             }
         }

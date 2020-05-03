@@ -1,20 +1,16 @@
 package it.polimi.ingsw.PSP54.client.view;
 
-import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.server.model.Player;
-import it.polimi.ingsw.PSP54.utils.Build;
-import it.polimi.ingsw.PSP54.utils.Move;
-import it.polimi.ingsw.PSP54.utils.PlayerMessage;
+import it.polimi.ingsw.PSP54.utils.*;
 
 import java.io.PrintStream;
 import java.util.Scanner;
 
 public class CliView implements Observer {
 
-	private final Scanner scanner = new Scanner(System.in);
-	private final PrintStream outputStream = new PrintStream(System.out);
+	private final Scanner inputReader = new Scanner(System.in);
+	private final PrintStream output = new PrintStream(System.out);
 
 	/**
 	 *Returns the correct character to print in the center of every box, it's called by printBoard(Box[][] board)
@@ -88,7 +84,7 @@ public class CliView implements Observer {
 			line.append(endGround);
 			toPrint.append(line);
 		}
-		outputStream.println(toPrint);
+		output.println(toPrint);
 	}
 
 	/**
@@ -123,7 +119,7 @@ public class CliView implements Observer {
 		String endThird = Color.ANSI_SECOND_BACKGROUND.toString() + Color.ANSI_SECOND.toString() + Symbol.UNICODE_SQUARE + endSecond;
 
 		//print border and first ground level
-		outputStream.println(upperBorder);
+		output.println(upperBorder);
 
 		//print Board
 		for (int i = 0; i < 5; i++) {
@@ -155,7 +151,7 @@ public class CliView implements Observer {
 						}
 						toPrint.append(line);
 					}
-					outputStream.println(toPrint.toString());
+					output.println(toPrint.toString());
 					l++;
 				}
 				else if (l == 1 || l == 5){
@@ -182,7 +178,7 @@ public class CliView implements Observer {
 						}
 						toPrint.append(line);
 					}
-					outputStream.println(toPrint.toString());
+					output.println(toPrint.toString());
 					l++;
 				}
 				else if (l == 2 || l == 4){
@@ -215,7 +211,7 @@ public class CliView implements Observer {
 						}
 						toPrint.append(line);
 					}
-					outputStream.println(toPrint.toString());
+					output.println(toPrint.toString());
 					l++;
 				}
 				else if (l == 3){
@@ -264,7 +260,7 @@ public class CliView implements Observer {
 						}
 						toPrint.append(line);
 					}
-					outputStream.println(toPrint.toString());
+					output.println(toPrint.toString());
 					l++;
 				}
 			}
@@ -272,37 +268,26 @@ public class CliView implements Observer {
 			//print the last line
 			printGround(initGround, endGround);
 			if (i < 4)
-				outputStream. println(middleBorder);
+				output. println(middleBorder);
 		}
 
 		//print lower border
-		outputStream.println(lowerBorder);
+		output.println(lowerBorder);
 	}
 
-	/**
-	 * asks the username of the player
-	 * @return the player name
-	 */
-
-	public String acquireName(){
-
-		outputStream.println("Enter your name:");
-		return scanner.next();
-	}
 
 	/**
 	 *asks player which worker he wants to use
 	 * @return true if the choice is the male worker, false if it's the female Worker
 	 */
-
 	public boolean acquireWorkerSelection(){
 
 		boolean loop = true;
 		Boolean isMale = null;
 
 		while (loop) {
-			outputStream.println("Select your worker: [Enter 'male' or 'female']");
-			String workerSex = scanner.next();
+			output.println("Select your worker: [Enter 'male' or 'female']");
+			String workerSex = inputReader.next();
 			if(workerSex.equals("male")) {
 				isMale = true;
 				loop = false;
@@ -311,7 +296,7 @@ public class CliView implements Observer {
 				isMale = false;
 				loop = false;
 			}else
-				outputStream.println("Incorrect Input!");
+				output.println("Incorrect Input!");
 		}
 		return isMale;
 	}
@@ -321,7 +306,7 @@ public class CliView implements Observer {
 	 */
 
 	public  void moveMessage(){
-		outputStream.println("where do you want to move?");
+		output.println("where do you want to move?");
 	}
 
 	/**
@@ -329,7 +314,7 @@ public class CliView implements Observer {
 	 */
 
 	public void buildMessage(){
-		outputStream.println("Where do you want to build?");
+		output.println("Where do you want to build?");
 	}
 
 	/**
@@ -342,12 +327,12 @@ public class CliView implements Observer {
 		int y = 0;
 		int[] coordinates = new int[2];
 
-		outputStream.println("Set cell coordinates");
+		output.println("Set cell coordinates");
 		//set x
-		outputStream.println("Enter x:");
+		output.println("Enter x:");
 		x = getCoordinate( x);
 		//set y
-		outputStream.println("Enter y:");
+		output.println("Enter y:");
 		y = getCoordinate(y);
 
 		coordinates[0] = x;
@@ -359,15 +344,15 @@ public class CliView implements Observer {
 	private int getCoordinate(int k) {
 		boolean loop = true;
 		while (loop) {
-			String component  = scanner.next();
+			String component  = inputReader.next();
 			try{
 				k = Integer.parseInt(component);
 				if (0<k && k<6)
 					loop = false;
 				else
-					outputStream.println("Incorrect Input!");
+					output.println("Incorrect Input!");
 			}catch (IllegalArgumentException e){
-				outputStream.println("Incorrect input!");
+				output.println("Incorrect input!");
 			}
 		}
 		return k-1; //return coordinate translated to array index
@@ -382,51 +367,75 @@ public class CliView implements Observer {
 		Integer level = null;
 		boolean loop = true;
 
-		outputStream.println("which level do you want to build? [enter 'd' to build a dome]");
+		output.println("which level do you want to build? [enter 'd' to build a dome]");
 		//set level
 		while(loop){
-			outputStream.println("Enter Level:");
-			String tempLev = scanner.next();
+			output.println("Enter Level:");
+			String tempLev = inputReader.next();
 			try{
 				level = Integer.parseInt(tempLev);
 				if (level>0 && level<4)
 					loop = false;
 				else
-					outputStream.println("Incorrect Level! [level bust be 1<=level<=3]");
+					output.println("Incorrect Level! [level bust be 1<=level<=3]");
 			}catch (IllegalArgumentException e){
 				if (tempLev.equals("d")) {
 					level = 4;
 					loop = false;
 				}else
-					outputStream.println("Incorrect input!");
+					output.println("Incorrect input!");
 			}
 		}
 		return level;
 	}
 
 	@Override
-	public void update(Box[][] message) throws Exception {
+	public void update(Box[][] message) {
 		printBoard(message);
 	}
 
 	@Override
-	public void update(String message) throws Exception {
+	public void update(CardDisplayed message) { //TODO: manage input with upper methods
+		output.println(message.getToDisplay());
+
+	}
+
+	@Override
+	public void update(GameMessage message) {
+		output.println(message);
+	}
+
+	@Override
+	public void update(String message) {
 		System.out.println(message);
 	}
 
 	@Override
-	public void update(Move message) throws Exception {
+	public void update(CardChoice message) {
+
+	}
+
+	@Override
+	public void update(Move message){
+		acquireCoordinates();
+	}
+
+	@Override
+	public void update(Build message){
 		return;
 	}
 
 	@Override
-	public void update(Build message) throws Exception {
+	public void update(PlayerMessage message){
 		return;
 	}
 
-	@Override
-	public void update(PlayerMessage message) throws Exception {
-		return;
-	}
+	/*TODO:
+	   	update(WorkerToChose message){
+	   		acquireWorkerSelection();
+
+
+	 */
+
 
 }

@@ -63,7 +63,7 @@ public interface Player {
      * @param worker selected worker which the player wants to move
      * @param dest selected box where to build
      */
-    void build(Worker worker, Box dest) throws InvalidBuildingException; //TODO: throw incorrect building exception
+    void build(Worker worker, Box dest) throws InvalidBuildingException;
 
     /**
      *checks if player has won

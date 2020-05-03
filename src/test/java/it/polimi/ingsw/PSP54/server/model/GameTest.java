@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Vector;
@@ -104,12 +105,12 @@ public class GameTest {
 
         game.extractCards();
 
-        int[] cards = game.getExtractedCards();
+        ArrayList<Integer> cards = game.getExtractedCards();
 
         for (int i = 0; i < players.size(); i++) {
             for (int j = 0; j < players.size(); j++){
                 if (i!=j){
-                    assertNotEquals(cards[i], cards[j]);
+                    assertNotEquals(cards.get(i), cards.get(j));
                 }
             }
         }
@@ -119,7 +120,10 @@ public class GameTest {
     @Test
     public void nameExtractedCards_3Cards_CorrectNames() {
 
-        int[] deck1 = {0, 2, 1};
+        ArrayList<Integer> deck1 = new ArrayList<>();
+        deck1.add(0);
+        deck1.add(2);
+        deck1.add(1);
 
         game.setExtractedCards(deck1);
 
@@ -129,7 +133,9 @@ public class GameTest {
         assertEquals("Athena", namedCards[1]);
         assertEquals("Artemis", namedCards[2]);
 
-        int[] deck2 = {3, 4};
+        ArrayList<Integer> deck2 = new ArrayList<>();
+        deck2.add(3);
+        deck2.add(4);
 
         game.setExtractedCards(deck2);
 

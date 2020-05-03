@@ -24,9 +24,8 @@ public class Server {
     private Map<PlayerMessage, Connection> lobbyBuffer = new HashMap<>(0);
     private Map<PlayerMessage, Connection> waitingConnection = new HashMap<>();
     private Vector<Connection> playingConnection = new Vector<>(0,1);
-    private Vector<VirtualView> virtualViews = new Vector<>(0);
-    protected Vector<Connection> currentConnections =new Vector<>(0,1);
-
+    private Vector<VirtualView> virtualViews = new Vector<>(0, 1);
+    protected Vector<Connection> currentConnections = new Vector<>(0,1);
     private int numberOfPlayers;
 
 
@@ -45,16 +44,17 @@ public class Server {
             waitingConnection.keySet().removeIf(playerMessage -> waitingConnection.get(playerMessage) == c);
 
         if (playingConnection.contains(c)){
-            c.send("i'm sorry but you lose, wish to you good luck for the next time");
+            c.send("I'm sorry but you lose, wish to you good luck for the next time");
             playingConnection.remove(c);
             if(playingConnection.size()>=1)
             {
                 for (Connection connection : playingConnection)
-                    connection.send(c.getName() + " non è più il tuo avversario");
+                    connection.send(c.getName() + " is not your opponent anymore");
             }
             if (playingConnection.size()==1){
-                playingConnection.firstElement().send("hai vinto");
+                playingConnection.firstElement().send("You won!");
             }
+            virtualViews.remove(playingConnection.indexOf(c));
         }
     }
 
@@ -81,13 +81,12 @@ public class Server {
                 List<PlayerMessage> keys = new ArrayList<>(waitingConnection.keySet());
 
                 for (int i = 0; i < keys.size(); i++) {
-
                     Connection client = waitingConnection.get(keys.get(i));
                     currentConnections.remove(waitingConnection.get(keys.get(i)));
+                    keys.get(i).setVirtualViewID(i);
 
                     //initialize a VirtualView for each player, manage dispatching depending on numberOfPlayers
                     if (i == 0) {
-
                         VirtualView virtualView;
                         if (numberOfPlayers == 2) {
                             virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName());
@@ -118,6 +117,7 @@ public class Server {
                     virtualViews.get(i).addPlayer();
                 }
                 waitingConnection.clear();
+                controller.startGame(); //TODO why deregisterConnection() is no more called if startGame() is running?
             }
         }
     }

@@ -21,6 +21,11 @@ public class StandardPlayer implements Player {
 
     public StandardPlayer(String playerName) {
         this.playerName = playerName;
+        this.workers[0] = new Worker(true, this, null);
+        this.workers[1] = new Worker(false, this, null);
+        this.winner = false;
+        this.loser = false;
+        this.playing = false;
     }
 
     /**

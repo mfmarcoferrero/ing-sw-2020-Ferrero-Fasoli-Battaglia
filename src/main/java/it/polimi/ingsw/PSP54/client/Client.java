@@ -3,7 +3,6 @@ package it.polimi.ingsw.PSP54.client;
 
 import it.polimi.ingsw.PSP54.client.view.*;
 import it.polimi.ingsw.PSP54.observer.Observable;
-import it.polimi.ingsw.PSP54.server.model.Box;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -66,8 +65,7 @@ public class Client extends Observable {
      * @param socketOut
      * @return
      */
-    // E' necessario far inviare direttamente degli oggetti dal client?
-
+    //TODO: make client use View methods to parse input and instantiate the message objects
     public Thread asyncWriteToSocket(final Scanner stdin, final PrintWriter socketOut){
         Thread t = new Thread(new Runnable() {
             @Override

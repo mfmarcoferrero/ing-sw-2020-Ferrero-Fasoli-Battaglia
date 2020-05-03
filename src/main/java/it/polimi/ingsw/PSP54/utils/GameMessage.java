@@ -2,6 +2,9 @@ package it.polimi.ingsw.PSP54.utils;
 
 public class GameMessage {
 
+    private int virtualViewID;
+    private String message;
+    public static String turnMessage = "It's your turn!";
     public static String moveMessage = "Make your move (x,y):";
     public static String waitMessage = "Wait for the other player's move!";
     public static String winMessage = "You win!";
@@ -15,4 +18,24 @@ public class GameMessage {
     public static String setSecondWorkerMessage = "Set your second worker \n Enter (x,y):";
     public static String choiceMessage = "Do you want to move or build?";
 
+    public GameMessage(int virtualViewID, String message) {
+        this.virtualViewID = virtualViewID;
+        this.message = message;
+    }
+
+    public int getVirtualViewID() {
+        return virtualViewID;
+    }
+
+    public void setVirtualViewID(int virtualViewID) {
+        this.virtualViewID = virtualViewID;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
