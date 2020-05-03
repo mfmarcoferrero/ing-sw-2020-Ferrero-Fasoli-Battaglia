@@ -1,5 +1,7 @@
 package it.polimi.ingsw.PSP54.server.model;
 
+import it.polimi.ingsw.PSP54.utils.GameMessage;
+
 import java.util.ArrayList;
 
 /**
@@ -53,21 +55,27 @@ public class StandardPlayer implements Player {
 
         Player actualPlayer = new StandardPlayer(null,0, 0);
 
-        if (cardID == APOLLO) {
-            actualPlayer = new ApolloDecorator(this);
-            actualPlayer.setCardID(APOLLO);
-        } else if (cardID == ARTEMIS) {
-            actualPlayer = new ArtemisDecorator(this);
-            actualPlayer.setCardID(ARTEMIS);
-        } else if (cardID == ATHENA) {
-            actualPlayer = new AthenaDecorator(this);
-            actualPlayer.setCardID(ATHENA);
-        } else if (cardID == ATLAS) {
-            actualPlayer = new AtlasDecorator(this);
-            actualPlayer.setCardID(ATLAS);
-        } else if (cardID == DEMETER) {
-            actualPlayer = new DemeterDecorator(this);
-            actualPlayer.setCardID(DEMETER);
+        switch (cardID) {
+            case APOLLO:
+                actualPlayer = new ApolloDecorator(this);
+                actualPlayer.setCardID(APOLLO);
+                break;
+            case ARTEMIS:
+                actualPlayer = new ArtemisDecorator(this);
+                actualPlayer.setCardID(ARTEMIS);
+                break;
+            case ATHENA:
+                actualPlayer = new AthenaDecorator(this);
+                actualPlayer.setCardID(ATHENA);
+                break;
+            case ATLAS:
+                actualPlayer = new AtlasDecorator(this);
+                actualPlayer.setCardID(ATLAS);
+                break;
+            case DEMETER:
+                actualPlayer = new DemeterDecorator(this);
+                actualPlayer.setCardID(DEMETER);
+                break;
         }
 
         return actualPlayer;

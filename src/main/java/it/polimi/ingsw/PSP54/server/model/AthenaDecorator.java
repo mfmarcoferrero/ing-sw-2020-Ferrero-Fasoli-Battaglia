@@ -3,6 +3,9 @@ package it.polimi.ingsw.PSP54.server.model;
 import java.util.ArrayList;
 import java.util.Vector;
 
+/**
+ *
+ */
 public class AthenaDecorator extends GodDecorator{
 
     private boolean movedUp; //settled on the previous turn

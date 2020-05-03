@@ -117,34 +117,5 @@ public class GameTest {
 
     }
 
-    @Test
-    public void nameExtractedCards_3Cards_CorrectNames() {
-
-        ArrayList<Integer> deck1 = new ArrayList<>();
-        deck1.add(0);
-        deck1.add(2);
-        deck1.add(1);
-
-        game.setExtractedCards(deck1);
-
-        String[] namedCards = game.nameExtractedCards();
-
-        assertEquals("Apollo", namedCards[0]);
-        assertEquals("Athena", namedCards[1]);
-        assertEquals("Artemis", namedCards[2]);
-
-        ArrayList<Integer> deck2 = new ArrayList<>();
-        deck2.add(3);
-        deck2.add(4);
-
-        game.setExtractedCards(deck2);
-
-        namedCards = game.nameExtractedCards();
-
-        assertEquals("Atlas", namedCards[0]);
-        assertEquals("Demeter", namedCards[1]);
-
-
-    }
 
 }

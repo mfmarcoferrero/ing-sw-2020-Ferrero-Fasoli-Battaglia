@@ -33,10 +33,6 @@ public class Controller implements Observer {
         game.assignColors();
         game.extractCards();
         game.displayCards();
-        if (game.getExtractedCards().isEmpty()){
-            //go on
-        }
-
     }
 
     /**
@@ -45,18 +41,21 @@ public class Controller implements Observer {
      */
     private synchronized void performCardChoice(CardChoice choice) {
 
-        ArrayList<Integer> extractedCards = game.getExtractedCards();
-
-        if (game.getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()){
-            for (int i = 0; i < game.nameExtractedCards().length; i++) {
-                if (game.nameExtractedCards()[i].equals(choice.getName())) {
-                    game.removeExtractedCard(i);
+        if (!game.getExtractedCards().isEmpty()) {
+            if (game.getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()) {
+                if (game.getCardMap().containsValue(choice.getName())) {
+                    for (int i = 0; i < game.getExtractedCards().size(); i++) {
+                        if (game.getCardMap().get(game.getExtractedCards().get(i)).equals(choice.getName())) {
+                            game.powerAssignment(i);
+                        }
+                    }
+                } else {
+                    GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.wrongTurnMessage);
+                    virtualViewList.get(choice.getVirtualViewID()).notify(message);
                 }
-            }
-            game.setExtractedCards(extractedCards);
-        }else
-            virtualViewList.get(choice.getVirtualViewID()).notify(GameMessage.wrongTurnMessage);
-
+            } //else
+                //TODO: next step, set initial workers positions
+        }
     }
 
     /**

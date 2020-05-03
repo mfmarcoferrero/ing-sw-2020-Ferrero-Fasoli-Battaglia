@@ -100,7 +100,7 @@ public class CliView implements Observer {
 		String upperBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "____________________________________________________________________________________________________";
 
 		//String containing lower border
-		String lowerBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺";
+		String lowerBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺" + Color.ANSI_RESET;
 
 		//String containing middle border
 		String middleBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "----------------------------------------------------------------------------------------------------";
@@ -275,7 +275,6 @@ public class CliView implements Observer {
 		output.println(lowerBorder);
 	}
 
-
 	/**
 	 *asks player which worker he wants to use
 	 * @return true if the choice is the male worker, false if it's the female Worker
@@ -299,22 +298,6 @@ public class CliView implements Observer {
 				output.println("Incorrect Input!");
 		}
 		return isMale;
-	}
-
-	/**
-	 * print a message to the current player who is about to move
-	 */
-
-	public  void moveMessage(){
-		output.println("where do you want to move?");
-	}
-
-	/**
-	 * prints a message to the current player who is about to build
-	 */
-
-	public void buildMessage(){
-		output.println("Where do you want to build?");
 	}
 
 	/**
@@ -362,7 +345,7 @@ public class CliView implements Observer {
 	 *asks player which level he wants to build
 	 * @return the acquired level
 	 */
-	public int acquireLevel(){ //TODO:model level 4 handling
+	public int acquireLevel(){ //TODO: level 4 handling
 
 		Integer level = null;
 		boolean loop = true;

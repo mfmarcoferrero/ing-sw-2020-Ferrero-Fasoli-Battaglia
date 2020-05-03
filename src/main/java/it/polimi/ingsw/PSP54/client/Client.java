@@ -58,6 +58,7 @@ public class Client extends Observable {
         return t;
     }
 
+    //TODO: make client use View methods to parse input and instantiate the message objects
     /**
      * Thread per la scrittura verso il server
      * Fino a quando il thread è attivo il client invia ciò che viene scritto da terminale
@@ -65,7 +66,6 @@ public class Client extends Observable {
      * @param socketOut
      * @return
      */
-    //TODO: make client use View methods to parse input and instantiate the message objects
     public Thread asyncWriteToSocket(final Scanner stdin, final PrintWriter socketOut){
         Thread t = new Thread(new Runnable() {
             @Override
