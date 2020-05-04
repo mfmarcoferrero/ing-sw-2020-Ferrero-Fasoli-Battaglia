@@ -11,11 +11,11 @@ import java.net.Socket;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class Client extends Observable {
+public class Client extends Observable<Object> {
 
-    private String ip;
-    private int port;
-    private CliView view = new CliView();
+    private final String ip;
+    private final int port;
+    private final CliView view = new CliView();
 
     public Client(String ip, int port){
         this.ip = ip;

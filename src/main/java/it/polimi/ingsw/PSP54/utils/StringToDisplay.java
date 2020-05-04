@@ -1,11 +1,11 @@
 package it.polimi.ingsw.PSP54.utils;
 
-public class CardDisplayed {
+public class StringToDisplay {
 
     private int virtualViewID;
     private String toDisplay;
 
-    public CardDisplayed(int virtualViewID, String toDisplay) {
+    public StringToDisplay(int virtualViewID, String toDisplay) {
         this.virtualViewID = virtualViewID;
         this.toDisplay = toDisplay;
     }

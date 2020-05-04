@@ -78,7 +78,7 @@ public class MessageReceiver implements Observer {
     }
 
     @Override
-    public void update(CardDisplayed message) {
+    public void update(StringToDisplay message) {
 
     }
 

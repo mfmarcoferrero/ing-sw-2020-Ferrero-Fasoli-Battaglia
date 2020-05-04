@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP54.server.model;
 import java.util.ArrayList;
 
 public class Worker {
-    private Boolean male;
+    private final Boolean male;
     private StandardPlayer owner;
     private Box pos;
     private int moveToken;

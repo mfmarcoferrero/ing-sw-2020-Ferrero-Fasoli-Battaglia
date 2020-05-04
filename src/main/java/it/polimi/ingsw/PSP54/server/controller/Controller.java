@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class Controller implements Observer {
 
-    private Game game;
+    private final Game game;
     private ArrayList<VirtualView> virtualViewList = new ArrayList<>();
 
 
@@ -41,21 +41,7 @@ public class Controller implements Observer {
      */
     private synchronized void performCardChoice(CardChoice choice) {
 
-        if (!game.getExtractedCards().isEmpty()) {
-            if (game.getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()) {
-                if (game.getCardMap().containsValue(choice.getName())) {
-                    for (int i = 0; i < game.getExtractedCards().size(); i++) {
-                        if (game.getCardMap().get(game.getExtractedCards().get(i)).equals(choice.getName())) {
-                            game.powerAssignment(i);
-                        }
-                    }
-                } else {
-                    GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.wrongTurnMessage);
-                    virtualViewList.get(choice.getVirtualViewID()).notify(message);
-                }
-            } //else
-                //TODO: next step, set initial workers positions
-        }
+        game.powerAssignment(choice);
     }
 
     /**
@@ -98,7 +84,6 @@ public class Controller implements Observer {
     /**
      * Metodo per inserire un giocatore nel model
      * @param p
-     * @throws Exception
      */
     private synchronized void addPlayer (PlayerMessage p) {
 
@@ -139,7 +124,7 @@ public class Controller implements Observer {
     }
 
     @Override
-    public void update(CardDisplayed message) {
+    public void update(StringToDisplay message) {
 
     }
 

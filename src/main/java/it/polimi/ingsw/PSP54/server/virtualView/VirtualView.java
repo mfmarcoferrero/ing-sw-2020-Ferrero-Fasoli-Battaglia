@@ -7,11 +7,11 @@ import it.polimi.ingsw.PSP54.server.model.Box;
 import it.polimi.ingsw.PSP54.utils.*;
 
 
-public class VirtualView extends Observable implements Observer {
+public class VirtualView extends Observable<Object> implements Observer {
 
     private Box [][] board;
     private boolean moveDone = false, buildDone = false, firstWorkerSetDone = false;
-    private int id;
+    private final int id;
     private Connection connection;
     private MessageReceiver messageReceiver;
     private PlayerMessage player;
@@ -144,7 +144,7 @@ public class VirtualView extends Observable implements Observer {
     }
 
     @Override
-    public void update(CardDisplayed message) {
+    public void update(StringToDisplay message) {
         if (message.getVirtualViewID() == id)
             showMessage(message.getToDisplay());
     }

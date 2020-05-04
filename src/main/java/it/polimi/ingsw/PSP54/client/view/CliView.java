@@ -341,51 +341,20 @@ public class CliView implements Observer {
 		return k-1; //return coordinate translated to array index
 	}
 
-	/**
-	 *asks player which level he wants to build
-	 * @return the acquired level
-	 */
-	public int acquireLevel(){ //TODO: level 4 handling
-
-		Integer level = null;
-		boolean loop = true;
-
-		output.println("which level do you want to build? [enter 'd' to build a dome]");
-		//set level
-		while(loop){
-			output.println("Enter Level:");
-			String tempLev = inputReader.next();
-			try{
-				level = Integer.parseInt(tempLev);
-				if (level>0 && level<4)
-					loop = false;
-				else
-					output.println("Incorrect Level! [level bust be 1<=level<=3]");
-			}catch (IllegalArgumentException e){
-				if (tempLev.equals("d")) {
-					level = 4;
-					loop = false;
-				}else
-					output.println("Incorrect input!");
-			}
-		}
-		return level;
-	}
-
 	@Override
 	public void update(Box[][] message) {
 		printBoard(message);
 	}
 
 	@Override
-	public void update(CardDisplayed message) { //TODO: manage input with upper methods
+	public void update(StringToDisplay message) { //TODO: manage input with upper methods
 		output.println(message.getToDisplay());
 
 	}
 
 	@Override
 	public void update(GameMessage message) {
-		output.println(message);
+		output.println(message.getMessage());
 	}
 
 	@Override
@@ -405,12 +374,12 @@ public class CliView implements Observer {
 
 	@Override
 	public void update(Build message){
-		return;
+
 	}
 
 	@Override
 	public void update(PlayerMessage message){
-		return;
+
 	}
 
 	/*TODO:

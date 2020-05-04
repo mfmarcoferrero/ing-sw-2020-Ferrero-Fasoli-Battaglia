@@ -1,7 +1,5 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-import it.polimi.ingsw.PSP54.utils.GameMessage;
-
 import java.util.ArrayList;
 
 /**

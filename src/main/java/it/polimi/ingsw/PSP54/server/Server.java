@@ -12,7 +12,6 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.Map;
 
 public class Server {
     private static final int PORT= 12345;
@@ -66,7 +65,7 @@ public class Server {
      * @param c refernce to client
      * @param p reference to in game player associated to client
      */
-    public synchronized void lobby(Connection c, PlayerMessage p) throws Exception {
+    public synchronized void lobby(Connection c, PlayerMessage p) {
 
         if (numberOfPlayers < 2 || numberOfPlayers > 3)
             lobbyBuffer.put(p, c);

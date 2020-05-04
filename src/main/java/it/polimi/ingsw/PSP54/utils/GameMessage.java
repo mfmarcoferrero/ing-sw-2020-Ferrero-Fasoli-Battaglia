@@ -5,11 +5,12 @@ public class GameMessage {
     private int virtualViewID;
     private String message;
     public static String turnMessage = "It's your turn!";
-    public static String apolloMessage = "You chose Apollo!\nYour Move: Your Worker may move one additional time, but not back to its initial space.";
-    public static String artemisMessage = "You chose Artemis!\nOpponent's Turn: If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn.";
-    public static String athenaMessage = "You chose Athena!\nYour Build: Your Worker may build a dome at any level";
-    public static String atlasMessage = "You chose Atlas!\nYour Build: Your Worker may build one additional time, but not on the same space.";
-    public static String demeterMessage = "You chose Demeter!\nYour Build: Your Worker may build one additional block (not dome) on top of your first block.";
+    public static String cantSelect = "You can't chose your card now";
+    public static String apolloMessage = "You have Apollo!\nYour Move: Your Worker may move one additional time, but not back to its initial space.";
+    public static String artemisMessage = "You have Artemis!\nOpponent's Turn: If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn.";
+    public static String athenaMessage = "You have Athena!\nYour Build: Your Worker may build a dome at any level.";
+    public static String atlasMessage = "You have Atlas!\nYour Build: Your Worker may build one additional time, but not on the same space.";
+    public static String demeterMessage = "You have Demeter!\nYour Build: Your Worker may build one additional block (not dome) on top of your first block.";
     public static String moveMessage = "Make your move (x,y):";
     public static String waitMessage = "Wait for the other player's move!";
     public static String winMessage = "You win!";

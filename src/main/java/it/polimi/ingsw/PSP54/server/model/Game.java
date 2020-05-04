@@ -6,7 +6,7 @@ import it.polimi.ingsw.PSP54.utils.*;
 
 import java.util.*;
 
-public class Game extends Observable {
+public class Game extends Observable<Object> {
 
     public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
     private HashMap<Integer, String> cardMap = new HashMap<>();
@@ -44,8 +44,8 @@ public class Game extends Observable {
      * @param name the name of the player
      */
     public void newPlayer (String name, int age, int virtualViewId) {
-
         Player player = new StandardPlayer(name, age, virtualViewId);
+        player.setGame(this);
         players.add(player);
         notify(board.clone());
 
@@ -116,55 +116,71 @@ public class Game extends Observable {
 
         message = message + cardNames;
 
-        CardDisplayed cardDisplayed = new CardDisplayed(currentPlayer.getVirtualViewID(), message);
-        notify(cardDisplayed); //TODO: fix not displayed when currentPLayer is players.get(2)
+        StringToDisplay stringToDisplay = new StringToDisplay(currentPlayer.getVirtualViewID(), message);
+        notify(stringToDisplay);
         return message;
     }
 
-    /**
-     * Invoke the player decoration and remove the card from extractedCards ArrayList.
-     * @param cardIndex the index of the chosen card in the extractedCards ArrayList.
-     */
-    public void powerAssignment(int cardIndex){
+
+    public void powerAssignment(CardChoice choice){
 
         //assign the power and notify the player
-        currentPlayer.assignPower(getExtractedCards().get(cardIndex));
-        GameMessage message = new GameMessage(currentPlayer.getVirtualViewID(), null);
+        if (!getExtractedCards().isEmpty()) {
+            if (getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()) {
+                for (int i = 0; i < getExtractedCards().size(); i++)
+                    if (getCardMap().get(getExtractedCards().get(i)).equals(choice.getName())) {
 
-        switch (getExtractedCards().get(cardIndex)) {
-            case APOLLO:
-                message.setMessage(GameMessage.apolloMessage);
+                        currentPlayer.assignPower(getExtractedCards().get(i));
+                        GameMessage message = new GameMessage(currentPlayer.getVirtualViewID(), null);
+
+                        switch (getExtractedCards().get(i)) {
+                            case APOLLO:
+                                currentPlayer.assignPower(APOLLO);
+                                message.setMessage(GameMessage.apolloMessage);
+                                notify(message);
+                                break;
+                            case ARTEMIS:
+                                currentPlayer.assignPower(ARTEMIS);
+                                message.setMessage(GameMessage.artemisMessage);
+                                notify(message);
+                                break;
+                            case ATHENA:
+                                currentPlayer.assignPower(ATHENA);
+                                message.setMessage(GameMessage.athenaMessage);
+                                notify(message);
+                                break;
+                            case ATLAS:
+                                currentPlayer.assignPower(ATLAS);
+                                message.setMessage(GameMessage.atlasMessage);
+                                notify(message);
+                                break;
+                            case DEMETER:
+                                currentPlayer.assignPower(DEMETER);
+                                message.setMessage(GameMessage.demeterMessage);
+                                notify(message);
+                                break;
+                        }
+
+                        //remove the already taken card
+                        getExtractedCards().remove(i);
+
+                        //end the current player's turn
+                        int index = players.indexOf(getCurrentPlayer());
+                        if (index < players.indexOf(players.lastElement())) {
+                            setCurrentPlayer(players.get(index + 1));
+                            displayCards();
+                        } else
+                            setCurrentPlayer(players.get(0));
+                            //GO ON ?
+                    }
+            } else {
+                GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.wrongTurnMessage);
                 notify(message);
-                break;
-            case ARTEMIS:
-                message.setMessage(GameMessage.artemisMessage);
-                notify(message);
-                break;
-            case ATHENA:
-                message.setMessage(GameMessage.athenaMessage);
-                notify(message);
-                break;
-            case ATLAS:
-                message.setMessage(GameMessage.atlasMessage);
-                notify(message);
-                break;
-            case DEMETER:
-                message.setMessage(GameMessage.demeterMessage);
-                notify(message);
-                break;
+            }
+        }else{
+            GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.cantSelect);
+            notify(message);
         }
-
-        //remove the already taken card
-        getExtractedCards().remove(cardIndex);
-
-        //end the current player's turn
-        int i = players.indexOf(getCurrentPlayer());
-        if (i<players.indexOf(players.lastElement())) {
-            setCurrentPlayer(players.get(i + 1));
-            displayCards();
-        }else
-            setCurrentPlayer(players.get(0));
-
     }
 
     //TODO: maybe handle InvalidMove/BuildingException here?

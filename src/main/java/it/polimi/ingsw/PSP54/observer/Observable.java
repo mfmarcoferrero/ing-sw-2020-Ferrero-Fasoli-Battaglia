@@ -46,8 +46,8 @@ public class Observable<T> {
                 if (message instanceof CardChoice){
                     observer.update((CardChoice) message);
                 }
-                if (message instanceof CardDisplayed){
-                    observer.update((CardDisplayed) message);
+                if (message instanceof StringToDisplay){
+                    observer.update((StringToDisplay) message);
                 }
             }
         }
