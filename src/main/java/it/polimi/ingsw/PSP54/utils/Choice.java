@@ -1,21 +1,21 @@
 package it.polimi.ingsw.PSP54.utils;
 
-public class CardChoice {
+public class Choice {
 
-    private String name;
+    private String choice;
     private int virtualViewID;
 
-    public CardChoice(int virtualViewID, String name) {
-        this.name = name;
+    public Choice(int virtualViewID, String choice) {
+        this.choice = choice;
         this.virtualViewID = virtualViewID;
     }
 
-    public String getName() {
-        return name;
+    public String getChoice() {
+        return choice;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setChoice(String choice) {
+        this.choice = choice;
     }
 
     public int getVirtualViewID() {

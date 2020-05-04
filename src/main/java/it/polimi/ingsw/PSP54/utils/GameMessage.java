@@ -11,6 +11,7 @@ public class GameMessage {
     public static String athenaMessage = "You have Athena!\nYour Build: Your Worker may build a dome at any level.";
     public static String atlasMessage = "You have Atlas!\nYour Build: Your Worker may build one additional time, but not on the same space.";
     public static String demeterMessage = "You have Demeter!\nYour Build: Your Worker may build one additional block (not dome) on top of your first block.";
+    public static String firstPlacement = "Chose which worker to place first: [enter 'm' or 'f']";
     public static String moveMessage = "Make your move (x,y):";
     public static String waitMessage = "Wait for the other player's move!";
     public static String winMessage = "You win!";
@@ -23,6 +24,7 @@ public class GameMessage {
     public static String setFirstWorkerMessage = "Set your first worker \n Enter (x,y):";
     public static String setSecondWorkerMessage = "Set your second worker \n Enter (x,y):";
     public static String choiceMessage = "Do you want to move or build?";
+    public static String buildOrDome = "Do you want to build a dome?";
 
     public GameMessage(int virtualViewID, String message) {
         this.virtualViewID = virtualViewID;

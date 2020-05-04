@@ -1,0 +1,158 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Player</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP54.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Player (it.polimi.ingsw.PSP54.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Player</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP54.server.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.ArrayList;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;public interface Player {
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;    /**
+<i>8</i>&nbsp;     * Decorates the current player
+<i>9</i>&nbsp;     * @param cardID the number of the card
+<i>10</i>&nbsp;     * @return the decorated player
+<i>11</i>&nbsp;     */
+<i>12</i>&nbsp;    Player assignPower(int cardID);
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    /**
+<i>15</i>&nbsp;     * Sets initial position on the board for the selected worker
+<i>16</i>&nbsp;     * @param worker the selected worker
+<i>17</i>&nbsp;     * @param x the board abscissa
+<i>18</i>&nbsp;     * @param y the board ordinate
+<i>19</i>&nbsp;     */
+<i>20</i>&nbsp;    void setWorkerPos (Worker worker, int x, int y);
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    /**
+<i>23</i>&nbsp;     * Select the worker which player is going to use depending on the worker&#39;s sex
+<i>24</i>&nbsp;     * @param male the worker&#39;s sex
+<i>25</i>&nbsp;     * @return the chosen worker
+<i>26</i>&nbsp;     */
+<i>27</i>&nbsp;    Worker choseWorker(Boolean male);
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /**
+<i>30</i>&nbsp;     *Initialize current player&#39;s turn by setting worker&#39;s action tokens
+<i>31</i>&nbsp;     * @param male represent the sex of the worker which the player is going to use
+<i>32</i>&nbsp;     * @return the chosen worker with updated tokens
+<i>33</i>&nbsp;     */
+<i>34</i>&nbsp;    Worker turnInit(Boolean male);
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    /**
+<i>37</i>&nbsp;     * Sets standard available boxes for the worker to move and stores them in worker&#39;s attribute
+<i>38</i>&nbsp;     * @param worker current worker in use
+<i>39</i>&nbsp;     * @return the vector containing available boxes
+<i>40</i>&nbsp;     */
+<i>41</i>&nbsp;    ArrayList&lt;Box&gt; setWorkerBoxesToMove(Worker worker);
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    /**
+<i>44</i>&nbsp;     * Set standard available boxes for the worker to build and stores them in worker&#39;s attribute
+<i>45</i>&nbsp;     * @param worker current worker in use
+<i>46</i>&nbsp;     * @return the vector containing buildable boxes
+<i>47</i>&nbsp;     */
+<i>48</i>&nbsp;    ArrayList&lt;Box&gt; setWorkerBoxesToBuild(Worker worker);
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    /**
+<i>51</i>&nbsp;     * Standard move action
+<i>52</i>&nbsp;     * @param worker selected worker which the player wants to move
+<i>53</i>&nbsp;     * @param dest selected destination box
+<i>54</i>&nbsp;     * @throws InvalidMoveException if the move can&#39;t be done
+<i>55</i>&nbsp;     */
+<i>56</i>&nbsp;    void move(Worker worker, Box dest) throws InvalidMoveException;
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /**
+<i>59</i>&nbsp;     *Standard build action
+<i>60</i>&nbsp;     * @param worker selected worker which the player wants to move
+<i>61</i>&nbsp;     * @param dest selected box where to build
+<i>62</i>&nbsp;     */
+<i>63</i>&nbsp;    void build(Worker worker, Box dest) throws InvalidBuildingException;
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;    /**
+<i>66</i>&nbsp;     *checks if player has won
+<i>67</i>&nbsp;     */
+<i>68</i>&nbsp;    void endTurn();
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    //setters &amp; getters
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    /**
+<i>73</i>&nbsp;     * Creates a reference to the current Game, in order to access board&#39;s and other players&#39; info
+<i>74</i>&nbsp;     * @param game the current Game
+<i>75</i>&nbsp;     */
+<i>76</i>&nbsp;    void setGame(Game game);
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    Game getGame();
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;    String getPlayerName();
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;    void setAge(int age);
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    int getAge();
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;    void setColor(String color);
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    String getColor();
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    boolean isWinner();
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    void setWinner(boolean winner);
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;    boolean isLoser();
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;    void setLoser(boolean loser);
+<i>97</i>&nbsp;
+<i>98</i>&nbsp;    int getCardID();
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;    void setCardID(int cardID);
+<i>101</i>&nbsp;
+<i>102</i>&nbsp;    Worker[] getWorkers();
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;    int getVirtualViewID ();
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;    void setVirtualViewId(int virtualViewId);
+<i>107</i>&nbsp;
+<i>108</i>&nbsp;    boolean isPlaying();
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    void setPlaying(boolean playing);
+<i>111</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-04 18:00</div>
+</div>
+</body>
+</html>

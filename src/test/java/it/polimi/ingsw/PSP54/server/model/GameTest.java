@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.server.model;
 
+import it.polimi.ingsw.PSP54.utils.Choice;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -143,6 +144,29 @@ public class GameTest {
 
     }
 
+    @Test
+    public void powerAssignment_Atlas_CorrectOutput(){
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).setVirtualViewId(i);
+        }
+        game.setCurrentPlayer(players.get(0));
+
+        Choice choice = new Choice(players.get(0).getVirtualViewID(), "Atlas");
+
+        ArrayList<Integer> extract = new ArrayList<>();
+        extract.add(0);
+        extract.add(1);
+        extract.add(2);
+        extract.add(3);
+        extract.add(4);
+
+        game.setExtractedCards(extract);
+
+        game.chosePower(choice);
+
+        assertEquals(3, players.get(0).getCardID());
+
+    }
 
 
 }

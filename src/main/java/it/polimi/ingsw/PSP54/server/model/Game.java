@@ -122,13 +122,13 @@ public class Game extends Observable<Object> {
     }
 
 
-    public void powerAssignment(CardChoice choice){
+    public void chosePower(Choice choice){
 
         //assign the power and notify the player
-        if (!getExtractedCards().isEmpty()) {
-            if (getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()) {
+        if (!getExtractedCards().isEmpty()) { //card can be chose
+            if (getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()) { //is the right player
                 for (int i = 0; i < getExtractedCards().size(); i++)
-                    if (getCardMap().get(getExtractedCards().get(i)).equals(choice.getName())) {
+                    if (getCardMap().get(getExtractedCards().get(i)).equals(choice.getChoice())) {
 
                         currentPlayer.assignPower(getExtractedCards().get(i));
                         GameMessage message = new GameMessage(currentPlayer.getVirtualViewID(), null);
@@ -161,17 +161,19 @@ public class Game extends Observable<Object> {
                                 break;
                         }
 
-                        //remove the already taken card
-                        getExtractedCards().remove(i);
+                        //noinspection SuspiciousListRemoveInLoop
+                        getExtractedCards().remove(i); //remove the already taken card
 
                         //end the current player's turn
                         int index = players.indexOf(getCurrentPlayer());
-                        if (index < players.indexOf(players.lastElement())) {
+                        if (index <
+                                players.indexOf(players.lastElement())) {
                             setCurrentPlayer(players.get(index + 1));
                             displayCards();
-                        } else
+                        } else {
                             setCurrentPlayer(players.get(0));
-                            //GO ON ?
+                            displayWorkerToBeSettled(currentPlayer);
+                        }
                     }
             } else {
                 GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.wrongTurnMessage);
@@ -179,6 +181,29 @@ public class Game extends Observable<Object> {
             }
         }else{
             GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.cantSelect);
+            notify(message);
+        }
+    }
+
+    public void displayWorkerToBeSettled(Player currentPlayer) {
+
+        GameMessage firstPlacement = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.firstPlacement);
+        notify(firstPlacement);
+    }
+
+    public void choseWorker(Choice choice){
+        if (choice.getVirtualViewID() == currentPlayer.getVirtualViewID()){
+            currentPlayer.choseWorker(choice.getChoice().equals("m"));
+            int index = players.indexOf(getCurrentPlayer());
+            if (index < players.indexOf(players.lastElement())) {
+                setCurrentPlayer(players.get(index + 1));
+                displayWorkerToBeSettled(currentPlayer);
+            } else {
+                setCurrentPlayer(players.get(0));
+                //START GAME
+            }
+        }else {
+            GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.wrongTurnMessage);
             notify(message);
         }
     }

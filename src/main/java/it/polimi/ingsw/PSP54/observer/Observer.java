@@ -9,7 +9,7 @@ public interface Observer {
     void update(String message);
 
     //from Client to Server
-    void update(CardChoice message);
+    void update(Choice message);
 
     void update(Move message);
 

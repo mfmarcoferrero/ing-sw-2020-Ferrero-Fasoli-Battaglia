@@ -39,9 +39,16 @@ public class Controller implements Observer {
      * Remove already assigned cards from Model's extractedCards list
      * @param choice the message containing the card to remove
      */
-    private synchronized void performCardChoice(CardChoice choice) {
+    private synchronized void performCardChoice(Choice choice) {
 
-        game.powerAssignment(choice);
+        game.chosePower(choice);
+    }
+
+
+    private void performWorkerChoice(Choice message) {
+
+        game.choseWorker(message);
+
     }
 
     /**
@@ -114,8 +121,12 @@ public class Controller implements Observer {
     }
 
     @Override
-    public void update(CardChoice message){
-        performCardChoice(message);
+    public void update(Choice message){
+        if (message.getChoice().equals("Apollo") || message.getChoice().equals("Artemis") || message.getChoice().equals("Athena") || message.getChoice().equals("Demeter") || message.getChoice().equals("Atlas")){
+            performCardChoice(message);
+        }else if (message.getChoice().equals("m") || message.getChoice().equals("f")){
+            performWorkerChoice(message);
+        }
     }
 
     @Override

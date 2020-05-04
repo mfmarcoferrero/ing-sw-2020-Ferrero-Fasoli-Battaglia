@@ -67,10 +67,17 @@ public class VirtualView extends Observable<Object> implements Observer {
     
     public void selectCard(String cardName) {
 
-        CardChoice choice = new CardChoice(id, cardName);
+        Choice choice = new Choice(id, cardName);
         notify(choice);
 
-    } 
+    }
+
+    public void selectWorker(String message) {
+
+        Choice choice = new Choice(id, message);
+        notify(choice);
+
+    }
 
     /**
      * Notifica il controller con un oggetto di tipo Move verificando che la mossa
@@ -165,8 +172,8 @@ public class VirtualView extends Observable<Object> implements Observer {
     }
 
     @Override
-    public void update(CardChoice message) {
-
+    public void update(Choice message) {
+        showMessage(message.getChoice());
     }
 
     @Override
@@ -183,5 +190,4 @@ public class VirtualView extends Observable<Object> implements Observer {
     public void update(PlayerMessage message) {
 
     }
-
 }

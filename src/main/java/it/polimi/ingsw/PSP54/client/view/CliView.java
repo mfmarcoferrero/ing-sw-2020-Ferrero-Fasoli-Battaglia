@@ -363,7 +363,7 @@ public class CliView implements Observer {
 	}
 
 	@Override
-	public void update(CardChoice message) {
+	public void update(Choice message) {
 
 	}
 

@@ -1,0 +1,380 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Game</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP54.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Game (it.polimi.ingsw.PSP54.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Game</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    64%
+  </span>
+  <span class="absValue">
+    (16/ 25)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    60,1%
+  </span>
+  <span class="absValue">
+    (83/ 138)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP54.server.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP54.observer.Observable;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP54.utils.*;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.util.*;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;public class Game extends Observable&lt;Object&gt; {
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;    public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
+<b class="fc"><i>12</i>&nbsp;    private HashMap&lt;Integer, String&gt; cardMap = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>13</i>&nbsp;    public static final String[] colors = {&quot;blue&quot;, &quot;red&quot;, &quot;yellow&quot;};</b>
+<b class="fc"><i>14</i>&nbsp;    public final int cardNumber = 5;</b>
+<b class="fc"><i>15</i>&nbsp;    public final int boardSize = 5;</b>
+<i>16</i>&nbsp;    private Vector&lt;Player&gt; players;
+<i>17</i>&nbsp;    private Player currentPlayer;
+<i>18</i>&nbsp;    private final Box[][] board;
+<i>19</i>&nbsp;    private ArrayList&lt;Integer&gt; extractedCards;
+<i>20</i>&nbsp;
+<b class="fc"><i>21</i>&nbsp;    public Game() {</b>
+<i>22</i>&nbsp;
+<b class="fc"><i>23</i>&nbsp;        players = new Vector&lt;&gt;(1, 1);</b>
+<b class="fc"><i>24</i>&nbsp;        board = new Box[boardSize][boardSize];</b>
+<b class="fc"><i>25</i>&nbsp;        for (int i = 0; i &lt; board.length; i++) {</b>
+<b class="fc"><i>26</i>&nbsp;            for (int j = 0; j &lt; board.length; j++) {</b>
+<b class="fc"><i>27</i>&nbsp;                board[i][j] = new Box(i, j, 0, false);</b>
+<i>28</i>&nbsp;            }
+<i>29</i>&nbsp;        }
+<b class="fc"><i>30</i>&nbsp;        cardMap.put(APOLLO, &quot;Apollo&quot;);</b>
+<b class="fc"><i>31</i>&nbsp;        cardMap.put(ARTEMIS, &quot;Artemis&quot;);</b>
+<b class="fc"><i>32</i>&nbsp;        cardMap.put(ATHENA, &quot;Athena&quot;);</b>
+<b class="fc"><i>33</i>&nbsp;        cardMap.put(ATLAS, &quot;Atlas&quot;);</b>
+<b class="fc"><i>34</i>&nbsp;        cardMap.put(DEMETER, &quot;Demeter&quot;);</b>
+<b class="fc"><i>35</i>&nbsp;    }</b>
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    public void newPlayer(String name){
+<b class="fc"><i>38</i>&nbsp;        Player player = new StandardPlayer(name);</b>
+<b class="fc"><i>39</i>&nbsp;        players.add(player);</b>
+<b class="fc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    /**
+<i>43</i>&nbsp;     * Adds a player to the players Vector
+<i>44</i>&nbsp;     * @param name the name of the player
+<i>45</i>&nbsp;     */
+<i>46</i>&nbsp;    public void newPlayer (String name, int age, int virtualViewId) {
+<b class="nc"><i>47</i>&nbsp;        Player player = new StandardPlayer(name, age, virtualViewId);</b>
+<b class="nc"><i>48</i>&nbsp;        player.setGame(this);</b>
+<b class="nc"><i>49</i>&nbsp;        players.add(player);</b>
+<b class="nc"><i>50</i>&nbsp;        notify(board.clone());</b>
+<i>51</i>&nbsp;
+<b class="nc"><i>52</i>&nbsp;    }</b>
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    /**
+<i>55</i>&nbsp;     * Sorts elements of players vector depending on players age
+<i>56</i>&nbsp;     */
+<i>57</i>&nbsp;    public void sortPlayers(){
+<i>58</i>&nbsp;
+<b class="fc"><i>59</i>&nbsp;        Comparator&lt;Player&gt; comp = (o1, o2) -&gt; {</b>
+<b class="fc"><i>60</i>&nbsp;            int result = 0;</b>
+<b class="fc"><i>61</i>&nbsp;            if (o1.getAge() &lt; o2.getAge())</b>
+<b class="fc"><i>62</i>&nbsp;                result = -1;</b>
+<b class="fc"><i>63</i>&nbsp;            else if (o1.getAge() &gt; o2.getAge())</b>
+<b class="fc"><i>64</i>&nbsp;                result = 1;</b>
+<b class="fc"><i>65</i>&nbsp;            return result;</b>
+<i>66</i>&nbsp;        };
+<i>67</i>&nbsp;
+<b class="fc"><i>68</i>&nbsp;        players.sort(comp);</b>
+<b class="fc"><i>69</i>&nbsp;        setCurrentPlayer(players.get(0));</b>
+<b class="fc"><i>70</i>&nbsp;    }</b>
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    /**
+<i>73</i>&nbsp;     * Sets the color of the players&#39; workers according to the order: first player is blue, second is red, third is yellow
+<i>74</i>&nbsp;     */
+<i>75</i>&nbsp;    public void assignColors(){
+<i>76</i>&nbsp;
+<b class="fc"><i>77</i>&nbsp;        int numberOfPlayers = players.capacity();</b>
+<i>78</i>&nbsp;
+<b class="fc"><i>79</i>&nbsp;        for (int i = 0; i &lt; numberOfPlayers; i++) {</b>
+<b class="fc"><i>80</i>&nbsp;            players.get(i).setColor(colors[i]);</b>
+<i>81</i>&nbsp;        }
+<b class="fc"><i>82</i>&nbsp;    }</b>
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    /**
+<i>85</i>&nbsp;     *Extract an unique random god card for each player in the game
+<i>86</i>&nbsp;     */
+<i>87</i>&nbsp;    public void extractCards() {
+<i>88</i>&nbsp;
+<b class="fc"><i>89</i>&nbsp;        int numberOfPlayers = players.capacity();</b>
+<b class="fc"><i>90</i>&nbsp;        ArrayList&lt;Integer&gt; deck = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>91</i>&nbsp;        extractedCards = new ArrayList&lt;&gt;();</b>
+<i>92</i>&nbsp;
+<b class="fc"><i>93</i>&nbsp;        for (int i = 0; i &lt; cardNumber; i++) {</b>
+<b class="fc"><i>94</i>&nbsp;            deck.add(i);</b>
+<i>95</i>&nbsp;        }
+<i>96</i>&nbsp;
+<b class="fc"><i>97</i>&nbsp;        Collections.shuffle(deck);</b>
+<i>98</i>&nbsp;
+<b class="fc"><i>99</i>&nbsp;        for (int i = 0; i &lt; numberOfPlayers; i++) {</b>
+<b class="fc"><i>100</i>&nbsp;            extractedCards.add(deck.get(i));</b>
+<i>101</i>&nbsp;        }
+<i>102</i>&nbsp;
+<b class="fc"><i>103</i>&nbsp;    }</b>
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    /**
+<i>106</i>&nbsp;     * Creates a message for the player containing the extracted cards
+<i>107</i>&nbsp;     */
+<i>108</i>&nbsp;    public String displayCards(){
+<i>109</i>&nbsp;
+<b class="fc"><i>110</i>&nbsp;        String message = &quot;Chose your card:\n&quot;;</b>
+<b class="fc"><i>111</i>&nbsp;        StringBuilder cardNames = new StringBuilder();</b>
+<i>112</i>&nbsp;
+<b class="fc"><i>113</i>&nbsp;        for (int i = 0; i &lt; extractedCards.size(); i++) {</b>
+<b class="fc"><i>114</i>&nbsp;            cardNames.append(i+1).append(&quot;. &quot;).append(cardMap.get(getExtractedCards().get(i))).append(&quot;\n&quot;);</b>
+<i>115</i>&nbsp;        }
+<i>116</i>&nbsp;
+<b class="fc"><i>117</i>&nbsp;        message = message + cardNames;</b>
+<i>118</i>&nbsp;
+<b class="fc"><i>119</i>&nbsp;        StringToDisplay stringToDisplay = new StringToDisplay(currentPlayer.getVirtualViewID(), message);</b>
+<b class="fc"><i>120</i>&nbsp;        notify(stringToDisplay);</b>
+<b class="fc"><i>121</i>&nbsp;        return message;</b>
+<i>122</i>&nbsp;    }
+<i>123</i>&nbsp;
+<i>124</i>&nbsp;
+<i>125</i>&nbsp;    public void chosePower(Choice choice){
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;        //assign the power and notify the player
+<b class="fc"><i>128</i>&nbsp;        if (!getExtractedCards().isEmpty()) { //card can be chose</b>
+<b class="fc"><i>129</i>&nbsp;            if (getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()) { //is the right player</b>
+<b class="fc"><i>130</i>&nbsp;                for (int i = 0; i &lt; getExtractedCards().size(); i++)</b>
+<b class="fc"><i>131</i>&nbsp;                    if (getCardMap().get(getExtractedCards().get(i)).equals(choice.getChoice())) {</b>
+<i>132</i>&nbsp;
+<b class="fc"><i>133</i>&nbsp;                        currentPlayer.assignPower(getExtractedCards().get(i));</b>
+<b class="fc"><i>134</i>&nbsp;                        GameMessage message = new GameMessage(currentPlayer.getVirtualViewID(), null);</b>
+<i>135</i>&nbsp;
+<b class="fc"><i>136</i>&nbsp;                        switch (getExtractedCards().get(i)) {</b>
+<i>137</i>&nbsp;                            case APOLLO:
+<b class="nc"><i>138</i>&nbsp;                                currentPlayer.assignPower(APOLLO);</b>
+<b class="nc"><i>139</i>&nbsp;                                message.setMessage(GameMessage.apolloMessage);</b>
+<b class="nc"><i>140</i>&nbsp;                                notify(message);</b>
+<b class="nc"><i>141</i>&nbsp;                                break;</b>
+<i>142</i>&nbsp;                            case ARTEMIS:
+<b class="nc"><i>143</i>&nbsp;                                currentPlayer.assignPower(ARTEMIS);</b>
+<b class="nc"><i>144</i>&nbsp;                                message.setMessage(GameMessage.artemisMessage);</b>
+<b class="nc"><i>145</i>&nbsp;                                notify(message);</b>
+<b class="nc"><i>146</i>&nbsp;                                break;</b>
+<i>147</i>&nbsp;                            case ATHENA:
+<b class="nc"><i>148</i>&nbsp;                                currentPlayer.assignPower(ATHENA);</b>
+<b class="nc"><i>149</i>&nbsp;                                message.setMessage(GameMessage.athenaMessage);</b>
+<b class="nc"><i>150</i>&nbsp;                                notify(message);</b>
+<b class="nc"><i>151</i>&nbsp;                                break;</b>
+<i>152</i>&nbsp;                            case ATLAS:
+<b class="fc"><i>153</i>&nbsp;                                currentPlayer.assignPower(ATLAS);</b>
+<b class="fc"><i>154</i>&nbsp;                                message.setMessage(GameMessage.atlasMessage);</b>
+<b class="fc"><i>155</i>&nbsp;                                notify(message);</b>
+<b class="fc"><i>156</i>&nbsp;                                break;</b>
+<i>157</i>&nbsp;                            case DEMETER:
+<b class="nc"><i>158</i>&nbsp;                                currentPlayer.assignPower(DEMETER);</b>
+<b class="nc"><i>159</i>&nbsp;                                message.setMessage(GameMessage.demeterMessage);</b>
+<b class="nc"><i>160</i>&nbsp;                                notify(message);</b>
+<i>161</i>&nbsp;                                break;
+<i>162</i>&nbsp;                        }
+<i>163</i>&nbsp;
+<i>164</i>&nbsp;                        //noinspection SuspiciousListRemoveInLoop
+<b class="fc"><i>165</i>&nbsp;                        getExtractedCards().remove(i); //remove the already taken card</b>
+<i>166</i>&nbsp;
+<i>167</i>&nbsp;                        //end the current player&#39;s turn
+<b class="fc"><i>168</i>&nbsp;                        int index = players.indexOf(getCurrentPlayer());</b>
+<b class="fc"><i>169</i>&nbsp;                        if (index &lt;</b>
+<b class="fc"><i>170</i>&nbsp;                                players.indexOf(players.lastElement())) {</b>
+<b class="fc"><i>171</i>&nbsp;                            setCurrentPlayer(players.get(index + 1));</b>
+<b class="fc"><i>172</i>&nbsp;                            displayCards();</b>
+<i>173</i>&nbsp;                        } else {
+<b class="nc"><i>174</i>&nbsp;                            setCurrentPlayer(players.get(0));</b>
+<b class="nc"><i>175</i>&nbsp;                            displayWorkerToBeSettled(currentPlayer);</b>
+<i>176</i>&nbsp;                        }
+<i>177</i>&nbsp;                    }
+<i>178</i>&nbsp;            } else {
+<b class="nc"><i>179</i>&nbsp;                GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.wrongTurnMessage);</b>
+<b class="nc"><i>180</i>&nbsp;                notify(message);</b>
+<b class="nc"><i>181</i>&nbsp;            }</b>
+<i>182</i>&nbsp;        }else{
+<b class="nc"><i>183</i>&nbsp;            GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.cantSelect);</b>
+<b class="nc"><i>184</i>&nbsp;            notify(message);</b>
+<i>185</i>&nbsp;        }
+<b class="fc"><i>186</i>&nbsp;    }</b>
+<i>187</i>&nbsp;
+<i>188</i>&nbsp;    public void displayWorkerToBeSettled(Player currentPlayer) {
+<i>189</i>&nbsp;
+<b class="nc"><i>190</i>&nbsp;        GameMessage firstPlacement = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.firstPlacement);</b>
+<b class="nc"><i>191</i>&nbsp;        notify(firstPlacement);</b>
+<b class="nc"><i>192</i>&nbsp;    }</b>
+<i>193</i>&nbsp;
+<i>194</i>&nbsp;    public void choseWorker(Choice choice){
+<b class="nc"><i>195</i>&nbsp;        if (choice.getVirtualViewID() == currentPlayer.getVirtualViewID()){</b>
+<b class="nc"><i>196</i>&nbsp;            currentPlayer.choseWorker(choice.getChoice().equals(&quot;m&quot;));</b>
+<b class="nc"><i>197</i>&nbsp;            int index = players.indexOf(getCurrentPlayer());</b>
+<b class="nc"><i>198</i>&nbsp;            if (index &lt; players.indexOf(players.lastElement())) {</b>
+<b class="nc"><i>199</i>&nbsp;                setCurrentPlayer(players.get(index + 1));</b>
+<b class="nc"><i>200</i>&nbsp;                displayWorkerToBeSettled(currentPlayer);</b>
+<i>201</i>&nbsp;            } else {
+<b class="nc"><i>202</i>&nbsp;                setCurrentPlayer(players.get(0));</b>
+<i>203</i>&nbsp;                //START GAME
+<i>204</i>&nbsp;            }
+<b class="nc"><i>205</i>&nbsp;        }else {</b>
+<b class="nc"><i>206</i>&nbsp;            GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.wrongTurnMessage);</b>
+<b class="nc"><i>207</i>&nbsp;            notify(message);</b>
+<i>208</i>&nbsp;        }
+<b class="nc"><i>209</i>&nbsp;    }</b>
+<i>210</i>&nbsp;
+<i>211</i>&nbsp;    //TODO: maybe handle InvalidMove/BuildingException here?
+<i>212</i>&nbsp;
+<i>213</i>&nbsp;    /**
+<i>214</i>&nbsp;     * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
+<i>215</i>&nbsp;     * @param move oggetto che contiene le informazioni per eseguire lo spostamento
+<i>216</i>&nbsp;     */
+<i>217</i>&nbsp;    public void move(Move move) throws InvalidMoveException {
+<b class="nc"><i>218</i>&nbsp;        players.get(move.getPlayer_ind()).move(players.get(move.getPlayer_ind()).getWorkers()[move.getPlayer_ind()],board[move.getX()][move.getY()]);</b>
+<b class="nc"><i>219</i>&nbsp;        notify(board.clone());</b>
+<b class="nc"><i>220</i>&nbsp;    }</b>
+<i>221</i>&nbsp;
+<i>222</i>&nbsp;    /**
+<i>223</i>&nbsp;     * Metodo per chiamare la costruzione e restituire alla view la board che ha subito il cambiamento
+<i>224</i>&nbsp;     * @param build oggetto che contiene le informazioni per costruire
+<i>225</i>&nbsp;     */
+<i>226</i>&nbsp;    public void build (Build build) throws InvalidBuildingException {
+<b class="nc"><i>227</i>&nbsp;        players.get(build.getPlayer_ind()).build(players.get(build.getPlayer_ind()).getWorkers()[build.getPlayer_ind()],board[build.getX()][build.getY()]);</b>
+<b class="nc"><i>228</i>&nbsp;        notify(board.clone());</b>
+<b class="nc"><i>229</i>&nbsp;    }</b>
+<i>230</i>&nbsp;
+<i>231</i>&nbsp;    /**
+<i>232</i>&nbsp;     * Sets the initial worker&#39;s position on the board.
+<i>233</i>&nbsp;     * @param move the message containing information about the Box where the worker is going to be placed.
+<i>234</i>&nbsp;     */
+<i>235</i>&nbsp;    public void setWorker(Move move){
+<b class="nc"><i>236</i>&nbsp;        players.get(move.getPlayer_ind()).setWorkerPos(players.get(move.getPlayer_ind()).getWorkers()[move.getPlayer_ind()], move.getX(), move.getY());</b>
+<b class="nc"><i>237</i>&nbsp;        notify(board.clone());</b>
+<b class="nc"><i>238</i>&nbsp;    }</b>
+<i>239</i>&nbsp;
+<i>240</i>&nbsp;    //setters &amp; getters
+<i>241</i>&nbsp;
+<i>242</i>&nbsp;    /**
+<i>243</i>&nbsp;     * Search for the currently playing member of the player&#39;s Vector.
+<i>244</i>&nbsp;     * @return the currently playing player.
+<i>245</i>&nbsp;     */
+<i>246</i>&nbsp;    public Player getCurrentPlayer() {
+<b class="fc"><i>247</i>&nbsp;        return currentPlayer;</b>
+<i>248</i>&nbsp;    }
+<i>249</i>&nbsp;
+<i>250</i>&nbsp;    /**
+<i>251</i>&nbsp;     * Sets the playing attribute of currentPlayer to &#39;true&#39; and notifies the VirtualView
+<i>252</i>&nbsp;     * @param currentPlayer the member of the players Vector which is going to play
+<i>253</i>&nbsp;     */
+<i>254</i>&nbsp;    public void setCurrentPlayer(Player currentPlayer) {
+<i>255</i>&nbsp;
+<b class="fc"><i>256</i>&nbsp;        for (Player player : players) {</b>
+<b class="fc"><i>257</i>&nbsp;            if (currentPlayer.equals(player))</b>
+<b class="fc"><i>258</i>&nbsp;                player.setPlaying(true);</b>
+<b class="fc"><i>259</i>&nbsp;        }</b>
+<i>260</i>&nbsp;
+<b class="fc"><i>261</i>&nbsp;        this.currentPlayer = currentPlayer;</b>
+<b class="fc"><i>262</i>&nbsp;        GameMessage yourTurn = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.turnMessage);</b>
+<b class="fc"><i>263</i>&nbsp;        notify(yourTurn);</b>
+<b class="fc"><i>264</i>&nbsp;    }</b>
+<i>265</i>&nbsp;
+<i>266</i>&nbsp;    public Vector&lt;Player&gt; getPlayers() {
+<b class="fc"><i>267</i>&nbsp;        return players;</b>
+<i>268</i>&nbsp;    }
+<i>269</i>&nbsp;
+<i>270</i>&nbsp;    public void setPlayers(Vector&lt;Player&gt; players) {
+<b class="nc"><i>271</i>&nbsp;        this.players = players;</b>
+<b class="nc"><i>272</i>&nbsp;    }</b>
+<i>273</i>&nbsp;
+<i>274</i>&nbsp;    public Box[][] getBoard() {
+<b class="fc"><i>275</i>&nbsp;        return board;</b>
+<i>276</i>&nbsp;    }
+<i>277</i>&nbsp;
+<i>278</i>&nbsp;    public Box getBox(int x, int y){
+<b class="nc"><i>279</i>&nbsp;        return board[x][y];</b>
+<i>280</i>&nbsp;    }
+<i>281</i>&nbsp;
+<i>282</i>&nbsp;    public ArrayList&lt;Integer&gt; getExtractedCards() {
+<b class="fc"><i>283</i>&nbsp;        return extractedCards;</b>
+<i>284</i>&nbsp;    }
+<i>285</i>&nbsp;
+<i>286</i>&nbsp;    public void setExtractedCards(ArrayList&lt;Integer&gt; extractedCards) {
+<b class="fc"><i>287</i>&nbsp;        this.extractedCards = extractedCards;</b>
+<b class="fc"><i>288</i>&nbsp;    }</b>
+<i>289</i>&nbsp;
+<i>290</i>&nbsp;    public HashMap&lt;Integer, String&gt; getCardMap() {
+<b class="fc"><i>291</i>&nbsp;        return cardMap;</b>
+<i>292</i>&nbsp;    }
+<i>293</i>&nbsp;
+<i>294</i>&nbsp;    public void setCardMap(HashMap&lt;Integer, String&gt; cardMap) {
+<b class="nc"><i>295</i>&nbsp;        this.cardMap = cardMap;</b>
+<b class="nc"><i>296</i>&nbsp;    }</b>
+<i>297</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-04 18:00</div>
+</div>
+</body>
+</html>

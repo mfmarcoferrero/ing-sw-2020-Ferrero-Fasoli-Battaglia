@@ -64,12 +64,14 @@ public class MessageReceiver implements Observer {
             virtualView.showBoard();
         }else if(message.equals("Apollo") || message.equals("Artemis") || message.equals("Athena") || message.equals("Demeter") || message.equals("Atlas")){
             virtualView.selectCard(message);
+        }else if(message.equals("m") || message.equals("f")){
+            virtualView.selectWorker(message);
         }
     }
 
     @Override
-    public void update(CardChoice message) {
-        virtualView.selectCard(message.getName());
+    public void update(Choice message) {
+        virtualView.selectCard(message.getChoice());
     }
 
     @Override

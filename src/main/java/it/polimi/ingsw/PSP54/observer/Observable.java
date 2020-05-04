@@ -22,7 +22,7 @@ public class Observable<T> {
         }
     }
 
-    public void notify(T message){
+    protected void notify(T message){
         synchronized (observers) {
             for(Observer observer : observers) {
                 if (message instanceof GameMessage){
@@ -43,8 +43,8 @@ public class Observable<T> {
                 if (message instanceof String) {
                     observer.update((String) message);
                 }
-                if (message instanceof CardChoice){
-                    observer.update((CardChoice) message);
+                if (message instanceof Choice){
+                    observer.update((Choice) message);
                 }
                 if (message instanceof StringToDisplay){
                     observer.update((StringToDisplay) message);
