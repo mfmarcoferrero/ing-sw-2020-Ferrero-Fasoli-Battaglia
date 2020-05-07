@@ -1,16 +1,25 @@
 package it.polimi.ingsw.PSP54.client.view;
 
+import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
+import it.polimi.ingsw.PSP54.server.model.Game;
 import it.polimi.ingsw.PSP54.utils.*;
 
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class CliView implements Observer {
 
 	private final Scanner inputReader = new Scanner(System.in);
 	private final PrintStream output = new PrintStream(System.out);
+	private Client client;
+
+	public CliView(Client client) {
+		this.client = client;
+	}
 
 	/**
 	 *Returns the correct character to print in the center of every box, it's called by printBoard(Box[][] board)
@@ -279,7 +288,7 @@ public class CliView implements Observer {
 	 *asks player which worker he wants to use
 	 * @return true if the choice is the male worker, false if it's the female Worker
 	 */
-	public boolean acquireWorkerSelection(){
+	public boolean acquireWorkerSelection() {
 
 		boolean loop = true;
 		Boolean isMale = null;
@@ -294,7 +303,7 @@ public class CliView implements Observer {
 			else if(workerSex.equals("female")){
 				isMale = false;
 				loop = false;
-			}else
+			} else
 				output.println("Incorrect Input!");
 		}
 		return isMale;
@@ -330,15 +339,91 @@ public class CliView implements Observer {
 			String component  = inputReader.next();
 			try{
 				k = Integer.parseInt(component);
-				if (0<k && k<6)
+				if (0 < k && k < 6)
 					loop = false;
 				else
 					output.println("Incorrect Input!");
-			}catch (IllegalArgumentException e){
+			} catch (IllegalArgumentException e) {
 				output.println("Incorrect input!");
 			}
 		}
-		return k-1; //return coordinate translated to array index
+		return k - 1; //return coordinate translated to array index
+	}
+
+	public void acquirePlayer() {
+		output.println("What's your name?");
+		String name = inputReader.next();
+		output.println("What's your age?");
+		int age = inputReader.nextInt();
+		PlayerMessage playerMessage = new PlayerMessage(name,age,0);
+		client.asyncWriteToSocket(playerMessage);
+	}
+
+	public void acquireNumberOfPlayers() {
+		int numberOfPlayers = 0;
+		numberOfPlayers = inputReader.nextInt();
+		while (numberOfPlayers < 2 || numberOfPlayers > 3) {
+			output.println("Illegal number of player! It must be '2' or '3', try again");
+			numberOfPlayers = inputReader.nextInt();
+		}
+		client.asyncWriteToSocket(numberOfPlayers);
+	}
+
+	/**
+	 * Creates a message for the player containing the extracted cards
+	 */
+	public void displayCards(HashMap<Integer,String> extractedCards){
+		Vector<String> cardsName = new Vector<>(extractedCards.values());
+		Vector<Integer> cardsValues = new Vector<>(extractedCards.keySet());
+		boolean found = false;
+
+		if (extractedCards.size() == 1){
+			output.println("You are the last player so you can't choose");
+			client.asyncWriteToSocket(new Choice(cardsValues.get(0)));
+		}
+		else {
+			output.println("Choose your card: (write the name of the card you want)");
+			for (int i = 0; i < cardsName.size(); i++) {
+				output.println((i + 1) + ") " + cardsName.get(i));
+			}
+
+			String chosenCard = inputReader.next();
+			while (!found) {
+				for (int i = 0; i < cardsName.size(); i++) {
+					if (chosenCard.equals(cardsName.get(i))) {
+						client.asyncWriteToSocket(new Choice(cardsValues.get(i)));
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					output.println("Invalid input: (write the name of the card you want)");
+					chosenCard = inputReader.next();
+				}
+			}
+		}
+	}
+
+	public void setWorker() {
+		boolean isMale = acquireWorkerSelection();
+		int [] coordinates = acquireCoordinates();
+		Move move = new Move(isMale, coordinates[0], coordinates[1]);
+		move.setSetFirstPos(true);
+		client.asyncWriteToSocket(move);
+	}
+
+	@Override
+	public void update(String message) {
+		output.println(message);
+		if (message.equals(GameMessage.welcomeMessage)) {
+			acquirePlayer();
+		}
+		if (message.equals(GameMessage.setNumberOfPlayersMessage)) {
+			acquireNumberOfPlayers();
+		}
+		if (message.equals(GameMessage.setFirstWorkerMessage)){
+			setWorker();
+		}
 	}
 
 	@Override
@@ -347,19 +432,18 @@ public class CliView implements Observer {
 	}
 
 	@Override
-	public void update(StringToDisplay message) { //TODO: manage input with upper methods
-		output.println(message.getToDisplay());
+	public void update(CardsToDisplay message) {
+		displayCards(message.getExtractedCards());
+	}
+
+	@Override
+	public void update(StringToDisplay message) {
 
 	}
 
 	@Override
 	public void update(GameMessage message) {
-		output.println(message.getMessage());
-	}
 
-	@Override
-	public void update(String message) {
-		System.out.println(message);
 	}
 
 	@Override
@@ -369,7 +453,7 @@ public class CliView implements Observer {
 
 	@Override
 	public void update(Move message){
-		acquireCoordinates();
+
 	}
 
 	@Override
@@ -382,12 +466,12 @@ public class CliView implements Observer {
 
 	}
 
-	/*TODO:
+
+
+	/*
+		TODO:
 	   	update(WorkerToChose message){
 	   		acquireWorkerSelection();
-
-
-	 */
-
+	*/
 
 }

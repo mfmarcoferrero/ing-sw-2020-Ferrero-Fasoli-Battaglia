@@ -10,7 +10,7 @@ public class CLIDebugMain {
 
     public static void main ( String [] args){
 
-        CliView view = new CliView();
+        CliView view = new CliView(null);
         Game game = new Game();
 
         for (int i = 0; i < 5; i++) {

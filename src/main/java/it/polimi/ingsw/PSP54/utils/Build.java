@@ -1,9 +1,11 @@
 package it.polimi.ingsw.PSP54.utils;
 
+import java.io.Serializable;
+
 /**
  * Classe utilizzata come messsaggio per notificare costruzioni
  */
-public class Build {
+public class Build implements Serializable,Cloneable {
     private int player_ind, worker_ind, x, y, virtualViewId;
     private boolean setDome;
 

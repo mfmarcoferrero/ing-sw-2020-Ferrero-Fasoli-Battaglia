@@ -1,6 +1,8 @@
 package it.polimi.ingsw.PSP54.utils;
 
-public class StringToDisplay {
+import java.io.Serializable;
+
+public class StringToDisplay implements Serializable,Cloneable {
 
     private int virtualViewID;
     private String toDisplay;

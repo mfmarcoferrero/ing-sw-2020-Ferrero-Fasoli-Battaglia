@@ -43,11 +43,12 @@ public class MessageReceiver implements Observer {
         System.out.println("Received move message !!");
         message.setVirtualViewId(virtualView.getId());
 
-        if (message.isSetFirstPos()){
+        if (message.isSetFirstPos()) {
             virtualView.setWorker(message);
         }
         else
             virtualView.handleMove(message);
+
     }
 
     @Override
@@ -62,16 +63,14 @@ public class MessageReceiver implements Observer {
         System.out.println("Received a string !!");
         if (message.equals("show")) {
             virtualView.showBoard();
-        }else if(message.equals("Apollo") || message.equals("Artemis") || message.equals("Athena") || message.equals("Demeter") || message.equals("Atlas")){
-            virtualView.selectCard(message);
-        }else if(message.equals("m") || message.equals("f")){
-            virtualView.selectWorker(message);
         }
     }
 
     @Override
     public void update(Choice message) {
-        virtualView.selectCard(message.getChoice());
+        System.out.println("Received a chosen card !!");
+        message.setVirtualViewID(this.virtualView.getId());
+        virtualView.selectCard(message);
     }
 
     @Override
@@ -94,4 +93,8 @@ public class MessageReceiver implements Observer {
 
     }
 
+    @Override
+    public void update(CardsToDisplay message) {
+
+    }
 }

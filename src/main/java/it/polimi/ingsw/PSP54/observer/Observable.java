@@ -25,7 +25,7 @@ public class Observable<T> {
     protected void notify(T message){
         synchronized (observers) {
             for(Observer observer : observers) {
-                if (message instanceof GameMessage){
+                if (message instanceof GameMessage) {
                     observer.update((GameMessage) message);
                 }
                 if (message instanceof Move) {
@@ -42,6 +42,9 @@ public class Observable<T> {
                 }
                 if (message instanceof String) {
                     observer.update((String) message);
+                }
+                if (message instanceof CardsToDisplay){
+                    observer.update((CardsToDisplay) message);
                 }
                 if (message instanceof Choice){
                     observer.update((Choice) message);

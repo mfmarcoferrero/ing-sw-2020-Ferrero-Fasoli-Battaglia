@@ -23,4 +23,7 @@ public interface Observer {
     void update(StringToDisplay message);
 
     void update(GameMessage message);
+
+    void update(CardsToDisplay message);
+
 }

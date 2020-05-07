@@ -1,17 +1,19 @@
 package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.observer.*;
+import it.polimi.ingsw.PSP54.utils.GameMessage;
 import it.polimi.ingsw.PSP54.utils.PlayerMessage;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Connection extends Observable <String> implements Runnable {
+public class Connection extends Observable implements Runnable {
 
     private Socket socket;
-    private Scanner in;
+    private ObjectInputStream in;
     private ObjectOutputStream out;
     private Server server;
     private String name;
@@ -28,7 +30,7 @@ public class Connection extends Observable <String> implements Runnable {
         return active;
     }
 
-    public void send(Object message) {
+    public synchronized void send(Object message) {
         try {
             out.reset();
             out.writeObject(message);
@@ -43,8 +45,32 @@ public class Connection extends Observable <String> implements Runnable {
      * Viene istanziato un thread che esegue l'operzione di writeObject e flush
      * @param message
      */
-    public void asyncSend(final Object message){
-        new Thread(() -> send(message)).start();
+    public void asyncSend(final Object message) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                send(message);
+            }
+        }).start();
+    }
+
+
+    public Thread asyncReadFromSocket(final ObjectInputStream socketIn) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (isActive()) {
+                        Object inputObject = socketIn.readObject();
+                        Connection.this.notify(inputObject);
+                    }
+                } catch (Exception e) {
+                    setActive(false);
+                }
+            }
+        });
+        t.start();
+        return t;
     }
 
     public synchronized void closeConnection(){
@@ -71,28 +97,19 @@ public class Connection extends Observable <String> implements Runnable {
     @Override
     public void run() {
         try {
-            in = new Scanner(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
-            send("Welcome! What's your name?");
-            name = in.nextLine();
-            send("What's your age?");
-            int age = acquireInteger(in);
+            asyncSend(GameMessage.welcomeMessage);
+            in = new ObjectInputStream(socket.getInputStream());
+            PlayerMessage player = (PlayerMessage) in.readObject();
             if(gameMaster || this == server.currentConnections.firstElement()) {
-                send("Hey, set the number of player");
-                numberOfPlayers = acquireInteger(in);
-                while (numberOfPlayers <2 || numberOfPlayers >3) {
-                    send("Illegal number of player! It must be '2' or '3', try again");
-                    numberOfPlayers = acquireInteger(in);
-                }
+                send(GameMessage.setNumberOfPlayersMessage);
+                numberOfPlayers = (int) in.readObject();
                 server.setNumberOfPlayers(numberOfPlayers);
             }
-            PlayerMessage player = new PlayerMessage(name,age,0);
             server.lobby(this, player);
-            while(isActive()) {
-                String read = in.next();
-                notify(read);
-            }
-        } catch(IOException e){
+            Thread t0 = asyncReadFromSocket(in);
+            t0.join();
+        } catch(IOException e) {
             System.err.println(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,4 +149,9 @@ public class Connection extends Observable <String> implements Runnable {
     public Socket getSocket() {
         return socket;
     }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
 }

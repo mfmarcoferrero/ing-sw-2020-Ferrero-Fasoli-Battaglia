@@ -1,21 +1,22 @@
 package it.polimi.ingsw.PSP54.utils;
 
+import java.io.Serializable;
+
 /**
  * Classe utilizzata come messaggio per notificare spostamenti
  */
-public class Move {
+public class Move implements Serializable,Cloneable {
     private int player_ind, worker_ind, x, y, virtualViewId;
-    private boolean setFirstPos = true;
+    private boolean setFirstPos = false, isMale;
 
-    public Move(int player_ind, int worker_ind, int x, int y) {
+    public Move(boolean isMale, int x, int y) {
         this.x = x;
         this.y = y;
-        this.worker_ind = worker_ind;
-        this.player_ind = player_ind;
-    }
-
-    public int getWorker_ind() {
-        return worker_ind;
+        if (isMale) {
+            worker_ind = 0;
+        }
+        else
+            worker_ind = 1;
     }
 
     public void setVirtualViewId(int virtualViewId) {
@@ -44,5 +45,33 @@ public class Move {
 
     public void setSetFirstPos(boolean setFirstPos) {
         this.setFirstPos = setFirstPos;
+    }
+
+    public void setPlayer_ind(int player_ind) {
+        this.player_ind = player_ind;
+    }
+
+    public int getWorker_ind() {
+        return worker_ind;
+    }
+
+    public void setWorker_ind(int worker_ind) {
+        this.worker_ind = worker_ind;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public boolean isMale() {
+        return isMale;
+    }
+
+    public void setMale(boolean male) {
+        isMale = male;
     }
 }

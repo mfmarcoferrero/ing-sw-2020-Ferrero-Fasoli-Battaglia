@@ -1,6 +1,8 @@
 package it.polimi.ingsw.PSP54.utils;
 
-public class PlayerMessage {
+import java.io.Serializable;
+
+public class PlayerMessage implements Serializable,Cloneable {
     private String name;
     int age, virtualViewID;
 

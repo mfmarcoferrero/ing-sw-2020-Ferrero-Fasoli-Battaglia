@@ -17,14 +17,6 @@ public class VirtualView extends Observable<Object> implements Observer {
     private PlayerMessage player;
     private String opponent;
 
-    /*public VirtualView(int virtualViewId, Vector<PlayerMessage> players, Connection connection){
-        this.virtualViewId = virtualViewId;
-        this.connection = connection;
-        this.messageReceiver = new MessageReceiver(this.connection,this);
-        this.players = players;
-        connection.addObserver(this.messageReceiver);
-    }*/
-
     /**
      * Instantiates a VirtualView with corresponding Connection and MessageReceiver for a 2 players game
      * @param id
@@ -65,19 +57,14 @@ public class VirtualView extends Observable<Object> implements Observer {
         notify(player);
     }
     
-    public void selectCard(String cardName) {
-
-        Choice choice = new Choice(id, cardName);
-        notify(choice);
-
+    public void selectCard(Choice message) {
+        notify(message);
     }
 
-    public void selectWorker(String message) {
-
+    /*public void selectWorker(String message) {
         Choice choice = new Choice(id, message);
         notify(choice);
-
-    }
+    }*/
 
     /**
      * Notifica il controller con un oggetto di tipo Move verificando che la mossa
@@ -85,7 +72,7 @@ public class VirtualView extends Observable<Object> implements Observer {
      * @param move
      */
     public void setWorker(Move move){
-        while (!firstWorkerSetDone && move.isSetFirstPos()){
+        if (!firstWorkerSetDone && move.isSetFirstPos()){
             notify(move);
         }
     }
@@ -129,7 +116,7 @@ public class VirtualView extends Observable<Object> implements Observer {
         return id;
     }
 
-    public void showMessage(Object message) {
+    public synchronized void showMessage(Object message) {
         connection.asyncSend(message);
     }
 
@@ -146,20 +133,29 @@ public class VirtualView extends Observable<Object> implements Observer {
      * @param message the clone of model's board
      */
     @Override
-    public void update(Box[][] message) {
+    public synchronized void update(Box[][] message) {
         this.board = message;
     }
 
     @Override
-    public void update(StringToDisplay message) {
-        if (message.getVirtualViewID() == id)
+     public synchronized void update(StringToDisplay message) {
+        if (message.getVirtualViewID() == this.id) {
             showMessage(message.getToDisplay());
+        }
     }
 
     @Override
-    public void update(GameMessage message) {
-        if (message.getVirtualViewID()==getId())
+    public synchronized void update(GameMessage message) {
+        if (message.getVirtualViewID() == this.id) {
             showMessage(message.getMessage());
+        }
+    }
+
+    @Override
+    synchronized public void update(CardsToDisplay message) {
+        if (message.getCurrentPlayerID() == this.id) {
+            showMessage(message);
+        }
     }
 
     /**
@@ -167,13 +163,13 @@ public class VirtualView extends Observable<Object> implements Observer {
      * @param message the message to be shown
      */
     @Override
-    public void update(String message) {
+    synchronized public void update(String message) {
         showMessage(message);
     }
 
     @Override
-    public void update(Choice message) {
-        showMessage(message.getChoice());
+    synchronized public void update(Choice message) {
+
     }
 
     @Override

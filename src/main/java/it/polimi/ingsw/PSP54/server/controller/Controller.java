@@ -14,7 +14,6 @@ public class Controller implements Observer {
     private final Game game;
     private ArrayList<VirtualView> virtualViewList = new ArrayList<>();
 
-
     public Controller (Game game) {
         this.game = game;
     }
@@ -28,11 +27,30 @@ public class Controller implements Observer {
         this.virtualViewList.add(virtualView.getId(),virtualView);
     }
 
-    public void startGame(){
+    public void startGame() {
         game.sortPlayers();
         game.assignColors();
         game.extractCards();
-        game.displayCards();
+        displayCards();
+    }
+
+    /**
+     * Show cards that can be chosen to current player
+     */
+    private synchronized void displayCards () {
+        if (!game.isPowerSet()) {
+            CardsToDisplay cards = new CardsToDisplay();
+            cards.setExtractedCards(game.getExtractedCards());
+            virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(cards);
+        }
+        else {
+            for (VirtualView v : virtualViewList) {
+                v.showBoard();
+                if (v.getId() == game.getCurrentPlayer().getVirtualViewID()) {
+                    v.showMessage(GameMessage.setFirstWorkerMessage);
+                }
+            }
+        }
     }
 
     /**
@@ -40,30 +58,46 @@ public class Controller implements Observer {
      * @param choice the message containing the card to remove
      */
     private synchronized void performCardChoice(Choice choice) {
-
-        game.chosePower(choice);
+        if (game.getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()) {
+            game.chosePower(choice);
+            displayCards();
+        }
     }
 
-
-    private void performWorkerChoice(Choice message) {
-
-        game.choseWorker(message);
-
+    private synchronized void performWorkerSet(Move move){
+        if (move.isSetFirstPos()) {
+            for (int i = 0; i < game.getPlayers().size(); i++) {
+                if (game.getPlayers().get(i).getVirtualViewID() == move.getVirtualViewId()){
+                    move.setPlayer_ind(i);
+                    game.setWorker(move);
+                    showAllBoards();
+                    virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
+                }
+            }
+        }
     }
+
 
     /**
      * Metodo per effettuare una mossa
      * @param move
      */
-    private synchronized void performMove(Move move){
-        if(!game.getPlayers().get(move.getPlayer_ind()).isPlaying()){
-            virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
-            return;
+     private synchronized void performMove(Move move){
+        for (int i = 0; i < game.getPlayers().size(); i++){
+            if (game.getPlayers().get(i).getVirtualViewID() == move.getVirtualViewId()){
+                move.setPlayer_ind(i);
+            }
         }
-        try{
+        try {
             if (move.isSetFirstPos()){
-                    game.setWorker(move);
-                    virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
+                game.setWorker(move);
+                for (VirtualView v : virtualViewList) {
+                    //v.showBoard();
+                    if (v.getId() == game.getCurrentPlayer().getVirtualViewID()) {
+                        v.showMessage(GameMessage.setSecondWorkerMessage);
+                    }
+                }
+                //virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
             }
             else
                 game.move(move);
@@ -88,21 +122,29 @@ public class Controller implements Observer {
         }
     }
 
+
     /**
      * Metodo per inserire un giocatore nel model
      * @param p
      */
     private synchronized void addPlayer (PlayerMessage p) {
-
         game.newPlayer(p.getPlayerName(), p.getAge(), p.getVirtualViewID());
-
     }
 
-
+    private synchronized void showAllBoards() {
+        for (VirtualView v :virtualViewList){
+            v.showBoard();
+        }
+    }
 
     @Override
-    public void update(Move message){
-        performMove(message);
+    public void update(Move message) {
+        if (message.isSetFirstPos()) {
+            performWorkerSet(message);
+        }
+        if (!message.isSetFirstPos()){
+            performMove(message);
+        }
     }
 
     @Override
@@ -116,17 +158,13 @@ public class Controller implements Observer {
     }
 
     @Override
-    public void update(String message){
-
+    public void update(Choice message) {
+        performCardChoice(message);
     }
 
     @Override
-    public void update(Choice message){
-        if (message.getChoice().equals("Apollo") || message.getChoice().equals("Artemis") || message.getChoice().equals("Athena") || message.getChoice().equals("Demeter") || message.getChoice().equals("Atlas")){
-            performCardChoice(message);
-        }else if (message.getChoice().equals("m") || message.getChoice().equals("f")){
-            performWorkerChoice(message);
-        }
+    public void update(String message){
+
     }
 
     @Override
@@ -141,6 +179,11 @@ public class Controller implements Observer {
 
     @Override
     public void update(GameMessage message) {
+
+    }
+
+    @Override
+    public void update(CardsToDisplay message) {
 
     }
 }

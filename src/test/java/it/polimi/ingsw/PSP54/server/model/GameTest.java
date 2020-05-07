@@ -91,6 +91,7 @@ public class GameTest {
         assertEquals("yellow", players.get(2).getColor());
     }
 
+    /*
     @Test
     public void extractCards_2PlayersExtraction_AllDifferent() {
 
@@ -166,7 +167,7 @@ public class GameTest {
 
         assertEquals(3, players.get(0).getCardID());
 
-    }
+    }*/
 
 
 }

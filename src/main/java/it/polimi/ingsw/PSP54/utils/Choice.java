@@ -1,21 +1,15 @@
 package it.polimi.ingsw.PSP54.utils;
 
-public class Choice {
+import java.io.Serializable;
 
-    private String choice;
+public class Choice implements Serializable,Cloneable {
+
+    private String choiceString;
+    private int choiceInt;
     private int virtualViewID;
 
-    public Choice(int virtualViewID, String choice) {
-        this.choice = choice;
-        this.virtualViewID = virtualViewID;
-    }
-
-    public String getChoice() {
-        return choice;
-    }
-
-    public void setChoice(String choice) {
-        this.choice = choice;
+    public Choice(int choiceInt) {
+        this.choiceInt = choiceInt;
     }
 
     public int getVirtualViewID() {
@@ -24,5 +18,21 @@ public class Choice {
 
     public void setVirtualViewID(int virtualViewID) {
         this.virtualViewID = virtualViewID;
+    }
+
+    public String getChoiceString() {
+        return choiceString;
+    }
+
+    public void setChoiceString(String choiceString) {
+        this.choiceString = choiceString;
+    }
+
+    public int getChoiceInt() {
+        return choiceInt;
+    }
+
+    public void setChoiceInt(int choiceInt) {
+        this.choiceInt = choiceInt;
     }
 }

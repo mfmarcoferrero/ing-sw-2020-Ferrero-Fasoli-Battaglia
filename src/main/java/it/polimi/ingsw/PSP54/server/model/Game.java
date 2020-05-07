@@ -9,34 +9,36 @@ import java.util.*;
 public class Game extends Observable<Object> {
 
     public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
-    private HashMap<Integer, String> cardMap = new HashMap<>();
+    public static final int CARD_NUMBER = 5;
+    public static final int BOARD_SIZE = 5;
     public static final String[] colors = {"blue", "red", "yellow"};
-    public final int cardNumber = 5;
-    public final int boardSize = 5;
+    private final Box[][] board;
+    private HashMap<Integer, String> cardMap = new HashMap<>();
+    private HashMap<Integer, String> extractedCards = new HashMap<>();
     private Vector<Player> players;
     private Player currentPlayer;
-    private final Box[][] board;
-    private ArrayList<Integer> extractedCards;
+    private boolean powerSet = false;
 
     public Game() {
 
         players = new Vector<>(1, 1);
-        board = new Box[boardSize][boardSize];
+        board = new Box[BOARD_SIZE][BOARD_SIZE];
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board.length; j++) {
                 board[i][j] = new Box(i, j, 0, false);
             }
         }
-        cardMap.put(APOLLO, "Apollo");
-        cardMap.put(ARTEMIS, "Artemis");
-        cardMap.put(ATHENA, "Athena");
-        cardMap.put(ATLAS, "Atlas");
-        cardMap.put(DEMETER, "Demeter");
+        cardMap.put(APOLLO,"Apollo");
+        cardMap.put(ARTEMIS,"Artemis");
+        cardMap.put(ATHENA,"Athena");
+        cardMap.put(ATLAS,"Atlas");
+        cardMap.put(DEMETER,"Demeter");
     }
 
     public void newPlayer(String name){
         Player player = new StandardPlayer(name);
         players.add(player);
+        notify(board.clone());
     }
 
     /**
@@ -48,7 +50,6 @@ public class Game extends Observable<Object> {
         player.setGame(this);
         players.add(player);
         notify(board.clone());
-
     }
 
     /**
@@ -70,7 +71,8 @@ public class Game extends Observable<Object> {
     }
 
     /**
-     * Sets the color of the players' workers according to the order: first player is blue, second is red, third is yellow
+     * Sets the color of the players' workers according to the order: first player is blue,
+     * second is red, third is yellow
      */
     public void assignColors(){
 
@@ -79,119 +81,75 @@ public class Game extends Observable<Object> {
         for (int i = 0; i < numberOfPlayers; i++) {
             players.get(i).setColor(colors[i]);
         }
+
+    }
+
+    public HashMap<Integer, String> getExtractedCards() {
+        return extractedCards;
     }
 
     /**
      *Extract an unique random god card for each player in the game
      */
     public void extractCards() {
+        int numberOfPlayers = players.size();
+        Vector<Integer> deck = new Vector<>();
 
-        int numberOfPlayers = players.capacity();
-        ArrayList<Integer> deck = new ArrayList<>();
-        extractedCards = new ArrayList<>();
-
-        for (int i = 0; i < cardNumber; i++) {
+        for (int i = 0; i < CARD_NUMBER; i++) {
             deck.add(i);
         }
 
         Collections.shuffle(deck);
 
         for (int i = 0; i < numberOfPlayers; i++) {
-            extractedCards.add(deck.get(i));
+            extractedCards.put(deck.get(i),cardMap.get(deck.get(i)));
         }
-
-    }
-
-    /**
-     * Creates a message for the player containing the extracted cards
-     */
-    public String displayCards(){
-
-        String message = "Chose your card:\n";
-        StringBuilder cardNames = new StringBuilder();
-
-        for (int i = 0; i < extractedCards.size(); i++) {
-            cardNames.append(i+1).append(". ").append(cardMap.get(getExtractedCards().get(i))).append("\n");
-        }
-
-        message = message + cardNames;
-
-        StringToDisplay stringToDisplay = new StringToDisplay(currentPlayer.getVirtualViewID(), message);
-        notify(stringToDisplay);
-        return message;
     }
 
 
-    public void chosePower(Choice choice){
-
-        //assign the power and notify the player
-        if (!getExtractedCards().isEmpty()) { //card can be chose
-            if (getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()) { //is the right player
-                for (int i = 0; i < getExtractedCards().size(); i++)
-                    if (getCardMap().get(getExtractedCards().get(i)).equals(choice.getChoice())) {
-
-                        currentPlayer.assignPower(getExtractedCards().get(i));
-                        GameMessage message = new GameMessage(currentPlayer.getVirtualViewID(), null);
-
-                        switch (getExtractedCards().get(i)) {
-                            case APOLLO:
-                                currentPlayer.assignPower(APOLLO);
-                                message.setMessage(GameMessage.apolloMessage);
-                                notify(message);
-                                break;
-                            case ARTEMIS:
-                                currentPlayer.assignPower(ARTEMIS);
-                                message.setMessage(GameMessage.artemisMessage);
-                                notify(message);
-                                break;
-                            case ATHENA:
-                                currentPlayer.assignPower(ATHENA);
-                                message.setMessage(GameMessage.athenaMessage);
-                                notify(message);
-                                break;
-                            case ATLAS:
-                                currentPlayer.assignPower(ATLAS);
-                                message.setMessage(GameMessage.atlasMessage);
-                                notify(message);
-                                break;
-                            case DEMETER:
-                                currentPlayer.assignPower(DEMETER);
-                                message.setMessage(GameMessage.demeterMessage);
-                                notify(message);
-                                break;
-                        }
-
-                        //noinspection SuspiciousListRemoveInLoop
-                        getExtractedCards().remove(i); //remove the already taken card
-
-                        //end the current player's turn
-                        int index = players.indexOf(getCurrentPlayer());
-                        if (index <
-                                players.indexOf(players.lastElement())) {
-                            setCurrentPlayer(players.get(index + 1));
-                            displayCards();
-                        } else {
-                            setCurrentPlayer(players.get(0));
-                            displayWorkerToBeSettled(currentPlayer);
-                        }
-                    }
-            } else {
-                GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.wrongTurnMessage);
-                notify(message);
-            }
-        }else{
-            GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.cantSelect);
-            notify(message);
+    synchronized public void chosePower(Choice choice) {
+        GameMessage message = new GameMessage(choice.getVirtualViewID(),GameMessage.cantSelect);
+        switch (choice.getChoiceInt()) {
+            case APOLLO:
+                currentPlayer.assignPower(APOLLO);
+                message.setMessage(GameMessage.apolloMessage);
+                break;
+            case ARTEMIS:
+                currentPlayer.assignPower(ARTEMIS);
+                message.setMessage(GameMessage.artemisMessage);
+                break;
+            case ATHENA:
+                currentPlayer.assignPower(ATHENA);
+                message.setMessage(GameMessage.athenaMessage);
+                break;
+            case ATLAS:
+                currentPlayer.assignPower(ATLAS);
+                message.setMessage(GameMessage.atlasMessage);
+                break;
+            case DEMETER:
+                currentPlayer.assignPower(DEMETER);
+                message.setMessage(GameMessage.demeterMessage);
+                break;
         }
+        extractedCards.remove(choice.getChoiceInt());
+        int index = players.indexOf(getCurrentPlayer());
+        if (currentPlayer != players.lastElement()) {
+            setCurrentPlayer(players.get(index + 1));
+        } else {
+            setPowerSet(true);
+            setCurrentPlayer(players.get(0));
+        }
+        notify(message);
     }
 
     public void displayWorkerToBeSettled(Player currentPlayer) {
 
         GameMessage firstPlacement = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.firstPlacement);
         notify(firstPlacement);
+
     }
 
-    public void choseWorker(Choice choice){
+    /*public void choseWorker(Choice choice) {
         if (choice.getVirtualViewID() == currentPlayer.getVirtualViewID()){
             currentPlayer.choseWorker(choice.getChoice().equals("m"));
             int index = players.indexOf(getCurrentPlayer());
@@ -206,7 +164,7 @@ public class Game extends Observable<Object> {
             GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.wrongTurnMessage);
             notify(message);
         }
-    }
+    }*/
 
     //TODO: maybe handle InvalidMove/BuildingException here?
 
@@ -252,15 +210,16 @@ public class Game extends Observable<Object> {
      * @param currentPlayer the member of the players Vector which is going to play
      */
     public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
 
         for (Player player : players) {
-            if (currentPlayer.equals(player))
+            if (currentPlayer == player)
                 player.setPlaying(true);
+            else
+                player.setPlaying(false);
         }
-
-        this.currentPlayer = currentPlayer;
-        GameMessage yourTurn = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.turnMessage);
-        notify(yourTurn);
+        /*GameMessage yourTurn = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.turnMessage);
+        notify(yourTurn);*/
     }
 
     public Vector<Player> getPlayers() {
@@ -275,23 +234,20 @@ public class Game extends Observable<Object> {
         return board;
     }
 
-    public Box getBox(int x, int y){
+    public Box getBox(int x, int y) {
         return board[x][y];
-    }
-
-    public ArrayList<Integer> getExtractedCards() {
-        return extractedCards;
-    }
-
-    public void setExtractedCards(ArrayList<Integer> extractedCards) {
-        this.extractedCards = extractedCards;
     }
 
     public HashMap<Integer, String> getCardMap() {
         return cardMap;
     }
 
-    public void setCardMap(HashMap<Integer, String> cardMap) {
-        this.cardMap = cardMap;
+
+    public boolean isPowerSet() {
+        return powerSet;
+    }
+
+    public void setPowerSet(boolean powerSet) {
+        this.powerSet = powerSet;
     }
 }
