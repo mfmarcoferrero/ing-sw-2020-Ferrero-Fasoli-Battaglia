@@ -324,12 +324,12 @@ public class CliView implements Observer {
 		int y = 0;
 		int[] coordinates = new int[2];
 
-		output.println("Set cell coordinates");
+		output.println("Enter cell coordinates");
 		//set x
-		output.println("Enter x:");
+		output.println("x:");
 		x = getCoordinate( x);
 		//set y
-		output.println("Enter y:");
+		output.println("y:");
 		y = getCoordinate(y);
 
 		coordinates[0] = x;

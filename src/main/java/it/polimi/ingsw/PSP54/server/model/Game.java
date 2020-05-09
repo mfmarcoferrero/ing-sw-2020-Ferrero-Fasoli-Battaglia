@@ -218,9 +218,29 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
         for (Player player : players) {
             player.setPlaying(currentPlayer == player);
         }
-        GameMessage yourTurn = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.turnMessage);
+        /*GameMessage yourTurn = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.turnMessage);
         notify(yourTurn);
+         */
     }
+
+    /**
+     *
+     * @param currentPlayer
+     */
+    public void endTurn(Player currentPlayer) {
+
+        for (Player player : players){
+            if (player.equals(currentPlayer)){
+                int i = players.indexOf(player);
+                if (i == players.indexOf(players.lastElement())){
+                    setCurrentPlayer(players.get(0));
+                }else
+                    setCurrentPlayer(players.get(i+1));
+            }
+        }
+    }
+
+    //setters & getters
 
     public Vector<Player> getPlayers() {
         return players;

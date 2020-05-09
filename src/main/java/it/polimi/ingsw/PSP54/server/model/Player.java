@@ -20,6 +20,12 @@ public interface Player {
     void setWorkerPos (Worker worker, int x, int y) throws InvalidMoveException;
 
     /**
+     *
+     * @return
+     */
+    boolean areWorkerSettled();
+
+    /**
      * Select the worker which player is going to use depending on the worker's sex
      * @param male the worker's sex
      * @return the chosen worker
@@ -61,11 +67,6 @@ public interface Player {
      * @param dest selected box where to build
      */
     void build(Worker worker, Box dest) throws InvalidBuildingException;
-
-    /**
-     *checks if player has won
-     */
-    void endTurn();
 
     //setters & getters
 

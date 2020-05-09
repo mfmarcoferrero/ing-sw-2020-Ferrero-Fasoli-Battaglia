@@ -68,28 +68,36 @@ public class Controller implements Observer {
     }
 
     /**
-     *Invokes model's methods to perform, if possible, the card's assignment.
-     * @param move
+     *Invokes model's methods to perform, if possible, the settlement of the workers.
+     * @param move the message containing informations regarding which worker and where is going to be settled.
      */
     private void performWorkerSet(Move move){
 
         if (game.getCurrentPlayer().getVirtualViewID() == move.getVirtualViewId()) {
             //fills the message informations
             move.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
-            //perform actual placement
             try {
-                game.setWorker(move);
+                game.setWorker(move); //perform actual placement
                 showAllBoards();
-                /*TODO:
-                    1 - turn change when both workers are settled vs one worker at a time?
-                    2 - when all worker are settled -> start actual game
-                 */
-                virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
-            } catch (InvalidMoveException e) {
+
+                if (game.getCurrentPlayer().areWorkerSettled()){ //check current player turn status
+                    if (game.getCurrentPlayer().equals(game.getPlayers().lastElement())){ //check game turns status
+                        //send move message to next player
+                        game.endTurn(game.getCurrentPlayer());
+                        virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.moveMessage);
+
+                    }else { //send first placement message to next player
+                        game.endTurn(game.getCurrentPlayer());
+                        virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.setFirstWorkerMessage);
+                    }
+                }else
+                    virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
+
+            } catch (InvalidMoveException e) {//redo
                 virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
                 virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
             }
-        }else
+        }else //wrong turn
             virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
     }
 
@@ -145,6 +153,7 @@ public class Controller implements Observer {
     private void addPlayer (PlayerMessage p) {
         game.newPlayer(p.getPlayerName(), p.getAge(), p.getVirtualViewID());
     }
+
 
     private void showAllBoards() {
         synchronized (this) {

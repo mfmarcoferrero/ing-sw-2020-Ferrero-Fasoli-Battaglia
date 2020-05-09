@@ -81,10 +81,10 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     * Sets initial position on the board for the selected worker
-     * @param worker the selected worker
-     * @param x the board abscissa
-     * @param y the board ordinate
+     * Sets initial position on the board for the selected worker.
+     * @param worker the selected worker.
+     * @param x the board abscissa.
+     * @param y the board ordinate.
      */
     @Override
     public void setWorkerPos (Worker worker, int x, int y) throws InvalidMoveException{
@@ -93,7 +93,19 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             getGame().getBoard()[x][y].setWorker(worker);
         }else
             throw new InvalidMoveException();
+    }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public boolean areWorkerSettled() {
+
+        if (workers[0].getPos() != null && workers[1].getPos() != null)
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -122,7 +134,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         currentWorker.setMoveToken(1);
         currentWorker.setBuildToken(0);
         return currentWorker;
-
     }
 
     /**
@@ -197,10 +208,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             //set tokens
             worker.setMoveToken(currentMoveToken-1);
 
-            if (dest.getLevel() == 3){
-                endTurn();
-            }else
-                worker.setBuildToken(1);
+            worker.setBuildToken(1);
 
         } else throw new InvalidMoveException();
 
@@ -242,19 +250,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         }
         return false;
     }*/
-
-    /**
-     *checks if player has won and ends the player's turn
-     */
-    @Override
-    public void endTurn () {
-
-        for (int i = 0; i < 2; i++) {
-            if(workers[i].getPos().getLevel() == 3)
-                this.setWinner(true);
-        }
-        setPlaying(false);
-    }
 
     //setters & getters
 

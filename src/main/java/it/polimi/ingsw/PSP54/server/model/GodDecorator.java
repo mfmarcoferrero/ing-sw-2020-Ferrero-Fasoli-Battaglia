@@ -14,6 +14,11 @@ public abstract class GodDecorator implements Player {
     }
 
     @Override
+    public boolean areWorkerSettled() {
+        return playerToDecorate.areWorkerSettled();
+    }
+
+    @Override
     public Worker choseWorker(Boolean male) {
         return playerToDecorate.choseWorker(male);
     }
@@ -41,11 +46,6 @@ public abstract class GodDecorator implements Player {
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
         playerToDecorate.build(worker, dest);
-    }
-
-    @Override
-    public void endTurn() {
-        playerToDecorate.endTurn();
     }
 
     @Override
