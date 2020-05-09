@@ -288,7 +288,7 @@ public class CliView implements Observer {
 
 		//print lower border
 		output.println(lowerBorder);
-	}
+	} //TODO: insert coordinates along borders?
 
 	/**
 	 *asks player which worker he wants to use
@@ -320,17 +320,16 @@ public class CliView implements Observer {
 	 */
 	public int[] acquireCoordinates() {
 
-		int x = 0;
-		int y = 0;
+
 		int[] coordinates = new int[2];
 
 		output.println("Enter cell coordinates");
 		//set x
 		output.println("x:");
-		x = getCoordinate( x);
+		int y = getCoordinate();
 		//set y
 		output.println("y:");
-		y = getCoordinate(y);
+		int x = getCoordinate();
 
 		coordinates[0] = x;
 		coordinates[1] = y;
@@ -338,7 +337,8 @@ public class CliView implements Observer {
 		return coordinates;
 	}
 
-	private int getCoordinate(int k) {
+	private int getCoordinate() {
+		int k = 0;
 		boolean loop = true;
 		while (loop) {
 			String component  = inputReader.next();
@@ -355,23 +355,42 @@ public class CliView implements Observer {
 		return k - 1; //return coordinate translated to array index
 	}
 
-	public void acquirePlayer() {
+	public void acquirePlayerCredentials() {
 		output.println("What's your name?");
 		String name = inputReader.next();
 		output.println("What's your age?");
-		int age = inputReader.nextInt();
+		int age = acquireInteger();
 		PlayerMessage playerMessage = new PlayerMessage(name,age,0);
 		client.asyncWriteToSocket(playerMessage);
 	}
 
 	public void acquireNumberOfPlayers() {
 		int numberOfPlayers;
-		numberOfPlayers = inputReader.nextInt();
+		numberOfPlayers = acquireInteger();
 		while (numberOfPlayers < 2 || numberOfPlayers > 3) {
 			output.println("Illegal number of player! It must be '2' or '3', try again");
 			numberOfPlayers = inputReader.nextInt();
 		}
 		client.asyncWriteToSocket(numberOfPlayers);
+	}
+
+	/**
+	 * Asks an integer until input is valid.
+	 * @return the given number.
+	 */
+	public int acquireInteger() {
+		boolean loop = true;
+		int i = 0;
+		while (loop) {
+			String toParse = inputReader.next();
+			try{
+				i = Integer.parseInt(toParse);
+				loop = false;
+			}catch (IllegalArgumentException e){
+				output.println("Incorrect input, enter an integer!");
+			}
+		}
+		return i;
 	}
 
 	/**
@@ -409,10 +428,16 @@ public class CliView implements Observer {
 		}
 	}
 
-	public void workersInit(boolean male) {
+	public void sendWorkerPlacement(boolean male) {
 		int [] coordinates = acquireCoordinates();
 		Move move = new Move(male, coordinates[0], coordinates[1]);
 		move.setSetFirstPos(true);
+		client.asyncWriteToSocket(move);
+	}
+
+	public void sendMove(boolean male) {
+		int[] coordinates = acquireCoordinates();
+		Move move = new Move(male, coordinates[0], coordinates[1]);
 		client.asyncWriteToSocket(move);
 	}
 
@@ -420,7 +445,7 @@ public class CliView implements Observer {
 	public void update(String message) {
 		output.println(message);
 		if (message.equals(GameMessage.welcomeMessage)) {
-			acquirePlayer();
+			acquirePlayerCredentials();
 		}
 		if (message.equals(GameMessage.setNumberOfPlayersMessage)) {
 			acquireNumberOfPlayers();
@@ -428,10 +453,18 @@ public class CliView implements Observer {
 		if (message.equals(GameMessage.setFirstWorkerMessage)){
 			output.println(workerSelection);
 			setMaleSelected(acquireWorkerSelection());
-			workersInit(isMaleSelected());
+			sendWorkerPlacement(isMaleSelected());
 		}
 		if (message.equals(GameMessage.setSecondWorkerMessage)){
-			workersInit(!isMaleSelected());
+			sendWorkerPlacement(!isMaleSelected());
+		}
+		if (message.equals(GameMessage.moveMessage)){
+			output.println(workerSelection);
+			setMaleSelected(acquireWorkerSelection());
+			sendMove(isMaleSelected());
+		}
+		if (message.equals(GameMessage.invalidMoveMessage)){
+			sendMove(isMaleSelected());
 		}
 
 	}

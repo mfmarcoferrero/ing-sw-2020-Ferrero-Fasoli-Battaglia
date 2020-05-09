@@ -68,26 +68,11 @@ public class VirtualView extends Observable<Object> implements Observer {
 
     /**
      * Notifica il controller con un oggetto di tipo Move verificando che la mossa
-     * sia un set iniziale di un worker
-     * @param move
-     */
-    public void setWorker(Move move){
-        if (!firstWorkerSetDone && move.isSetFirstPos()){
-            notify(move);
-        }
-    }
-
-    /**
-     * Notifica il controller con un oggetto di tipo Move verificando che la mossa
      * non sia un set iniziale di un worker
      * @param move
      */
     public void handleMove(Move move) {
-        while (!moveDone) {
-            if (!(move.isSetFirstPos())) {
-                notify(move);
-            }
-        }
+        notify(move);
     }
 
     /**
@@ -120,7 +105,7 @@ public class VirtualView extends Observable<Object> implements Observer {
         connection.asyncSend(message);
     }
 
-    public void showBoard() {
+    public synchronized void showBoard() {
         connection.asyncSend(board);
     }
 

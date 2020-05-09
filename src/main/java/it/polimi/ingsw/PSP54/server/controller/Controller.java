@@ -74,16 +74,15 @@ public class Controller implements Observer {
     private void performWorkerSet(Move move){
 
         if (game.getCurrentPlayer().getVirtualViewID() == move.getVirtualViewId()) {
-            //fills the message informations
-            move.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
+            move.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));//fills the message informations
             try {
                 game.setWorker(move); //perform actual placement
                 showAllBoards();
 
                 if (game.getCurrentPlayer().areWorkerSettled()){ //check current player turn status
                     if (game.getCurrentPlayer().equals(game.getPlayers().lastElement())){ //check game turns status
-                        //send move message to next player
-                        game.endTurn(game.getCurrentPlayer());
+
+                        game.endTurn(game.getCurrentPlayer()); //players.next()
                         virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.moveMessage);
 
                     }else { //send first placement message to next player
@@ -94,7 +93,10 @@ public class Controller implements Observer {
                     virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
 
             } catch (InvalidMoveException e) {//redo
-                virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
+                virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongPlacementMessage);
+                if (game.noWorkerSettled(game.getCurrentPlayer())){
+                    virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setFirstWorkerMessage);
+                }
                 virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
             }
         }else //wrong turn
@@ -106,27 +108,18 @@ public class Controller implements Observer {
      * @param move
      */
      private void performMove(Move move){
-        for (int i = 0; i < game.getPlayers().size(); i++){
-            if (game.getPlayers().get(i).getVirtualViewID() == move.getVirtualViewId()){
-                move.setPlayer_ind(i);
-            }
-        }
-        try {
-            if (move.isSetFirstPos()){
-                game.setWorker(move);
-                for (VirtualView v : virtualViewList) {
-                    //v.showBoard();
-                    if (v.getId() == game.getCurrentPlayer().getVirtualViewID()) {
-                        v.showMessage(GameMessage.setSecondWorkerMessage);
-                    }
-                }
-                //virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
-            }
-            else
-                game.move(move);
-        } catch (InvalidMoveException e) {
-            virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
-        }
+         if (game.getCurrentPlayer().getVirtualViewID() == move.getVirtualViewId()) {
+             move.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
+             try {
+                 game.move(move); //perform actual move
+                 showAllBoards();
+                 virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.buildMessage);
+             } catch (InvalidMoveException e) {
+                 virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
+             }
+
+         }else
+             virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
     }
 
     /**

@@ -102,10 +102,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public boolean areWorkerSettled() {
 
-        if (workers[0].getPos() != null && workers[1].getPos() != null)
-            return true;
-        else
-            return false;
+        return workers[0].getPos() != null && workers[1].getPos() != null;
     }
 
     /**
@@ -129,10 +126,10 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      */
     @Override
     public Worker turnInit(Boolean male) {
-        setPlaying(true);
         Worker currentWorker = choseWorker(male);
         currentWorker.setMoveToken(1);
         currentWorker.setBuildToken(0);
+        setWorkerBoxesToBuild(currentWorker);
         return currentWorker;
     }
 

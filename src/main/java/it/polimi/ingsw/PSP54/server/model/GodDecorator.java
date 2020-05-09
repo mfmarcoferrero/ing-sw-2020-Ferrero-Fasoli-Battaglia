@@ -1,11 +1,12 @@
 package it.polimi.ingsw.PSP54.server.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Abstract decorator class that delegates all methods
  */
-public abstract class GodDecorator implements Player {
+public abstract class GodDecorator implements Player, Serializable, Cloneable {
 
     private final Player playerToDecorate;
 

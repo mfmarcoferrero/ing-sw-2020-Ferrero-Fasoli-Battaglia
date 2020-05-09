@@ -147,36 +147,13 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
         notify(message);
     }
 
-    public void displayWorkerToBeSettled(Player currentPlayer) {
-
-        GameMessage firstPlacement = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.firstPlacement);
-        notify(firstPlacement);
-
-    }
-
-    /*public void choseWorker(Choice choice) {
-        if (choice.getVirtualViewID() == currentPlayer.getVirtualViewID()){
-            currentPlayer.choseWorker(choice.getChoice().equals("m"));
-            int index = players.indexOf(getCurrentPlayer());
-            if (index < players.indexOf(players.lastElement())) {
-                setCurrentPlayer(players.get(index + 1));
-                displayWorkerToBeSettled(currentPlayer);
-            } else {
-                setCurrentPlayer(players.get(0));
-                //START GAME
-            }
-        }else {
-            GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.wrongTurnMessage);
-            notify(message);
-        }
-    }*/
-
     /**
      * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
      * @param move oggetto che contiene le informazioni per eseguire lo spostamento
      */
     public void move(Move move) throws InvalidMoveException {
-        players.get(move.getPlayer_ind()).move(players.get(move.getPlayer_ind()).getWorkers()[move.getPlayer_ind()],board[move.getX()][move.getY()]);
+        players.get(move.getPlayer_ind()).turnInit(move.isMale());
+        players.get(move.getPlayer_ind()).move(players.get(move.getPlayer_ind()).getWorkers()[move.getWorker_ind()],board[move.getX()][move.getY()]);
         notify(board.clone());
     }
 
@@ -196,6 +173,13 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
     public void setWorker(Move move) throws InvalidMoveException {
         players.get(move.getPlayer_ind()).setWorkerPos(players.get(move.getPlayer_ind()).getWorkers()[move.getWorker_ind()], move.getX(), move.getY());
         notify(board.clone());
+    }
+
+    public boolean noWorkerSettled(Player player){
+
+        return (player.getWorkers()[0].getPos() == null
+                && player.getWorkers()[1].getPos() == null);
+
     }
 
     //setters & getters

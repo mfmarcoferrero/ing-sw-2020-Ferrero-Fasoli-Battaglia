@@ -42,12 +42,7 @@ public class MessageReceiver implements Observer {
     public void update(Move message){
         System.out.println("Received move message !!");
         message.setVirtualViewId(virtualView.getId());
-
-        if (message.isSetFirstPos()) {
-            virtualView.setWorker(message);
-        }
-        else
-            virtualView.handleMove(message);
+        virtualView.handleMove(message);
     }
 
     @Override

@@ -48,7 +48,7 @@ public class Server {
             if(playingConnection.size()>=1)
             {
                 for (Connection connection : playingConnection)
-                    connection.send(c.getName() + " is not your opponent anymore");
+                    connection.send(c.getName() + " is not your opponent anymore"); //TODO: why opponent's name is no longer saved?
             }
             if (playingConnection.size()==1){
                 playingConnection.firstElement().send("You won!");

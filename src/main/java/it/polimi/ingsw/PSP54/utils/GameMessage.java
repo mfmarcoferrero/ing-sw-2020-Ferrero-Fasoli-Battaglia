@@ -19,12 +19,14 @@ public class GameMessage implements Serializable,Cloneable {
     public static String demeterMessage = "You have Demeter!\nYour Build: Your Worker may build one additional time, but not on the same space.";
     public static String artemisMessage = "You have Artemis!\nYour Move: Your Worker may move one additional time, but not back to its initial space.";
     public static String firstPlacement = "Chose which worker to place first: [enter 'm' or 'f']";
-    public static String moveMessage = "Make your move (x,y):";
+    public static String moveMessage = "Make your move!";
+    public static String buildMessage = "Where do you want to build?";
     public static String waitMessage = "Wait for the other player's choice!";
     public static String winMessage = "You win!";
     public static String loseMessage = "You lose!";
     public static String drawMessage = "Draw!";
     public static String wrongTurnMessage = "It is not your turn!";
+    public static String wrongPlacementMessage = "You can't place your worker here, please retry.";
     public static String invalidMoveMessage = "Change move, it's not valid!";
     public static String invalidBuildingMessage = "Change building, it's not valid!";
     public static String occupiedBoxMessage = "The chosen box is not empty!";

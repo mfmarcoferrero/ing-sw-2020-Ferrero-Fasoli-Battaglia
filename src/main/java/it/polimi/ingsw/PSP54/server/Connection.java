@@ -118,26 +118,6 @@ public class Connection extends Observable implements Runnable {
         }
     }
 
-    /**
-     * Asks an integer until input is valid
-     * @param in  the scanner that's being used to acquire the input
-     * @return player's age
-     */
-    public int acquireInteger(Scanner in) {
-        boolean loop = true;
-        int i = 0;
-        while (loop) {
-            String toParse = in.next();
-            try{
-                i = Integer.parseInt(toParse);
-                loop = false;
-            }catch (IllegalArgumentException e){
-                send("Incorrect input!");
-            }
-        }
-        return i;
-    }
-
     public void setGameMaster(boolean gameMaster) {
         this.gameMaster = gameMaster;
     }
