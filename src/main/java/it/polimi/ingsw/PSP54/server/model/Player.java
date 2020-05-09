@@ -17,7 +17,7 @@ public interface Player {
      * @param x the board abscissa
      * @param y the board ordinate
      */
-    void setWorkerPos (Worker worker, int x, int y);
+    void setWorkerPos (Worker worker, int x, int y) throws InvalidMoveException;
 
     /**
      * Select the worker which player is going to use depending on the worker's sex

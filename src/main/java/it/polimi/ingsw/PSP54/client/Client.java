@@ -57,7 +57,6 @@ public class Client extends Observable {
         return t;
     }
 
-    //TODO: make client use View methods to parse input and instantiate the message objects
     public void send(Object message) {
         try {
             socketOut.reset();

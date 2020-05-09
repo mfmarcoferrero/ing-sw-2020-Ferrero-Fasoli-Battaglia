@@ -19,14 +19,16 @@ public class Controller implements Observer {
     }
 
     /**
-     * Il controller può avere 2 o 3 virtualView collegate in bese al numero di giocatori per partita
-     * Quindi viene utilizzato un vector
-     * @param virtualView
+     * Inserts a VirtualView object in the virtualViewList ArrayList.
+     * @param virtualView the VirtualView to add.
      */
     public void addVirtualView (VirtualView virtualView) {
         this.virtualViewList.add(virtualView.getId(),virtualView);
     }
 
+    /**
+     *
+     */
     public void startGame() {
         game.sortPlayers();
         game.assignColors();
@@ -35,10 +37,10 @@ public class Controller implements Observer {
     }
 
     /**
-     * Show cards that can be chosen to current player
+     * Show cards that can be chosen to current player.
      */
-    private synchronized void displayCards () {
-        if (!game.isPowerSet()) {
+    private void displayCards () {
+        if (!game.isPowersSet()) {
             CardsToDisplay cards = new CardsToDisplay();
             cards.setExtractedCards(game.getExtractedCards());
             virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(cards);
@@ -54,35 +56,48 @@ public class Controller implements Observer {
     }
 
     /**
-     * Remove already assigned cards from Model's extractedCards list
-     * @param choice the message containing the card to remove
+     * Invokes model's methods to perform, if possible, the card's assignment.
+     * @param choice the message containing informations regarding the assignment.
      */
-    private synchronized void performCardChoice(Choice choice) {
+    private void performCardChoice(Choice choice) {
         if (game.getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()) {
             game.chosePower(choice);
             displayCards();
-        }
+        }else
+            virtualViewList.get(choice.getVirtualViewID()).showMessage(GameMessage.wrongTurnMessage);
     }
 
-    private synchronized void performWorkerSet(Move move){
-        if (move.isSetFirstPos()) {
-            for (int i = 0; i < game.getPlayers().size(); i++) {
-                if (game.getPlayers().get(i).getVirtualViewID() == move.getVirtualViewId()){
-                    move.setPlayer_ind(i);
-                    game.setWorker(move);
-                    showAllBoards();
-                    virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
-                }
+    /**
+     *Invokes model's methods to perform, if possible, the card's assignment.
+     * @param move
+     */
+    private void performWorkerSet(Move move){
+
+        if (game.getCurrentPlayer().getVirtualViewID() == move.getVirtualViewId()) {
+            //fills the message informations
+            move.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
+            //perform actual placement
+            try {
+                game.setWorker(move);
+                showAllBoards();
+                /*TODO:
+                    1 - turn change when both workers are settled vs one worker at a time?
+                    2 - when all worker are settled -> start actual game
+                 */
+                virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
+            } catch (InvalidMoveException e) {
+                virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
+                virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
             }
-        }
+        }else
+            virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
     }
-
 
     /**
      * Metodo per effettuare una mossa
      * @param move
      */
-     private synchronized void performMove(Move move){
+     private void performMove(Move move){
         for (int i = 0; i < game.getPlayers().size(); i++){
             if (game.getPlayers().get(i).getVirtualViewID() == move.getVirtualViewId()){
                 move.setPlayer_ind(i);
@@ -110,7 +125,7 @@ public class Controller implements Observer {
      * Metodo per effettuare una costruzione
      * @param build
      */
-    private synchronized void performBuild(Build build){
+    private void performBuild(Build build){
         if(!game.getPlayers().get(build.getPlayer_ind()).isPlaying()){
             virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
             return;
@@ -127,13 +142,15 @@ public class Controller implements Observer {
      * Metodo per inserire un giocatore nel model
      * @param p
      */
-    private synchronized void addPlayer (PlayerMessage p) {
+    private void addPlayer (PlayerMessage p) {
         game.newPlayer(p.getPlayerName(), p.getAge(), p.getVirtualViewID());
     }
 
-    private synchronized void showAllBoards() {
-        for (VirtualView v :virtualViewList){
-            v.showBoard();
+    private void showAllBoards() {
+        synchronized (this) {
+            for (VirtualView v : virtualViewList) {
+                v.showBoard();
+            }
         }
     }
 
@@ -169,11 +186,6 @@ public class Controller implements Observer {
 
     @Override
     public void update(Box[][] message) {
-
-    }
-
-    @Override
-    public void update(StringToDisplay message) {
 
     }
 

@@ -12,6 +12,7 @@ public class Move implements Serializable,Cloneable {
     public Move(boolean isMale, int x, int y) {
         this.x = x;
         this.y = y;
+        this.isMale = isMale;
         if (isMale) {
             worker_ind = 0;
         }

@@ -1,14 +1,12 @@
 package it.polimi.ingsw.PSP54.server.model;
 
 import it.polimi.ingsw.PSP54.utils.Choice;
+import it.polimi.ingsw.PSP54.utils.Move;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -91,23 +89,13 @@ public class GameTest {
         assertEquals("yellow", players.get(2).getColor());
     }
 
-    /*
+
     @Test
     public void extractCards_2PlayersExtraction_AllDifferent() {
 
-        //initialize game
-        game = new Game();
-        board = game.getBoard();
-        //initialize players
-        game.newPlayer("1");
-        game.newPlayer("2");
-        players = game.getPlayers();
-        players.get(0).setGame(game);
-        players.get(1).setGame(game);
-
         game.extractCards();
 
-        ArrayList<Integer> cards = game.getExtractedCards();
+        HashMap<Integer, String> cards = game.getExtractedCards();
 
         for (int i = 0; i < players.size(); i++) {
             for (int j = 0; j < players.size(); j++){
@@ -120,54 +108,18 @@ public class GameTest {
     }
 
     @Test
-    public void displayCards_AllGods_CorrectOutput() {
+    public void setWorker_SouthWestCorner_CorrectInput() throws InvalidMoveException {
 
-        for (int i = 0; i < players.size(); i++) {
-            players.get(i).setVirtualViewId(i);
-        }
-        game.setCurrentPlayer(players.get(0));
+        Move message = new Move(true, 0, 4);
 
-        ArrayList<Integer> extract = new ArrayList<>();
+        message.setPlayer_ind(0);
+        message.setVirtualViewId(0);
+        players.get(0).setVirtualViewId(0);
 
-        extract.add(0);
-        extract.add(1);
-        extract.add(2);
-        extract.add(3);
-        extract.add(4);
+        game.setWorker(message);
 
-        game.setExtractedCards(extract);
-
-        String result = game.displayCards();
-
-        String expected = "Chose your card:\n1. Apollo\n2. Artemis\n3. Athena\n4. Atlas\n5. Demeter\n";
-
-        assertEquals(result, expected);
+        assertEquals(board[0][4], players.get(0).choseWorker(true).getPos());
+        assertEquals(players.get(0).choseWorker(true), board[0][4].getWorker());
 
     }
-
-    @Test
-    public void powerAssignment_Atlas_CorrectOutput(){
-        for (int i = 0; i < players.size(); i++) {
-            players.get(i).setVirtualViewId(i);
-        }
-        game.setCurrentPlayer(players.get(0));
-
-        Choice choice = new Choice(players.get(0).getVirtualViewID(), "Atlas");
-
-        ArrayList<Integer> extract = new ArrayList<>();
-        extract.add(0);
-        extract.add(1);
-        extract.add(2);
-        extract.add(3);
-        extract.add(4);
-
-        game.setExtractedCards(extract);
-
-        game.chosePower(choice);
-
-        assertEquals(3, players.get(0).getCardID());
-
-    }*/
-
-
 }

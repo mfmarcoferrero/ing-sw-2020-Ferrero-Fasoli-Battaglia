@@ -119,7 +119,7 @@ public abstract class GodDecorator implements Player {
     }
 
     @Override
-    public void setWorkerPos(Worker worker, int x, int y) {
+    public void setWorkerPos(Worker worker, int x, int y) throws InvalidMoveException {
         playerToDecorate.setWorkerPos(worker, x, y);
     }
 

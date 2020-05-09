@@ -21,13 +21,7 @@ public class CLIDebugMain {
                 game.getBoard()[i][j].setDome(true);
             }
         }
-        //add player
 
-        //set worker coordinates
-        int[] coordinates = view.acquireCoordinates();
-        //set worker 1 in coordinates
-
-        //print worker color
 
         //print Board
         view.printBoard(game.getBoard());

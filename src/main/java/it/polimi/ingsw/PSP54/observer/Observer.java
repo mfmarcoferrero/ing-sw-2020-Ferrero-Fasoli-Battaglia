@@ -20,7 +20,6 @@ public interface Observer {
     void update(Box[][] message);
 
     //from Server to Client
-    void update(StringToDisplay message);
 
     void update(GameMessage message);
 

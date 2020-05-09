@@ -4,9 +4,10 @@ import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.utils.*;
 
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Game extends Observable<Object> {
+public class Game extends Observable<Object> implements Serializable, Cloneable {
 
     public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
     public static final int CARD_NUMBER = 5;
@@ -17,7 +18,7 @@ public class Game extends Observable<Object> {
     private HashMap<Integer, String> extractedCards = new HashMap<>();
     private Vector<Player> players;
     private Player currentPlayer;
-    private boolean powerSet = false;
+    private boolean powersSet;
 
     public Game() {
 
@@ -28,6 +29,7 @@ public class Game extends Observable<Object> {
                 board[i][j] = new Box(i, j, 0, false);
             }
         }
+        powersSet = false;
         cardMap.put(APOLLO,"Apollo");
         cardMap.put(ARTEMIS,"Artemis");
         cardMap.put(ATHENA,"Athena");
@@ -35,6 +37,10 @@ public class Game extends Observable<Object> {
         cardMap.put(DEMETER,"Demeter");
     }
 
+    /**
+     * Adds a player to the players Vector.
+     * @param name the player's username.
+     */
     public void newPlayer(String name){
         Player player = new StandardPlayer(name);
         players.add(player);
@@ -42,8 +48,10 @@ public class Game extends Observable<Object> {
     }
 
     /**
-     * Adds a player to the players Vector
-     * @param name the name of the player
+     * Adds a player to the players Vector.
+     * @param name the player's username.
+     * @param age the player's age.
+     * @param virtualViewId the unique identifier for the VirtualView to which the player interfaces.
      */
     public void newPlayer (String name, int age, int virtualViewId) {
         Player player = new StandardPlayer(name, age, virtualViewId);
@@ -53,7 +61,7 @@ public class Game extends Observable<Object> {
     }
 
     /**
-     * Sorts elements of players vector depending on players age
+     * Sorts elements of players vector depending on players age.
      */
     public void sortPlayers(){
 
@@ -84,14 +92,11 @@ public class Game extends Observable<Object> {
 
     }
 
-    public HashMap<Integer, String> getExtractedCards() {
-        return extractedCards;
-    }
-
     /**
      *Extract an unique random god card for each player in the game
      */
     public void extractCards() {
+
         int numberOfPlayers = players.size();
         Vector<Integer> deck = new Vector<>();
 
@@ -136,7 +141,7 @@ public class Game extends Observable<Object> {
         if (currentPlayer != players.lastElement()) {
             setCurrentPlayer(players.get(index + 1));
         } else {
-            setPowerSet(true);
+            setPowersSet(true);
             setCurrentPlayer(players.get(0));
         }
         notify(message);
@@ -166,8 +171,6 @@ public class Game extends Observable<Object> {
         }
     }*/
 
-    //TODO: maybe handle InvalidMove/BuildingException here?
-
     /**
      * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
      * @param move oggetto che contiene le informazioni per eseguire lo spostamento
@@ -190,8 +193,8 @@ public class Game extends Observable<Object> {
      * Sets the initial worker's position on the board.
      * @param move the message containing information about the Box where the worker is going to be placed.
      */
-    public void setWorker(Move move){
-        players.get(move.getPlayer_ind()).setWorkerPos(players.get(move.getPlayer_ind()).getWorkers()[move.getPlayer_ind()], move.getX(), move.getY());
+    public void setWorker(Move move) throws InvalidMoveException {
+        players.get(move.getPlayer_ind()).setWorkerPos(players.get(move.getPlayer_ind()).getWorkers()[move.getWorker_ind()], move.getX(), move.getY());
         notify(board.clone());
     }
 
@@ -213,13 +216,10 @@ public class Game extends Observable<Object> {
         this.currentPlayer = currentPlayer;
 
         for (Player player : players) {
-            if (currentPlayer == player)
-                player.setPlaying(true);
-            else
-                player.setPlaying(false);
+            player.setPlaying(currentPlayer == player);
         }
-        /*GameMessage yourTurn = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.turnMessage);
-        notify(yourTurn);*/
+        GameMessage yourTurn = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.turnMessage);
+        notify(yourTurn);
     }
 
     public Vector<Player> getPlayers() {
@@ -238,16 +238,19 @@ public class Game extends Observable<Object> {
         return board[x][y];
     }
 
+    public HashMap<Integer, String> getExtractedCards() {
+        return extractedCards;
+    }
+
     public HashMap<Integer, String> getCardMap() {
         return cardMap;
     }
 
-
-    public boolean isPowerSet() {
-        return powerSet;
+    public boolean isPowersSet() {
+        return powersSet;
     }
 
-    public void setPowerSet(boolean powerSet) {
-        this.powerSet = powerSet;
+    public void setPowersSet(boolean powersSet) {
+        this.powersSet = powersSet;
     }
 }

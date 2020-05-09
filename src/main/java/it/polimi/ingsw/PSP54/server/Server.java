@@ -116,7 +116,7 @@ public class Server {
                     virtualViews.get(i).addPlayer();
                 }
                 waitingConnection.clear();
-                controller.startGame(); //TODO: fix the missing call of deregisterConnection() if startGame() is running!
+                controller.startGame();
             }
         }
     }

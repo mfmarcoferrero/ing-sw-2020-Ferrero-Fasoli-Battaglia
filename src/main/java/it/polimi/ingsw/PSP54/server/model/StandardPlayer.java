@@ -1,11 +1,12 @@
 package it.polimi.ingsw.PSP54.server.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Class representing the player whit his default actions and turn administration
  */
-public class StandardPlayer implements Player {
+public class StandardPlayer implements Player, Serializable, Cloneable {
 
     private static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
     private int cardID;
@@ -86,8 +87,13 @@ public class StandardPlayer implements Player {
      * @param y the board ordinate
      */
     @Override
-    public void setWorkerPos (Worker worker, int x, int y){
-        worker.setPos(game.getBoard()[x][y]);
+    public void setWorkerPos (Worker worker, int x, int y) throws InvalidMoveException{
+        if (!getGame().getBoard()[x][y].isOccupied()) {
+            worker.setPos(getGame().getBoard()[x][y]);
+            getGame().getBoard()[x][y].setWorker(worker);
+        }else
+            throw new InvalidMoveException();
+
     }
 
     /**

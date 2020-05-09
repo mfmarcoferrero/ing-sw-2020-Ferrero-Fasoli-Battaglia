@@ -49,9 +49,6 @@ public class Observable<T> {
                 if (message instanceof Choice){
                     observer.update((Choice) message);
                 }
-                if (message instanceof StringToDisplay){
-                    observer.update((StringToDisplay) message);
-                }
             }
         }
     }

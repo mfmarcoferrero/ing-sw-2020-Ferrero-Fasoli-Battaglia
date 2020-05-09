@@ -3,7 +3,6 @@ package it.polimi.ingsw.PSP54.client.view;
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.server.model.Game;
 import it.polimi.ingsw.PSP54.utils.*;
 
 import java.io.PrintStream;
@@ -16,6 +15,8 @@ public class CliView implements Observer {
 	private final Scanner inputReader = new Scanner(System.in);
 	private final PrintStream output = new PrintStream(System.out);
 	private Client client;
+	private boolean maleSelected;
+	private static final String workerSelection = "Select your worker: [Enter m/f]";
 
 	public CliView(Client client) {
 		this.client = client;
@@ -47,7 +48,7 @@ public class CliView implements Observer {
 		}
 
 		if(box.isDome())
-			string = string + Color.ANSI_DOME + Symbol.UNICODE_DOME;
+			string = string + Color.ANSI_DOME_BACKGROUND + Color.ANSI_DOME + Symbol.UNICODE_DOME;
 
 		else if(box.getWorker() != null) {
 			switch (box.getWorker().getOwner().getColor()) {
@@ -74,7 +75,7 @@ public class CliView implements Observer {
 			}
 		}else
 			string = Symbol.UNICODE_SQUARE.toString();
-		return string;
+		return string + background;
 	}
 
 	/**
@@ -106,16 +107,21 @@ public class CliView implements Observer {
 		StringBuilder toPrint;
 
 		//String containing upper border
-		String upperBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "____________________________________________________________________________________________________";
+		String upperBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER
+				+ "⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽"
+				+ Color.ANSI_BACKGROUND_RESET;
 
 		//String containing lower border
-		String lowerBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺" + Color.ANSI_RESET;
+		String lowerBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER
+				+ "⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺"
+				+ Color.ANSI_RESET;
 
 		//String containing middle border
-		String middleBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "----------------------------------------------------------------------------------------------------";
+		String middleBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER
+				+ "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼";
 
 		//Strings containing beginning/end of lines, it contains border and blocks with corresponding colors
-		String initGround = Color.ANSI_BORDER + "|" + Color.ANSI_GROUND_BACKGROUND + Color.ANSI_GROUND;
+		String initGround = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "|" + Color.ANSI_GROUND_BACKGROUND + Color.ANSI_GROUND;
 		String endGround = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "|";
 
 		String initFirst = initGround + Symbol.UNICODE_SQUARE + Color.ANSI_FIRST_BACKGROUND + Color.ANSI_FIRST ;
@@ -291,22 +297,21 @@ public class CliView implements Observer {
 	public boolean acquireWorkerSelection() {
 
 		boolean loop = true;
-		Boolean isMale = null;
+		Boolean male = null;
 
 		while (loop) {
-			output.println("Select your worker: [Enter 'male' or 'female']");
 			String workerSex = inputReader.next();
-			if(workerSex.equals("male")) {
-				isMale = true;
+			if(workerSex.equals("m")) {
+				male = true;
 				loop = false;
 			}
-			else if(workerSex.equals("female")){
-				isMale = false;
+			else if(workerSex.equals("f")){
+				male = false;
 				loop = false;
 			} else
 				output.println("Incorrect Input!");
 		}
-		return isMale;
+		return male;
 	}
 
 	/**
@@ -360,7 +365,7 @@ public class CliView implements Observer {
 	}
 
 	public void acquireNumberOfPlayers() {
-		int numberOfPlayers = 0;
+		int numberOfPlayers;
 		numberOfPlayers = inputReader.nextInt();
 		while (numberOfPlayers < 2 || numberOfPlayers > 3) {
 			output.println("Illegal number of player! It must be '2' or '3', try again");
@@ -404,10 +409,9 @@ public class CliView implements Observer {
 		}
 	}
 
-	public void setWorker() {
-		boolean isMale = acquireWorkerSelection();
+	public void workersInit(boolean male) {
 		int [] coordinates = acquireCoordinates();
-		Move move = new Move(isMale, coordinates[0], coordinates[1]);
+		Move move = new Move(male, coordinates[0], coordinates[1]);
 		move.setSetFirstPos(true);
 		client.asyncWriteToSocket(move);
 	}
@@ -422,8 +426,14 @@ public class CliView implements Observer {
 			acquireNumberOfPlayers();
 		}
 		if (message.equals(GameMessage.setFirstWorkerMessage)){
-			setWorker();
+			output.println(workerSelection);
+			setMaleSelected(acquireWorkerSelection());
+			workersInit(isMaleSelected());
 		}
+		if (message.equals(GameMessage.setSecondWorkerMessage)){
+			workersInit(!isMaleSelected());
+		}
+
 	}
 
 	@Override
@@ -434,11 +444,6 @@ public class CliView implements Observer {
 	@Override
 	public void update(CardsToDisplay message) {
 		displayCards(message.getExtractedCards());
-	}
-
-	@Override
-	public void update(StringToDisplay message) {
-
 	}
 
 	@Override
@@ -466,12 +471,14 @@ public class CliView implements Observer {
 
 	}
 
+	//setters & getters
 
 
-	/*
-		TODO:
-	   	update(WorkerToChose message){
-	   		acquireWorkerSelection();
-	*/
+	public boolean isMaleSelected() {
+		return maleSelected;
+	}
 
+	public void setMaleSelected(boolean maleSelected) {
+		this.maleSelected = maleSelected;
+	}
 }

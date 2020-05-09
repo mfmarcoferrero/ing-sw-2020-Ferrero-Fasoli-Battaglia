@@ -40,6 +40,19 @@ public class StandardPlayerTest {
         game = null;
     }
 
+
+    @Test
+    public void setWorkerPos_BoardCenter_CorrectOutput() throws InvalidMoveException { //TODO: exception Case
+
+        Worker maleWorker = players.get(0).choseWorker(true);
+
+        players.get(0).setWorkerPos(maleWorker, 2,2);
+
+        assertEquals(board[2][2], players.get(0).choseWorker(true).getPos());
+        assertEquals(players.get(0).choseWorker(true), board[2][2].getWorker());
+
+    }
+
     //setWorkerBoxesToMove
     @Test
     public void setWorkerBoxesToMove_EmptyBoardsCenter_AllAdjacentBoxes() {
@@ -338,6 +351,7 @@ public class StandardPlayerTest {
 
         //set result
         Box result = board [1][1];
+
 
         assertEquals(currentWorker.getPos(), result);
         assertEquals(result.getWorker(), currentWorker);

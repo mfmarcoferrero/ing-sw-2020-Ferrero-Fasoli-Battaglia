@@ -138,13 +138,6 @@ public class VirtualView extends Observable<Object> implements Observer {
     }
 
     @Override
-     public synchronized void update(StringToDisplay message) {
-        if (message.getVirtualViewID() == this.id) {
-            showMessage(message.getToDisplay());
-        }
-    }
-
-    @Override
     public synchronized void update(GameMessage message) {
         if (message.getVirtualViewID() == this.id) {
             showMessage(message.getMessage());

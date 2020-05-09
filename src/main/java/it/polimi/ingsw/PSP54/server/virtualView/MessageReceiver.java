@@ -48,7 +48,6 @@ public class MessageReceiver implements Observer {
         }
         else
             virtualView.handleMove(message);
-
     }
 
     @Override
@@ -75,11 +74,6 @@ public class MessageReceiver implements Observer {
 
     @Override
     public void update(Box[][] message) {
-
-    }
-
-    @Override
-    public void update(StringToDisplay message) {
 
     }
 
