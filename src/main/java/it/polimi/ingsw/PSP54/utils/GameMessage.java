@@ -1,12 +1,13 @@
 package it.polimi.ingsw.PSP54.utils;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class GameMessage implements Serializable,Cloneable {
 
     private int virtualViewID;
-
     private String message;
+    private HashMap<Integer, String> cards;
     public static String turnMessage = "It's your turn!";
     public static String powersSet = "All powers are set!";
     public static String welcomeMessage = "Welcome!";
@@ -24,7 +25,6 @@ public class GameMessage implements Serializable,Cloneable {
     public static String waitMessage = "Wait for the other player's choice!";
     public static String winMessage = "You win!";
     public static String loseMessage = "You lose!";
-    public static String drawMessage = "Draw!";
     public static String wrongTurnMessage = "It is not your turn!";
     public static String wrongPlacementMessage = "You can't place your worker here, please retry.";
     public static String invalidMoveMessage = "Change move, it's not valid!";
@@ -40,6 +40,8 @@ public class GameMessage implements Serializable,Cloneable {
         this.message = message;
     }
 
+    //getters & setters
+
     public int getVirtualViewID() {
         return virtualViewID;
     }
@@ -54,5 +56,13 @@ public class GameMessage implements Serializable,Cloneable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public HashMap<Integer, String> getCards() {
+        return cards;
+    }
+
+    public void setCards(HashMap<Integer, String> cards) {
+        this.cards = cards;
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.PSP54.server.model;
 
 import it.polimi.ingsw.PSP54.observer.Observable;
+import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 import it.polimi.ingsw.PSP54.utils.*;
 
 
@@ -148,6 +149,27 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
     }
 
     /**
+     * Determines whether a player has placed no workers
+     * in order to inform the Controller of the message to be sent.
+     * @param player the current player.
+     * @return true if no worker has been placed, false otherwise.
+     */
+    public boolean noWorkerPlaced(Player player){
+
+        return (player.getWorkers()[0].getPos() == null
+                && player.getWorkers()[1].getPos() == null);
+    }
+
+    /**
+     * Sets the initial worker's position on the board.
+     * @param move the message containing information about the Box where the worker is going to be placed.
+     */
+    public void setWorker(Move move) throws InvalidMoveException {
+        players.get(move.getPlayer_ind()).setWorkerPos(players.get(move.getPlayer_ind()).getWorkers()[move.getWorker_ind()], move.getX(), move.getY());
+        notify(board.clone());
+    }
+
+    /**
      * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
      * @param move oggetto che contiene le informazioni per eseguire lo spostamento
      */
@@ -164,47 +186,6 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
     public void build (Build build) throws InvalidBuildingException {
         players.get(build.getPlayer_ind()).build(players.get(build.getPlayer_ind()).getWorkers()[build.getPlayer_ind()],board[build.getX()][build.getY()]);
         notify(board.clone());
-    }
-
-    /**
-     * Sets the initial worker's position on the board.
-     * @param move the message containing information about the Box where the worker is going to be placed.
-     */
-    public void setWorker(Move move) throws InvalidMoveException {
-        players.get(move.getPlayer_ind()).setWorkerPos(players.get(move.getPlayer_ind()).getWorkers()[move.getWorker_ind()], move.getX(), move.getY());
-        notify(board.clone());
-    }
-
-    public boolean noWorkerSettled(Player player){
-
-        return (player.getWorkers()[0].getPos() == null
-                && player.getWorkers()[1].getPos() == null);
-
-    }
-
-    //setters & getters
-
-    /**
-     * Search for the currently playing member of the player's Vector.
-     * @return the currently playing player.
-     */
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    /**
-     * Sets the playing attribute of currentPlayer to 'true' and notifies the VirtualView
-     * @param currentPlayer the member of the players Vector which is going to play
-     */
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
-
-        for (Player player : players) {
-            player.setPlaying(currentPlayer == player);
-        }
-        /*GameMessage yourTurn = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.turnMessage);
-        notify(yourTurn);
-         */
     }
 
     /**
@@ -232,6 +213,25 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
 
     public void setPlayers(Vector<Player> players) {
         this.players = players;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    /**
+     * Sets the playing attribute of currentPlayer to 'true' and notifies the VirtualView
+     * @param currentPlayer the member of the players Vector which is going to play
+     */
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+
+        for (Player player : players) {
+            player.setPlaying(currentPlayer == player);
+        }
+        /*GameMessage yourTurn = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.turnMessage);
+        notify(yourTurn);
+         */
     }
 
     public Box[][] getBoard() {

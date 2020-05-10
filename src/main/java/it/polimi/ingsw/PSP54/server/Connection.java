@@ -54,14 +54,18 @@ public class Connection extends Observable implements Runnable {
         }).start();
     }
 
-
+    /**
+     * Instantiates a thread that reads incoming messages from the client
+     * @param socketIn
+     * @return
+     */
     public Thread asyncReadFromSocket(final ObjectInputStream socketIn) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     while (isActive()) {
-                        Object inputObject = socketIn.readObject();
+                        Object inputObject = socketIn.readObject(); //TODO: set to PlayerAction
                         Connection.this.notify(inputObject);
                     }
                 } catch (Exception e) {
