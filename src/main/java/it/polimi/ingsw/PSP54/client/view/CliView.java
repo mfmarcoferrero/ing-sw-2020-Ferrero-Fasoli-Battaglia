@@ -314,13 +314,31 @@ public class CliView implements Observer {
 		return male;
 	}
 
+	public boolean acquireSetDome() {
+		boolean loop = true;
+		Boolean setDome = false;
+		output.println("Do you want to build a dome? [Enter yes/no]");
+		while (loop) {
+			String dome = inputReader.next();
+			if(dome.equals("yes")) {
+				setDome = true;
+				loop = false;
+			}
+			else if(dome.equals("no")){
+				setDome = false;
+				loop = false;
+			} else
+				output.println("Incorrect Input!");
+				output.println("[Enter yes/no]");
+		}
+		return setDome;
+	}
+
 	/**
 	 * asks coordinates which player wants to move
 	 * @return an array containing the selected coordinates
 	 */
 	public int[] acquireCoordinates() {
-
-
 		int[] coordinates = new int[2];
 
 		output.println("Enter cell coordinates");
@@ -342,7 +360,7 @@ public class CliView implements Observer {
 		boolean loop = true;
 		while (loop) {
 			String component  = inputReader.next();
-			try{
+			try {
 				k = Integer.parseInt(component);
 				if (0 < k && k < 6)
 					loop = false;
@@ -386,7 +404,7 @@ public class CliView implements Observer {
 			try{
 				i = Integer.parseInt(toParse);
 				loop = false;
-			}catch (IllegalArgumentException e){
+			} catch (IllegalArgumentException e){
 				output.println("Incorrect input, enter an integer!");
 			}
 		}
@@ -428,17 +446,23 @@ public class CliView implements Observer {
 		}
 	}
 
-	public void sendWorkerPlacement(boolean male) {
+	public void sendWorkerPlacement(boolean male){
 		int [] coordinates = acquireCoordinates();
 		Move move = new Move(male, coordinates[0], coordinates[1]);
 		move.setSetFirstPos(true);
 		client.asyncWriteToSocket(move);
 	}
 
-	public void sendMove(boolean male) {
+	public void sendMove(boolean male){
 		int[] coordinates = acquireCoordinates();
 		Move move = new Move(male, coordinates[0], coordinates[1]);
 		client.asyncWriteToSocket(move);
+	}
+
+	public void sendBuild(boolean male, boolean setDome){
+		int[] coordinates = acquireCoordinates();
+		Build build = new Build(male,coordinates[0],coordinates[1],setDome);
+		client.asyncWriteToSocket(build);
 	}
 
 	@Override
@@ -450,7 +474,7 @@ public class CliView implements Observer {
 		if (message.equals(GameMessage.setNumberOfPlayersMessage)) {
 			acquireNumberOfPlayers();
 		}
-		if (message.equals(GameMessage.setFirstWorkerMessage)){
+		if (message.equals(GameMessage.setFirstWorkerMessage)) {
 			output.println(workerSelection);
 			setMaleSelected(acquireWorkerSelection());
 			sendWorkerPlacement(isMaleSelected());
@@ -465,6 +489,14 @@ public class CliView implements Observer {
 		}
 		if (message.equals(GameMessage.invalidMoveMessage)){
 			sendMove(isMaleSelected());
+		}
+		if (message.equals(GameMessage.buildMessage)){
+			output.println(workerSelection);
+			setMaleSelected(acquireWorkerSelection());
+			sendBuild(isMaleSelected(),acquireSetDome());
+		}
+		if (message.equals(GameMessage.invalidBuildingMessage)){
+			sendBuild(isMaleSelected(),acquireSetDome());
 		}
 
 	}

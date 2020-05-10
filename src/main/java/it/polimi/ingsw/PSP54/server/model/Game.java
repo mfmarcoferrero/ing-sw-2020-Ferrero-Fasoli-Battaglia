@@ -218,10 +218,11 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
                 int i = players.indexOf(player);
                 if (i == players.indexOf(players.lastElement())){
                     setCurrentPlayer(players.get(0));
-                }else
+                } else
                     setCurrentPlayer(players.get(i+1));
             }
         }
+
     }
 
     //setters & getters

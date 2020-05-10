@@ -63,7 +63,7 @@ public class Controller implements Observer {
         if (game.getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()) {
             game.chosePower(choice);
             displayCards();
-        }else
+        } else
             virtualViewList.get(choice.getVirtualViewID()).showMessage(GameMessage.wrongTurnMessage);
     }
 
@@ -79,17 +79,17 @@ public class Controller implements Observer {
                 game.setWorker(move); //perform actual placement
                 showAllBoards();
 
-                if (game.getCurrentPlayer().areWorkerSettled()){ //check current player turn status
-                    if (game.getCurrentPlayer().equals(game.getPlayers().lastElement())){ //check game turns status
+                if (game.getCurrentPlayer().areWorkerSettled()) { //check current player turn status
+                    if (game.getCurrentPlayer() == game.getPlayers().lastElement()){ //check game turns status
 
                         game.endTurn(game.getCurrentPlayer()); //players.next()
                         virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.moveMessage);
 
-                    }else { //send first placement message to next player
+                    } else { //send first placement message to next player
                         game.endTurn(game.getCurrentPlayer());
                         virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.setFirstWorkerMessage);
                     }
-                }else
+                } else
                     virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
 
             } catch (InvalidMoveException e) {//redo
@@ -97,9 +97,10 @@ public class Controller implements Observer {
                 if (game.noWorkerSettled(game.getCurrentPlayer())){
                     virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setFirstWorkerMessage);
                 }
-                virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
+                else
+                    virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
             }
-        }else //wrong turn
+        } else //wrong turn
             virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
     }
 
@@ -117,8 +118,7 @@ public class Controller implements Observer {
              } catch (InvalidMoveException e) {
                  virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
              }
-
-         }else
+         } else
              virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
     }
 
@@ -127,15 +127,18 @@ public class Controller implements Observer {
      * @param build
      */
     private void performBuild(Build build){
-        if(!game.getPlayers().get(build.getPlayer_ind()).isPlaying()){
+        if (game.getCurrentPlayer().getVirtualViewID() == build.getVirtualViewId()) {
+            build.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
+            try{
+                game.build(build);
+                showAllBoards(); //check current player turn status
+                game.endTurn(game.getCurrentPlayer());
+                virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.moveMessage);
+            } catch (InvalidBuildingException e) {
+                virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.invalidBuildingMessage);
+            }
+        } else
             virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
-            return;
-        }
-        try{
-            game.build(build);
-        } catch (InvalidBuildingException e) {
-            virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.invalidBuildingMessage);
-        }
     }
 
 

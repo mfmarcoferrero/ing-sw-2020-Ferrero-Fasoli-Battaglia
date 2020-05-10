@@ -6,12 +6,11 @@ import java.io.Serializable;
  * Classe utilizzata come messsaggio per notificare costruzioni
  */
 public class Build implements Serializable,Cloneable {
-    private int player_ind, worker_ind, x, y, virtualViewId;
-    private boolean setDome;
+    private int player_ind, x, y, virtualViewId;
+    private boolean setDome, male;
 
-    public Build(int player_ind, int worker_ind, int x, int y, boolean setDome) {
-        this.worker_ind = worker_ind;
-        this.player_ind = player_ind;
+    public Build(boolean male, int x, int y, boolean setDome) {
+        this.male = male;
         this.x = x;
         this.y = y;
         this.setDome = setDome;
@@ -19,10 +18,6 @@ public class Build implements Serializable,Cloneable {
 
     public int getPlayer_ind() {
         return player_ind;
-    }
-
-    public int getWorker_ind() {
-        return worker_ind;
     }
 
     public boolean isSetDome() {
@@ -44,4 +39,13 @@ public class Build implements Serializable,Cloneable {
     public int getY() {
         return y;
     }
+
+    public void setPlayer_ind(int player_ind) {
+        this.player_ind = player_ind;
+    }
+
+    public boolean isMale() {
+        return male;
+    }
+
 }
