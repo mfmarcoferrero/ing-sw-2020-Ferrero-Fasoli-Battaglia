@@ -3,14 +3,17 @@ package it.polimi.ingsw.PSP54.client.view;
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.utils.*;
+import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
+import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Vector;
 
-public class CliView implements Observer {
+public class CliView implements Observer<GameMessage> {
 
 	private final Scanner inputReader = new Scanner(System.in);
 	private final PrintStream output = new PrintStream(System.out);
@@ -378,8 +381,8 @@ public class CliView implements Observer {
 		String name = inputReader.next();
 		output.println("What's your age?");
 		int age = acquireInteger();
-		PlayerMessage playerMessage = new PlayerMessage(name,age,0);
-		client.asyncWriteToSocket(playerMessage);
+		PlayerCredentials playerCredentials = new PlayerCredentials(name,age,0);
+		client.asyncWriteToSocket(playerCredentials);
 	}
 
 	public void acquireNumberOfPlayers() {
@@ -420,11 +423,11 @@ public class CliView implements Observer {
 		boolean found = false;
 
 		if (extractedCards.size() == 1){
-			output.println("You are the last player so you can't choose");
-			client.asyncWriteToSocket(new Choice(cardsValues.get(0)));
+			output.println("You are the last player.");
+			client.asyncWriteToSocket(new CardChoice(cardsValues.get(0)));
 		}
 		else {
-			output.println("Choose your card: (write the name of the card you want)");
+			output.println("Choose your card: [Enter the name of the God]");
 			for (int i = 0; i < cardsName.size(); i++) {
 				output.println((i + 1) + ") " + cardsName.get(i));
 			}
@@ -433,13 +436,13 @@ public class CliView implements Observer {
 			while (!found) {
 				for (int i = 0; i < cardsName.size(); i++) {
 					if (chosenCard.equals(cardsName.get(i))) {
-						client.asyncWriteToSocket(new Choice(cardsValues.get(i)));
+						client.asyncWriteToSocket(new CardChoice(cardsValues.get(i)));
 						found = true;
 						break;
 					}
 				}
 				if (!found) {
-					output.println("Invalid input: (write the name of the card you want)");
+					output.println("Invalid input! [Enter the name of the God]");
 					chosenCard = inputReader.next();
 				}
 			}
@@ -448,15 +451,15 @@ public class CliView implements Observer {
 
 	public void sendWorkerPlacement(boolean male){
 		int [] coordinates = acquireCoordinates();
-		Move move = new Move(male, coordinates[0], coordinates[1]);
-		move.setSetFirstPos(true);
-		client.asyncWriteToSocket(move);
+		MoveChoice moveChoice = new MoveChoice(male, coordinates[0], coordinates[1]);
+		moveChoice.setFirstPlacement(true);
+		client.asyncWriteToSocket(moveChoice);
 	}
 
 	public void sendMove(boolean male){
 		int[] coordinates = acquireCoordinates();
-		Move move = new Move(male, coordinates[0], coordinates[1]);
-		client.asyncWriteToSocket(move);
+		MoveChoice moveChoice = new MoveChoice(male, coordinates[0], coordinates[1]);
+		client.asyncWriteToSocket(moveChoice);
 	}
 
 	public void sendBuild(boolean male, boolean setDome){
@@ -474,5 +477,15 @@ public class CliView implements Observer {
 
 	public void setMaleSelected(boolean maleSelected) {
 		this.maleSelected = maleSelected;
+	}
+
+	/**
+	 * Called whenever the observed object is changed.
+	 *
+	 * @param message an argument passed to the notify method.
+	 */
+	@Override
+	public void update(GameMessage message) {
+
 	}
 }

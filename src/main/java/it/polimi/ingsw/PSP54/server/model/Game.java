@@ -1,14 +1,15 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-import it.polimi.ingsw.PSP54.observer.Observable;
-import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
-import it.polimi.ingsw.PSP54.utils.*;
+import it.polimi.ingsw.PSP54.observer.GameMessageManager;
+import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
+import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 
 
 import java.io.Serializable;
 import java.util.*;
 
-public class Game extends Observable<Object> implements Serializable, Cloneable {
+public class Game extends GameMessageManager implements Serializable, Cloneable {
 
     public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
     public static final int CARD_NUMBER = 5;
@@ -113,9 +114,9 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
     }
 
 
-    synchronized public void chosePower(Choice choice) {
-        GameMessage message = new GameMessage(choice.getVirtualViewID(),GameMessage.cantSelect);
-        switch (choice.getChoiceInt()) {
+    synchronized public void chosePower(CardChoice cardChoice) {
+        GameMessage message = new GameMessage(cardChoice.getVirtualViewID(),GameMessage.cantSelect);
+        switch (cardChoice.getChoiceKey()) {
             case APOLLO:
                 currentPlayer.assignPower(APOLLO);
                 message.setMessage(GameMessage.apolloMessage);
@@ -137,7 +138,7 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
                 message.setMessage(GameMessage.demeterMessage);
                 break;
         }
-        extractedCards.remove(choice.getChoiceInt());
+        extractedCards.remove(cardChoice.getChoiceKey());
         int index = players.indexOf(getCurrentPlayer());
         if (currentPlayer != players.lastElement()) {
             setCurrentPlayer(players.get(index + 1));
@@ -162,20 +163,20 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
 
     /**
      * Sets the initial worker's position on the board.
-     * @param move the message containing information about the Box where the worker is going to be placed.
+     * @param moveChoice the message containing information about the Box where the worker is going to be placed.
      */
-    public void setWorker(Move move) throws InvalidMoveException {
-        players.get(move.getPlayer_ind()).setWorkerPos(players.get(move.getPlayer_ind()).getWorkers()[move.getWorker_ind()], move.getX(), move.getY());
+    public void setWorker(MoveChoice moveChoice) throws InvalidMoveException {
+        players.get(moveChoice.getPlayer_ind()).setWorkerPos(players.get(moveChoice.getPlayer_ind()).getWorkers()[moveChoice.getWorker_ind()], moveChoice.getX(), moveChoice.getY());
         notify(board.clone());
     }
 
     /**
      * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
-     * @param move oggetto che contiene le informazioni per eseguire lo spostamento
+     * @param moveChoice oggetto che contiene le informazioni per eseguire lo spostamento
      */
-    public void move(Move move) throws InvalidMoveException {
-        players.get(move.getPlayer_ind()).turnInit(move.isMale());
-        players.get(move.getPlayer_ind()).move(players.get(move.getPlayer_ind()).getWorkers()[move.getWorker_ind()],board[move.getX()][move.getY()]);
+    public void move(MoveChoice moveChoice) throws InvalidMoveException {
+        players.get(moveChoice.getPlayer_ind()).turnInit(moveChoice.isMale());
+        players.get(moveChoice.getPlayer_ind()).move(players.get(moveChoice.getPlayer_ind()).getWorkers()[moveChoice.getWorker_ind()],board[moveChoice.getX()][moveChoice.getY()]);
         notify(board.clone());
     }
 

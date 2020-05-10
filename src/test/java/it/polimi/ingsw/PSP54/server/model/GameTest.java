@@ -1,7 +1,6 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-import it.polimi.ingsw.PSP54.utils.Choice;
-import it.polimi.ingsw.PSP54.utils.Move;
+import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -110,7 +109,7 @@ public class GameTest {
     @Test
     public void setWorker_SouthWestCorner_CorrectInput() throws InvalidMoveException {
 
-        Move message = new Move(true, 0, 4);
+        MoveChoice message = new MoveChoice(true, 0, 4);
 
         message.setPlayer_ind(0);
         message.setVirtualViewId(0);

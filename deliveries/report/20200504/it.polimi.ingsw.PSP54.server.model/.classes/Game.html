@@ -196,13 +196,13 @@
 <i>122</i>&nbsp;    }
 <i>123</i>&nbsp;
 <i>124</i>&nbsp;
-<i>125</i>&nbsp;    public void chosePower(Choice choice){
+<i>125</i>&nbsp;    public void chosePower(Choice cardChoice){
 <i>126</i>&nbsp;
 <i>127</i>&nbsp;        //assign the power and notify the player
 <b class="fc"><i>128</i>&nbsp;        if (!getExtractedCards().isEmpty()) { //card can be chose</b>
-<b class="fc"><i>129</i>&nbsp;            if (getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()) { //is the right player</b>
+<b class="fc"><i>129</i>&nbsp;            if (getCurrentPlayer().getVirtualViewID() == cardChoice.getVirtualViewID()) { //is the right player</b>
 <b class="fc"><i>130</i>&nbsp;                for (int i = 0; i &lt; getExtractedCards().size(); i++)</b>
-<b class="fc"><i>131</i>&nbsp;                    if (getCardMap().get(getExtractedCards().get(i)).equals(choice.getChoice())) {</b>
+<b class="fc"><i>131</i>&nbsp;                    if (getCardMap().get(getExtractedCards().get(i)).equals(cardChoice.getChoice())) {</b>
 <i>132</i>&nbsp;
 <b class="fc"><i>133</i>&nbsp;                        currentPlayer.assignPower(getExtractedCards().get(i));</b>
 <b class="fc"><i>134</i>&nbsp;                        GameMessage message = new GameMessage(currentPlayer.getVirtualViewID(), null);</b>
@@ -250,11 +250,11 @@
 <i>176</i>&nbsp;                        }
 <i>177</i>&nbsp;                    }
 <i>178</i>&nbsp;            } else {
-<b class="nc"><i>179</i>&nbsp;                GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.wrongTurnMessage);</b>
+<b class="nc"><i>179</i>&nbsp;                GameMessage message = new GameMessage(cardChoice.getVirtualViewID(), GameMessage.wrongTurnMessage);</b>
 <b class="nc"><i>180</i>&nbsp;                notify(message);</b>
 <b class="nc"><i>181</i>&nbsp;            }</b>
 <i>182</i>&nbsp;        }else{
-<b class="nc"><i>183</i>&nbsp;            GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.cantSelect);</b>
+<b class="nc"><i>183</i>&nbsp;            GameMessage message = new GameMessage(cardChoice.getVirtualViewID(), GameMessage.cantSelect);</b>
 <b class="nc"><i>184</i>&nbsp;            notify(message);</b>
 <i>185</i>&nbsp;        }
 <b class="fc"><i>186</i>&nbsp;    }</b>
@@ -265,9 +265,9 @@
 <b class="nc"><i>191</i>&nbsp;        notify(firstPlacement);</b>
 <b class="nc"><i>192</i>&nbsp;    }</b>
 <i>193</i>&nbsp;
-<i>194</i>&nbsp;    public void choseWorker(Choice choice){
-<b class="nc"><i>195</i>&nbsp;        if (choice.getVirtualViewID() == currentPlayer.getVirtualViewID()){</b>
-<b class="nc"><i>196</i>&nbsp;            currentPlayer.choseWorker(choice.getChoice().equals(&quot;m&quot;));</b>
+<i>194</i>&nbsp;    public void choseWorker(Choice cardChoice){
+<b class="nc"><i>195</i>&nbsp;        if (cardChoice.getVirtualViewID() == currentPlayer.getVirtualViewID()){</b>
+<b class="nc"><i>196</i>&nbsp;            currentPlayer.choseWorker(cardChoice.getChoice().equals(&quot;m&quot;));</b>
 <b class="nc"><i>197</i>&nbsp;            int index = players.indexOf(getCurrentPlayer());</b>
 <b class="nc"><i>198</i>&nbsp;            if (index &lt; players.indexOf(players.lastElement())) {</b>
 <b class="nc"><i>199</i>&nbsp;                setCurrentPlayer(players.get(index + 1));</b>
@@ -277,7 +277,7 @@
 <i>203</i>&nbsp;                //START GAME
 <i>204</i>&nbsp;            }
 <b class="nc"><i>205</i>&nbsp;        }else {</b>
-<b class="nc"><i>206</i>&nbsp;            GameMessage message = new GameMessage(choice.getVirtualViewID(), GameMessage.wrongTurnMessage);</b>
+<b class="nc"><i>206</i>&nbsp;            GameMessage message = new GameMessage(cardChoice.getVirtualViewID(), GameMessage.wrongTurnMessage);</b>
 <b class="nc"><i>207</i>&nbsp;            notify(message);</b>
 <i>208</i>&nbsp;        }
 <b class="nc"><i>209</i>&nbsp;    }</b>
@@ -286,10 +286,10 @@
 <i>212</i>&nbsp;
 <i>213</i>&nbsp;    /**
 <i>214</i>&nbsp;     * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
-<i>215</i>&nbsp;     * @param move oggetto che contiene le informazioni per eseguire lo spostamento
+<i>215</i>&nbsp;     * @param moveChoice oggetto che contiene le informazioni per eseguire lo spostamento
 <i>216</i>&nbsp;     */
-<i>217</i>&nbsp;    public void move(Move move) throws InvalidMoveException {
-<b class="nc"><i>218</i>&nbsp;        players.get(move.getPlayer_ind()).move(players.get(move.getPlayer_ind()).getWorkers()[move.getPlayer_ind()],board[move.getX()][move.getY()]);</b>
+<i>217</i>&nbsp;    public void moveChoice(Move moveChoice) throws InvalidMoveException {
+<b class="nc"><i>218</i>&nbsp;        players.get(moveChoice.getPlayer_ind()).moveChoice(players.get(moveChoice.getPlayer_ind()).getWorkers()[moveChoice.getPlayer_ind()],board[moveChoice.getX()][moveChoice.getY()]);</b>
 <b class="nc"><i>219</i>&nbsp;        notify(board.clone());</b>
 <b class="nc"><i>220</i>&nbsp;    }</b>
 <i>221</i>&nbsp;
@@ -304,10 +304,10 @@
 <i>230</i>&nbsp;
 <i>231</i>&nbsp;    /**
 <i>232</i>&nbsp;     * Sets the initial worker&#39;s position on the board.
-<i>233</i>&nbsp;     * @param move the message containing information about the Box where the worker is going to be placed.
+<i>233</i>&nbsp;     * @param moveChoice the message containing information about the Box where the worker is going to be placed.
 <i>234</i>&nbsp;     */
-<i>235</i>&nbsp;    public void setWorker(Move move){
-<b class="nc"><i>236</i>&nbsp;        players.get(move.getPlayer_ind()).setWorkerPos(players.get(move.getPlayer_ind()).getWorkers()[move.getPlayer_ind()], move.getX(), move.getY());</b>
+<i>235</i>&nbsp;    public void setWorker(Move moveChoice){
+<b class="nc"><i>236</i>&nbsp;        players.get(moveChoice.getPlayer_ind()).setWorkerPos(players.get(moveChoice.getPlayer_ind()).getWorkers()[moveChoice.getPlayer_ind()], moveChoice.getX(), moveChoice.getY());</b>
 <b class="nc"><i>237</i>&nbsp;        notify(board.clone());</b>
 <b class="nc"><i>238</i>&nbsp;    }</b>
 <i>239</i>&nbsp;

@@ -245,10 +245,10 @@
 <i>171</i>&nbsp;
 <i>172</i>&nbsp;    /**
 <i>173</i>&nbsp;     * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
-<i>174</i>&nbsp;     * @param move oggetto che contiene le informazioni per eseguire lo spostamento
+<i>174</i>&nbsp;     * @param moveChoice oggetto che contiene le informazioni per eseguire lo spostamento
 <i>175</i>&nbsp;     */
-<i>176</i>&nbsp;    public void move(Move move) throws InvalidMoveException {
-<b class="nc"><i>177</i>&nbsp;        players.get(move.getPlayer_ind()).move(players.get(move.getPlayer_ind()).getWorkers()[move.getPlayer_ind()],board[move.getX()][move.getY()]);</b>
+<i>176</i>&nbsp;    public void moveChoice(Move moveChoice) throws InvalidMoveException {
+<b class="nc"><i>177</i>&nbsp;        players.get(moveChoice.getPlayer_ind()).moveChoice(players.get(moveChoice.getPlayer_ind()).getWorkers()[moveChoice.getPlayer_ind()],board[moveChoice.getX()][moveChoice.getY()]);</b>
 <b class="nc"><i>178</i>&nbsp;        notify(board.clone());</b>
 <b class="nc"><i>179</i>&nbsp;    }</b>
 <i>180</i>&nbsp;
@@ -263,10 +263,10 @@
 <i>189</i>&nbsp;
 <i>190</i>&nbsp;    /**
 <i>191</i>&nbsp;     * Sets the initial worker&#39;s position on the board.
-<i>192</i>&nbsp;     * @param move the message containing information about the Box where the worker is going to be placed.
+<i>192</i>&nbsp;     * @param moveChoice the message containing information about the Box where the worker is going to be placed.
 <i>193</i>&nbsp;     */
-<i>194</i>&nbsp;    public void setWorker(Move move){
-<b class="nc"><i>195</i>&nbsp;        players.get(move.getPlayer_ind()).setWorkerPos(players.get(move.getPlayer_ind()).getWorkers()[move.getPlayer_ind()], move.getX(), move.getY());</b>
+<i>194</i>&nbsp;    public void setWorker(Move moveChoice){
+<b class="nc"><i>195</i>&nbsp;        players.get(moveChoice.getPlayer_ind()).setWorkerPos(players.get(moveChoice.getPlayer_ind()).getWorkers()[moveChoice.getPlayer_ind()], moveChoice.getX(), moveChoice.getY());</b>
 <b class="nc"><i>196</i>&nbsp;        notify(board.clone());</b>
 <b class="nc"><i>197</i>&nbsp;    }</b>
 <i>198</i>&nbsp;

@@ -122,13 +122,13 @@
 <b class="fc"><i>48</i>&nbsp;    }</b>
 <i>49</i>&nbsp;
 <i>50</i>&nbsp;    /**
-<i>51</i>&nbsp;     * If valid performs move and modify action tokes
-<i>52</i>&nbsp;     * @param worker selected worker which the player wants to move
+<i>51</i>&nbsp;     * If valid performs moveChoice and modify action tokes
+<i>52</i>&nbsp;     * @param worker selected worker which the player wants to moveChoice
 <i>53</i>&nbsp;     * @param dest selected destination box
-<i>54</i>&nbsp;     * @throws InvalidMoveException if the move can&#39;t be done
+<i>54</i>&nbsp;     * @throws InvalidMoveException if the moveChoice can&#39;t be done
 <i>55</i>&nbsp;     */
 <i>56</i>&nbsp;    @Override
-<i>57</i>&nbsp;    public void move(Worker worker, Box dest) throws InvalidMoveException {
+<i>57</i>&nbsp;    public void moveChoice(Worker worker, Box dest) throws InvalidMoveException {
 <i>58</i>&nbsp;
 <b class="fc"><i>59</i>&nbsp;        ArrayList&lt;Box&gt; valid = worker.getBoxesToMove();</b>
 <b class="fc"><i>60</i>&nbsp;        int currentMoveToken = worker.getMoveToken();</b>
@@ -143,7 +143,7 @@
 <b class="fc"><i>69</i>&nbsp;                this.assignAthenaSideEffect(getGame().getPlayers());</b>
 <b class="fc"><i>70</i>&nbsp;                movedUp = true;</b>
 <i>71</i>&nbsp;            }
-<b class="fc"><i>72</i>&nbsp;            super.move(worker, dest);</b>
+<b class="fc"><i>72</i>&nbsp;            super.moveChoice(worker, dest);</b>
 <i>73</i>&nbsp;
 <b class="nc"><i>74</i>&nbsp;        }else throw new InvalidMoveException();</b>
 <i>75</i>&nbsp;

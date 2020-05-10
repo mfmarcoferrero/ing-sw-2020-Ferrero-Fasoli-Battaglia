@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.server.controller.Controller;
 import it.polimi.ingsw.PSP54.server.model.Game;
-import it.polimi.ingsw.PSP54.utils.PlayerMessage;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 
 import java.io.IOException;
@@ -20,8 +20,8 @@ public class Server {
     private ExecutorService executor = Executors.newCachedThreadPool();
 
     private List<Connection> connections = new ArrayList<>();
-    private Map<PlayerMessage, Connection> lobbyBuffer = new HashMap<>(0);
-    private Map<PlayerMessage, Connection> waitingConnection = new HashMap<>();
+    private Map<PlayerCredentials, Connection> lobbyBuffer = new HashMap<>(0);
+    private Map<PlayerCredentials, Connection> waitingConnection = new HashMap<>();
     private Vector<Connection> playingConnection = new Vector<>(0,1);
     private Vector<VirtualView> virtualViews = new Vector<>(0, 1);
     protected Vector<Connection> currentConnections = new Vector<>(0,1);
@@ -65,7 +65,7 @@ public class Server {
      * @param c refernce to client
      * @param p reference to in game player associated to client
      */
-    public synchronized void lobby(Connection c, PlayerMessage p) {
+    public synchronized void lobby(Connection c, PlayerCredentials p) {
 
         if (numberOfPlayers < 2 || numberOfPlayers > 3)
             lobbyBuffer.put(p, c);
@@ -77,7 +77,7 @@ public class Server {
                 freeBuffer(lobbyBuffer);
 
             if (waitingConnection.size() == numberOfPlayers ) {
-                List<PlayerMessage> keys = new ArrayList<>(waitingConnection.keySet());
+                List<PlayerCredentials> keys = new ArrayList<>(waitingConnection.keySet());
 
                 for (int i = 0; i < keys.size(); i++) {
                     Connection client = waitingConnection.get(keys.get(i));
@@ -151,8 +151,8 @@ public class Server {
         this.numberOfPlayers = numberOfPlayers;
     }
 
-    private void freeBuffer(Map<PlayerMessage, Connection> buffer){
-        Vector<PlayerMessage> bufferKeys= new Vector<>(buffer.keySet());
+    private void freeBuffer(Map<PlayerCredentials, Connection> buffer){
+        Vector<PlayerCredentials> bufferKeys= new Vector<>(buffer.keySet());
         Vector<Connection> bufferValues = new Vector<>(buffer.values());
         while (waitingConnection.size()<numberOfPlayers && lobbyBuffer.size()>0){
             waitingConnection.put(bufferKeys.get(0),bufferValues.get(0));

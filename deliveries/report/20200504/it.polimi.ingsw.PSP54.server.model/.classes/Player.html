@@ -72,7 +72,7 @@
 <i>34</i>&nbsp;    Worker turnInit(Boolean male);
 <i>35</i>&nbsp;
 <i>36</i>&nbsp;    /**
-<i>37</i>&nbsp;     * Sets standard available boxes for the worker to move and stores them in worker&#39;s attribute
+<i>37</i>&nbsp;     * Sets standard available boxes for the worker to moveChoice and stores them in worker&#39;s attribute
 <i>38</i>&nbsp;     * @param worker current worker in use
 <i>39</i>&nbsp;     * @return the vector containing available boxes
 <i>40</i>&nbsp;     */
@@ -86,16 +86,16 @@
 <i>48</i>&nbsp;    ArrayList&lt;Box&gt; setWorkerBoxesToBuild(Worker worker);
 <i>49</i>&nbsp;
 <i>50</i>&nbsp;    /**
-<i>51</i>&nbsp;     * Standard move action
-<i>52</i>&nbsp;     * @param worker selected worker which the player wants to move
+<i>51</i>&nbsp;     * Standard moveChoice action
+<i>52</i>&nbsp;     * @param worker selected worker which the player wants to moveChoice
 <i>53</i>&nbsp;     * @param dest selected destination box
-<i>54</i>&nbsp;     * @throws InvalidMoveException if the move can&#39;t be done
+<i>54</i>&nbsp;     * @throws InvalidMoveException if the moveChoice can&#39;t be done
 <i>55</i>&nbsp;     */
-<i>56</i>&nbsp;    void move(Worker worker, Box dest) throws InvalidMoveException;
+<i>56</i>&nbsp;    void moveChoice(Worker worker, Box dest) throws InvalidMoveException;
 <i>57</i>&nbsp;
 <i>58</i>&nbsp;    /**
 <i>59</i>&nbsp;     *Standard build action
-<i>60</i>&nbsp;     * @param worker selected worker which the player wants to move
+<i>60</i>&nbsp;     * @param worker selected worker which the player wants to moveChoice
 <i>61</i>&nbsp;     * @param dest selected box where to build
 <i>62</i>&nbsp;     */
 <i>63</i>&nbsp;    void build(Worker worker, Box dest) throws InvalidBuildingException;

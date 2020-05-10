@@ -74,7 +74,7 @@
 
 <div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP54.server.model;
 <i>2</i>&nbsp;
-<i>3</i>&nbsp;import it.polimi.ingsw.PSP54.utils.GameMessage;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 <i>4</i>&nbsp;
 <i>5</i>&nbsp;import java.util.ArrayList;
 <i>6</i>&nbsp;
@@ -196,7 +196,7 @@
 <i>122</i>&nbsp;    }
 <i>123</i>&nbsp;
 <i>124</i>&nbsp;    /**
-<i>125</i>&nbsp;     * Sets available boxes for the worker to move and stores them in worker&#39;s attribute
+<i>125</i>&nbsp;     * Sets available boxes for the worker to moveChoice and stores them in worker&#39;s attribute
 <i>126</i>&nbsp;     * @param worker current worker in use
 <i>127</i>&nbsp;     * @return the vector containing available boxes
 <i>128</i>&nbsp;     */
@@ -246,13 +246,13 @@
 <i>172</i>&nbsp;    }
 <i>173</i>&nbsp;
 <i>174</i>&nbsp;    /**
-<i>175</i>&nbsp;     * If valid performs move and modify action tokes
-<i>176</i>&nbsp;     * @param worker selected worker which the player wants to move
+<i>175</i>&nbsp;     * If valid performs moveChoice and modify action tokes
+<i>176</i>&nbsp;     * @param worker selected worker which the player wants to moveChoice
 <i>177</i>&nbsp;     * @param dest selected destination box
-<i>178</i>&nbsp;     * @throws InvalidMoveException if the move can&#39;t be done
+<i>178</i>&nbsp;     * @throws InvalidMoveException if the moveChoice can&#39;t be done
 <i>179</i>&nbsp;     */
 <i>180</i>&nbsp;    @Override
-<i>181</i>&nbsp;    public void move(Worker worker, Box dest) throws InvalidMoveException{
+<i>181</i>&nbsp;    public void moveChoice(Worker worker, Box dest) throws InvalidMoveException{
 <i>182</i>&nbsp;
 <b class="fc"><i>183</i>&nbsp;        ArrayList&lt;Box&gt; valid = worker.getBoxesToMove();</b>
 <b class="fc"><i>184</i>&nbsp;        int currentMoveToken = worker.getMoveToken();</b>
@@ -261,7 +261,7 @@
 <b class="fc"><i>187</i>&nbsp;        if (currentMoveToken &gt; 0 &amp;&amp; valid.contains(dest)){</b>
 <i>188</i>&nbsp;            //free current box
 <b class="fc"><i>189</i>&nbsp;            worker.getPos().setWorker(null);</b>
-<i>190</i>&nbsp;            //perform move
+<i>190</i>&nbsp;            //perform moveChoice
 <b class="fc"><i>191</i>&nbsp;            worker.setPos(dest);</b>
 <b class="fc"><i>192</i>&nbsp;            dest.setWorker(worker);</b>
 <i>193</i>&nbsp;            //set tokens
@@ -278,7 +278,7 @@
 <i>204</i>&nbsp;
 <i>205</i>&nbsp;    /**
 <i>206</i>&nbsp;     *If valid performs build and modify action tokens
-<i>207</i>&nbsp;     * @param worker selected worker which the player wants to move
+<i>207</i>&nbsp;     * @param worker selected worker which the player wants to moveChoice
 <i>208</i>&nbsp;     * @param dest selected box where to build
 <i>209</i>&nbsp;     */
 <i>210</i>&nbsp;    @Override

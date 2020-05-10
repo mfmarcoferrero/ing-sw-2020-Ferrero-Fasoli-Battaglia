@@ -1,14 +1,13 @@
 package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.observer.*;
-import it.polimi.ingsw.PSP54.utils.GameMessage;
-import it.polimi.ingsw.PSP54.utils.PlayerMessage;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Connection extends Observable implements Runnable {
 
@@ -104,7 +103,7 @@ public class Connection extends Observable implements Runnable {
             out = new ObjectOutputStream(socket.getOutputStream());
             asyncSend(GameMessage.welcomeMessage);
             in = new ObjectInputStream(socket.getInputStream());
-            PlayerMessage player = (PlayerMessage) in.readObject();
+            PlayerCredentials player = (PlayerCredentials) in.readObject();
             if(gameMaster || this == server.currentConnections.firstElement()) {
                 send(GameMessage.setNumberOfPlayersMessage);
                 numberOfPlayers = (int) in.readObject();

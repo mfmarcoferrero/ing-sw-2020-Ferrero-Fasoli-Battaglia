@@ -3,7 +3,10 @@ package it.polimi.ingsw.PSP54.server.controller;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.*;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
-import it.polimi.ingsw.PSP54.utils.*;
+import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
+import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 
 import java.util.ArrayList;
 
@@ -57,26 +60,26 @@ public class Controller implements Observer {
 
     /**
      * Invokes model's methods to perform, if possible, the card's assignment.
-     * @param choice the message containing informations regarding the assignment.
+     * @param cardChoice the message containing informations regarding the assignment.
      */
-    private void performCardChoice(Choice choice) {
-        if (game.getCurrentPlayer().getVirtualViewID() == choice.getVirtualViewID()) {
-            game.chosePower(choice);
+    private void performCardChoice(CardChoice cardChoice) {
+        if (game.getCurrentPlayer().getVirtualViewID() == cardChoice.getVirtualViewID()) {
+            game.chosePower(cardChoice);
             displayCards();
         } else
-            virtualViewList.get(choice.getVirtualViewID()).showMessage(GameMessage.wrongTurnMessage);
+            virtualViewList.get(cardChoice.getVirtualViewID()).showMessage(GameMessage.wrongTurnMessage);
     }
 
     /**
      *Invokes model's methods to perform, if possible, the settlement of the workers.
-     * @param move the message containing informations regarding which worker and where is going to be settled.
+     * @param moveChoice the message containing informations regarding which worker and where is going to be settled.
      */
-    private void performWorkerSet(Move move){
+    private void performWorkerSet(MoveChoice moveChoice){
 
-        if (game.getCurrentPlayer().getVirtualViewID() == move.getVirtualViewId()) {
-            move.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));//fills the message informations
+        if (game.getCurrentPlayer().getVirtualViewID() == moveChoice.getVirtualViewId()) {
+            moveChoice.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));//fills the message informations
             try {
-                game.setWorker(move); //perform actual placement
+                game.setWorker(moveChoice); //perform actual placement
                 showAllBoards();
 
                 if (game.getCurrentPlayer().areWorkerSettled()) { //check current player turn status
@@ -90,35 +93,35 @@ public class Controller implements Observer {
                         virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.setFirstWorkerMessage);
                     }
                 } else
-                    virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
+                    virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
 
             } catch (InvalidMoveException e) {//redo
-                virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongPlacementMessage);
+                virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.wrongPlacementMessage);
                 if (game.noWorkerPlaced(game.getCurrentPlayer())){
-                    virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setFirstWorkerMessage);
+                    virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.setFirstWorkerMessage);
                 }
-                virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
+                virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
             }
         } else //wrong turn
-            virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
+            virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
     }
 
     /**
      * Metodo per effettuare una mossa
-     * @param move
+     * @param moveChoice
      */
-     private void performMove(Move move){
-         if (game.getCurrentPlayer().getVirtualViewID() == move.getVirtualViewId()) {
-             move.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
+     private void performMove(MoveChoice moveChoice){
+         if (game.getCurrentPlayer().getVirtualViewID() == moveChoice.getVirtualViewId()) {
+             moveChoice.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
              try {
-                 game.move(move); //perform actual move
+                 game.move(moveChoice); //perform actual move
                  showAllBoards();
-                 virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.buildMessage);
+                 virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.buildMessage);
              } catch (InvalidMoveException e) {
-                 virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
+                 virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
              }
          } else
-             virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
+             virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
     }
 
     /**
@@ -145,7 +148,7 @@ public class Controller implements Observer {
      * Metodo per inserire un giocatore nel model
      * @param p
      */
-    private void addPlayer (PlayerMessage p) {
+    private void addPlayer (PlayerCredentials p) {
         game.newPlayer(p.getPlayerName(), p.getAge(), p.getVirtualViewID());
     }
 

@@ -4,7 +4,9 @@ import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.utils.*;
+import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
+import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 
 
 public class VirtualView extends Observable<Object> implements Observer {
@@ -14,7 +16,7 @@ public class VirtualView extends Observable<Object> implements Observer {
     private final int id;
     private Connection connection;
     private MessageReceiver messageReceiver;
-    private PlayerMessage player;
+    private PlayerCredentials player;
     private String opponent;
 
     /**
@@ -23,7 +25,7 @@ public class VirtualView extends Observable<Object> implements Observer {
      * @param p
      * @param connection
      */
-    public VirtualView(int id, PlayerMessage p, Connection connection, String opponent) {
+    public VirtualView(int id, PlayerCredentials p, Connection connection, String opponent) {
         this.id = id;
         this.connection = connection;
         this.messageReceiver = new MessageReceiver(this.connection,this);
@@ -39,7 +41,7 @@ public class VirtualView extends Observable<Object> implements Observer {
      * @param p
      * @param connection
      */
-    public VirtualView(int id, PlayerMessage p, Connection connection, String opponent1, String opponent2) {
+    public VirtualView(int id, PlayerCredentials p, Connection connection, String opponent1, String opponent2) {
         this.id = id;
         this.connection = connection;
         this.messageReceiver = new MessageReceiver(this.connection,this);
@@ -57,7 +59,7 @@ public class VirtualView extends Observable<Object> implements Observer {
         notify(player);
     }
     
-    public void selectCard(Choice message) {
+    public void selectCard(CardChoice message) {
         notify(message);
     }
 
@@ -69,10 +71,10 @@ public class VirtualView extends Observable<Object> implements Observer {
     /**
      * Notifica il controller con un oggetto di tipo Move verificando che la mossa
      * non sia un set iniziale di un worker
-     * @param move
+     * @param moveChoice
      */
-    public void handleMove(Move move) {
-        notify(move);
+    public void handleMove(MoveChoice moveChoice) {
+        notify(moveChoice);
     }
 
     /**

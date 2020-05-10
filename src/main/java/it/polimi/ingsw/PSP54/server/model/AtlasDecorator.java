@@ -1,6 +1,6 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-import it.polimi.ingsw.PSP54.utils.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 
 /**
  * Your worker can build a dome on every level
