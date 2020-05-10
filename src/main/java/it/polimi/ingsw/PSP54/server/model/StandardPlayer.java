@@ -91,7 +91,9 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         if (!getGame().getBoard()[x][y].isOccupied()) {
             worker.setPos(getGame().getBoard()[x][y]);
             getGame().getBoard()[x][y].setWorker(worker);
-        }else
+            setWorkerBoxesToMove(worker);
+            setWorkerBoxesToBuild(worker);
+        } else
             throw new InvalidMoveException();
     }
 
@@ -165,7 +167,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      */
     @Override
     public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){
-
         ArrayList<Box> boxes = new ArrayList<>();
         int deltaX, deltaY;
         Box[][] board = getGame().getBoard();
@@ -178,7 +179,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                     boxes.add(board[i][j]);
             }
         }
-
         worker.setBoxesToBuild(boxes);
         return boxes;
     }
@@ -192,6 +192,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException{
 
+        setWorkerBoxesToMove(worker);
         ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
 
@@ -203,9 +204,10 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             worker.setPos(dest);
             dest.setWorker(worker);
             //set tokens
-            worker.setMoveToken(currentMoveToken-1);
-
+            worker.setMoveToken(currentMoveToken - 1);
             worker.setBuildToken(1);
+            setWorkerBoxesToMove(worker);
+            setWorkerBoxesToBuild(worker);
 
         } else throw new InvalidMoveException();
 
@@ -219,20 +221,22 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public void build (Worker worker, Box dest) throws InvalidBuildingException{
 
-        worker.setBoxesToBuild(setWorkerBoxesToBuild(worker));
         ArrayList<Box> valid = worker.getBoxesToBuild();
         int currentBuildToken = worker.getBuildToken();
 
-        if (currentBuildToken > 0 && valid.contains(dest)){
+        if (currentBuildToken > 0 && valid.contains(dest)) {
             if (dest.getLevel() == 3)
                 dest.setDome(true);
             else {
                 int currentLevel = dest.getLevel();
                 dest.setLevel(currentLevel+1);
             }
-
             worker.setBuildToken(currentBuildToken - 1);
-        } else throw new InvalidBuildingException();
+            setWorkerBoxesToMove(worker);
+            setWorkerBoxesToBuild(worker);
+        }
+        else
+            throw new InvalidBuildingException();
     }
 
     /*@Override

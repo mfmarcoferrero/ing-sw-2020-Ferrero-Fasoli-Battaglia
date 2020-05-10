@@ -80,9 +80,7 @@ public class VirtualView extends Observable<Object> implements Observer {
      * @param build
      */
     public void handleBuild(Build build) {
-        while (!buildDone) {
-            notify(build);
-        }
+        notify(build);
     }
 
     public void setMoveDone(boolean moveDone) {
