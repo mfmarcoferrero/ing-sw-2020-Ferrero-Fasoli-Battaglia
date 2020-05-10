@@ -158,48 +158,4 @@ public class Controller implements Observer {
         }
     }
 
-    @Override
-    public void update(Move message) {
-        if (message.isSetFirstPos()) {
-            performWorkerSet(message);
-        }
-        if (!message.isSetFirstPos()){
-            performMove(message);
-        }
-    }
-
-    @Override
-    public void update(Build message){
-        performBuild(message);
-    }
-
-    @Override
-    public void update(PlayerMessage message){
-        addPlayer(message);
-    }
-
-    @Override
-    public void update(Choice message) {
-        performCardChoice(message);
-    }
-
-    @Override
-    public void update(String message){
-
-    }
-
-    @Override
-    public void update(Box[][] message) {
-
-    }
-
-    @Override
-    public void update(GameMessage message) {
-
-    }
-
-    @Override
-    public void update(CardsToDisplay message) {
-
-    }
 }
