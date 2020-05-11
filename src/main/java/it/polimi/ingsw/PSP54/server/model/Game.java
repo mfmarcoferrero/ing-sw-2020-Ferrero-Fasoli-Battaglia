@@ -1,15 +1,20 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-import it.polimi.ingsw.PSP54.observer.GameMessageManager;
+import it.polimi.ingsw.PSP54.observer.Observable;
+import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
+import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
 import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
+import it.polimi.ingsw.PSP54.utils.messages.BoardMessage;
+import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 
 import java.io.Serializable;
 import java.util.*;
 
-public class Game extends GameMessageManager implements Serializable, Cloneable {
+public class Game extends Observable<GameMessage> implements Serializable, Cloneable {
 
     public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
     public static final int CARD_NUMBER = 5;
@@ -46,7 +51,6 @@ public class Game extends GameMessageManager implements Serializable, Cloneable 
     public void newPlayer(String name){
         Player player = new StandardPlayer(name);
         players.add(player);
-        notify(board.clone());
     }
 
     /**
@@ -59,7 +63,6 @@ public class Game extends GameMessageManager implements Serializable, Cloneable 
         Player player = new StandardPlayer(name, age, virtualViewId);
         player.setGame(this);
         players.add(player);
-        notify(board.clone());
     }
 
     /**
@@ -113,9 +116,24 @@ public class Game extends GameMessageManager implements Serializable, Cloneable 
         }
     }
 
+    /**
+     * Show cards that can be chosen to current player.
+     */
+    public void displayCards () {
+        if (!isPowersSet()) {
+            GameMessage cards = new CardsMessage(currentPlayer.getVirtualViewID(), getExtractedCards());
+            notify(cards);
+        }
+        else {
+            GameMessage board = new BoardMessage(null, getBoard().clone());
+            notify(board);
+        }
+    }
 
-    synchronized public void chosePower(CardChoice cardChoice) {
-        GameMessage message = new GameMessage(cardChoice.getVirtualViewID(),GameMessage.cantSelect);
+
+    /*synchronized public void chosePower(PlayerAction card) {
+        GameMessage message = new StringMessage(card.getVirtualViewID(),StringMessage.cantSelect);
+        CardChoice cardChoice = (CardChoice) card.getChoice();
         switch (cardChoice.getChoiceKey()) {
             case APOLLO:
                 currentPlayer.assignPower(APOLLO);
@@ -138,7 +156,7 @@ public class Game extends GameMessageManager implements Serializable, Cloneable 
                 message.setMessage(GameMessage.demeterMessage);
                 break;
         }
-        extractedCards.remove(cardChoice.getChoiceKey());
+        extractedCards.remove(card.getChoiceKey());
         int index = players.indexOf(getCurrentPlayer());
         if (currentPlayer != players.lastElement()) {
             setCurrentPlayer(players.get(index + 1));
@@ -147,7 +165,7 @@ public class Game extends GameMessageManager implements Serializable, Cloneable 
             setCurrentPlayer(players.get(0));
         }
         notify(message);
-    }
+    }*/
 
     /**
      * Determines whether a player has placed no workers
@@ -155,39 +173,39 @@ public class Game extends GameMessageManager implements Serializable, Cloneable 
      * @param player the current player.
      * @return true if no worker has been placed, false otherwise.
      */
-    public boolean noWorkerPlaced(Player player){
+    /*public boolean noWorkerPlaced(Player player){
 
         return (player.getWorkers()[0].getPos() == null
                 && player.getWorkers()[1].getPos() == null);
-    }
+    }*/
 
     /**
      * Sets the initial worker's position on the board.
      * @param moveChoice the message containing information about the Box where the worker is going to be placed.
      */
-    public void setWorker(MoveChoice moveChoice) throws InvalidMoveException {
+    /*public void setWorker(MoveChoice moveChoice) throws InvalidMoveException {
         players.get(moveChoice.getPlayer_ind()).setWorkerPos(players.get(moveChoice.getPlayer_ind()).getWorkers()[moveChoice.getWorker_ind()], moveChoice.getX(), moveChoice.getY());
         notify(board.clone());
-    }
+    }*/
 
     /**
      * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
      * @param moveChoice oggetto che contiene le informazioni per eseguire lo spostamento
      */
-    public void move(MoveChoice moveChoice) throws InvalidMoveException {
+    /*public void move(MoveChoice moveChoice) throws InvalidMoveException {
         players.get(moveChoice.getPlayer_ind()).turnInit(moveChoice.isMale());
         players.get(moveChoice.getPlayer_ind()).move(players.get(moveChoice.getPlayer_ind()).getWorkers()[moveChoice.getWorker_ind()],board[moveChoice.getX()][moveChoice.getY()]);
         notify(board.clone());
-    }
+    }*/
 
     /**
      * Metodo per chiamare la costruzione e restituire alla view la board che ha subito il cambiamento
      * @param build oggetto che contiene le informazioni per costruire
      */
-    public void build (Build build) throws InvalidBuildingException {
+    /*public void build (Build build) throws InvalidBuildingException {
         players.get(build.getPlayer_ind()).build(players.get(build.getPlayer_ind()).getWorkers()[build.getPlayer_ind()],board[build.getX()][build.getY()]);
         notify(board.clone());
-    }
+    }*/
 
     /**
      *

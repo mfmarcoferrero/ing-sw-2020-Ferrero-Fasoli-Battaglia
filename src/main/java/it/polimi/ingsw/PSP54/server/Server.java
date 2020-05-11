@@ -3,6 +3,8 @@ package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.server.controller.Controller;
 import it.polimi.ingsw.PSP54.server.model.Game;
+import it.polimi.ingsw.PSP54.utils.PlayerAction;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 
@@ -77,32 +79,34 @@ public class Server {
                 freeBuffer(lobbyBuffer);
 
             if (waitingConnection.size() == numberOfPlayers ) {
-                List<PlayerCredentials> keys = new ArrayList<>(waitingConnection.keySet());
+                List<PlayerCredentials> credentialsChoices = new ArrayList<>(waitingConnection.keySet());
+                List<PlayerAction> playersCredentials = new ArrayList<>();
 
-                for (int i = 0; i < keys.size(); i++) {
-                    Connection client = waitingConnection.get(keys.get(i));
-                    currentConnections.remove(waitingConnection.get(keys.get(i)));
-                    keys.get(i).setVirtualViewID(i);
+                for (int i = 0; i < credentialsChoices.size(); i++) {
+                    Connection client = waitingConnection.get(credentialsChoices.get(i));
+                    currentConnections.remove(waitingConnection.get(credentialsChoices.get(i)));
+                    PlayerAction credentials = new PlayerAction(i, credentialsChoices.get(i));
+                    playersCredentials.add(credentials);
 
                     //initialize a VirtualView for each player, manage dispatching depending on numberOfPlayers
                     if (i == 0) {
                         VirtualView virtualView;
                         if (numberOfPlayers == 2) {
-                            virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName());
+                            virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i + 1).getPlayerName());
                         } else { //numberOfPlayers == 3
-                            virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName(), keys.get(i + 2).getPlayerName());
+                            virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i + 1).getPlayerName(), credentialsChoices.get(i + 2).getPlayerName());
                         }
                         virtualViews.add(i, virtualView);
                     } else if (i == 1) {
                         VirtualView virtualView;
                         if (numberOfPlayers == 2) {
-                            virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName());
+                            virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i - 1).getPlayerName());
                         } else {
-                            virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName(), keys.get(i + 1).getPlayerName());
+                            virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i - 1).getPlayerName(), credentialsChoices.get(i + 1).getPlayerName());
                         }
                         virtualViews.add(i, virtualView);
                     } else {
-                        VirtualView virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 2).getPlayerName(), keys.get(i - 1).getPlayerName());
+                        VirtualView virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i - 2).getPlayerName(), credentialsChoices.get(i - 1).getPlayerName());
                         virtualViews.add(i, virtualView);
                     }
                     playingConnection.add(client);
@@ -147,10 +151,6 @@ public class Server {
         }
     }
 
-    public void setNumberOfPlayers(int numberOfPlayers) {
-        this.numberOfPlayers = numberOfPlayers;
-    }
-
     private void freeBuffer(Map<PlayerCredentials, Connection> buffer){
         Vector<PlayerCredentials> bufferKeys= new Vector<>(buffer.keySet());
         Vector<Connection> bufferValues = new Vector<>(buffer.values());
@@ -168,5 +168,9 @@ public class Server {
             bufferValues.remove(0);
             bufferKeys.remove(0);
         }
+    }
+
+    public void setNumberOfPlayers(int numberOfPlayers) {
+        this.numberOfPlayers = numberOfPlayers;
     }
 }

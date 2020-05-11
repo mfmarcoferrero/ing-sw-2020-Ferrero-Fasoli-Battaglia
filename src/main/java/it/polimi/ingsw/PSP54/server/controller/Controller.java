@@ -6,6 +6,7 @@ import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
 import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 
@@ -37,45 +38,26 @@ public class Controller implements Observer<PlayerAction> {
         game.sortPlayers();
         game.assignColors();
         game.extractCards();
-        displayCards();
-    }
-
-    /**
-     * Show cards that can be chosen to current player.
-     */
-    private void displayCards () {
-        if (!game.isPowersSet()) {
-            CardsToDisplay cards = new CardsToDisplay();
-            cards.setExtractedCards(game.getExtractedCards());
-            virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(cards);
-        }
-        else {
-            for (VirtualView v : virtualViewList) {
-                v.showBoard();
-                if (v.getId() == game.getCurrentPlayer().getVirtualViewID()) {
-                    v.showMessage(GameMessage.setFirstWorkerMessage);
-                }
-            }
-        }
+        game.displayCards();
     }
 
     /**
      * Invokes model's methods to perform, if possible, the card's assignment.
      * @param cardChoice the message containing informations regarding the assignment.
      */
-    private void performCardChoice(CardChoice cardChoice) {
+    /*private void performCardChoice(CardChoice cardChoice) {
         if (game.getCurrentPlayer().getVirtualViewID() == cardChoice.getVirtualViewID()) {
             game.chosePower(cardChoice);
             displayCards();
         } else
-            virtualViewList.get(cardChoice.getVirtualViewID()).showMessage(GameMessage.wrongTurnMessage);
-    }
+            virtualViewList.get(cardChoice.getVirtualViewID()).sendMessage(GameMessage.wrongTurnMessage);
+    }*/
 
     /**
      *Invokes model's methods to perform, if possible, the settlement of the workers.
      * @param moveChoice the message containing informations regarding which worker and where is going to be settled.
      */
-    private void performWorkerSet(MoveChoice moveChoice){
+    /*private void performWorkerSet(MoveChoice moveChoice){
 
         if (game.getCurrentPlayer().getVirtualViewID() == moveChoice.getVirtualViewId()) {
             moveChoice.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));//fills the message informations
@@ -87,79 +69,71 @@ public class Controller implements Observer<PlayerAction> {
                     if (game.getCurrentPlayer() == game.getPlayers().lastElement()){ //check game turns status
 
                         game.endTurn(game.getCurrentPlayer()); //players.next()
-                        virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.moveMessage);
+                        virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).sendMessage(GameMessage.moveMessage);
 
                     } else { //send first placement message to next player
                         game.endTurn(game.getCurrentPlayer());
-                        virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.setFirstWorkerMessage);
+                        virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).sendMessage(GameMessage.setFirstWorkerMessage);
                     }
                 } else
-                    virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
+                    virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.setSecondWorkerMessage);
 
             } catch (InvalidMoveException e) {//redo
-                virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.wrongPlacementMessage);
+                virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.wrongPlacementMessage);
                 if (game.noWorkerPlaced(game.getCurrentPlayer())){
-                    virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.setFirstWorkerMessage);
+                    virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.setFirstWorkerMessage);
                 }
-                virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
+                virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.setSecondWorkerMessage);
             }
         } else //wrong turn
-            virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
-    }
+            virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.wrongTurnMessage);
+    }*/
 
     /**
      * Metodo per effettuare una mossa
      * @param moveChoice
      */
-     private void performMove(MoveChoice moveChoice){
+     /*private void performMove(MoveChoice moveChoice){
          if (game.getCurrentPlayer().getVirtualViewID() == moveChoice.getVirtualViewId()) {
              moveChoice.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
              try {
                  game.move(moveChoice); //perform actual move
                  showAllBoards();
-                 virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.buildMessage);
+                 virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.buildMessage);
              } catch (InvalidMoveException e) {
-                 virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
+                 virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.invalidMoveMessage);
              }
          } else
-             virtualViewList.get(moveChoice.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
-    }
+             virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.wrongTurnMessage);
+    }*/
 
     /**
      * Metodo per effettuare una costruzione
      * @param build
      */
-    private void performBuild(Build build){
+    /*private void performBuild(Build build){
         if (game.getCurrentPlayer().getVirtualViewID() == build.getVirtualViewId()) {
             build.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
             try{
                 game.build(build);
                 showAllBoards(); //check current player turn status
                 game.endTurn(game.getCurrentPlayer());
-                virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.moveMessage);
+                virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).sendMessage(GameMessage.moveMessage);
             } catch (InvalidBuildingException e) {
-                virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.invalidBuildingMessage);
+                virtualViewList.get(build.getVirtualViewId()).sendMessage(GameMessage.invalidBuildingMessage);
             }
         } else
-            virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
-    }
+            virtualViewList.get(build.getVirtualViewId()).sendMessage(GameMessage.wrongTurnMessage);
+    }*/
 
 
     /**
-     * Metodo per inserire un giocatore nel model
-     * @param p
+     * Inserts a new player in the game.
+     * @param playerCredentials a message containing the player's credentials.
      */
-    private void addPlayer (PlayerCredentials p) {
-        game.newPlayer(p.getPlayerName(), p.getAge(), p.getVirtualViewID());
-    }
-
-
-    private void showAllBoards() {
-        synchronized (this) {
-            for (VirtualView v : virtualViewList) {
-                v.showBoard();
-            }
-        }
+    private void addPlayer (PlayerAction playerCredentials) {
+        PlayerCredentials credentials = (PlayerCredentials) playerCredentials.getChoice();
+        game.newPlayer(credentials.getPlayerName(), credentials.getAge(), playerCredentials.getVirtualViewID());
     }
 
     /**
@@ -169,6 +143,9 @@ public class Controller implements Observer<PlayerAction> {
      */
     @Override
     public void update(PlayerAction message) {
-
+        PlayerChoice choice = message.getChoice();
+        if (choice instanceof PlayerCredentials){
+            addPlayer(message);
+        }
     }
 }

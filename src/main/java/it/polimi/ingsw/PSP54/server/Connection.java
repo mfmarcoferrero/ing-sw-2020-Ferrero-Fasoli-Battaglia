@@ -10,7 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class Connection extends PlayerChoicesManager implements Runnable {
+public class Connection extends Observable<PlayerChoice> implements Runnable {
 
     private Socket socket;
     private ObjectInputStream in;
@@ -104,13 +104,13 @@ public class Connection extends PlayerChoicesManager implements Runnable {
             out = new ObjectOutputStream(socket.getOutputStream());
             asyncSend(StringMessage.welcomeMessage);
             in = new ObjectInputStream(socket.getInputStream());
-            PlayerCredentials player = (PlayerCredentials) in.readObject();
+            PlayerCredentials credentials = (PlayerCredentials) in.readObject();
             if(gameMaster || this == server.currentConnections.firstElement()) {
                 send(StringMessage.setNumberOfPlayersMessage);
                 numberOfPlayers = (int) in.readObject();
                 server.setNumberOfPlayers(numberOfPlayers);
             }
-            server.lobby(this, player);
+            server.lobby(this, credentials);
             Thread t0 = asyncReadFromSocket(in);
             t0.join();
         } catch(IOException e) {

@@ -6,7 +6,8 @@ public class BoardMessage extends GameMessage {
 
     private Box[][] board;
 
-    public BoardMessage(Box[][] board){
+    public BoardMessage(Integer virtualViewID, Box[][] board){
+        super(virtualViewID);
         this.board = board;
     }
 

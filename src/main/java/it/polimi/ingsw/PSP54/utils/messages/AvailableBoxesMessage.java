@@ -6,16 +6,11 @@ import java.util.List;
 
 public class AvailableBoxesMessage extends GameMessage{
 
-    private final int virtualViewID;
     private final List<Box> availableBoxes;
 
-    public AvailableBoxesMessage(int virtualViewID, List<Box> availableBoxes) {
-        this.virtualViewID = virtualViewID;
+    public AvailableBoxesMessage(Integer virtualViewID, List<Box> availableBoxes) {
+        super(virtualViewID);
         this.availableBoxes = availableBoxes;
-    }
-
-    public int getVirtualViewID() {
-        return virtualViewID;
     }
 
     public List<Box> getAvailableBoxes() {

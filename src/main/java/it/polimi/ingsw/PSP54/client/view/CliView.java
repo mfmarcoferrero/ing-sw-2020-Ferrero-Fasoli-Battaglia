@@ -5,12 +5,16 @@ import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
 import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.Vector;
 
 public class CliView implements Observer<GameMessage> {
@@ -18,6 +22,8 @@ public class CliView implements Observer<GameMessage> {
 	private final Scanner inputReader = new Scanner(System.in);
 	private final PrintStream output = new PrintStream(System.out);
 	private final Client client;
+	private HashMap<String, Integer> credentials;
+	private static int numberOfPlayers;
 	private boolean maleSelected;
 	private static final String workerSelection = "Select your worker: [Enter m/f]";
 
@@ -294,6 +300,51 @@ public class CliView implements Observer<GameMessage> {
 	} //TODO: insert coordinates along borders?
 
 	/**
+	 * Acquires username and age of the player from command line and stores them in the credentials HashMap.
+	 */
+	public void acquirePlayerCredentials() {
+		output.println("What's your name?");
+		String name = inputReader.next();
+		output.println("What's your age?");
+		int age = acquireInteger();
+
+		HashMap<String, Integer> credentials = new HashMap<>();
+		credentials.put(name, age);
+		setCredentials(credentials);
+	}
+
+	/**
+	 * Creates a PlayerChoice object containing player's credentials and sends it via socket.
+	 * @param credentials the HashMap containing player's name and age.
+	 */
+	public void sendPlayerCredentials(HashMap<String, Integer> credentials) {
+		Set<String> name = credentials.keySet();
+		int age = credentials.get(name.toString());
+		PlayerChoice playerCredentials = new PlayerCredentials(name.toString(),age);
+		client.asyncWriteToSocket(playerCredentials);
+	}
+
+	/**
+	 * Acquires game's number of players and stores it into a local variable.
+	 */
+	public void acquireNumberOfPlayers() {
+		int numberOfPlayers = acquireInteger();
+		while (numberOfPlayers < 2 || numberOfPlayers > 3) {
+			output.println("Illegal number of player! It must be '2' or '3', try again");
+			numberOfPlayers = inputReader.nextInt();
+		}
+		setNumberOfPlayers(numberOfPlayers);
+	}
+
+	/**
+	 * Sends the number of players via socket.
+	 * @param numberOfPlayers the number of players.
+	 */
+	public void sendNumberOfPlayers(int numberOfPlayers){
+		client.asyncWriteToSocket(numberOfPlayers);
+	}
+
+	/**
 	 * Asks player which worker he wants to use.
 	 * @return true if the choice is the male worker, false if it's the female Worker.
 	 */
@@ -375,25 +426,6 @@ public class CliView implements Observer<GameMessage> {
 		return k - 1; //return coordinate translated to array index
 	}
 
-	public void acquirePlayerCredentials() {
-		output.println("What's your name?");
-		String name = inputReader.next();
-		output.println("What's your age?");
-		int age = acquireInteger();
-		PlayerCredentials playerCredentials = new PlayerCredentials(name,age,0);
-		client.asyncWriteToSocket(playerCredentials);
-	}
-
-	public void acquireNumberOfPlayers() {
-		int numberOfPlayers;
-		numberOfPlayers = acquireInteger();
-		while (numberOfPlayers < 2 || numberOfPlayers > 3) {
-			output.println("Illegal number of player! It must be '2' or '3', try again");
-			numberOfPlayers = inputReader.nextInt();
-		}
-		client.asyncWriteToSocket(numberOfPlayers);
-	}
-
 	/**
 	 * Asks an integer until input is valid.
 	 * @return the given number.
@@ -448,7 +480,7 @@ public class CliView implements Observer<GameMessage> {
 		}
 	}
 
-	public void sendWorkerPlacement(boolean male){
+	/*public void sendWorkerPlacement(boolean male){
 		int [] coordinates = acquireCoordinates();
 		MoveChoice moveChoice = new MoveChoice(male, coordinates[0], coordinates[1]);
 		moveChoice.setFirstPlacement(true);
@@ -465,6 +497,31 @@ public class CliView implements Observer<GameMessage> {
 		int[] coordinates = acquireCoordinates();
 		Build build = new Build(male,coordinates[0],coordinates[1],setDome);
 		client.asyncWriteToSocket(build);
+	}*/
+
+	/**
+	 * Called whenever the observed object is changed.
+	 *
+	 * @param message an argument passed to the notify method.
+	 */
+	@Override
+	public void update(GameMessage message) {
+		if (message instanceof StringMessage){
+			String stringMessage = ((StringMessage) message).getMessage();
+
+			if (stringMessage.equals(StringMessage.welcomeMessage)){
+				acquirePlayerCredentials();
+				sendPlayerCredentials(getCredentials());
+			}
+			if (stringMessage.equals(StringMessage.setNumberOfPlayersMessage)){
+				acquireNumberOfPlayers();
+				sendNumberOfPlayers(getNumberOfPlayers());
+			}
+		}
+		if (message instanceof CardsMessage){
+			displayCards(((CardsMessage) message).getCards());
+		}
+
 	}
 
 	//setters & getters
@@ -477,13 +534,20 @@ public class CliView implements Observer<GameMessage> {
 		this.maleSelected = maleSelected;
 	}
 
-	/**
-	 * Called whenever the observed object is changed.
-	 *
-	 * @param message an argument passed to the notify method.
-	 */
-	@Override
-	public void update(GameMessage message) {
-
+	public HashMap<String, Integer> getCredentials() {
+		return credentials;
 	}
+
+	public void setCredentials(HashMap<String, Integer> credentials) {
+		this.credentials = credentials;
+	}
+
+	public int getNumberOfPlayers() {
+		return numberOfPlayers;
+	}
+
+	public void setNumberOfPlayers(int numberOfPlayers) {
+		CliView.numberOfPlayers = numberOfPlayers;
+	}
+
 }

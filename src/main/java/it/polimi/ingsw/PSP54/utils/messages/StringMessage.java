@@ -2,7 +2,6 @@ package it.polimi.ingsw.PSP54.utils.messages;
 
 public class StringMessage extends GameMessage {
 
-    private final int virtualViewID;
     private final String message;
     //init
     public static String welcomeMessage = "Welcome!";
@@ -33,15 +32,11 @@ public class StringMessage extends GameMessage {
     public static String choiceMessage = "Do you want to move again?";
     public static String buildOrDome = "Do you want to build a dome?";
 
-    public StringMessage(int virtualViewID, String message) {
+    public StringMessage(Integer virtualViewID, String message) {
 
-        this.virtualViewID = virtualViewID;
+        super(virtualViewID);
         this.message = message;
 
-    }
-
-    public int getVirtualViewID() {
-        return virtualViewID;
     }
 
     public String getMessage() {

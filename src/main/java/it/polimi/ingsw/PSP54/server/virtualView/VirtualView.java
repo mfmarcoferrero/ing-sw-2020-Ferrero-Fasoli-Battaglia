@@ -1,23 +1,23 @@
 package it.polimi.ingsw.PSP54.server.virtualView;
 
+import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
-import it.polimi.ingsw.PSP54.observer.PlayerActionsManager;
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.server.model.Box;
+import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
 import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
-import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 
 
-public class VirtualView extends PlayerActionsManager implements Observer<GameMessage> {
+public class VirtualView extends Observable<PlayerAction> implements Observer<GameMessage> {
 
-    private Box [][] board;
     private boolean moveDone = false, buildDone = false, firstWorkerSetDone = false;
     private final int id;
     private Connection connection;
     private MessageReceiver messageReceiver;
-    private PlayerCredentials player;
+    private PlayerAction player;
     private String opponent;
 
     /**
@@ -26,7 +26,7 @@ public class VirtualView extends PlayerActionsManager implements Observer<GameMe
      * @param p
      * @param connection
      */
-    public VirtualView(int id, PlayerCredentials p, Connection connection, String opponent) {
+    public VirtualView(int id, PlayerAction p, Connection connection, String opponent) {
         this.id = id;
         this.connection = connection;
         this.messageReceiver = new MessageReceiver(this.connection,this);
@@ -42,7 +42,7 @@ public class VirtualView extends PlayerActionsManager implements Observer<GameMe
      * @param p
      * @param connection
      */
-    public VirtualView(int id, PlayerCredentials p, Connection connection, String opponent1, String opponent2) {
+    public VirtualView(int id, PlayerAction p, Connection connection, String opponent1, String opponent2) {
         this.id = id;
         this.connection = connection;
         this.messageReceiver = new MessageReceiver(this.connection,this);
@@ -58,32 +58,6 @@ public class VirtualView extends PlayerActionsManager implements Observer<GameMe
      */
     public void addPlayer() {
         notify(player);
-    }
-    
-    public void selectCard(CardChoice message) {
-        notify(message);
-    }
-
-    /*public void selectWorker(String message) {
-        Choice choice = new Choice(id, message);
-        notify(choice);
-    }*/
-
-    /**
-     * Notifica il controller con un oggetto di tipo Move verificando che la mossa
-     * non sia un set iniziale di un worker
-     * @param moveChoice
-     */
-    public void handleMove(MoveChoice moveChoice) {
-        notify(moveChoice);
-    }
-
-    /**
-     * Notifica il controller con un oggetto di tipo Build
-     * @param build
-     */
-    public void handleBuild(Build build) {
-        notify(build);
     }
 
     public void setMoveDone(boolean moveDone) {
@@ -102,16 +76,8 @@ public class VirtualView extends PlayerActionsManager implements Observer<GameMe
         return id;
     }
 
-    public synchronized void showMessage(Object message) {
+    public synchronized void sendMessage(GameMessage message) {
         connection.asyncSend(message);
-    }
-
-    public synchronized void showBoard() {
-        connection.asyncSend(board);
-    }
-
-    public Box[][] getBoard() {
-        return board;
     }
 
     /**
@@ -121,6 +87,8 @@ public class VirtualView extends PlayerActionsManager implements Observer<GameMe
      */
     @Override
     public void update(GameMessage message) {
-
+        if (message.getVirtualViewID() == getId() || message.getVirtualViewID() == null) {
+            sendMessage(message);
+        }
     }
 }

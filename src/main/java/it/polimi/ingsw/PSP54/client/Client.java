@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP54.client;
 
 import it.polimi.ingsw.PSP54.client.view.*;
-import it.polimi.ingsw.PSP54.observer.GameMessageManager;
+import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.NoSuchElementException;
 
-public class Client extends GameMessageManager {
+public class Client extends Observable<GameMessage> {
 
     private String ip;
     private int port;
