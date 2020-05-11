@@ -112,7 +112,6 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
         }
     }
 
-
     synchronized public void chosePower(Choice choice) {
         GameMessage message = new GameMessage(choice.getVirtualViewID(),GameMessage.cantSelect);
         switch (choice.getChoiceInt()) {
@@ -174,8 +173,9 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
      * @param move oggetto che contiene le informazioni per eseguire lo spostamento
      */
     public void move(Move move) throws InvalidMoveException {
-        players.get(move.getPlayer_ind()).turnInit(move.isMale());
-        players.get(move.getPlayer_ind()).move(players.get(move.getPlayer_ind()).getWorkers()[move.getWorker_ind()],board[move.getX()][move.getY()]);
+        Worker currentWorker = players.get(move.getPlayer_ind()).turnInit(move.isMale());
+        players.get(move.getPlayer_ind()).setWorkerBoxesToMove(currentWorker);
+        players.get(move.getPlayer_ind()).move(currentWorker,board[move.getX()][move.getY()]);
         notify(board.clone());
     }
 
@@ -184,14 +184,10 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
      * @param build oggetto che contiene le informazioni per costruire
      */
     public void build (Build build) throws InvalidBuildingException {
-        players.get(build.getPlayer_ind()).build(players.get(build.getPlayer_ind()).getWorkers()[build.getPlayer_ind()],board[build.getX()][build.getY()]);
+        players.get(build.getPlayer_ind()).build(players.get(build.getPlayer_ind()).choseWorker(build.isMale()), board[build.getX()][build.getY()]);
         notify(board.clone());
     }
 
-    /**
-     *
-     * @param currentPlayer
-     */
     public void endTurn(Player currentPlayer) {
 
         for (Player player : players){

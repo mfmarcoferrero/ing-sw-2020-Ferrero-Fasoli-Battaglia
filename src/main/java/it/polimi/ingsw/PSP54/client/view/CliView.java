@@ -317,7 +317,7 @@ public class CliView implements Observer {
 	public boolean acquireSetDome() {
 		boolean loop = true;
 		Boolean setDome = false;
-		output.println("Do you want to build a dome? [Enter yes/no]");
+		output.println("Do you want to build a dome? [Enter y/n]");
 		while (loop) {
 			String dome = inputReader.next();
 			if(dome.equals("yes")) {
@@ -328,8 +328,7 @@ public class CliView implements Observer {
 				setDome = false;
 				loop = false;
 			} else
-				output.println("Incorrect Input!");
-				output.println("[Enter yes/no]");
+				output.println("Incorrect Input! [Enter y/n]");
 		}
 		return setDome;
 	}
@@ -459,9 +458,9 @@ public class CliView implements Observer {
 		client.asyncWriteToSocket(move);
 	}
 
-	public void sendBuild(boolean male, boolean setDome){
+	public void sendBuild(boolean male){
 		int[] coordinates = acquireCoordinates();
-		Build build = new Build(male,coordinates[0],coordinates[1],setDome);
+		Build build = new Build(male,coordinates[0],coordinates[1]);
 		client.asyncWriteToSocket(build);
 	}
 
@@ -491,12 +490,10 @@ public class CliView implements Observer {
 			sendMove(isMaleSelected());
 		}
 		if (message.equals(GameMessage.buildMessage)){
-			output.println(workerSelection);
-			setMaleSelected(acquireWorkerSelection());
-			sendBuild(isMaleSelected(),acquireSetDome());
+			sendBuild(isMaleSelected());
 		}
 		if (message.equals(GameMessage.invalidBuildingMessage)){
-			sendBuild(isMaleSelected(),acquireSetDome());
+			sendBuild(isMaleSelected());
 		}
 
 	}

@@ -24,7 +24,6 @@ public class ArtemisDecorator extends GodDecorator{
         Worker currentWorker = choseWorker(male);
         currentWorker.setMoveToken(2);
         currentWorker.setBuildToken(0);
-        setWorkerBoxesToBuild(currentWorker);
         return currentWorker;
     }
 

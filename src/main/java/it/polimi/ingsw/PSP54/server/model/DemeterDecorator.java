@@ -21,13 +21,7 @@ public class DemeterDecorator extends GodDecorator{
             return super.setWorkerBoxesToBuild(worker);
         else {
             ArrayList<Box> valid = super.setWorkerBoxesToBuild(worker);
-            Iterator<Box> iterator = valid.iterator();
-            while (iterator.hasNext()) {
-
-                Box check = iterator.next();
-                if (check == getLastBuilding())
-                    iterator.remove();
-            }
+            valid.removeIf(check -> check == getLastBuilding());
 
             return valid;
         }

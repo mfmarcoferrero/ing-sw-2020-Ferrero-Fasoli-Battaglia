@@ -9,11 +9,10 @@ public class Build implements Serializable,Cloneable {
     private int player_ind, x, y, virtualViewId;
     private boolean setDome, male;
 
-    public Build(boolean male, int x, int y, boolean setDome) {
+    public Build(boolean male, int x, int y) {
         this.male = male;
         this.x = x;
         this.y = y;
-        this.setDome = setDome;
     }
 
     public int getPlayer_ind() {

@@ -131,7 +131,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         Worker currentWorker = choseWorker(male);
         currentWorker.setMoveToken(1);
         currentWorker.setBuildToken(0);
-        setWorkerBoxesToBuild(currentWorker);
         return currentWorker;
     }
 
@@ -192,7 +191,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException{
 
-        setWorkerBoxesToMove(worker);
         ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
 
