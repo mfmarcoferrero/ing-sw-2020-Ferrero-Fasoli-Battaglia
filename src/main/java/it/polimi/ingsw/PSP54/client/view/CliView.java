@@ -17,7 +17,7 @@ public class CliView implements Observer<GameMessage> {
 
 	private final Scanner inputReader = new Scanner(System.in);
 	private final PrintStream output = new PrintStream(System.out);
-	private Client client;
+	private final Client client;
 	private boolean maleSelected;
 	private static final String workerSelection = "Select your worker: [Enter m/f]";
 
@@ -26,9 +26,9 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 *Returns the correct character to print in the center of every box, it's called by printBoard(Box[][] board)
-	 * @param box current box which is being printed
-	 * @return the String containing ANSI/UNICODE codes representing the Dome, the Workers or the level of the current box
+	 * Returns the correct character to print in the center of every box, it's called by printBoard(Box[][] board).
+	 * @param box current box which is being printed.
+	 * @return the String containing ANSI/UNICODE codes representing the Dome, the Workers or the level of the current box.
 	 */
 	private String getBoxCenter(Box box){
 
@@ -82,9 +82,9 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 * Prints the ground line of every box in the same line of the board
-	 * @param initGround String containing the left border and the ANSI code for the ground
-	 * @param endGround String containing the right border
+	 * Prints the ground line of every box in the same line of the board.
+	 * @param initGround String containing the left border and the ANSI code for the ground.
+	 * @param endGround String containing the right border.
 	 */
 	private void printGround(String initGround, String endGround) {
 		StringBuilder line;
@@ -101,8 +101,8 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 *prints the board
-	 * @param board bi-dimensional array of boxes representing the game board
+	 * Prints the board.
+	 * @param board bi-dimensional array of boxes representing the game board.
 	 */
 	public void printBoard (Box[][] board) {
 
@@ -294,8 +294,8 @@ public class CliView implements Observer<GameMessage> {
 	} //TODO: insert coordinates along borders?
 
 	/**
-	 *asks player which worker he wants to use
-	 * @return true if the choice is the male worker, false if it's the female Worker
+	 * Asks player which worker he wants to use.
+	 * @return true if the choice is the male worker, false if it's the female Worker.
 	 */
 	public boolean acquireWorkerSelection() {
 
@@ -319,7 +319,7 @@ public class CliView implements Observer<GameMessage> {
 
 	public boolean acquireSetDome() {
 		boolean loop = true;
-		Boolean setDome = false;
+		boolean setDome = false;
 		output.println("Do you want to build a dome? [Enter yes/no]");
 		while (loop) {
 			String dome = inputReader.next();
@@ -328,7 +328,6 @@ public class CliView implements Observer<GameMessage> {
 				loop = false;
 			}
 			else if(dome.equals("no")){
-				setDome = false;
 				loop = false;
 			} else
 				output.println("Incorrect Input!");
@@ -338,8 +337,8 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 * asks coordinates which player wants to move
-	 * @return an array containing the selected coordinates
+	 * Asks coordinates which player wants to move.
+	 * @return an array containing the selected coordinates.
 	 */
 	public int[] acquireCoordinates() {
 		int[] coordinates = new int[2];
@@ -415,7 +414,7 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 * Creates a message for the player containing the extracted cards
+	 * Creates a message for the player containing the extracted cards.
 	 */
 	public void displayCards(HashMap<Integer,String> extractedCards){
 		Vector<String> cardsName = new Vector<>(extractedCards.values());
@@ -469,7 +468,6 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	//setters & getters
-
 
 	public boolean isMaleSelected() {
 		return maleSelected;

@@ -1,7 +1,8 @@
 package it.polimi.ingsw.PSP54.client;
 
 import it.polimi.ingsw.PSP54.client.view.*;
-import it.polimi.ingsw.PSP54.observer.Observable;
+import it.polimi.ingsw.PSP54.observer.GameMessageManager;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -9,28 +10,20 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.NoSuchElementException;
 
-public class Client extends Observable {
+public class Client extends GameMessageManager {
 
     private String ip;
     private int port;
     private ObjectOutputStream socketOut;
-    private CliView view = new CliView(this);
+    private CliView view;
     private int playerInd;
+    private boolean active = true;
 
     public Client(String ip, int port) {
         this.ip = ip;
         this.port = port;
+        this.view = new CliView(this);
         addObserver(view);
-    }
-
-    private boolean active = true;
-
-    public synchronized boolean isActive(){
-        return active;
-    }
-
-    public synchronized void setActive(boolean active){
-        this.active = active;
     }
 
     /**
@@ -46,7 +39,7 @@ public class Client extends Observable {
                 try {
                     while (isActive()) {
                         Object inputObject = socketIn.readObject();
-                        Client.this.notify(inputObject);
+                        Client.this.notify((GameMessage)inputObject);
                     }
                 } catch (Exception e) {
                     setActive(false);
@@ -102,6 +95,14 @@ public class Client extends Observable {
             socketOut.close();
             socket.close();
         }
+    }
+
+    public synchronized boolean isActive(){
+        return active;
+    }
+
+    public synchronized void setActive(boolean active){
+        this.active = active;
     }
 
 }

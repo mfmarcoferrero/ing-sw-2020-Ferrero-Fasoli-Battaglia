@@ -1,15 +1,16 @@
 package it.polimi.ingsw.PSP54.server.virtualView;
 
-import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
+import it.polimi.ingsw.PSP54.observer.PlayerActionsManager;
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.server.model.Box;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
 import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 
 
-public class VirtualView extends Observable<Object> implements Observer {
+public class VirtualView extends PlayerActionsManager implements Observer<GameMessage> {
 
     private Box [][] board;
     private boolean moveDone = false, buildDone = false, firstWorkerSetDone = false;
@@ -111,5 +112,15 @@ public class VirtualView extends Observable<Object> implements Observer {
 
     public Box[][] getBoard() {
         return board;
+    }
+
+    /**
+     * Called whenever the observed object is changed.
+     *
+     * @param message an argument passed to the notify method.
+     */
+    @Override
+    public void update(GameMessage message) {
+
     }
 }

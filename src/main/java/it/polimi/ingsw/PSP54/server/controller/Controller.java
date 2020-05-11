@@ -3,6 +3,7 @@ package it.polimi.ingsw.PSP54.server.controller;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.*;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
+import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
 import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 
 
 
-public class Controller implements Observer {
+public class Controller implements Observer<PlayerAction> {
 
     private final Game game;
     private ArrayList<VirtualView> virtualViewList = new ArrayList<>();
@@ -161,4 +162,13 @@ public class Controller implements Observer {
         }
     }
 
+    /**
+     * Called whenever the observed object is changed.
+     *
+     * @param message an argument passed to the notify method.
+     */
+    @Override
+    public void update(PlayerAction message) {
+
+    }
 }

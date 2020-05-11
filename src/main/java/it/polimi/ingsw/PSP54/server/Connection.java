@@ -1,15 +1,16 @@
 package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.observer.*;
-import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class Connection extends Observable implements Runnable {
+public class Connection extends PlayerChoicesManager implements Runnable {
 
     private Socket socket;
     private ObjectInputStream in;
@@ -64,8 +65,8 @@ public class Connection extends Observable implements Runnable {
             public void run() {
                 try {
                     while (isActive()) {
-                        Object inputObject = socketIn.readObject(); //TODO: set to PlayerAction
-                        Connection.this.notify(inputObject);
+                        Object inputObject = socketIn.readObject(); //TODO: set to PlayerChoice
+                        Connection.this.notify((PlayerChoice) inputObject);
                     }
                 } catch (Exception e) {
                     setActive(false);
@@ -101,11 +102,11 @@ public class Connection extends Observable implements Runnable {
     public void run() {
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
-            asyncSend(GameMessage.welcomeMessage);
+            asyncSend(StringMessage.welcomeMessage);
             in = new ObjectInputStream(socket.getInputStream());
             PlayerCredentials player = (PlayerCredentials) in.readObject();
             if(gameMaster || this == server.currentConnections.firstElement()) {
-                send(GameMessage.setNumberOfPlayersMessage);
+                send(StringMessage.setNumberOfPlayersMessage);
                 numberOfPlayers = (int) in.readObject();
                 server.setNumberOfPlayers(numberOfPlayers);
             }
