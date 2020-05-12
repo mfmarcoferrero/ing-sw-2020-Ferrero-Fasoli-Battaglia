@@ -1,6 +1,8 @@
 package it.polimi.ingsw.PSP54.utils.messages;
 
-public class StringMessage extends GameMessage {
+import java.io.Serializable;
+
+public class StringMessage extends GameMessage implements Serializable, Cloneable {
 
     private final String message;
     //init

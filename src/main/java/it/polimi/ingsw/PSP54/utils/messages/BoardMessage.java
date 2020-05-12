@@ -2,7 +2,9 @@ package it.polimi.ingsw.PSP54.utils.messages;
 
 import it.polimi.ingsw.PSP54.server.model.Box;
 
-public class BoardMessage extends GameMessage {
+import java.io.Serializable;
+
+public class BoardMessage extends GameMessage implements Serializable, Cloneable {
 
     private Box[][] board;
 

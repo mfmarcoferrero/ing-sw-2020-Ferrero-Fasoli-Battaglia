@@ -3,6 +3,7 @@ package it.polimi.ingsw.PSP54.server;
 import it.polimi.ingsw.PSP54.observer.*;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.IOException;
@@ -68,7 +69,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
             public void run() {
                 try {
                     while (isActive()) {
-                        Object inputObject = socketIn.readObject(); //TODO: set to PlayerChoice
+                        Object inputObject = socketIn.readObject();
                         Connection.this.notify((PlayerChoice) inputObject);
                     }
                 } catch (Exception e) {
@@ -105,9 +106,11 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     public void run() {
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
-            asyncSend(StringMessage.welcomeMessage);
+            GameMessage welcome = new StringMessage(null, StringMessage.welcomeMessage);
+            asyncSend(welcome);
             in = new ObjectInputStream(socket.getInputStream());
             PlayerCredentials credentials = (PlayerCredentials) in.readObject();
+            this.name = credentials.getPlayerName();
             if(gameMaster || this == server.currentConnections.firstElement()) {
                 send(StringMessage.setNumberOfPlayersMessage);
                 numberOfPlayers = (int) in.readObject();

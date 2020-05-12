@@ -1,6 +1,8 @@
 package it.polimi.ingsw.PSP54.utils.choices;
 
-public class WorkerChoice extends PlayerChoice{
+import java.io.Serializable;
+
+public class WorkerChoice extends PlayerChoice implements Serializable, Cloneable {
 
     private final boolean male;
 

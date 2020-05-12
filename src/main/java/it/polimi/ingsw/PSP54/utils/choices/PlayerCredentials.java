@@ -1,9 +1,11 @@
 package it.polimi.ingsw.PSP54.utils.choices;
 
+import java.io.Serializable;
+
 /**
  * Represent the choice of player's name and age.
  */
-public class PlayerCredentials extends PlayerChoice {
+public class PlayerCredentials extends PlayerChoice implements Serializable, Cloneable {
 
     private String name;
     int age;

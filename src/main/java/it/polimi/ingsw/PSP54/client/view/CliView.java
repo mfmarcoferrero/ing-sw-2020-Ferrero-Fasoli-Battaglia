@@ -19,7 +19,7 @@ public class CliView implements Observer<GameMessage> {
 
 	private final Scanner inputReader = new Scanner(System.in);
 	private final PrintStream output = new PrintStream(System.out);
-	private final Client client;
+		private final Client client;
 	private HashMap<String, Integer> credentials;
 	private static int numberOfPlayers;
 	private boolean maleSelected;
@@ -507,7 +507,7 @@ public class CliView implements Observer<GameMessage> {
 	public void update(GameMessage message) {
 		if (message instanceof StringMessage){
 			String stringMessage = ((StringMessage) message).getMessage();
-
+			output.println(stringMessage);
 			if (stringMessage.equals(StringMessage.welcomeMessage)){
 				acquirePlayerCredentials();
 				sendPlayerCredentials(getCredentials());

@@ -1,9 +1,11 @@
 package it.polimi.ingsw.PSP54.utils.choices;
 
+import java.io.Serializable;
+
 /**
  * Represents the choice regarding a Build Action
  */
-public class MoveChoice extends PlayerChoice{
+public class MoveChoice extends PlayerChoice implements Serializable, Cloneable {
     private final int  x, y;
     private final boolean firstPlacement;
 
