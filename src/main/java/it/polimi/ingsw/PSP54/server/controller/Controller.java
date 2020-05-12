@@ -5,13 +5,10 @@ import it.polimi.ingsw.PSP54.server.model.*;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
-import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
-import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 
 import java.util.ArrayList;
-
 
 
 public class Controller implements Observer<PlayerAction> {
@@ -32,7 +29,7 @@ public class Controller implements Observer<PlayerAction> {
     }
 
     /**
-     *
+     * Initializes the game by sorting the players and extracting a card for each one of them.
      */
     public void startGame() {
         game.sortPlayers();
@@ -43,15 +40,13 @@ public class Controller implements Observer<PlayerAction> {
 
     /**
      * Invokes model's methods to perform, if possible, the card's assignment.
-     * @param cardChoice the message containing informations regarding the assignment.
+     * @param selectedCard the message containing informations regarding the assignment.
      */
-    /*private void performCardChoice(CardChoice cardChoice) {
-        if (game.getCurrentPlayer().getVirtualViewID() == cardChoice.getVirtualViewID()) {
-            game.chosePower(cardChoice);
-            displayCards();
-        } else
-            virtualViewList.get(cardChoice.getVirtualViewID()).sendMessage(GameMessage.wrongTurnMessage);
-    }*/
+    private void invokePowerAssignment(PlayerAction selectedCard) {
+        game.performPowerAssignment(selectedCard);
+        game.displayCards();
+
+    }
 
     /**
      *Invokes model's methods to perform, if possible, the settlement of the workers.
@@ -146,6 +141,9 @@ public class Controller implements Observer<PlayerAction> {
         PlayerChoice choice = message.getChoice();
         if (choice instanceof PlayerCredentials){
             addPlayer(message);
+        }
+        if (choice instanceof CardChoice){
+            invokePowerAssignment(message);
         }
     }
 }

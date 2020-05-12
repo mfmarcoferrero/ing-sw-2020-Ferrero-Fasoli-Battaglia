@@ -106,6 +106,7 @@ public class GameTest {
 
     }
 
+    /* TODO
     @Test
     public void setWorker_SouthWestCorner_CorrectInput() throws InvalidMoveException {
 
@@ -120,5 +121,5 @@ public class GameTest {
         assertEquals(board[0][4], players.get(0).choseWorker(true).getPos());
         assertEquals(players.get(0).choseWorker(true), board[0][4].getWorker());
 
-    }
+    }*/
 }

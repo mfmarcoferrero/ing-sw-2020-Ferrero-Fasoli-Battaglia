@@ -4,13 +4,11 @@ import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
-import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
-
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -448,26 +446,27 @@ public class CliView implements Observer<GameMessage> {
 	/**
 	 * Creates a message for the player containing the extracted cards.
 	 */
-	public void displayCards(HashMap<Integer,String> extractedCards){
+	public void acquireCardSelection(HashMap<Integer,String> extractedCards){
 		Vector<String> cardsName = new Vector<>(extractedCards.values());
 		Vector<Integer> cardsValues = new Vector<>(extractedCards.keySet());
 		boolean found = false;
 
 		if (extractedCards.size() == 1){
-			output.println("You are the last player.");
-			client.asyncWriteToSocket(new CardChoice(cardsValues.get(0)));
+			//output.println("You are the last player.");
+			PlayerChoice cardChoice = new CardChoice(cardsValues.get(0));
+			client.asyncWriteToSocket(cardChoice);
 		}
 		else {
 			output.println("Choose your card: [Enter the name of the God]");
 			for (int i = 0; i < cardsName.size(); i++) {
 				output.println((i + 1) + ") " + cardsName.get(i));
 			}
-
 			String chosenCard = inputReader.next();
 			while (!found) {
 				for (int i = 0; i < cardsName.size(); i++) {
 					if (chosenCard.equals(cardsName.get(i))) {
-						client.asyncWriteToSocket(new CardChoice(cardsValues.get(i)));
+						PlayerChoice cardChoice = new CardChoice(cardsValues.get(i));
+						client.asyncWriteToSocket(cardChoice);
 						found = true;
 						break;
 					}
@@ -519,7 +518,7 @@ public class CliView implements Observer<GameMessage> {
 			}
 		}
 		if (message instanceof CardsMessage){
-			displayCards(((CardsMessage) message).getCards());
+			acquireCardSelection(((CardsMessage) message).getCards());
 		}
 
 	}

@@ -10,6 +10,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/**
+ * Represents the connection between Server and a Client. It can send an read object.
+ */
 public class Connection extends Observable<PlayerChoice> implements Runnable {
 
     private Socket socket;

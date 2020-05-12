@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 
 public class Server {
     private static final int PORT= 12345;
-    private ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
 
     private ExecutorService executor = Executors.newCachedThreadPool();
 

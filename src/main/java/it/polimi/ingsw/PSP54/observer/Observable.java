@@ -35,7 +35,7 @@ public class Observable<T> {
      * Called when the observable object changes state to notify its observers.
      * @param message a message for the observers.
      */
-    public void notify(T message){
+    protected void notify(T message){
         synchronized (observers) {
             for (Observer<T> observer : observers) {
                 observer.update(message);

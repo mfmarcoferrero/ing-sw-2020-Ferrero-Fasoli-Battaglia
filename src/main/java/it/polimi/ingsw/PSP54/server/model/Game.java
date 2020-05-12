@@ -1,10 +1,8 @@
 package it.polimi.ingsw.PSP54.server.model;
 
 import it.polimi.ingsw.PSP54.observer.Observable;
-import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
-import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
 import it.polimi.ingsw.PSP54.utils.messages.BoardMessage;
 import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
@@ -25,7 +23,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     private HashMap<Integer, String> extractedCards = new HashMap<>();
     private Vector<Player> players;
     private Player currentPlayer;
-    private boolean powersSet;
+    private boolean powersAssigned;
 
     public Game() {
 
@@ -36,7 +34,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
                 board[i][j] = new Box(i, j, 0, false);
             }
         }
-        powersSet = false;
+        powersAssigned = false;
         cardMap.put(APOLLO,"Apollo");
         cardMap.put(ARTEMIS,"Artemis");
         cardMap.put(ATHENA,"Athena");
@@ -118,54 +116,70 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
 
     /**
      * Show cards that can be chosen to current player.
+     * If all cards are already taken moves on to the next game step.
      */
-    public void displayCards () {
-        if (!isPowersSet()) {
+    public synchronized void displayCards () {
+        if (!arePowersAssigned()) {
             GameMessage cards = new CardsMessage(currentPlayer.getVirtualViewID(), getExtractedCards());
             notify(cards);
         }
         else {
             GameMessage board = new BoardMessage(null, getBoard().clone());
             notify(board);
+            //TODO: notify first placement to first player
         }
     }
 
+    /**
+     * Verifies if the assignment can be done and if so decorates the current player with the chosen power.
+     * @param selectedCard the PlayerAction containing the chosen card.
+     */
+    public synchronized void performPowerAssignment(PlayerAction selectedCard) {
+        if (getCurrentPlayer().getVirtualViewID() == selectedCard.getVirtualViewID()) {
+            if (!arePowersAssigned()) {
+                CardChoice cardChoice = (CardChoice) selectedCard.getChoice();
+                GameMessage powerInfoMessage;
+                switch (cardChoice.getChoiceKey()) {
+                    case APOLLO:
+                        currentPlayer.assignPower(APOLLO);
+                        powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.apolloMessage);
+                        notify(powerInfoMessage);
+                        break;
+                    case ARTEMIS:
+                        currentPlayer.assignPower(ARTEMIS);
+                        powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.artemisMessage);
+                        notify(powerInfoMessage);
+                        break;
+                    case ATHENA:
+                        currentPlayer.assignPower(ATHENA);
+                        powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.athenaMessage);
+                        notify(powerInfoMessage);
+                        break;
+                    case ATLAS:
+                        currentPlayer.assignPower(ATLAS);
+                        powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.atlasMessage);
+                        notify(powerInfoMessage);
+                        break;
+                    case DEMETER:
+                        currentPlayer.assignPower(DEMETER);
+                        powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.demeterMessage);
+                        notify(powerInfoMessage);
+                        break;
+                }
+                extractedCards.remove(((CardChoice) selectedCard.getChoice()).getChoiceKey());
+                if (currentPlayer == players.lastElement())
+                    setPowersAssigned(true);
 
-    /*synchronized public void chosePower(PlayerAction card) {
-        GameMessage message = new StringMessage(card.getVirtualViewID(),StringMessage.cantSelect);
-        CardChoice cardChoice = (CardChoice) card.getChoice();
-        switch (cardChoice.getChoiceKey()) {
-            case APOLLO:
-                currentPlayer.assignPower(APOLLO);
-                message.setMessage(GameMessage.apolloMessage);
-                break;
-            case ARTEMIS:
-                currentPlayer.assignPower(ARTEMIS);
-                message.setMessage(GameMessage.artemisMessage);
-                break;
-            case ATHENA:
-                currentPlayer.assignPower(ATHENA);
-                message.setMessage(GameMessage.athenaMessage);
-                break;
-            case ATLAS:
-                currentPlayer.assignPower(ATLAS);
-                message.setMessage(GameMessage.atlasMessage);
-                break;
-            case DEMETER:
-                currentPlayer.assignPower(DEMETER);
-                message.setMessage(GameMessage.demeterMessage);
-                break;
+                endTurn(getCurrentPlayer());
+            }else {
+                GameMessage cantSelect = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.cantSelect);
+                notify(cantSelect);
+            }
+        }else {
+            GameMessage wrongTurn = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.wrongTurnMessage);
+            notify(wrongTurn);
         }
-        extractedCards.remove(card.getChoiceKey());
-        int index = players.indexOf(getCurrentPlayer());
-        if (currentPlayer != players.lastElement()) {
-            setCurrentPlayer(players.get(index + 1));
-        } else {
-            setPowersSet(true);
-            setCurrentPlayer(players.get(0));
-        }
-        notify(message);
-    }*/
+    }
 
     /**
      * Determines whether a player has placed no workers
@@ -208,21 +222,16 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }*/
 
     /**
-     *
-     * @param currentPlayer
+     * Set the nex player in the players Vector to current.
+     * @param currentPlayer player who has just finished his turn.
      */
     public void endTurn(Player currentPlayer) {
 
-        for (Player player : players){
-            if (player.equals(currentPlayer)){
-                int i = players.indexOf(player);
-                if (i == players.indexOf(players.lastElement())){
-                    setCurrentPlayer(players.get(0));
-                } else
-                    setCurrentPlayer(players.get(i+1));
-            }
-        }
-
+        int i = players.indexOf(currentPlayer);
+        if (i == players.indexOf(players.lastElement())){
+            setCurrentPlayer(players.get(0));
+        } else
+            setCurrentPlayer(players.get(i+1));
     }
 
     //setters & getters
@@ -240,18 +249,14 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     * Sets the playing attribute of currentPlayer to 'true' and notifies the VirtualView
-     * @param currentPlayer the member of the players Vector which is going to play
+     * Sets the playing attribute of currentPlayer to 'true' and notifies the VirtualView.
+     * @param currentPlayer the member of the players Vector which is going to play.
      */
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
-
-        for (Player player : players) {
-            player.setPlaying(currentPlayer == player);
-        }
-        /*GameMessage yourTurn = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.turnMessage);
+        currentPlayer.setPlaying(true);
+        GameMessage yourTurn = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.turnMessage);
         notify(yourTurn);
-         */
     }
 
     public Box[][] getBoard() {
@@ -270,11 +275,11 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         return cardMap;
     }
 
-    public boolean isPowersSet() {
-        return powersSet;
+    public boolean arePowersAssigned() {
+        return powersAssigned;
     }
 
-    public void setPowersSet(boolean powersSet) {
-        this.powersSet = powersSet;
+    public void setPowersAssigned(boolean powersAssigned) {
+        this.powersAssigned = powersAssigned;
     }
 }

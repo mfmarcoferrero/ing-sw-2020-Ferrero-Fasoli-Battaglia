@@ -45,12 +45,12 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     * Decorates the current player
-     * @param cardID the number of the card
-     * @return the decorated player
+     * Decorates the current player with the given power.
+     * @param cardID the number of the card.
+     * @return the decorated player.
      */
     @Override
-    public Player assignPower(int cardID){ //where to be performed?
+    public Player assignPower(int cardID){
 
         Player actualPlayer = new StandardPlayer(null,0, 0);
 
@@ -76,7 +76,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                 actualPlayer.setCardID(DEMETER);
                 break;
         }
-
         return actualPlayer;
     }
 
@@ -238,19 +237,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         else
             throw new InvalidBuildingException();
     }
-
-    /*@Override
-    public boolean isTurn() {
-        for (Worker w : workers){
-            if (w.getMoveToken() == 1 && w.getBuildToken() == 0){
-                return true;
-            }
-            if (w.getMoveToken() == 0 && w.getBuildToken() == 1){
-                return true;
-            }
-        }
-        return false;
-    }*/
 
     //setters & getters
 
