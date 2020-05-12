@@ -1,0 +1,122 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: AtlasDecorator</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP54.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: AtlasDecorator (it.polimi.ingsw.PSP54.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AtlasDecorator</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 5)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP54.server.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP54.utils.GameMessage;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * Your worker can build a dome on every level
+<i>7</i>&nbsp; */
+<i>8</i>&nbsp;public class AtlasDecorator extends GodDecorator {
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;    public AtlasDecorator(Player player) {
+<b class="nc"><i>11</i>&nbsp;        super(player);</b>
+<i>12</i>&nbsp;    }
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    /*
+<i>15</i>&nbsp;    PSEUDOCODE
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    build(Worker worker, Box dest):
+<i>18</i>&nbsp;        if !dest.isDome &amp;&amp; dest.getLevel() != 3
+<i>19</i>&nbsp;            notifyController()
+<i>20</i>&nbsp;            acquireChoice()
+<i>21</i>&nbsp;            performBuild
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    @Override
+<i>25</i>&nbsp;    public void build(Worker worker, Box dest) throws InvalidBuildingException {
+<i>26</i>&nbsp;
+<b class="nc"><i>27</i>&nbsp;        if (!dest.isDome() &amp;&amp; dest.getLevel() != 3) {</b>
+<b class="nc"><i>28</i>&nbsp;            GameMessage buildOrDome = new GameMessage(this.getVirtualViewID(), GameMessage.buildOrDome);</b>
+<i>29</i>&nbsp;            //getGame().notify(buildOrDome);
+<b class="nc"><i>30</i>&nbsp;        }else</b>
+<b class="nc"><i>31</i>&nbsp;            super.build(worker, dest);</b>
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;        //TODO: endTurn?
+<i>34</i>&nbsp;        //Box destAtCall = new Box(dest.getX(), dest.getY(), dest.getLevel(), dest.isDome());
+<i>35</i>&nbsp;        //if dest.getLevel == destAtCall.getLevel+1 || dest.isDome
+<i>36</i>&nbsp;            //endTurn
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    }
+<i>39</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-11 18:17</div>
+</div>
+</body>
+</html>

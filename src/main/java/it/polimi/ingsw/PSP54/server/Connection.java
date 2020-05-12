@@ -105,6 +105,7 @@ public class Connection extends Observable implements Runnable {
             asyncSend(GameMessage.welcomeMessage);
             in = new ObjectInputStream(socket.getInputStream());
             PlayerMessage player = (PlayerMessage) in.readObject();
+            this.name = player.getPlayerName();
             if(gameMaster || this == server.currentConnections.firstElement()) {
                 send(GameMessage.setNumberOfPlayersMessage);
                 numberOfPlayers = (int) in.readObject();
