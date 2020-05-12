@@ -96,8 +96,8 @@ public class Controller implements Observer {
                 virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongPlacementMessage);
                 if (game.noWorkerPlaced(game.getCurrentPlayer())){
                     virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setFirstWorkerMessage);
-                }
-                virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
+                } else
+                    virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
             }
         } else //wrong turn
             virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
