@@ -112,7 +112,8 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
             PlayerCredentials credentials = (PlayerCredentials) in.readObject();
             this.name = credentials.getPlayerName();
             if(gameMaster || this == server.currentConnections.firstElement()) {
-                send(StringMessage.setNumberOfPlayersMessage);
+                GameMessage setPlayersNumber = new StringMessage(null, StringMessage.setNumberOfPlayersMessage);
+                send(setPlayersNumber);
                 numberOfPlayers = (int) in.readObject();
                 server.setNumberOfPlayers(numberOfPlayers);
             }

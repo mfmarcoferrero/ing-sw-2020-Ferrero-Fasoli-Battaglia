@@ -10,10 +10,7 @@ import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 public class CliView implements Observer<GameMessage> {
 
@@ -316,10 +313,14 @@ public class CliView implements Observer<GameMessage> {
 	 * @param credentials the HashMap containing player's name and age.
 	 */
 	public void sendPlayerCredentials(HashMap<String, Integer> credentials) {
-		Set<String> name = credentials.keySet();
-		int age = credentials.get(name.toString());
-		PlayerChoice playerCredentials = new PlayerCredentials(name.toString(),age);
-		client.asyncWriteToSocket(playerCredentials);
+
+		for (Map.Entry<String, Integer> map : credentials.entrySet()){
+			String name = map.getKey();
+			int age = map.getValue();
+			PlayerChoice playerCredentials = new PlayerCredentials(name, age);
+			client.asyncWriteToSocket(playerCredentials);
+		}
+
 	}
 
 	/**
