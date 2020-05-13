@@ -119,66 +119,65 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * If all cards are already taken moves on to the next game step.
      */
     public synchronized void displayCards () {
-        if (!arePowersAssigned()) {
+        if (!getExtractedCards().isEmpty()) {
             GameMessage cards = new CardsMessage(currentPlayer.getVirtualViewID(), getExtractedCards());
             notify(cards);
-        }
-        else {
+        }else {//all cards are assigned => worker placement
             GameMessage board = new BoardMessage(null, getBoard().clone());
             notify(board);
-            //TODO: notify first placement to first player
+            GameMessage setFirstWorker = new StringMessage(getCurrentPlayer().getVirtualViewID(), StringMessage.setFirstWorkerMessage);
+            notify(setFirstWorker);
         }
     }
 
     /**
      * Verifies if the assignment can be done and if so decorates the current player with the chosen power.
+     * If all cards are assigned notifies the first player with a worker selection message.
      * @param selectedCard the PlayerAction containing the chosen card.
      */
     public synchronized void performPowerAssignment(PlayerAction selectedCard) {
         if (getCurrentPlayer().getVirtualViewID() == selectedCard.getVirtualViewID()) {
-            if (!arePowersAssigned()) {
-                CardChoice cardChoice = (CardChoice) selectedCard.getChoice();
-                GameMessage powerInfoMessage;
-                switch (cardChoice.getChoiceKey()) {
-                    case APOLLO:
-                        currentPlayer.assignPower(APOLLO);
-                        powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.apolloMessage);
-                        notify(powerInfoMessage);
-                        break;
-                    case ARTEMIS:
-                        currentPlayer.assignPower(ARTEMIS);
-                        powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.artemisMessage);
-                        notify(powerInfoMessage);
-                        break;
-                    case ATHENA:
-                        currentPlayer.assignPower(ATHENA);
-                        powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.athenaMessage);
-                        notify(powerInfoMessage);
-                        break;
-                    case ATLAS:
-                        currentPlayer.assignPower(ATLAS);
-                        powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.atlasMessage);
-                        notify(powerInfoMessage);
-                        break;
-                    case DEMETER:
-                        currentPlayer.assignPower(DEMETER);
-                        powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.demeterMessage);
-                        notify(powerInfoMessage);
-                        break;
-                }
-                extractedCards.remove(((CardChoice) selectedCard.getChoice()).getChoiceKey());
-                if (currentPlayer == players.lastElement())
-                    setPowersAssigned(true);
-
-                endTurn(getCurrentPlayer());
-            }else {
-                GameMessage cantSelect = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.cantSelect);
-                notify(cantSelect);
+            CardChoice cardChoice = (CardChoice) selectedCard.getChoice();
+            GameMessage powerInfoMessage;
+            switch (cardChoice.getChoiceKey()) {
+                case APOLLO:
+                    currentPlayer.assignPower(APOLLO);
+                    powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.apolloMessage);
+                    notify(powerInfoMessage);
+                    break;
+                case ARTEMIS:
+                    currentPlayer.assignPower(ARTEMIS);
+                    powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.artemisMessage);
+                    notify(powerInfoMessage);
+                    break;
+                case ATHENA:
+                    currentPlayer.assignPower(ATHENA);
+                    powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.athenaMessage);
+                    notify(powerInfoMessage);
+                    break;
+                case ATLAS:
+                    currentPlayer.assignPower(ATLAS);
+                    powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.atlasMessage);
+                    notify(powerInfoMessage);
+                    break;
+                case DEMETER:
+                    currentPlayer.assignPower(DEMETER);
+                    powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.demeterMessage);
+                    notify(powerInfoMessage);
+                    break;
             }
+            extractedCards.remove(((CardChoice) selectedCard.getChoice()).getChoiceKey());
+            endTurn(getCurrentPlayer());
         }else {
             GameMessage wrongTurn = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.wrongTurnMessage);
             notify(wrongTurn);
         }
+    }
+
+    public void performWorkerChoice(PlayerAction selectedWorker) {
+
+
+
     }
 
     /**

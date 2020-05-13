@@ -3,9 +3,8 @@ package it.polimi.ingsw.PSP54.client.view;
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
-import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
-import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.choices.*;
+import it.polimi.ingsw.PSP54.utils.messages.BoardMessage;
 import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
@@ -20,7 +19,6 @@ public class CliView implements Observer<GameMessage> {
 	private HashMap<String, Integer> credentials;
 	private static int numberOfPlayers;
 	private boolean maleSelected;
-	private static final String workerSelection = "Select your worker: [Enter m/f]";
 
 	public CliView(Client client) {
 		this.client = client;
@@ -349,6 +347,7 @@ public class CliView implements Observer<GameMessage> {
 	 */
 	public boolean acquireWorkerSelection() {
 
+		output.println("Select your worker: [enter m/f]");
 		boolean loop = true;
 		Boolean male = null;
 
@@ -445,7 +444,7 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 * Creates a message for the player containing the extracted cards.
+	 * Asks the player which power he wants and sends the choice via socket.
 	 */
 	public void acquireCardSelection(HashMap<Integer,String> extractedCards){
 		Vector<String> cardsName = new Vector<>(extractedCards.values());
@@ -453,7 +452,6 @@ public class CliView implements Observer<GameMessage> {
 		boolean found = false;
 
 		if (extractedCards.size() == 1){
-			//output.println("You are the last player.");
 			PlayerChoice cardChoice = new CardChoice(cardsValues.get(0));
 			client.asyncWriteToSocket(cardChoice);
 		}
@@ -480,24 +478,10 @@ public class CliView implements Observer<GameMessage> {
 		}
 	}
 
-	/*public void sendWorkerPlacement(boolean male){
-		int [] coordinates = acquireCoordinates();
-		MoveChoice moveChoice = new MoveChoice(male, coordinates[0], coordinates[1]);
-		moveChoice.setFirstPlacement(true);
-		client.asyncWriteToSocket(moveChoice);
+	public void sendWorkerSelection(){
+		PlayerChoice workerSelection = new WorkerChoice(isMaleSelected());
+		client.asyncWriteToSocket(workerSelection);
 	}
-
-	public void sendMove(boolean male){
-		int[] coordinates = acquireCoordinates();
-		MoveChoice moveChoice = new MoveChoice(male, coordinates[0], coordinates[1]);
-		client.asyncWriteToSocket(moveChoice);
-	}
-
-	public void sendBuild(boolean male, boolean setDome){
-		int[] coordinates = acquireCoordinates();
-		Build build = new Build(male,coordinates[0],coordinates[1],setDome);
-		client.asyncWriteToSocket(build);
-	}*/
 
 	/**
 	 * Called whenever the observed object is changed.
@@ -517,11 +501,18 @@ public class CliView implements Observer<GameMessage> {
 				acquireNumberOfPlayers();
 				sendNumberOfPlayers(getNumberOfPlayers());
 			}
+			if (stringMessage.equals(StringMessage.setFirstWorkerMessage)){
+				setMaleSelected(acquireWorkerSelection());
+				sendWorkerSelection();
+			}
+
 		}
 		if (message instanceof CardsMessage){
 			acquireCardSelection(((CardsMessage) message).getCards());
 		}
-
+		if (message instanceof BoardMessage){
+			printBoard(((BoardMessage)message).getBoard());
+		}
 	}
 
 	//setters & getters

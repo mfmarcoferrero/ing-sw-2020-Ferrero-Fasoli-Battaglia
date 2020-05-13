@@ -7,6 +7,8 @@ import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -45,15 +47,19 @@ public class Server {
             waitingConnection.keySet().removeIf(playerMessage -> waitingConnection.get(playerMessage) == c);
 
         if (playingConnection.contains(c)){
-            c.send("I'm sorry but you lose, wish to you good luck for the next time");
+            GameMessage tryAgain = new StringMessage(null, "I'm sorry but you lose, wish you good luck for the next time");
+            c.send(tryAgain);
             playingConnection.remove(c);
             if(playingConnection.size()>=1)
             {
-                for (Connection connection : playingConnection)
-                    connection.send(c.getName() + " is not your opponent anymore"); //TODO: why opponent's name is no longer saved?
+                for (Connection connection : playingConnection){
+                    GameMessage noMoreOpponent = new StringMessage(null, c.getName() + " is not your opponent anymore");
+                    connection.send(noMoreOpponent);
+                }
             }
             if (playingConnection.size()==1){
-                playingConnection.firstElement().send("You won!");
+                GameMessage youWon = new StringMessage(null, StringMessage.winMessage);
+                playingConnection.firstElement().send(youWon);
             }
             virtualViews.remove(playingConnection.indexOf(c));
         }

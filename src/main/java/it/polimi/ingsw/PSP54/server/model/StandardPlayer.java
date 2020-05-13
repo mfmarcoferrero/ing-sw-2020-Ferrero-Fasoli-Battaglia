@@ -15,6 +15,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     private int age, virtualViewId;
     private String color;
     private final Worker[] workers = new Worker[2];
+    private Worker currentWorker;
     private boolean playing;
     private boolean winner;
     private boolean loser;
@@ -96,10 +97,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             throw new InvalidMoveException();
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean areWorkerSettled() {
 
@@ -130,7 +127,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         Worker currentWorker = choseWorker(male);
         currentWorker.setMoveToken(1);
         currentWorker.setBuildToken(0);
-        setWorkerBoxesToBuild(currentWorker);
+        setWorkerBoxesToMove(currentWorker);
         return currentWorker;
     }
 
@@ -142,7 +139,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public ArrayList<Box> setWorkerBoxesToMove (Worker worker){
 
-        ArrayList<Box> boxes = new ArrayList<>();
+        ArrayList<Box> valid = new ArrayList<>();
         int deltaX, deltaY, deltaH;
         Box[][] board = getGame().getBoard();
 
@@ -152,11 +149,14 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                 deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
                 deltaH =  board[i][j].getLevel() - worker.getPos().getLevel();
                 if ((deltaX <= 1 && deltaY <= 1) && deltaH <= 1 && !board[i][j].isOccupied() && !board[i][j].isDome())
-                    boxes.add(board[i][j]);
+                    valid.add(board[i][j]);
             }
         }
-        worker.setBoxesToMove(boxes);
-        return boxes;
+        if (valid.isEmpty()){
+            setLoser(true);
+        }
+        worker.setBoxesToMove(valid);
+        return valid;
     }
 
     /**
@@ -272,7 +272,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public void setLoser(boolean loser) {
         this.loser = loser;
-    }
+    } //TODO: notify client & remove player.
 
     @Override
     public int getAge() {
@@ -315,6 +315,15 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
 
     @Override
     public Worker[] getWorkers() { return workers; }
+
+    @Override
+    public Worker getCurrentWorker() {
+        return currentWorker;
+    }
+    @Override
+    public void setCurrentWorker(Worker currentWorker) {
+        this.currentWorker = currentWorker;
+    }
 
     @Override
     public int getVirtualViewID() {

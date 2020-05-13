@@ -35,6 +35,16 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     }
 
     @Override
+    public Worker getCurrentWorker() {
+        return playerToDecorate.getCurrentWorker();
+    }
+
+    @Override
+    public void setCurrentWorker(Worker currentWorker) {
+        playerToDecorate.setCurrentWorker(currentWorker);
+    }
+
+    @Override
     public Worker turnInit(Boolean male) {
         return playerToDecorate.turnInit(male);
     }
@@ -147,9 +157,5 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
         playerToDecorate.setVirtualViewId(virtualViewId);
     }
 
-    /*@Override
-    public boolean isTurn() {
-        return playerToDecorate.isTurn();
-    }*/
 }
 

@@ -5,6 +5,7 @@ import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 
 public class VirtualView extends Observable<PlayerAction> implements Observer<GameMessage> {
@@ -29,7 +30,8 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
         this.playerCredentials = p;
         this.opponent = opponent;
         connection.addObserver(this.messageReceiver);
-        connection.asyncSend("opponent is: " + this.opponent + "\n");
+        GameMessage opponentMessage = new StringMessage(id, "Your opponent is:\n" + this.opponent + "\n");
+        connection.asyncSend(opponentMessage);
     }
 
     /**
@@ -47,7 +49,8 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
         this.playerCredentials = p;
         this.opponent = opponent1;
         connection.addObserver(this.messageReceiver);
-        connection.asyncSend("opponent 1 is: " + opponent1 + "\nopponent 2 is: " + opponent2 + "\n");
+        GameMessage opponentsMessage = new StringMessage(id, "Your opponents are:\n" + "- " + opponent1 + "\n" + "- " + opponent2 + "\n");
+        connection.asyncSend(opponentsMessage);
     }
 
     /**
@@ -56,13 +59,15 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
     public void addPlayer() {
         notify(playerCredentials);
     }
-    
+
     public void handleCardSelection(PlayerAction selection) {
         notify(selection);
     }
 
-    public synchronized void sendMessage(GameMessage message) {
-        connection.asyncSend(message);
+    public void sendMessage(GameMessage message) {
+        synchronized (connection){
+            connection.asyncSend(message);
+        }
     }
 
     /**
@@ -72,7 +77,7 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
      */
     @Override
     public void update(GameMessage message) {
-        if (message.getVirtualViewID() == getId() || message.getVirtualViewID() == null) {
+        if (message.getVirtualViewID() == null || message.getVirtualViewID() == getId()) {
             sendMessage(message);
         }
     }

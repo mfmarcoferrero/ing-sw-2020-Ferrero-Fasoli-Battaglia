@@ -7,6 +7,7 @@ import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.choices.WorkerChoice;
 
 import java.util.ArrayList;
 
@@ -45,7 +46,10 @@ public class Controller implements Observer<PlayerAction> {
     private void invokePowerAssignment(PlayerAction selectedCard) {
         game.performPowerAssignment(selectedCard);
         game.displayCards();
+    }
 
+    private void invokeWorkerChoice(PlayerAction choice){
+        game.performWorkerChoice(choice);
     }
 
     /**
@@ -121,7 +125,6 @@ public class Controller implements Observer<PlayerAction> {
             virtualViewList.get(build.getVirtualViewId()).sendMessage(GameMessage.wrongTurnMessage);
     }*/
 
-
     /**
      * Inserts a new player in the game.
      * @param playerCredentials a message containing the player's credentials.
@@ -144,6 +147,9 @@ public class Controller implements Observer<PlayerAction> {
         }
         if (choice instanceof CardChoice){
             invokePowerAssignment(message);
+        }
+        if (choice instanceof WorkerChoice){
+            invokeWorkerChoice(message);
         }
     }
 }

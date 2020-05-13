@@ -102,6 +102,10 @@ public interface Player {
 
     Worker[] getWorkers();
 
+    Worker getCurrentWorker();
+
+    void setCurrentWorker(Worker currentWorker);
+
     int getVirtualViewID ();
 
     void setVirtualViewId(int virtualViewId);
