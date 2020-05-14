@@ -26,11 +26,17 @@ public interface Player {
     boolean areWorkerSettled();
 
     /**
+     *
+     * @param currentWorker
+     */
+    void nextCurrentWorker(Worker currentWorker);
+
+    /**
      * Select the worker which player is going to use depending on the worker's sex
      * @param male the worker's sex
      * @return the chosen worker
      */
-    Worker choseWorker(Boolean male);
+    Worker getWorker(Boolean male);
 
     /**
      *Initialize current player's turn by setting worker's action tokens

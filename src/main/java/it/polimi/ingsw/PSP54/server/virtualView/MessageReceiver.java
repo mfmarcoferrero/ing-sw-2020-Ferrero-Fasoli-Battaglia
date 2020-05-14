@@ -6,6 +6,7 @@ import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.choices.WorkerChoice;
 
 /**
  * Represent the intermediary between a player's Connection and VirtualView.
@@ -40,10 +41,7 @@ public class MessageReceiver implements Observer<PlayerChoice> {
     @Override
     public void update(PlayerChoice message) {
         int id = getVirtualView().getId();
-        
-        if (message instanceof CardChoice){
-            PlayerAction cardSelection = new PlayerAction(id, message);
-            getVirtualView().handleCardSelection(cardSelection);
-        }
+        PlayerAction action = new PlayerAction(id, message);
+        getVirtualView().handleAction(action);
     }
 }

@@ -20,8 +20,8 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     }
 
     @Override
-    public Worker choseWorker(Boolean male) {
-        return playerToDecorate.choseWorker(male);
+    public Worker getWorker(Boolean male) {
+        return playerToDecorate.getWorker(male);
     }
 
     @Override
@@ -42,6 +42,11 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     @Override
     public void setCurrentWorker(Worker currentWorker) {
         playerToDecorate.setCurrentWorker(currentWorker);
+    }
+
+    @Override
+    public void nextCurrentWorker(Worker currentWorker) {
+        playerToDecorate.nextCurrentWorker(currentWorker);
     }
 
     @Override

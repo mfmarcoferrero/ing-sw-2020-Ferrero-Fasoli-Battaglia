@@ -54,16 +54,24 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
     }
 
     /**
-     * Notifies the Controller with a PlayerAction object containing the
+     * Notifies the observers with a PlayerAction object containing the player's credentials.
      */
     public void addPlayer() {
         notify(playerCredentials);
     }
 
-    public void handleCardSelection(PlayerAction selection) {
-        notify(selection);
+    /**
+     * Notifies the observers with a message containing player's action.
+     * @param action the player's action.
+     */
+    public void handleAction(PlayerAction action) {
+        notify(action);
     }
 
+    /**
+     * Sends via socket a GameMessage object.
+     * @param message the message to be sent.
+     */
     public void sendMessage(GameMessage message) {
         synchronized (connection){
             connection.asyncSend(message);

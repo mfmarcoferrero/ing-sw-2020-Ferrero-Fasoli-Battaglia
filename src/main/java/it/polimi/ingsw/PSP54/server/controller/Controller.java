@@ -4,10 +4,7 @@ import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.*;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
-import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
-import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
-import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
-import it.polimi.ingsw.PSP54.utils.choices.WorkerChoice;
+import it.polimi.ingsw.PSP54.utils.choices.*;
 
 import java.util.ArrayList;
 
@@ -41,15 +38,21 @@ public class Controller implements Observer<PlayerAction> {
 
     /**
      * Invokes model's methods to perform, if possible, the card's assignment.
-     * @param selectedCard the message containing informations regarding the assignment.
+     * @param action the message containing informations regarding the assignment.
      */
-    private void invokePowerAssignment(PlayerAction selectedCard) {
-        game.performPowerAssignment(selectedCard);
+    private void checkPowerAssignment(PlayerAction action) {
+        game.performPowerAssignment(action);
         game.displayCards();
     }
 
-    private void invokeWorkerChoice(PlayerAction choice){
-        game.performWorkerChoice(choice);
+    private void checkWorkerSelection(PlayerAction action){
+        game.performWorkerChoice(action);
+    }
+
+    private void checkMove(PlayerAction action) {
+
+        game.performMove(action);
+
     }
 
     /**
@@ -146,10 +149,13 @@ public class Controller implements Observer<PlayerAction> {
             addPlayer(message);
         }
         if (choice instanceof CardChoice){
-            invokePowerAssignment(message);
+            checkPowerAssignment(message);
         }
         if (choice instanceof WorkerChoice){
-            invokeWorkerChoice(message);
+            checkWorkerSelection(message);
+        }
+        if (choice instanceof MoveChoice){
+            checkMove(message);
         }
     }
 }

@@ -3,6 +3,8 @@ package it.polimi.ingsw.PSP54.server.model;
 import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
+import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
+import it.polimi.ingsw.PSP54.utils.choices.WorkerChoice;
 import it.polimi.ingsw.PSP54.utils.messages.BoardMessage;
 import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
@@ -23,7 +25,8 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     private HashMap<Integer, String> extractedCards = new HashMap<>();
     private Vector<Player> players;
     private Player currentPlayer;
-    private boolean powersAssigned;
+
+
 
     public Game() {
 
@@ -34,7 +37,6 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
                 board[i][j] = new Box(i, j, 0, false);
             }
         }
-        powersAssigned = false;
         cardMap.put(APOLLO,"Apollo");
         cardMap.put(ARTEMIS,"Artemis");
         cardMap.put(ATHENA,"Athena");
@@ -123,74 +125,133 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             GameMessage cards = new CardsMessage(currentPlayer.getVirtualViewID(), getExtractedCards());
             notify(cards);
         }else {//all cards are assigned => worker placement
-            GameMessage board = new BoardMessage(null, getBoard().clone());
-            notify(board);
-            GameMessage setFirstWorker = new StringMessage(getCurrentPlayer().getVirtualViewID(), StringMessage.setFirstWorkerMessage);
+            notifyBoard();
+            GameMessage setFirstWorker = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.setFirstWorkerMessage);
             notify(setFirstWorker);
         }
     }
 
     /**
      * Verifies if the assignment can be done and if so decorates the current player with the chosen power.
-     * If all cards are assigned notifies the first player with a worker selection message.
-     * @param selectedCard the PlayerAction containing the chosen card.
+     * @param workerSelection the PlayerAction containing the chosen card.
      */
-    public synchronized void performPowerAssignment(PlayerAction selectedCard) {
-        if (getCurrentPlayer().getVirtualViewID() == selectedCard.getVirtualViewID()) {
-            CardChoice cardChoice = (CardChoice) selectedCard.getChoice();
+    public synchronized void performPowerAssignment(PlayerAction workerSelection) {
+        if (getCurrentPlayer().getVirtualViewID() == workerSelection.getVirtualViewID()) {
+            CardChoice cardChoice = (CardChoice) workerSelection.getChoice();
             GameMessage powerInfoMessage;
             switch (cardChoice.getChoiceKey()) {
                 case APOLLO:
                     currentPlayer.assignPower(APOLLO);
-                    powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.apolloMessage);
+                    powerInfoMessage = new StringMessage(workerSelection.getVirtualViewID(), StringMessage.apolloMessage);
                     notify(powerInfoMessage);
                     break;
                 case ARTEMIS:
                     currentPlayer.assignPower(ARTEMIS);
-                    powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.artemisMessage);
+                    powerInfoMessage = new StringMessage(workerSelection.getVirtualViewID(), StringMessage.artemisMessage);
                     notify(powerInfoMessage);
                     break;
                 case ATHENA:
                     currentPlayer.assignPower(ATHENA);
-                    powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.athenaMessage);
+                    powerInfoMessage = new StringMessage(workerSelection.getVirtualViewID(), StringMessage.athenaMessage);
                     notify(powerInfoMessage);
                     break;
                 case ATLAS:
                     currentPlayer.assignPower(ATLAS);
-                    powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.atlasMessage);
+                    powerInfoMessage = new StringMessage(workerSelection.getVirtualViewID(), StringMessage.atlasMessage);
                     notify(powerInfoMessage);
                     break;
                 case DEMETER:
                     currentPlayer.assignPower(DEMETER);
-                    powerInfoMessage = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.demeterMessage);
+                    powerInfoMessage = new StringMessage(workerSelection.getVirtualViewID(), StringMessage.demeterMessage);
                     notify(powerInfoMessage);
                     break;
             }
-            extractedCards.remove(((CardChoice) selectedCard.getChoice()).getChoiceKey());
-            endTurn(getCurrentPlayer());
+            extractedCards.remove(((CardChoice) workerSelection.getChoice()).getChoiceKey());
+            endTurn(currentPlayer);
         }else {
-            GameMessage wrongTurn = new StringMessage(selectedCard.getVirtualViewID(), StringMessage.wrongTurnMessage);
+            GameMessage wrongTurn = new StringMessage(workerSelection.getVirtualViewID(), StringMessage.wrongTurnMessage);
             notify(wrongTurn);
         }
     }
 
-    public void performWorkerChoice(PlayerAction selectedWorker) {
-
-
-
+    /**
+     * Verifies if the assignment can be done and if so decorates the current player with the chosen power.
+     * @param workerSelection
+     */
+    public void performWorkerChoice(PlayerAction workerSelection) {
+        if (workerSelection.getVirtualViewID() == currentPlayer.getVirtualViewID()){
+            WorkerChoice workerChoice = (WorkerChoice) workerSelection.getChoice();
+            Worker currentWorker = currentPlayer.getWorker(workerChoice.isMale());
+            currentPlayer.setCurrentWorker(currentWorker);
+            if (currentWorker.getPos() != null) //set tokens if is already settled
+                currentPlayer.turnInit(workerChoice.isMale());
+            GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
+            notify(move);
+        }else{
+            GameMessage wrongTurn = new StringMessage(workerSelection.getVirtualViewID(), StringMessage.wrongTurnMessage);
+            notify(wrongTurn);
+        }
     }
 
     /**
-     * Determines whether a player has placed no workers
-     * in order to inform the Controller of the message to be sent.
-     * @param player the current player.
-     * @return true if no worker has been placed, false otherwise.
+     *
+     * @param moveSelection
      */
-    /*public boolean noWorkerPlaced(Player player){
+    public void performMove(PlayerAction moveSelection) {
+        if (moveSelection.getVirtualViewID() == currentPlayer.getVirtualViewID()) {
+            MoveChoice moveChoice = (MoveChoice) moveSelection.getChoice();
+            if (currentPlayer.getCurrentWorker().getPos() != null) { //actual move
+                try {
+                    currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
+                    currentPlayer.move(currentPlayer.getCurrentWorker(), getBox(moveChoice.getX(), moveChoice.getY()));
+                    notifyBoard();
+                    GameMessage build = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildMessage);
+                    notify(build);
+                }
+                catch (InvalidMoveException e) { //retry
+                    GameMessage invalidMove = new StringMessage(moveSelection.getVirtualViewID(), StringMessage.invalidMoveMessage);
+                    notify(invalidMove);
+                }
+            }
+            else { //first placement
+                try {
+                    currentPlayer.setWorkerPos(currentPlayer.getCurrentWorker(), moveChoice.getX(), moveChoice.getY());
+                    notifyBoard();
+                    if (currentPlayer.areWorkerSettled()) {
+                        endTurn(currentPlayer);
+                        if (currentPlayer.equals(players.firstElement())){ //notify actual move
+                            GameMessage choseWorker = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.choseWorker);
+                            notify(choseWorker);
+                        }
+                        else { //next player's first placement
+                            GameMessage firstPlacement = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.setFirstWorkerMessage);
+                            notify(firstPlacement);
+                        }
+                    }
+                    else { //second placement
+                        currentPlayer.nextCurrentWorker(currentPlayer.getCurrentWorker());
+                        GameMessage secondPlacement = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.setSecondWorkerMessage);
+                        notify(secondPlacement);
+                    }
+                }
+                catch (InvalidMoveException e) { //retry
+                    GameMessage invalidMove = new StringMessage(moveSelection.getVirtualViewID(), StringMessage.invalidMoveMessage);
+                    notify(invalidMove);
+                }
+            }
 
-        return (player.getWorkers()[0].getPos() == null
-                && player.getWorkers()[1].getPos() == null);
-    }*/
+        }
+    }
+
+    /**
+     * Notifies observers with a BoardMessage object.
+     */
+    private void notifyBoard() {
+        synchronized (this) {
+            GameMessage board = new BoardMessage(null, getBoard());
+            notify(board);
+        }
+    }
 
     /**
      * Sets the initial worker's position on the board.
@@ -272,13 +333,5 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
 
     public HashMap<Integer, String> getCardMap() {
         return cardMap;
-    }
-
-    public boolean arePowersAssigned() {
-        return powersAssigned;
-    }
-
-    public void setPowersAssigned(boolean powersAssigned) {
-        this.powersAssigned = powersAssigned;
     }
 }

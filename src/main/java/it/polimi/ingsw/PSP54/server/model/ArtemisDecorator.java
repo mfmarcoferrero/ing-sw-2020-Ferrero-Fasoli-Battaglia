@@ -21,10 +21,9 @@ public class ArtemisDecorator extends GodDecorator{
     @Override
     public Worker turnInit(Boolean male){
 
-        Worker currentWorker = choseWorker(male);
+        Worker currentWorker = getWorker(male);
         currentWorker.setMoveToken(2);
         currentWorker.setBuildToken(0);
-        setWorkerBoxesToBuild(currentWorker);
         return currentWorker;
     }
 

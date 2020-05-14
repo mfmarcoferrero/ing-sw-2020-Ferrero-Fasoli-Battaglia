@@ -7,12 +7,10 @@ import java.io.Serializable;
  */
 public class MoveChoice extends PlayerChoice implements Serializable, Cloneable {
     private final int  x, y;
-    private final boolean firstPlacement;
 
-    public MoveChoice(int x, int y, boolean firstPlacement) {
+    public MoveChoice(int x, int y) {
         this.x = x;
         this.y = y;
-        this.firstPlacement = firstPlacement;
     }
 
     public int getX() {
@@ -21,10 +19,6 @@ public class MoveChoice extends PlayerChoice implements Serializable, Cloneable 
 
     public int getY() {
         return y;
-    }
-
-    public boolean isFirstPlacement() {
-        return firstPlacement;
     }
 
 }

@@ -347,7 +347,6 @@ public class CliView implements Observer<GameMessage> {
 	 */
 	public boolean acquireWorkerSelection() {
 
-		output.println("Select your worker: [enter m/f]");
 		boolean loop = true;
 		Boolean male = null;
 
@@ -392,7 +391,7 @@ public class CliView implements Observer<GameMessage> {
 	public int[] acquireCoordinates() {
 		int[] coordinates = new int[2];
 
-		output.println("Enter cell coordinates");
+		output.println("Enter cell coordinates.");
 		//set x
 		output.println("x:");
 		int y = getCoordinate();
@@ -406,6 +405,10 @@ public class CliView implements Observer<GameMessage> {
 		return coordinates;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	private int getCoordinate() {
 		int k = 0;
 		boolean loop = true;
@@ -478,9 +481,21 @@ public class CliView implements Observer<GameMessage> {
 		}
 	}
 
+	/**
+	 *
+	 */
 	public void sendWorkerSelection(){
 		PlayerChoice workerSelection = new WorkerChoice(isMaleSelected());
 		client.asyncWriteToSocket(workerSelection);
+	}
+
+	/**
+	 *
+	 * @param coordinates
+	 */
+	public void sendMove(int[] coordinates) {
+		PlayerChoice move = new MoveChoice(coordinates[0], coordinates[1]);
+		client.asyncWriteToSocket(move);
 	}
 
 	/**
@@ -501,11 +516,22 @@ public class CliView implements Observer<GameMessage> {
 				acquireNumberOfPlayers();
 				sendNumberOfPlayers(getNumberOfPlayers());
 			}
-			if (stringMessage.equals(StringMessage.setFirstWorkerMessage)){
+			if (stringMessage.equals(StringMessage.setFirstWorkerMessage) || stringMessage.equals(StringMessage.choseWorker)){
 				setMaleSelected(acquireWorkerSelection());
 				sendWorkerSelection();
 			}
-
+			if (stringMessage.equals(StringMessage.setSecondWorkerMessage)){ //TODO: ma un bell'else?
+				int[] coordinates = acquireCoordinates();
+				sendMove(coordinates);
+			}
+			if (stringMessage.equals(StringMessage.moveMessage)){
+				int[] coordinates = acquireCoordinates();
+				sendMove(coordinates);
+			}
+			if (stringMessage.equals(StringMessage.invalidMoveMessage)){
+				int[] coordinates = acquireCoordinates();
+				sendMove(coordinates);
+			}
 		}
 		if (message instanceof CardsMessage){
 			acquireCardSelection(((CardsMessage) message).getCards());

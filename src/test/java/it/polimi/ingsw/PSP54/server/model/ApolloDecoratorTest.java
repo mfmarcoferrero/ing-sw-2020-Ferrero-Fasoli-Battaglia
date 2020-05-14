@@ -49,7 +49,7 @@ public class ApolloDecoratorTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        apolloWorker = players.get(0).choseWorker(true);
+        apolloWorker = players.get(0).getWorker(true);
         apolloWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(apolloWorker);
 
@@ -75,7 +75,7 @@ public class ApolloDecoratorTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        apolloWorker = players.get(0).choseWorker(true);
+        apolloWorker = players.get(0).getWorker(true);
         apolloWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(apolloWorker);
 
@@ -84,7 +84,7 @@ public class ApolloDecoratorTest {
         board[2][1].setLevel(3);
         board[3][1].setLevel(3);
         board[3][1].setDome(true);
-        board[3][3].setWorker(players.get(1).choseWorker(false));
+        board[3][3].setWorker(players.get(1).getWorker(false));
 
         //generate expected result
         ArrayList<Box> expected = new ArrayList<>();
@@ -105,18 +105,18 @@ public class ApolloDecoratorTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        apolloWorker = players.get(0).choseWorker(true);
+        apolloWorker = players.get(0).getWorker(true);
         apolloWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(apolloWorker);
 
         //set boxes levels
         board[1][1].setLevel(1);
-        board[1][1].setWorker(players.get(1).choseWorker(true));
+        board[1][1].setWorker(players.get(1).getWorker(true));
         board[1][2].setDome(true);
         board[2][1].setLevel(3);
         board[3][1].setLevel(3);
         board[3][1].setDome(true);
-        board[3][1].setWorker(players.get(1).choseWorker(false));
+        board[3][1].setWorker(players.get(1).getWorker(false));
 
         //generate expected result
         ArrayList<Box> expected = new ArrayList<>();

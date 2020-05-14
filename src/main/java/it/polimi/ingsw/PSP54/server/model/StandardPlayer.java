@@ -91,28 +91,40 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         if (!getGame().getBoard()[x][y].isOccupied()) {
             worker.setPos(getGame().getBoard()[x][y]);
             getGame().getBoard()[x][y].setWorker(worker);
-            setWorkerBoxesToMove(worker);
-            setWorkerBoxesToBuild(worker);
         } else
             throw new InvalidMoveException();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean areWorkerSettled() {
-
         return workers[0].getPos() != null && workers[1].getPos() != null;
     }
 
     /**
-     * Select the worker which player is going to use depending on the worker's sex
-     * @param male the worker's sex
-     * @return the chosen worker
+     *
+     * @param currentWorker
+     */
+    public void nextCurrentWorker(Worker currentWorker) {
+        if (currentWorker.equals(getWorkers()[0]))
+            setCurrentWorker(getWorkers()[1]);
+        else
+            setCurrentWorker(getWorkers()[0]);
+    }
+
+    /**
+     * Select the worker which player is going to use depending on the worker's sex.
+     * @param male the worker's sex.
+     * @return the chosen worker.
      */
     @Override
-    public Worker choseWorker(Boolean male) {
-
-        if (male)
+    public Worker getWorker(Boolean male) {
+        if (male) {
             return this.workers[0];
+        }
         else
             return this.workers[1];
     }
@@ -124,10 +136,9 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      */
     @Override
     public Worker turnInit(Boolean male) {
-        Worker currentWorker = choseWorker(male);
+        Worker currentWorker = getWorker(male);
         currentWorker.setMoveToken(1);
         currentWorker.setBuildToken(0);
-        setWorkerBoxesToMove(currentWorker);
         return currentWorker;
     }
 
@@ -137,7 +148,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      * @return the vector containing available boxes
      */
     @Override
-    public ArrayList<Box> setWorkerBoxesToMove (Worker worker){
+    public ArrayList<Box> setWorkerBoxesToMove (Worker worker){ //TODO: Throw Exception if valid.isEmpty
 
         ArrayList<Box> valid = new ArrayList<>();
         int deltaX, deltaY, deltaH;
@@ -165,7 +176,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      * @return the vector containing buildable boxes
      */
     @Override
-    public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){
+    public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){ //TODO: Throw Exception if valid.isEmpty
         ArrayList<Box> boxes = new ArrayList<>();
         int deltaX, deltaY;
         Box[][] board = getGame().getBoard();
@@ -191,7 +202,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException{
 
-        setWorkerBoxesToMove(worker);
         ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
 
@@ -320,6 +330,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     public Worker getCurrentWorker() {
         return currentWorker;
     }
+
     @Override
     public void setCurrentWorker(Worker currentWorker) {
         this.currentWorker = currentWorker;
@@ -344,5 +355,4 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     public void setPlaying(boolean playing) {
         this.playing = playing;
     }
-
 }
