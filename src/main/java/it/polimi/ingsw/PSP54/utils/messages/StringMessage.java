@@ -33,7 +33,8 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String occupiedBoxMessage = "The chosen box is not empty!";
     //specials
     public static final String moveAgain = "Do you want to move again?";
-    public static final String buildAgain = "Do you want to move again?";
+    public static final String buildOrMove = "Do you want to move or build?";
+    public static final String buildAgain = "Do you want to build again?";
     public static final String buildOrDome = "Do you want to build a dome?";
 
     public StringMessage(Integer virtualViewID, String message) {

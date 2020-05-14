@@ -176,6 +176,22 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
+     *
+     * @param currentWorker
+     */
+    public void checkTokens(Worker currentWorker) {
+        if (currentWorker.getMoveToken() == 1 && currentWorker.getBuildToken() == 0){
+            GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
+            notify(move);
+        }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() == 1){
+            GameMessage build = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildMessage);
+            notify(build);
+        }else if (currentWorker.getMoveToken() == 1 && currentWorker.getBuildToken() == 1){
+            GameMessage buildOrMove = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildOrMove);
+            notify(buildOrMove);
+        }
+    }
+    /**
      * Verifies if the assignment can be done and if so decorates the current player with the chosen power.
      * @param workerSelection
      */
@@ -186,14 +202,32 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             currentPlayer.setCurrentWorker(currentWorker);
             if (currentWorker.getPos() != null) { //set tokens if is already settled
                 currentPlayer.turnInit(workerChoice.isMale());
-                //TODO: check tokens in order to eventually send special message
+                checkTokens(currentWorker);
+            }else {
+                GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
+                notify(move);
             }
-            GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
-            notify(move);
         }else{
             GameMessage wrongTurn = new StringMessage(workerSelection.getVirtualViewID(), StringMessage.wrongTurnMessage);
             notify(wrongTurn);
         }
+    }
+
+    /**
+     *
+     * @param currentWorker
+     */
+    public void checkWinner(Worker currentWorker) {
+
+        if (currentWorker.getPos().getLevel() == 3){
+            currentPlayer.setWinner(true); //TODO: implement notify
+            for (Player player : players){
+                if (!player.equals(currentPlayer)){
+                    player.setLoser(true); //TODO: implement notify
+                }
+            }
+        }
+
     }
 
     /**
@@ -207,7 +241,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
                 try {
                     currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
                     currentPlayer.move(currentPlayer.getCurrentWorker(), getBox(moveChoice.getX(), moveChoice.getY()));
-                    //TODO: checkForWinner(); here, in Player or where else?
+                    checkWinner(currentPlayer.getCurrentWorker());
                 }
                 catch (InvalidMoveException e) { //retry
                     GameMessage invalidMove = new StringMessage(moveSelection.getVirtualViewID(), StringMessage.invalidMoveMessage);
