@@ -2,6 +2,7 @@ package it.polimi.ingsw.PSP54.server.model;
 
 import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
+import it.polimi.ingsw.PSP54.utils.choices.BuildChoice;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
 import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
 import it.polimi.ingsw.PSP54.utils.choices.WorkerChoice;
@@ -205,8 +206,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
                     currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
                     currentPlayer.move(currentPlayer.getCurrentWorker(), getBox(moveChoice.getX(), moveChoice.getY()));
                     notifyBoard();
-                    GameMessage build = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildMessage);
-                    notify(build);
+                    //TODO: checkForWinner(); here, in Player or where else?
                 }
                 catch (InvalidMoveException e) { //retry
                     GameMessage invalidMove = new StringMessage(moveSelection.getVirtualViewID(), StringMessage.invalidMoveMessage);
@@ -241,6 +241,10 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             }
 
         }
+        else {
+            GameMessage wrongTurn = new StringMessage(moveSelection.getVirtualViewID(), StringMessage.wrongTurnMessage);
+            notify(wrongTurn);
+        }
     }
 
     /**
@@ -254,23 +258,26 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     * Sets the initial worker's position on the board.
-     * @param moveChoice the message containing information about the Box where the worker is going to be placed.
+     *
+     * @param buildSelection
      */
-    /*public void setWorker(MoveChoice moveChoice) throws InvalidMoveException {
-        players.get(moveChoice.getPlayer_ind()).setWorkerPos(players.get(moveChoice.getPlayer_ind()).getWorkers()[moveChoice.getWorker_ind()], moveChoice.getX(), moveChoice.getY());
-        notify(board.clone());
-    }*/
-
-    /**
-     * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
-     * @param moveChoice oggetto che contiene le informazioni per eseguire lo spostamento
-     */
-    /*public void move(MoveChoice moveChoice) throws InvalidMoveException {
-        players.get(moveChoice.getPlayer_ind()).turnInit(moveChoice.isMale());
-        players.get(moveChoice.getPlayer_ind()).move(players.get(moveChoice.getPlayer_ind()).getWorkers()[moveChoice.getWorker_ind()],board[moveChoice.getX()][moveChoice.getY()]);
-        notify(board.clone());
-    }*/
+    public void performBuild(PlayerAction buildSelection){
+        if (buildSelection.getVirtualViewID() == currentPlayer.getVirtualViewID()) {
+            BuildChoice buildChoice = (BuildChoice) buildSelection.getChoice();
+            try {
+                currentPlayer.setWorkerBoxesToBuild(currentPlayer.getCurrentWorker());
+                currentPlayer.build(currentPlayer.getCurrentWorker(), getBox(buildChoice.getX(), buildChoice.getY()));
+                notifyBoard(); //TODO bug to fix
+            }
+            catch (InvalidBuildingException e) { //retry
+                GameMessage invalidBuilding = new StringMessage(buildSelection.getVirtualViewID(), StringMessage.invalidBuildingMessage);
+                notify(invalidBuilding);
+            }
+        }else {
+            GameMessage wrongTurn = new StringMessage(buildSelection.getVirtualViewID(), StringMessage.wrongTurnMessage);
+            notify(wrongTurn);
+        }
+    }
 
     /**
      * Metodo per chiamare la costruzione e restituire alla view la board che ha subito il cambiamento

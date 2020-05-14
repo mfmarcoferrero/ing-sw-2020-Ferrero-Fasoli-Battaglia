@@ -26,6 +26,17 @@ public class Controller implements Observer<PlayerAction> {
         this.virtualViewList.add(virtualView.getId(),virtualView);
     }
 
+
+
+    /**
+     * Inserts a new player in the game.
+     * @param playerCredentials a message containing the player's credentials.
+     */
+    private void addPlayer (PlayerAction playerCredentials) {
+        PlayerCredentials credentials = (PlayerCredentials) playerCredentials.getChoice();
+        game.newPlayer(credentials.getPlayerName(), credentials.getAge(), playerCredentials.getVirtualViewID());
+    }
+
     /**
      * Initializes the game by sorting the players and extracting a card for each one of them.
      */
@@ -45,69 +56,29 @@ public class Controller implements Observer<PlayerAction> {
         game.displayCards();
     }
 
+    /**
+     *
+     * @param action
+     */
     private void checkWorkerSelection(PlayerAction action){
         game.performWorkerChoice(action);
     }
 
+    /**
+     *
+     * @param action
+     */
     private void checkMove(PlayerAction action) {
-
         game.performMove(action);
-
     }
 
     /**
-     *Invokes model's methods to perform, if possible, the settlement of the workers.
-     * @param moveChoice the message containing informations regarding which worker and where is going to be settled.
+     *
+     * @param action
      */
-    /*private void performWorkerSet(MoveChoice moveChoice){
-
-        if (game.getCurrentPlayer().getVirtualViewID() == moveChoice.getVirtualViewId()) {
-            moveChoice.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));//fills the message informations
-            try {
-                game.setWorker(moveChoice); //perform actual placement
-                showAllBoards();
-
-                if (game.getCurrentPlayer().areWorkerSettled()) { //check current player turn status
-                    if (game.getCurrentPlayer() == game.getPlayers().lastElement()){ //check game turns status
-
-                        game.endTurn(game.getCurrentPlayer()); //players.next()
-                        virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).sendMessage(GameMessage.moveMessage);
-
-                    } else { //send first placement message to next player
-                        game.endTurn(game.getCurrentPlayer());
-                        virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).sendMessage(GameMessage.setFirstWorkerMessage);
-                    }
-                } else
-                    virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.setSecondWorkerMessage);
-
-            } catch (InvalidMoveException e) {//redo
-                virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.wrongPlacementMessage);
-                if (game.noWorkerPlaced(game.getCurrentPlayer())){
-                    virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.setFirstWorkerMessage);
-                }
-                virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.setSecondWorkerMessage);
-            }
-        } else //wrong turn
-            virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.wrongTurnMessage);
-    }*/
-
-    /**
-     * Metodo per effettuare una mossa
-     * @param moveChoice
-     */
-     /*private void performMove(MoveChoice moveChoice){
-         if (game.getCurrentPlayer().getVirtualViewID() == moveChoice.getVirtualViewId()) {
-             moveChoice.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
-             try {
-                 game.move(moveChoice); //perform actual move
-                 showAllBoards();
-                 virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.buildMessage);
-             } catch (InvalidMoveException e) {
-                 virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.invalidMoveMessage);
-             }
-         } else
-             virtualViewList.get(moveChoice.getVirtualViewId()).sendMessage(GameMessage.wrongTurnMessage);
-    }*/
+    private void checkBuild(PlayerAction action){
+        game.performBuild(action);
+    }
 
     /**
      * Metodo per effettuare una costruzione
@@ -127,15 +98,6 @@ public class Controller implements Observer<PlayerAction> {
         } else
             virtualViewList.get(build.getVirtualViewId()).sendMessage(GameMessage.wrongTurnMessage);
     }*/
-
-    /**
-     * Inserts a new player in the game.
-     * @param playerCredentials a message containing the player's credentials.
-     */
-    private void addPlayer (PlayerAction playerCredentials) {
-        PlayerCredentials credentials = (PlayerCredentials) playerCredentials.getChoice();
-        game.newPlayer(credentials.getPlayerName(), credentials.getAge(), playerCredentials.getVirtualViewID());
-    }
 
     /**
      * Called whenever the observed object is changed.

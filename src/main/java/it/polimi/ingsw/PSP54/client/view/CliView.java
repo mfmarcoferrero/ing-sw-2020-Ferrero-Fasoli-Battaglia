@@ -1,8 +1,9 @@
-package it.polimi.ingsw.PSP54.client.view;
+ package it.polimi.ingsw.PSP54.client.view;
 
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
+import it.polimi.ingsw.PSP54.utils.StringToDisplay;
 import it.polimi.ingsw.PSP54.utils.choices.*;
 import it.polimi.ingsw.PSP54.utils.messages.BoardMessage;
 import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
@@ -499,6 +500,14 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
+	 *
+	 * @param coordinates
+	 */
+	public void sendBuild(int[] coordinates) {
+		PlayerChoice build = new BuildChoice(coordinates[0], coordinates[1]);
+		client.asyncWriteToSocket(build);
+	}
+	/**
 	 * Called whenever the observed object is changed.
 	 *
 	 * @param message an argument passed to the notify method.
@@ -508,29 +517,33 @@ public class CliView implements Observer<GameMessage> {
 		if (message instanceof StringMessage){
 			String stringMessage = ((StringMessage) message).getMessage();
 			output.println(stringMessage);
-			if (stringMessage.equals(StringMessage.welcomeMessage)){
-				acquirePlayerCredentials();
-				sendPlayerCredentials(getCredentials());
-			}
-			if (stringMessage.equals(StringMessage.setNumberOfPlayersMessage)){
-				acquireNumberOfPlayers();
-				sendNumberOfPlayers(getNumberOfPlayers());
-			}
-			if (stringMessage.equals(StringMessage.setFirstWorkerMessage) || stringMessage.equals(StringMessage.choseWorker)){
-				setMaleSelected(acquireWorkerSelection());
-				sendWorkerSelection();
-			}
-			if (stringMessage.equals(StringMessage.setSecondWorkerMessage)){ //TODO: ma un bell'else?
-				int[] coordinates = acquireCoordinates();
-				sendMove(coordinates);
-			}
-			if (stringMessage.equals(StringMessage.moveMessage)){
-				int[] coordinates = acquireCoordinates();
-				sendMove(coordinates);
-			}
-			if (stringMessage.equals(StringMessage.invalidMoveMessage)){
-				int[] coordinates = acquireCoordinates();
-				sendMove(coordinates);
+			switch (stringMessage) {
+				case StringMessage.welcomeMessage:
+					acquirePlayerCredentials();
+					sendPlayerCredentials(getCredentials());
+					break;
+				case StringMessage.setNumberOfPlayersMessage:
+					acquireNumberOfPlayers();
+					sendNumberOfPlayers(getNumberOfPlayers());
+					break;
+				case StringMessage.setFirstWorkerMessage:
+				case StringMessage.choseWorker:
+					setMaleSelected(acquireWorkerSelection());
+					sendWorkerSelection();
+					break;
+				case StringMessage.setSecondWorkerMessage:
+				case StringMessage.moveMessage:
+				case StringMessage.invalidMoveMessage: { //insert coordinates
+					int[] coordinates = acquireCoordinates();
+					sendMove(coordinates);
+					break;
+				}
+				case StringMessage.buildMessage:
+				case StringMessage.invalidBuildingMessage: {
+					int[] coordinates = acquireCoordinates();
+					sendBuild(coordinates);
+					break;
+				}
 			}
 		}
 		if (message instanceof CardsMessage){

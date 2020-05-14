@@ -9,14 +9,13 @@ public class BuildChoice extends PlayerChoice implements Serializable, Cloneable
 
     private final int x;
     private final int y;
-    private final boolean setDome;
+    private boolean setDome;
 
 
 
-    public BuildChoice(int x, int y, boolean setDome) {
+    public BuildChoice(int x, int y) {
         this.x = x;
         this.y = y;
-        this.setDome = setDome;
     }
 
     public int getX() {

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.PSP54.server.model;
 
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -218,6 +221,9 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             setWorkerBoxesToMove(worker);
             setWorkerBoxesToBuild(worker);
 
+            GameMessage build = new StringMessage(getVirtualViewID(), StringMessage.buildMessage);
+            game.notify(build);
+
         } else throw new InvalidMoveException();
 
     }
@@ -243,6 +249,8 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             worker.setBuildToken(currentBuildToken - 1);
             setWorkerBoxesToMove(worker);
             setWorkerBoxesToBuild(worker);
+
+            game.endTurn(this);
         }
         else
             throw new InvalidBuildingException();
