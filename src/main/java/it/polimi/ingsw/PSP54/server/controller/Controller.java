@@ -119,5 +119,8 @@ public class Controller implements Observer<PlayerAction> {
         if (choice instanceof MoveChoice){
             checkMove(message);
         }
+        if (choice instanceof BuildChoice){
+            checkBuild(message);
+        }
     }
 }

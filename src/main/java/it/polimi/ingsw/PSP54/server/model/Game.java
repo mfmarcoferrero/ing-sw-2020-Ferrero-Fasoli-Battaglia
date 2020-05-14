@@ -184,8 +184,10 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             WorkerChoice workerChoice = (WorkerChoice) workerSelection.getChoice();
             Worker currentWorker = currentPlayer.getWorker(workerChoice.isMale());
             currentPlayer.setCurrentWorker(currentWorker);
-            if (currentWorker.getPos() != null) //set tokens if is already settled
+            if (currentWorker.getPos() != null) { //set tokens if is already settled
                 currentPlayer.turnInit(workerChoice.isMale());
+                //TODO: check tokens in order to eventually send special message
+            }
             GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
             notify(move);
         }else{
@@ -205,7 +207,6 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
                 try {
                     currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
                     currentPlayer.move(currentPlayer.getCurrentWorker(), getBox(moveChoice.getX(), moveChoice.getY()));
-                    notifyBoard();
                     //TODO: checkForWinner(); here, in Player or where else?
                 }
                 catch (InvalidMoveException e) { //retry
@@ -248,16 +249,6 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     * Notifies observers with a BoardMessage object.
-     */
-    private void notifyBoard() {
-        synchronized (this) {
-            GameMessage board = new BoardMessage(null, getBoard());
-            notify(board);
-        }
-    }
-
-    /**
      *
      * @param buildSelection
      */
@@ -267,7 +258,10 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             try {
                 currentPlayer.setWorkerBoxesToBuild(currentPlayer.getCurrentWorker());
                 currentPlayer.build(currentPlayer.getCurrentWorker(), getBox(buildChoice.getX(), buildChoice.getY()));
-                notifyBoard(); //TODO bug to fix
+                if (buildSelection.getVirtualViewID() != currentPlayer.getVirtualViewID()){
+                    GameMessage choseWorker = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.choseWorker);
+                    notify(choseWorker);
+                }
             }
             catch (InvalidBuildingException e) { //retry
                 GameMessage invalidBuilding = new StringMessage(buildSelection.getVirtualViewID(), StringMessage.invalidBuildingMessage);
@@ -280,13 +274,12 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     * Metodo per chiamare la costruzione e restituire alla view la board che ha subito il cambiamento
-     * @param build oggetto che contiene le informazioni per costruire
+     * Notifies observers with a BoardMessage object.
      */
-    /*public void build (Build build) throws InvalidBuildingException {
-        players.get(build.getPlayer_ind()).build(players.get(build.getPlayer_ind()).getWorkers()[build.getPlayer_ind()],board[build.getX()][build.getY()]);
-        notify(board.clone());
-    }*/
+    protected void notifyBoard() {
+        GameMessage board = new BoardMessage(null, getBoard());
+        notify(board);
+    }
 
     /**
      * Set the nex player in the players Vector to current.

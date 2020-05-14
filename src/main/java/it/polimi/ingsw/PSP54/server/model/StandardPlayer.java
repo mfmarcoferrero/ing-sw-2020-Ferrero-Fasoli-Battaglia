@@ -221,6 +221,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             setWorkerBoxesToMove(worker);
             setWorkerBoxesToBuild(worker);
 
+            game.notifyBoard();
             GameMessage build = new StringMessage(getVirtualViewID(), StringMessage.buildMessage);
             game.notify(build);
 
@@ -250,6 +251,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             setWorkerBoxesToMove(worker);
             setWorkerBoxesToBuild(worker);
 
+            game.notifyBoard();
             game.endTurn(this);
         }
         else
