@@ -23,15 +23,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     private boolean winner;
     private boolean loser;
 
-    public StandardPlayer(String playerName) {
-        this.playerName = playerName;
-        this.workers[0] = new Worker(true, this, null);
-        this.workers[1] = new Worker(false, this, null);
-        this.winner = false;
-        this.loser = false;
-        this.playing = false;
-    }
-
     /**
      * Instantiates a new Player with corresponding workers.
      * @param playerName the name of the Player.
@@ -55,7 +46,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public Player assignPower(int cardID){
 
-        Player actualPlayer = new StandardPlayer(null,0, 0);
+        Player actualPlayer = this;
 
         switch (cardID) {
             case APOLLO:

@@ -87,12 +87,12 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     *Extract an unique random god card for each player in the game
+     *Extract an unique random god card for each player in the game.
      */
     public void extractCards() {
 
         int numberOfPlayers = players.size();
-        Vector<Integer> deck = new Vector<>();
+        ArrayList<Integer> deck = new ArrayList<>();
 
         for (int i = 0; i < CARD_NUMBER; i++) {
             deck.add(i);
@@ -128,29 +128,35 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         if (getCurrentPlayer().getVirtualViewID() == cardSelection.getVirtualViewID()) {
             CardChoice cardChoice = (CardChoice) cardSelection.getChoice();
             GameMessage powerInfoMessage;
+            int currentIndex = players.indexOf(currentPlayer);
             switch (cardChoice.getChoiceKey()) {
                 case APOLLO:
-                    currentPlayer.assignPower(APOLLO);
+                    players.set(currentIndex, currentPlayer.assignPower(APOLLO));
+                    currentPlayer = players.get(currentIndex);
                     powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.apolloMessage);
                     notify(powerInfoMessage);
                     break;
                 case ARTEMIS:
-                    currentPlayer.assignPower(ARTEMIS);
+                    players.set(currentIndex, currentPlayer.assignPower(ARTEMIS));
+                    currentPlayer = players.get(currentIndex);
                     powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.artemisMessage);
                     notify(powerInfoMessage);
                     break;
                 case ATHENA:
-                    currentPlayer.assignPower(ATHENA);
+                    players.set(currentIndex, currentPlayer.assignPower(ATHENA));
+                    currentPlayer = players.get(currentIndex);
                     powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.athenaMessage);
                     notify(powerInfoMessage);
                     break;
                 case ATLAS:
-                    currentPlayer.assignPower(ATLAS);
+                    players.set(currentIndex, currentPlayer.assignPower(ATLAS));
+                    currentPlayer = players.get(currentIndex);
                     powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.atlasMessage);
                     notify(powerInfoMessage);
                     break;
                 case DEMETER:
-                    currentPlayer.assignPower(DEMETER);
+                    players.set(currentIndex, currentPlayer.assignPower(DEMETER));
+                    currentPlayer = players.get(currentIndex);
                     powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.demeterMessage);
                     notify(powerInfoMessage);
                     break;
@@ -291,6 +297,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      */
     public void endTurn(Player currentPlayer) {
 
+        currentPlayer.setPlaying(false);
         int i = players.indexOf(currentPlayer);
         if (i == players.indexOf(players.lastElement())){
             setCurrentPlayer(players.get(0));

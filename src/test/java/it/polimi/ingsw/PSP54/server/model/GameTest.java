@@ -1,6 +1,9 @@
 package it.polimi.ingsw.PSP54.server.model;
 
+import it.polimi.ingsw.PSP54.utils.PlayerAction;
+import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
 import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,9 +28,6 @@ public class GameTest {
         game.newPlayer("2", 21, 1);
         game.newPlayer("3", 22, 2);
         players = game.getPlayers();
-        players.get(0).setGame(game);
-        players.get(1).setGame(game);
-        players.get(2).setGame(game);
     }
 
     @After
@@ -88,21 +88,23 @@ public class GameTest {
         assertEquals("yellow", players.get(2).getColor());
     }
 
-
     @Test
-    public void extractCards_2PlayersExtraction_AllDifferent() {
+    public void performPowerAssignment_ApolloPower_CorrectOutput() {
 
-        game.extractCards();
+        game.setCurrentPlayer(players.get(0));
 
-        HashMap<Integer, String> cards = game.getExtractedCards();
+        game.getExtractedCards().put(0, "Apollo");
 
-        for (int i = 0; i < players.size(); i++) {
-            for (int j = 0; j < players.size(); j++){
-                if (i!=j){
-                    assertNotEquals(cards.get(i), cards.get(j));
-                }
-            }
-        }
+        PlayerAction cardSelection = new PlayerAction(0, new CardChoice(0));
+
+        game.performPowerAssignment(cardSelection);
+
+        assertTrue(players.get(0) instanceof ApolloDecorator);
+
+        assertFalse(players.get(0).isPlaying());
+
+        assertTrue(players.get(1).isPlaying());
+
 
     }
 }
