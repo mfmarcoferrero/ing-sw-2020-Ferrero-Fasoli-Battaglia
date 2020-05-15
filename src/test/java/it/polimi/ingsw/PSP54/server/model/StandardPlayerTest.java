@@ -26,9 +26,9 @@ public class StandardPlayerTest {
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1");
-        game.newPlayer("2");
-        game.newPlayer("3");
+        game.newPlayer("1", 20, 0);
+        game.newPlayer("2", 21, 1);
+        game.newPlayer("3", 22, 2);
         players = game.getPlayers();
         players.get(0).setGame(game);
         players.get(1).setGame(game);
@@ -522,7 +522,6 @@ public class StandardPlayerTest {
 
         assertTrue(board[3][3].isDome());
         assertNotNull(thrown);
-
     }
 
 }

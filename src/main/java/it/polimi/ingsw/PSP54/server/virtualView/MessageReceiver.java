@@ -1,12 +1,8 @@
 package it.polimi.ingsw.PSP54.server.virtualView;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
-import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
-import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
-import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
-import it.polimi.ingsw.PSP54.utils.choices.WorkerChoice;
 
 /**
  * Represent the intermediary between a player's Connection and VirtualView.

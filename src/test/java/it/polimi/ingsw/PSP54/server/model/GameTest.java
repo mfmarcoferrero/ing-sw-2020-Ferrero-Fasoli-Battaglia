@@ -21,9 +21,9 @@ public class GameTest {
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1");
-        game.newPlayer("2");
-        game.newPlayer("3");
+        game.newPlayer("1", 20, 0);
+        game.newPlayer("2", 21, 1);
+        game.newPlayer("3", 22, 2);
         players = game.getPlayers();
         players.get(0).setGame(game);
         players.get(1).setGame(game);
@@ -105,21 +105,4 @@ public class GameTest {
         }
 
     }
-
-    /* TODO
-    @Test
-    public void setWorker_SouthWestCorner_CorrectInput() throws InvalidMoveException {
-
-        MoveChoice message = new MoveChoice(true, 0, 4);
-
-        message.setPlayer_ind(0);
-        message.setVirtualViewId(0);
-        players.get(0).setVirtualViewId(0);
-
-        game.setWorker(message);
-
-        assertEquals(board[0][4], players.get(0).choseWorker(true).getPos());
-        assertEquals(players.get(0).choseWorker(true), board[0][4].getWorker());
-
-    }*/
 }

@@ -16,10 +16,10 @@ import java.net.Socket;
  */
 public class Connection extends Observable<PlayerChoice> implements Runnable {
 
-    private Socket socket;
+    private final Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    private Server server;
+    private final Server server;
     private String name;
     private boolean active = true;
     boolean gameMaster  = false;

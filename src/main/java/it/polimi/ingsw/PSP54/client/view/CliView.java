@@ -3,7 +3,6 @@
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.utils.StringToDisplay;
 import it.polimi.ingsw.PSP54.utils.choices.*;
 import it.polimi.ingsw.PSP54.utils.messages.BoardMessage;
 import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
@@ -366,21 +365,26 @@ public class CliView implements Observer<GameMessage> {
 		return male;
 	}
 
+	/**
+	 * Asks the player if he wants to build a dome.
+	 * It needs to be called when a player decorated with Atlas is going to build.
+	 * @return true if the player wants to build a dome, false otherwise.
+	 */
 	public boolean acquireSetDome() {
 		boolean loop = true;
 		boolean setDome = false;
-		output.println("Do you want to build a dome? [Enter yes/no]");
+		output.println("Do you want to build a dome? [Enter y/n]");
 		while (loop) {
 			String dome = inputReader.next();
-			if(dome.equals("yes")) {
+			if(dome.equals("y")) {
 				setDome = true;
 				loop = false;
 			}
-			else if(dome.equals("no")){
+			else if(dome.equals("n")){
 				loop = false;
 			} else
 				output.println("Incorrect Input!");
-				output.println("[Enter yes/no]");
+				output.println("[Enter y/n]");
 		}
 		return setDome;
 	}
@@ -407,8 +411,8 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 *
-	 * @return
+	 * Asks an integer lower than 6 and greater than 0 until the input is correct.
+	 * @return the given input.
 	 */
 	private int getCoordinate() {
 		int k = 0;
@@ -483,7 +487,7 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 *
+	 * Sends a WorkerChoice object via socket.
 	 */
 	public void sendWorkerSelection(){
 		PlayerChoice workerSelection = new WorkerChoice(isMaleSelected());
@@ -491,8 +495,8 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 *
-	 * @param coordinates
+	 * Sends a MoveChoice object via socket.
+	 * @param coordinates an array containing the destination cell's coordinates.
 	 */
 	public void sendMove(int[] coordinates) {
 		PlayerChoice move = new MoveChoice(coordinates[0], coordinates[1]);
@@ -500,8 +504,8 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 *
-	 * @param coordinates
+	 * Sends a BuildChoice object via socket.
+	 * @param coordinates an array containing the destination cell's coordinates.
 	 */
 	public void sendBuild(int[] coordinates) {
 		PlayerChoice build = new BuildChoice(coordinates[0], coordinates[1]);
@@ -513,7 +517,7 @@ public class CliView implements Observer<GameMessage> {
 	 * @param message an argument passed to the notify method.
 	 */
 	@Override
-	public void update(GameMessage message) {
+	public synchronized void update(GameMessage message) {
 		if (message instanceof StringMessage){
 			String stringMessage = ((StringMessage) message).getMessage();
 			output.println(stringMessage);

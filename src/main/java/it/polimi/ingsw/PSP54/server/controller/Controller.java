@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Controller implements Observer<PlayerAction> {
 
     private final Game game;
-    private ArrayList<VirtualView> virtualViewList = new ArrayList<>();
+    private final ArrayList<VirtualView> virtualViewList = new ArrayList<>();
 
     public Controller (Game game) {
         this.game = game;
@@ -25,8 +25,6 @@ public class Controller implements Observer<PlayerAction> {
     public void addVirtualView (VirtualView virtualView) {
         this.virtualViewList.add(virtualView.getId(),virtualView);
     }
-
-
 
     /**
      * Inserts a new player in the game.
@@ -49,7 +47,7 @@ public class Controller implements Observer<PlayerAction> {
 
     /**
      * Invokes model's methods to perform, if possible, the card's assignment.
-     * @param action the message containing informations regarding the assignment.
+     * @param action the object containing information regarding the assignment.
      */
     private void checkPowerAssignment(PlayerAction action) {
         game.performPowerAssignment(action);
@@ -57,47 +55,28 @@ public class Controller implements Observer<PlayerAction> {
     }
 
     /**
-     *
-     * @param action
+     * Invokes model's method to perform, if possible, the worker's selection.
+     * @param action the object containing information regarding the selection.
      */
     private void checkWorkerSelection(PlayerAction action){
         game.performWorkerChoice(action);
     }
 
     /**
-     *
-     * @param action
+     * Invokes model's method to perform, if possible, the move action.
+     * @param action the object containing information regarding the move action.
      */
     private void checkMove(PlayerAction action) {
         game.performMove(action);
     }
 
     /**
-     *
-     * @param action
+     * Invokes model's method to perform, if possible, the build action.
+     * @param action the object containing information regarding the build action.
      */
     private void checkBuild(PlayerAction action){
         game.performBuild(action);
     }
-
-    /**
-     * Metodo per effettuare una costruzione
-     * @param build
-     */
-    /*private void performBuild(Build build){
-        if (game.getCurrentPlayer().getVirtualViewID() == build.getVirtualViewId()) {
-            build.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
-            try{
-                game.build(build);
-                showAllBoards(); //check current player turn status
-                game.endTurn(game.getCurrentPlayer());
-                virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).sendMessage(GameMessage.moveMessage);
-            } catch (InvalidBuildingException e) {
-                virtualViewList.get(build.getVirtualViewId()).sendMessage(GameMessage.invalidBuildingMessage);
-            }
-        } else
-            virtualViewList.get(build.getVirtualViewId()).sendMessage(GameMessage.wrongTurnMessage);
-    }*/
 
     /**
      * Called whenever the observed object is changed.

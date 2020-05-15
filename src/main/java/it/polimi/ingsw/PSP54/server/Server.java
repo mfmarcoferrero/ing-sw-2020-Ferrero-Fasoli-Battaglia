@@ -4,7 +4,6 @@ package it.polimi.ingsw.PSP54.server;
 import it.polimi.ingsw.PSP54.server.controller.Controller;
 import it.polimi.ingsw.PSP54.server.model.Game;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
-import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
@@ -19,15 +18,15 @@ import java.util.concurrent.Executors;
 
 public class Server {
     private static final int PORT= 12345;
-    private ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
 
-    private ExecutorService executor = Executors.newCachedThreadPool();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
 
-    private List<Connection> connections = new ArrayList<>();
-    private Map<PlayerCredentials, Connection> lobbyBuffer = new HashMap<>(0);
-    private Map<PlayerCredentials, Connection> waitingConnection = new HashMap<>();
-    private Vector<Connection> playingConnection = new Vector<>(0,1);
-    private Vector<VirtualView> virtualViews = new Vector<>(0, 1);
+    private final List<Connection> connections = new ArrayList<>();
+    private final Map<PlayerCredentials, Connection> lobbyBuffer = new HashMap<>(0);
+    private final Map<PlayerCredentials, Connection> waitingConnection = new HashMap<>();
+    private final Vector<Connection> playingConnection = new Vector<>(0,1);
+    private final Vector<VirtualView> virtualViews = new Vector<>(0, 1);
     protected Vector<Connection> currentConnections = new Vector<>(0,1);
     private int numberOfPlayers;
 
@@ -140,6 +139,7 @@ public class Server {
      * Per ogni client che si collega e viene accettato dal serverSocket
      * viene eseguito un thread di una connection (tramite un executor)
      */
+    @SuppressWarnings("InfiniteLoopStatement")
     public void run(){
         System.out.println("Server listening on port: " + PORT);
         while(true) {

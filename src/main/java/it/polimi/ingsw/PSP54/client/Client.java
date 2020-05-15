@@ -12,10 +12,10 @@ import java.util.NoSuchElementException;
 
 public class Client extends Observable<GameMessage> {
 
-    private String ip;
-    private int port;
+    private final String ip;
+    private final int port;
     private ObjectOutputStream socketOut;
-    private CliView view;
+    private final CliView view;
     private int playerInd;
     private boolean active = true;
 
