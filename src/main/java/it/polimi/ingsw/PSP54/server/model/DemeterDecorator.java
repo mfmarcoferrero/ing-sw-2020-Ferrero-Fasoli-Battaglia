@@ -21,13 +21,7 @@ public class DemeterDecorator extends GodDecorator{
             return super.setWorkerBoxesToBuild(worker);
         else {
             ArrayList<Box> valid = super.setWorkerBoxesToBuild(worker);
-            Iterator<Box> iterator = valid.iterator();
-            while (iterator.hasNext()) {
-
-                Box check = iterator.next();
-                if (check == getLastBuilding())
-                    iterator.remove();
-            }
+            valid.removeIf(check -> check == getLastBuilding());
 
             return valid;
         }
@@ -42,23 +36,9 @@ public class DemeterDecorator extends GodDecorator{
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
 
-        worker.setBoxesToBuild(setWorkerBoxesToBuild(worker));
-        ArrayList<Box> valid = worker.getBoxesToBuild();
-        int currentBuildToken = worker.getBuildToken();
-
-        if (valid.contains(dest)){
-            if (dest.getLevel() == 3)
-                dest.setDome(true);
-            else {
-                int currentLevel = dest.getLevel();
-                dest.setLevel(currentLevel+1);
-            }
-            if (currentBuildToken == 2)
-                setLastBuilding(dest);
-
-            worker.setBuildToken(currentBuildToken-1);
-
-            }else throw new InvalidBuildingException();
+        super.build(worker, dest);
+        if (worker.getBuildToken() == 1)
+            setLastBuilding(dest);
     }
 
     //getters & setters

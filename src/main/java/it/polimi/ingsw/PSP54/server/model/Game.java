@@ -183,7 +183,8 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         }else if (currentWorker.getMoveToken() >= 1 && currentWorker.getBuildToken() >= 1){
             GameMessage buildOrMove = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildOrMove);
             notify(buildOrMove);
-        }
+        }else
+            endTurn(currentPlayer);
     }
     /**
      * Verifies if the choice can be done and if so initializes worker's token and notifies with a corresponding message.
@@ -219,6 +220,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
                 try {
                     currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
                     currentPlayer.move(currentPlayer.getCurrentWorker(), getBox(moveChoice.getX(), moveChoice.getY()));
+                    checkTokens(currentPlayer.getCurrentWorker());
                 }
                 catch (InvalidMoveException e) { //retry
                     GameMessage invalidMove = new StringMessage(moveSelection.getVirtualViewID(), StringMessage.invalidMoveMessage);
@@ -268,6 +270,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             try {
                 currentPlayer.setWorkerBoxesToBuild(currentPlayer.getCurrentWorker());
                 currentPlayer.build(currentPlayer.getCurrentWorker(), getBox(buildChoice.getX(), buildChoice.getY()));
+                checkTokens(currentPlayer.getCurrentWorker());
                 if (buildSelection.getVirtualViewID() != currentPlayer.getVirtualViewID()){
                     GameMessage choseWorker = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.choseWorker);
                     notify(choseWorker);

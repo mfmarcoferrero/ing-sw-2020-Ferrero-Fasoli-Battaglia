@@ -74,6 +74,12 @@ public interface Player {
      */
     void build(Worker worker, Box dest) throws InvalidBuildingException;
 
+    /**
+     *
+     * @param worker
+     */
+    void checkWinner(Worker worker);
+
     //setters & getters
 
     /**

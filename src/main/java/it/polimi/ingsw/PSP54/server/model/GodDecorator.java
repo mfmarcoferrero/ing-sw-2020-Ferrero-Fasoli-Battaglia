@@ -100,6 +100,11 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     }
 
     @Override
+    public void checkWinner(Worker worker) {
+        playerToDecorate.checkWinner(worker);
+    }
+
+    @Override
     public boolean isWinner() {
         return playerToDecorate.isWinner();
     }

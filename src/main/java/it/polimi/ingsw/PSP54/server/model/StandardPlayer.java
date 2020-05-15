@@ -207,18 +207,12 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             //set tokens
             worker.setMoveToken(currentMoveToken - 1);
             worker.setBuildToken(1);
-            setWorkerBoxesToMove(worker);
-            setWorkerBoxesToBuild(worker);
 
             game.notifyBoard();
             checkWinner(worker);
             if (this.isWinner()){
                 //TODO: notify win && endGame
-            }else {
-                GameMessage build = new StringMessage(getVirtualViewID(), StringMessage.buildMessage);
-                game.notify(build);
             }
-
 
         } else throw new InvalidMoveException();
 
@@ -243,8 +237,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                 dest.setLevel(currentLevel+1);
             }
             worker.setBuildToken(currentBuildToken - 1);
-            setWorkerBoxesToMove(worker);
-            setWorkerBoxesToBuild(worker);
 
             game.notifyBoard();
             game.endTurn(this);
@@ -257,6 +249,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      * This method needs to be invoked after every move. It checks if the newly moved worker is on a 3 level building.
      * @param currentWorker the worker that has just been moved.
      */
+    @Override
     public void checkWinner(Worker currentWorker) {
 
         if (currentWorker.getPos().getLevel() == 3){

@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP54.server.model;
 import java.util.ArrayList;
 
 /**
- * Your worker may move an additional time but not back to its initial space
+ * Your worker may move an additional time but not back to its initial space.
  */
 public class ArtemisDecorator extends GodDecorator{
 
@@ -20,7 +20,6 @@ public class ArtemisDecorator extends GodDecorator{
      */
     @Override
     public Worker turnInit(Boolean male){
-
         Worker currentWorker = getWorker(male);
         currentWorker.setMoveToken(2);
         currentWorker.setBuildToken(0);

@@ -132,6 +132,7 @@ public class ArtemisDecoratorTest {
 
         doubleMove(artemisWorker, board[1][1], board[0][0]);
 
+        players.get(0).setWorkerBoxesToBuild(artemisWorker);
         players.get(0).build(artemisWorker, board[1][1]);
 
         assertEquals(artemisWorker.getPos(), board[0][0]);

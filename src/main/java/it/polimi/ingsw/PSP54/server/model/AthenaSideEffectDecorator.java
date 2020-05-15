@@ -21,13 +21,7 @@ public class AthenaSideEffectDecorator extends GodDecorator {
         ArrayList<Box> valid = super.setWorkerBoxesToMove(worker);
 
         //affects the vector
-        Iterator<Box> iterator = valid.iterator();
-        while (iterator.hasNext()) {
-            Box check = iterator.next();
-
-            if (check.getLevel() == worker.getPos().getLevel() + 1)
-                iterator.remove();
-        }
+        valid.removeIf(check -> check.getLevel() == worker.getPos().getLevel() + 1);
         return valid;
     }
 }

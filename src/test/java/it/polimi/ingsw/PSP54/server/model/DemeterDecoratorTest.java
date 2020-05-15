@@ -57,7 +57,9 @@ public class DemeterDecoratorTest {
 
         players.get(0).setWorkerBoxesToMove(demeterWorker);
         players.get(0).move(demeterWorker, board[3][3]);
+        players.get(0).setWorkerBoxesToBuild(demeterWorker);
         players.get(0).build(demeterWorker, board[2][2]);
+        players.get(0).setWorkerBoxesToBuild(demeterWorker);
         players.get(0).build(demeterWorker, board[4][4]);
 
         assertEquals(board[3][3], demeterWorker.getPos());
@@ -82,9 +84,12 @@ public class DemeterDecoratorTest {
 
         Exception thrown = null;
 
+        players.get(0).setWorkerBoxesToBuild(demeterWorker);
+
         players.get(0).build(demeterWorker, board[3][1]);
 
         try {
+            players.get(0).setWorkerBoxesToBuild(demeterWorker);
             players.get(0).build(demeterWorker, board[3][1]);
         } catch (InvalidBuildingException e) {
             thrown = e;

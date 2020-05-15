@@ -105,6 +105,5 @@ public class GameTest {
 
         assertTrue(players.get(1).isPlaying());
 
-
     }
 }
