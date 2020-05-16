@@ -112,27 +112,48 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
         }
     }
 
+    /**
+     * Cards in deck must be different
+     */
+    public void extractCardsIWant() {
+
+        int numberOfPlayers = players.size();
+        Vector<Integer> deck = new Vector<>();
+        deck.add(ARTEMIS);
+        deck.add(DEMETER);
+        deck.add(ATLAS);
+        for (int i = 0; i < numberOfPlayers; i++) {
+            extractedCards.put(deck.get(i),cardMap.get(deck.get(i)));
+        }
+    }
+
     synchronized public void chosePower(Choice choice) {
         GameMessage message = new GameMessage(choice.getVirtualViewID(),GameMessage.cantSelect);
+        int currentIndex = players.indexOf(currentPlayer);
         switch (choice.getChoiceInt()) {
             case APOLLO:
-                currentPlayer.assignPower(APOLLO);
+                players.set(currentIndex, currentPlayer.assignPower(APOLLO));
+                currentPlayer = players.get(currentIndex);
                 message.setMessage(GameMessage.apolloMessage);
                 break;
             case ARTEMIS:
-                currentPlayer.assignPower(ARTEMIS);
+                players.set(currentIndex, currentPlayer.assignPower(ARTEMIS));
+                currentPlayer = players.get(currentIndex);
                 message.setMessage(GameMessage.artemisMessage);
                 break;
             case ATHENA:
-                currentPlayer.assignPower(ATHENA);
+                players.set(currentIndex, currentPlayer.assignPower(ATHENA));
+                currentPlayer = players.get(currentIndex);
                 message.setMessage(GameMessage.athenaMessage);
                 break;
             case ATLAS:
-                currentPlayer.assignPower(ATLAS);
+                players.set(currentIndex, currentPlayer.assignPower(ATLAS));
+                currentPlayer = players.get(currentIndex);
                 message.setMessage(GameMessage.atlasMessage);
                 break;
             case DEMETER:
-                currentPlayer.assignPower(DEMETER);
+                players.set(currentIndex, currentPlayer.assignPower(DEMETER));
+                currentPlayer = players.get(currentIndex);
                 message.setMessage(GameMessage.demeterMessage);
                 break;
         }
@@ -173,7 +194,10 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
      * @param move oggetto che contiene le informazioni per eseguire lo spostamento
      */
     public void move(Move move) throws InvalidMoveException {
-        Worker currentWorker = players.get(move.getPlayer_ind()).turnInit(move.isMale());
+        Worker currentWorker = players.get(move.getPlayer_ind()).getWorkers()[move.getWorker_ind()];
+        if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() == 0){
+            currentWorker = players.get(move.getPlayer_ind()).turnInit(move.isMale());
+        }
         players.get(move.getPlayer_ind()).setWorkerBoxesToMove(currentWorker);
         players.get(move.getPlayer_ind()).move(currentWorker,board[move.getX()][move.getY()]);
         notify(board.clone());
@@ -226,9 +250,7 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
         for (Player player : players) {
             player.setPlaying(currentPlayer == player);
         }
-        /*GameMessage yourTurn = new GameMessage(currentPlayer.getVirtualViewID(), GameMessage.turnMessage);
-        notify(yourTurn);
-         */
+
     }
 
     public Box[][] getBoard() {

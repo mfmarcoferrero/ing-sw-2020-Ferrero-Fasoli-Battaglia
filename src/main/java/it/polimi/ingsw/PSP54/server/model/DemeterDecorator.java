@@ -52,7 +52,7 @@ public class DemeterDecorator extends GodDecorator{
 
             worker.setBuildToken(currentBuildToken-1);
 
-            }else throw new InvalidBuildingException();
+        } else throw new InvalidBuildingException();
     }
 
     //getters & setters

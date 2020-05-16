@@ -61,11 +61,6 @@ public class VirtualView extends Observable<Object> implements Observer {
         notify(message);
     }
 
-    /*public void selectWorker(String message) {
-        Choice choice = new Choice(id, message);
-        notify(choice);
-    }*/
-
     /**
      * Notifica il controller con un oggetto di tipo Move verificando che la mossa
      * non sia un set iniziale di un worker

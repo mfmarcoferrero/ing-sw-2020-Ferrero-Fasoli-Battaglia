@@ -55,6 +55,7 @@ public class ApolloDecorator extends GodDecorator {
             dest.setWorker(worker);
             //decrement token
             worker.setMoveToken(currentMoveToken-1);
+            worker.setBuildToken(1);
             //set buildable boxes
             worker.setBoxesToBuild(setWorkerBoxesToBuild(worker));
         }else throw new InvalidMoveException();

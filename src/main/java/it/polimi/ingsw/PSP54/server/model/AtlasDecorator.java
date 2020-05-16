@@ -27,7 +27,7 @@ public class AtlasDecorator extends GodDecorator {
         if (!dest.isDome() && dest.getLevel() != 3) {
             GameMessage buildOrDome = new GameMessage(this.getVirtualViewID(), GameMessage.buildOrDome);
             //getGame().notify(buildOrDome);
-        }else
+        } else
             super.build(worker, dest);
 
         //TODO: endTurn?

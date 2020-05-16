@@ -1,5 +1,7 @@
 package it.polimi.ingsw.PSP54.client;
 
+import it.polimi.ingsw.PSP54.client.gui.GuiMain;
+import it.polimi.ingsw.PSP54.client.gui.GuiView;
 import it.polimi.ingsw.PSP54.client.view.*;
 import it.polimi.ingsw.PSP54.observer.Observable;
 
@@ -14,13 +16,15 @@ public class Client extends Observable {
     private String ip;
     private int port;
     private ObjectOutputStream socketOut;
-    private CliView view = new CliView(this);
+    private CliView cliView = new CliView(this);
+    //private GuiView guiView = new GuiView(this);
     private int playerInd;
 
     public Client(String ip, int port) {
         this.ip = ip;
         this.port = port;
-        addObserver(view);
+        addObserver(cliView);
+        //addObserver(guiView);
     }
 
     private boolean active = true;
