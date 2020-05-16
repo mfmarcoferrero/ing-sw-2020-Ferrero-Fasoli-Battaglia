@@ -79,6 +79,13 @@ public class Controller implements Observer<PlayerAction> {
     }
 
     /**
+     *
+     * @param action
+     */
+    private void checkChoice(PlayerAction action) {
+        game.performChoice(action);
+    }
+    /**
      * Called whenever the observed object is changed.
      *
      * @param message an argument passed to the notify method.
@@ -100,6 +107,9 @@ public class Controller implements Observer<PlayerAction> {
         }
         if (choice instanceof BuildChoice){
             checkBuild(message);
+        }
+        if (choice instanceof BooleanChoice){
+            checkChoice(message);
         }
     }
 }

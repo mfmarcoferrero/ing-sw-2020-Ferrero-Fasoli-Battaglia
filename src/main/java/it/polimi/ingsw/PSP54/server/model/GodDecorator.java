@@ -65,6 +65,11 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     }
 
     @Override
+    public void chose(boolean choice) {
+        playerToDecorate.chose(choice);
+    }
+
+    @Override
     public int getAge() {
         return playerToDecorate.getAge();
     }

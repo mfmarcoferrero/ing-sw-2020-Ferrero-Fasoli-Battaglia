@@ -20,7 +20,7 @@ public class Server {
     private static final int PORT= 12345;
     private final ServerSocket serverSocket;
 
-    private final ExecutorService executor = Executors.newCachedThreadPool();
+    private final ExecutorService executor = Executors.newFixedThreadPool(100);
 
     private final List<Connection> connections = new ArrayList<>();
     private final Map<PlayerCredentials, Connection> lobbyBuffer = new HashMap<>(0);

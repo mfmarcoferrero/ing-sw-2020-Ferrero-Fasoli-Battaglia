@@ -2,10 +2,7 @@ package it.polimi.ingsw.PSP54.server.model;
 
 import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
-import it.polimi.ingsw.PSP54.utils.choices.BuildChoice;
-import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
-import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
-import it.polimi.ingsw.PSP54.utils.choices.WorkerChoice;
+import it.polimi.ingsw.PSP54.utils.choices.*;
 import it.polimi.ingsw.PSP54.utils.messages.BoardMessage;
 import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
@@ -180,12 +177,10 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() >= 1){
             GameMessage build = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildMessage);
             notify(build);
-        }else if (currentWorker.getMoveToken() >= 1 && currentWorker.getBuildToken() >= 1){
-            GameMessage buildOrMove = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildOrMove);
-            notify(buildOrMove);
         }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() == 0)
             endTurn(currentPlayer);
     }
+
     /**
      * Verifies if the choice can be done and if so initializes worker's token and notifies with a corresponding message.
      * @param workerSelection the object representing the player's selection.
@@ -282,6 +277,21 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             }
         }else {
             GameMessage wrongTurn = new StringMessage(buildSelection.getVirtualViewID(), StringMessage.wrongTurnMessage);
+            notify(wrongTurn);
+        }
+    }
+
+    /**
+     *
+     * @param choiceAction
+     */
+    public void performChoice(PlayerAction choiceAction){
+        if (choiceAction.getVirtualViewID() == currentPlayer.getVirtualViewID()){
+            BooleanChoice choice = (BooleanChoice) choiceAction.getChoice();
+            currentPlayer.chose(choice.isChoice());
+            checkTokens(currentPlayer.getCurrentWorker());
+        }else {
+            GameMessage wrongTurn = new StringMessage(choiceAction.getVirtualViewID(), StringMessage.wrongTurnMessage);
             notify(wrongTurn);
         }
     }

@@ -366,27 +366,24 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 * Asks the player if he wants to build a dome.
-	 * It needs to be called when a player decorated with Atlas is going to build.
-	 * @return true if the player wants to build a dome, false otherwise.
+	 *
+	 * @return
 	 */
-	public boolean acquireSetDome() {
+	public boolean acquireBooleanChoice() {
 		boolean loop = true;
-		boolean setDome = false;
-		output.println("Do you want to build a dome? [Enter y/n]");
+		boolean choice = false;
 		while (loop) {
 			String dome = inputReader.next();
 			if(dome.equals("y")) {
-				setDome = true;
+				choice = true;
 				loop = false;
 			}
 			else if(dome.equals("n")){
 				loop = false;
 			} else
 				output.println("Incorrect Input!");
-				output.println("[Enter y/n]");
 		}
-		return setDome;
+		return choice;
 	}
 
 	/**
@@ -511,13 +508,23 @@ public class CliView implements Observer<GameMessage> {
 		PlayerChoice build = new BuildChoice(coordinates[0], coordinates[1]);
 		client.asyncWriteToSocket(build);
 	}
+
+	/**
+	 *
+	 * @param choice
+	 */
+	public void sendBooleanChoice(boolean choice) {
+		PlayerChoice booleanChoice = new BooleanChoice(choice);
+		client.asyncWriteToSocket(booleanChoice);
+	}
 	/**
 	 * Called whenever the observed object is changed.
 	 *
 	 * @param message an argument passed to the notify method.
 	 */
 	@Override
-	public synchronized void update(GameMessage message) {
+	public void update(GameMessage message) {
+
 		if (message instanceof StringMessage){
 			String stringMessage = ((StringMessage) message).getMessage();
 			output.println(stringMessage);
@@ -548,6 +555,14 @@ public class CliView implements Observer<GameMessage> {
 					sendBuild(coordinates);
 					break;
 				}
+				case StringMessage.moveAgain:
+				case StringMessage.buildAgain:
+				case StringMessage.buildOrDome: {
+					boolean choice = acquireBooleanChoice();
+					sendBooleanChoice(choice);
+					break;
+				}
+
 			}
 		}
 		if (message instanceof CardsMessage){
@@ -555,6 +570,7 @@ public class CliView implements Observer<GameMessage> {
 		}
 		if (message instanceof BoardMessage){
 			printBoard(((BoardMessage)message).getBoard());
+
 		}
 	}
 

@@ -32,7 +32,7 @@ public class Client extends Observable<GameMessage> {
      * @param socketIn
      * @return
      */
-    public Thread asyncReadFromSocket(final ObjectInputStream socketIn){
+    public synchronized Thread asyncReadFromSocket(final ObjectInputStream socketIn){
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {

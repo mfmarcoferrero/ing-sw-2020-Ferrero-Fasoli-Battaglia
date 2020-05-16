@@ -15,6 +15,7 @@ public class AthenaSideEffectDecorator extends GodDecorator {
      * @param worker current worker in use
      * @return the vector containing available boxes
      */
+    @Override
     public ArrayList<Box> setWorkerBoxesToMove(Worker worker) {
 
         //get standard vector

@@ -80,6 +80,12 @@ public interface Player {
      */
     void checkWinner(Worker worker);
 
+    /**
+     *
+     * @param choice
+     */
+    void chose(boolean choice);
+
     //setters & getters
 
     /**

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -138,7 +137,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      * @return the vector containing available boxes
      */
     @Override
-    public ArrayList<Box> setWorkerBoxesToMove (Worker worker){ //TODO: Throw Exception if valid.isEmpty
+    public ArrayList<Box> setWorkerBoxesToMove (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
 
         ArrayList<Box> valid = new ArrayList<>();
         int deltaX, deltaY, deltaH;
@@ -166,7 +165,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      * @return the vector containing buildable boxes
      */
     @Override
-    public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){ //TODO: Throw LoserException if valid.isEmpty
+    public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
         ArrayList<Box> boxes = new ArrayList<>();
         int deltaX, deltaY;
         Box[][] board = getGame().getBoard();
@@ -206,7 +205,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             worker.setMoveToken(currentMoveToken - 1);
             worker.setBuildToken(1);
 
-            game.notifyBoard();
+            getGame().notifyBoard();
             checkWinner(worker);
             if (this.isWinner()){
                 //TODO: notify win && endGame
@@ -217,7 +216,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     *If valid performs build and modify action tokens
+     * If valid performs build and modify action tokens
      * @param worker selected worker which the player wants to move
      * @param dest selected box where to build
      */
@@ -236,11 +235,14 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             }
             worker.setBuildToken(currentBuildToken - 1);
 
-            game.notifyBoard();
-            game.endTurn(this);
+            getGame().notifyBoard();
         }
         else
             throw new InvalidBuildingException();
+    }
+
+    @Override
+    public void chose(boolean choice) {
     }
 
     /**

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.PSP54.server.model;
 
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
+
 import java.util.ArrayList;
 
 /**
@@ -39,6 +42,9 @@ public class ArtemisDecorator extends GodDecorator{
         if (worker.getMoveToken() == 2){
             initialPos = worker.getPos();
             valid = super.setWorkerBoxesToMove(worker);
+            worker.setMoveToken(-1);
+            GameMessage moveAgain = new StringMessage(getVirtualViewID(), StringMessage.moveAgain);
+            getGame().notify(moveAgain);
         }else {
             valid = super.setWorkerBoxesToMove(worker);
             valid.remove(initialPos);
@@ -47,16 +53,13 @@ public class ArtemisDecorator extends GodDecorator{
         return valid;
     }
 
-    /**
-     *If valid performs build and modify action tokens
-     * @param worker selected worker which the player wants to move
-     * @param dest selected box where to build
-     */
     @Override
-    public void build(Worker worker, Box dest) throws InvalidBuildingException {
-
-        super.build(worker, dest);
-        if (worker.getMoveToken()!=0)
-            worker.setMoveToken(0);
+    public void chose(boolean choice){
+        if (choice){ //move again
+            getCurrentWorker().setMoveToken(1);
+        }else {
+            getCurrentWorker().setMoveToken(0);
+            getCurrentWorker().setBuildToken(1);
+        }
     }
 }

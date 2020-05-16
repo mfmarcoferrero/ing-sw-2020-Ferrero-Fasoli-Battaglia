@@ -49,7 +49,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
      * Viene istanziato un thread che esegue l'operzione di writeObject e flush
      * @param message
      */
-    public void asyncSend(final Object message) {
+    public synchronized void asyncSend(final Object message) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -107,7 +107,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             GameMessage welcome = new StringMessage(null, StringMessage.welcomeMessage);
-            asyncSend(welcome);
+            send(welcome);
             in = new ObjectInputStream(socket.getInputStream());
             PlayerCredentials credentials = (PlayerCredentials) in.readObject();
             this.name = credentials.getPlayerName();

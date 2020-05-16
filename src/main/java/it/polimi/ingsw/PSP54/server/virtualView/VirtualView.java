@@ -31,7 +31,7 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
         this.opponent = opponent;
         connection.addObserver(this.messageReceiver);
         GameMessage opponentMessage = new StringMessage(id, "Your opponent is:\n" + this.opponent + "\n");
-        connection.asyncSend(opponentMessage);
+        connection.send(opponentMessage);
     }
 
     /**
@@ -50,7 +50,7 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
         this.opponent = opponent1;
         connection.addObserver(this.messageReceiver);
         GameMessage opponentsMessage = new StringMessage(id, "Your opponents are:\n" + "- " + opponent1 + "\n" + "- " + opponent2 + "\n");
-        connection.asyncSend(opponentsMessage);
+        connection.send(opponentsMessage);
     }
 
     /**
@@ -73,9 +73,7 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
      * @param message the message to be sent.
      */
     public void sendMessage(GameMessage message) {
-        synchronized (connection){
-            connection.asyncSend(message);
-        }
+        connection.send(message);
     }
 
     /**
@@ -85,9 +83,8 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
      */
     @Override
     public void update(GameMessage message) {
-        if (message.getVirtualViewID() == null || message.getVirtualViewID() == getId()) {
+        if (message.getVirtualViewID() == null || message.getVirtualViewID() == getId())
             sendMessage(message);
-        }
     }
 
     //getters & setter
