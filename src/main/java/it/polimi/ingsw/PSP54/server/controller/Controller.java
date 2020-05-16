@@ -122,7 +122,11 @@ public class Controller implements Observer {
                          virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.buildMessage);
                  }
                  else
-                     virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.buildMessage);
+                     if (game.getPlayers().get(move.getPlayer_ind()).getCardID() == Game.ATLAS){
+                         virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.buildOrDome);
+                     }
+                     else
+                         virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.buildMessage);
              } catch (InvalidMoveException e) {
                  virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
              }
@@ -142,6 +146,9 @@ public class Controller implements Observer {
         else {
             if (game.getCurrentPlayer().getVirtualViewID() == build.getVirtualViewId()) {
                 build.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
+                if (build.isSetDome()){
+                    game.getPlayers().get(build.getPlayer_ind()).getWorkers()[build.getWorker_ind()].setDomeBuilder(true);
+                }
                 try {
                     game.build(build);
                     showAllBoards(); //check current player turn status

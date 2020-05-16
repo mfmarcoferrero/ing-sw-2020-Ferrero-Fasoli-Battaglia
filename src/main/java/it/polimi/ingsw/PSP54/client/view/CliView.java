@@ -317,7 +317,6 @@ public class CliView implements Observer {
 	public boolean acquireSetDome() {
 		boolean loop = true;
 		Boolean setDome = false;
-		output.println("Do you want to build a dome? [Enter y/n]");
 		while (loop) {
 			String dome = inputReader.next();
 			if(dome.equals("yes")) {
@@ -438,6 +437,18 @@ public class CliView implements Observer {
 		}
 	}
 
+	private void acquireAtlasBuild(){
+		boolean setDome = acquireSetDome();
+		int[] coordinates = acquireCoordinates();
+		Build build = new Build(isMaleSelected(),coordinates[0],coordinates[1]);
+		if (setDome){
+			build.setSetDome(true);
+			client.asyncWriteToSocket(build);
+		}
+		else
+			client.asyncWriteToSocket(build);
+	}
+
 	/**
 	 * Asks an integer until input is valid.
 	 * @return the given number.
@@ -552,6 +563,9 @@ public class CliView implements Observer {
 		}
 		if (message.equals(GameMessage.doubleBuildMessage)){
 			acquireSecondBuild();
+		}
+		if (message.equals(GameMessage.buildOrDome)){
+			acquireAtlasBuild();
 		}
 
 	}

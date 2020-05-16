@@ -33,7 +33,7 @@ public class ApolloDecorator extends GodDecorator {
 
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
-        worker.setBoxesToMove(setWorkerBoxesToMove(worker));
+        //worker.setBoxesToMove(setWorkerBoxesToMove(worker));
         //sets validity indicators
         ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
@@ -58,6 +58,6 @@ public class ApolloDecorator extends GodDecorator {
             worker.setBuildToken(1);
             //set buildable boxes
             worker.setBoxesToBuild(setWorkerBoxesToBuild(worker));
-        }else throw new InvalidMoveException();
+        } else throw new InvalidMoveException();
     }
 }
