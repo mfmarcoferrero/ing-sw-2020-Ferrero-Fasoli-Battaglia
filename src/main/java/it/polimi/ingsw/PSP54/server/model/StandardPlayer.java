@@ -140,7 +140,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      * @return the vector containing available boxes
      */
     @Override
-    public ArrayList<Box> setWorkerBoxesToMove (Worker worker){
+    public ArrayList<Box> setWorkerBoxesToMove (Worker worker) {
 
         ArrayList<Box> boxes = new ArrayList<>();
         int deltaX, deltaY, deltaH;
@@ -236,21 +236,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         else
             throw new InvalidBuildingException();
     }
-
-    /*@Override
-    public boolean isTurn() {
-        for (Worker w : workers){
-            if (w.getMoveToken() == 1 && w.getBuildToken() == 0){
-                return true;
-            }
-            if (w.getMoveToken() == 0 && w.getBuildToken() == 1){
-                return true;
-            }
-        }
-        return false;
-    }*/
-
-    //setters & getters
 
     /**
      * Creates a reference to the current Game, in order to access board's and other players' info

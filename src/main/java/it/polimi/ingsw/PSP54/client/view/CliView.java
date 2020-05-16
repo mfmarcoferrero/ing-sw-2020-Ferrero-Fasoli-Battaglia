@@ -391,6 +391,53 @@ public class CliView implements Observer {
 		client.asyncWriteToSocket(numberOfPlayers);
 	}
 
+	private void acquireSecondMove(){
+		boolean loop = true;
+		Boolean secondMove = false;
+		while (loop) {
+			String choice = inputReader.next();
+			if(choice.equals("y")) {
+				secondMove = true;
+				loop = false;
+			}
+			else if(choice.equals("n")){
+				secondMove = false;
+				loop = false;
+			} else
+				output.println("Incorrect Input! [Enter y/n]");
+		}
+		if (secondMove) {
+			sendMove(isMaleSelected());
+		}
+		else {
+			output.println(GameMessage.buildMessage);
+			sendBuild(isMaleSelected());
+		}
+	}
+
+	private void acquireSecondBuild(){
+		boolean loop = true;
+		Boolean secondBuild = false;
+		while (loop) {
+			String choice = inputReader.next();
+			if(choice.equals("y")) {
+				secondBuild = true;
+				loop = false;
+			}
+			else if(choice.equals("n")){
+				secondBuild = false;
+				loop = false;
+			} else
+				output.println("Incorrect Input! [Enter y/n]");
+		}
+		if (secondBuild) {
+			sendBuild(isMaleSelected());
+		}
+		else {
+			sendEndTurn();
+		}
+	}
+
 	/**
 	 * Asks an integer until input is valid.
 	 * @return the given number.
@@ -464,6 +511,11 @@ public class CliView implements Observer {
 		client.asyncWriteToSocket(build);
 	}
 
+	public void sendEndTurn(){
+		Build build = new Build(true);
+		client.asyncWriteToSocket(build);
+	}
+
 	@Override
 	public void update(String message) {
 		output.println(message);
@@ -495,8 +547,15 @@ public class CliView implements Observer {
 		if (message.equals(GameMessage.invalidBuildingMessage)){
 			sendBuild(isMaleSelected());
 		}
+		if (message.equals(GameMessage.doubleMoveMessage)){
+			acquireSecondMove();
+		}
+		if (message.equals(GameMessage.doubleBuildMessage)){
+			acquireSecondBuild();
+		}
 
 	}
+
 
 	@Override
 	public void update(Box[][] message) {

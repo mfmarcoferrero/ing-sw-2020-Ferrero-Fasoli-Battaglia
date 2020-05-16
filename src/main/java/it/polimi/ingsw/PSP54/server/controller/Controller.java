@@ -32,7 +32,8 @@ public class Controller implements Observer {
     public void startGame() {
         game.sortPlayers();
         game.assignColors();
-        game.extractCards();
+        //game.extractCards();
+        game.extractCardsIWant();
         displayCards();
     }
 
@@ -96,7 +97,8 @@ public class Controller implements Observer {
                 virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.wrongPlacementMessage);
                 if (game.noWorkerPlaced(game.getCurrentPlayer())){
                     virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setFirstWorkerMessage);
-                } else
+                }
+                else
                     virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.setSecondWorkerMessage);
             }
         } else //wrong turn
@@ -113,7 +115,14 @@ public class Controller implements Observer {
              try {
                  game.move(move); //perform actual move
                  showAllBoards();
-                 virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.buildMessage);
+                 if (game.getPlayers().get(move.getPlayer_ind()).getCardID() == Game.ARTEMIS) {
+                     if (game.getPlayers().get(move.getPlayer_ind()).getWorkers()[move.getWorker_ind()].getMoveToken() == 1)
+                        virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.doubleMoveMessage);
+                     else
+                         virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.buildMessage);
+                 }
+                 else
+                     virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.buildMessage);
              } catch (InvalidMoveException e) {
                  virtualViewList.get(move.getVirtualViewId()).showMessage(GameMessage.invalidMoveMessage);
              }
@@ -125,19 +134,35 @@ public class Controller implements Observer {
      * Metodo per effettuare una costruzione
      * @param build
      */
-    private void performBuild(Build build){
-        if (game.getCurrentPlayer().getVirtualViewID() == build.getVirtualViewId()) {
-            build.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
-            try{
-                game.build(build);
-                showAllBoards(); //check current player turn status
-                game.endTurn(game.getCurrentPlayer());
-                virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.moveMessage);
-            } catch (InvalidBuildingException e) {
-                virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.invalidBuildingMessage);
-            }
-        } else
-            virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
+    private void performBuild(Build build) {
+        if (build.isEndTurn()) {
+            game.endTurn(game.getCurrentPlayer());
+            virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.moveMessage);
+        }
+        else {
+            if (game.getCurrentPlayer().getVirtualViewID() == build.getVirtualViewId()) {
+                build.setPlayer_ind(game.getPlayers().indexOf(game.getCurrentPlayer()));
+                try {
+                    game.build(build);
+                    showAllBoards(); //check current player turn status
+                    if (game.getPlayers().get(build.getPlayer_ind()).getCardID() == Game.DEMETER) {
+                        if (game.getPlayers().get(build.getPlayer_ind()).getWorkers()[build.getWorker_ind()].getBuildToken() == 1) {
+                            virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.doubleBuildMessage);
+                        }
+                        else {
+                            game.endTurn(game.getCurrentPlayer());
+                            virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.moveMessage);
+                        }
+                    } else {
+                        game.endTurn(game.getCurrentPlayer());
+                        virtualViewList.get(game.getCurrentPlayer().getVirtualViewID()).showMessage(GameMessage.moveMessage);
+                    }
+                } catch (InvalidBuildingException e) {
+                    virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.invalidBuildingMessage);
+                }
+            } else
+                virtualViewList.get(build.getVirtualViewId()).showMessage(GameMessage.wrongTurnMessage);
+        }
     }
 
 

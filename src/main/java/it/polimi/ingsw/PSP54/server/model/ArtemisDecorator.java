@@ -19,7 +19,7 @@ public class ArtemisDecorator extends GodDecorator{
      * @return the chosen worker with updated tokens
      */
     @Override
-    public Worker turnInit(Boolean male){
+    public Worker turnInit(Boolean male) {
 
         Worker currentWorker = choseWorker(male);
         currentWorker.setMoveToken(2);

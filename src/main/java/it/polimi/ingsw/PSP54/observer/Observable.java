@@ -22,7 +22,7 @@ public class Observable<T> {
         }
     }
 
-    protected void notify(T message){
+    protected void notify(T message) {
         synchronized (observers) {
             for(Observer observer : observers) {
                 if (message instanceof GameMessage) {

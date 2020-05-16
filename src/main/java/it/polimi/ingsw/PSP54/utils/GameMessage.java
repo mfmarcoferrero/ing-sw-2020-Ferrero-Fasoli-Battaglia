@@ -8,6 +8,8 @@ public class GameMessage implements Serializable,Cloneable {
     private int virtualViewID;
     private String message;
     private HashMap<Integer, String> cards;
+    public static String doubleMoveMessage = "You have Artemis!\nDo you want to move again? [enter 'y' or 'n']";
+    public static String doubleBuildMessage = "You have Demeter!\nDo you want to build again? [enter 'y' or 'n']";
     public static String turnMessage = "It's your turn!";
     public static String powersSet = "All powers are set!";
     public static String welcomeMessage = "Welcome!";
