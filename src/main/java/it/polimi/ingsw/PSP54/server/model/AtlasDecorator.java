@@ -8,33 +8,23 @@ import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
  */
 public class AtlasDecorator extends GodDecorator {
 
+    private Box dest;
+
     public AtlasDecorator(Player player) {
         super(player);
     }
-
-    /*
-    PSEUDOCODE
-
-    build(Worker worker, Box dest):
-        if !dest.isDome && dest.getLevel() != 3
-            notifyController()
-            acquireChoice()
-            performBuild
-     */
 
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
 
         if (!dest.isDome() && dest.getLevel() != 3) {
+            this.dest = dest;
             GameMessage buildOrDome = new StringMessage(this.getVirtualViewID(), StringMessage.buildOrDome);
-            //getGame().notify(buildOrDome);
+            getGame().notify(buildOrDome);
+            worker.setMoveToken(-1);
+            worker.setMoveToken(-1);
         }else
             super.build(worker, dest);
-
-        //TODO: endTurn?
-        //Box destAtCall = new Box(dest.getX(), dest.getY(), dest.getLevel(), dest.isDome());
-        //if dest.getLevel == destAtCall.getLevel+1 || dest.isDome
-            //endTurn
 
     }
 }

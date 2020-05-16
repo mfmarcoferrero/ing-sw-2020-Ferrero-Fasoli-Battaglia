@@ -183,7 +183,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         }else if (currentWorker.getMoveToken() >= 1 && currentWorker.getBuildToken() >= 1){
             GameMessage buildOrMove = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildOrMove);
             notify(buildOrMove);
-        }else
+        }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() == 0)
             endTurn(currentPlayer);
     }
     /**
