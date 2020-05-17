@@ -35,7 +35,7 @@ public class GameMessage implements Serializable,Cloneable {
     public static String setFirstWorkerMessage = "Set your first worker:";
     public static String setSecondWorkerMessage = "Set your second worker:";
     public static String choiceMessage = "Do you want to move or build?";
-    public static String buildOrDome = "Do you want to build a dome?";
+    public static String buildOrDome = "You have Atlas\nDo you want to build a dome?[enter 'y' or 'n']";
 
     public GameMessage(int virtualViewID, String message) {
         this.virtualViewID = virtualViewID;

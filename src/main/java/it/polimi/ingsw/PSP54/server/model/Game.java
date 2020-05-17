@@ -119,9 +119,9 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
 
         int numberOfPlayers = players.size();
         Vector<Integer> deck = new Vector<>();
+        deck.add(ATHENA);
+        deck.add(APOLLO);
         deck.add(ARTEMIS);
-        deck.add(DEMETER);
-        deck.add(ATLAS);
         for (int i = 0; i < numberOfPlayers; i++) {
             extractedCards.put(deck.get(i),cardMap.get(deck.get(i)));
         }

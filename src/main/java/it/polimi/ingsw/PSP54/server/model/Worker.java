@@ -9,7 +9,7 @@ public class Worker implements Serializable, Cloneable {
     private Box pos;
     private int moveToken;
     private int buildToken;
-    private boolean available;
+    private boolean available, domeBuilder;
     private ArrayList<Box> boxesToBuild;
     private ArrayList<Box> boxesToMove;
 
@@ -79,5 +79,13 @@ public class Worker implements Serializable, Cloneable {
 
     public void setBoxesToMove(ArrayList<Box> boxesToMove) {
         this.boxesToMove = boxesToMove;
+    }
+
+    public boolean isDomeBuilder() {
+        return domeBuilder;
+    }
+
+    public void setDomeBuilder(boolean domeBuilder) {
+        this.domeBuilder = domeBuilder;
     }
 }

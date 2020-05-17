@@ -67,4 +67,8 @@ public class Build implements Serializable,Cloneable {
     public int getWorker_ind() {
         return worker_ind;
     }
+
+    public void setSetDome(boolean setDome) {
+        this.setDome = setDome;
+    }
 }
