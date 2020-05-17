@@ -35,8 +35,9 @@ public class AtlasDecorator extends GodDecorator {
     public void chose(boolean choice){
         if (choice){
             selectedBox.setDome(true);
-            getCurrentWorker().setBuildToken(0);
-        }else
-            selectedBox.setLevel(selectedBox.getLevel()+1);
+        }else {
+            selectedBox.setLevel(selectedBox.getLevel() + 1);
+        }
+        getCurrentWorker().setBuildToken(0);
     }
 }

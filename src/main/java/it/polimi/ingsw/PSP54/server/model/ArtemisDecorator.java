@@ -64,6 +64,7 @@ public class ArtemisDecorator extends GodDecorator{
     public void chose(boolean choice){
         if (choice){ //move again
             getCurrentWorker().setMoveToken(1);
+            getCurrentWorker().setBuildToken(0);
         }else {
             getCurrentWorker().setMoveToken(0);
             getCurrentWorker().setBuildToken(1);

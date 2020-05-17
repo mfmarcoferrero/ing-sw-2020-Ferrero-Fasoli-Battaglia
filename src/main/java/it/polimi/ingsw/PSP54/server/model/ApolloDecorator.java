@@ -49,7 +49,6 @@ public class ApolloDecorator extends GodDecorator {
 
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
-        worker.setBoxesToMove(setWorkerBoxesToMove(worker));
         //sets validity indicators
         ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();

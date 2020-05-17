@@ -144,7 +144,7 @@ public class ApolloDecoratorTest {
         board[1][1].setWorker(victimWorker);
 
         //set available boxes
-        //apolloWorker.setBoxesToMove(player_1.setWorkerBoxesToMove(apolloWorker));
+        players.get(0).setWorkerBoxesToMove(apolloWorker);
 
         //invoke move() method
         players.get(0).move(apolloWorker, board[1][1]);
@@ -177,6 +177,7 @@ public class ApolloDecoratorTest {
 
         Exception thrown = null;
 
+        players.get(0).setWorkerBoxesToMove(apolloWorker);
         //invoke move() method
         try {
             players.get(0).move(apolloWorker, board[1][1]);
