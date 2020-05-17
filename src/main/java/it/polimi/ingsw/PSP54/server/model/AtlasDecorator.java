@@ -28,7 +28,8 @@ public class AtlasDecorator extends GodDecorator {
                 worker.setBuildToken(-1);
             } else
                 super.build(worker, dest);
-        }
+        }else
+            throw new InvalidBuildingException();
     }
 
     @Override
@@ -38,6 +39,7 @@ public class AtlasDecorator extends GodDecorator {
         }else {
             selectedBox.setLevel(selectedBox.getLevel() + 1);
         }
+        getGame().notifyBoard();
         getCurrentWorker().setBuildToken(0);
     }
 }
