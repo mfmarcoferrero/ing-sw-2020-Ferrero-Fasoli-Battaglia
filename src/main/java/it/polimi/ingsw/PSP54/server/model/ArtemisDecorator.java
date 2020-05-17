@@ -42,15 +42,22 @@ public class ArtemisDecorator extends GodDecorator{
         if (worker.getMoveToken() == 2){
             initialPos = worker.getPos();
             valid = super.setWorkerBoxesToMove(worker);
-            worker.setMoveToken(-1);
-            GameMessage moveAgain = new StringMessage(getVirtualViewID(), StringMessage.moveAgain);
-            getGame().notify(moveAgain);
         }else {
             valid = super.setWorkerBoxesToMove(worker);
             valid.remove(initialPos);
         }
         worker.setBoxesToMove(valid);
         return valid;
+    }
+
+    @Override
+    public void move(Worker worker, Box dest) throws InvalidMoveException {
+        super.move(worker, dest);
+        if (worker.getMoveToken() == 1){
+            worker.setMoveToken(-1);
+            GameMessage moveAgain = new StringMessage(getVirtualViewID(), StringMessage.moveAgain);
+            getGame().notify(moveAgain);
+        }
     }
 
     @Override

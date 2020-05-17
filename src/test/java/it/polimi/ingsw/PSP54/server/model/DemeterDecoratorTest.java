@@ -49,6 +49,7 @@ public class DemeterDecoratorTest {
         y = 2;
 
         demeterWorker = players.get(0).turnInit(true);
+        players.get(0).setCurrentWorker(demeterWorker);
         demeterWorker.setPos(board[x][y]);
         board[x][y].setWorker(demeterWorker);
 
@@ -59,6 +60,7 @@ public class DemeterDecoratorTest {
         players.get(0).move(demeterWorker, board[3][3]);
         players.get(0).setWorkerBoxesToBuild(demeterWorker);
         players.get(0).build(demeterWorker, board[2][2]);
+        players.get(0).chose(true);
         players.get(0).setWorkerBoxesToBuild(demeterWorker);
         players.get(0).build(demeterWorker, board[4][4]);
 

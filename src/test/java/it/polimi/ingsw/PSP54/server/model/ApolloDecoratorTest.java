@@ -195,6 +195,33 @@ public class ApolloDecoratorTest {
         assertEquals(victimExpected.getWorker(), victimWorker);
 
         assertNotNull(thrown);
+    }
 
+    @Test
+    public void move_OccupiedByFellowWorker_ThrowException() {
+
+        apolloWorker = players.get(0).turnInit(true);
+        Worker fellowWorker = players.get(0).getWorker(false);
+
+        fellowWorker.setPos(board[4][4]);
+        board[4][4].setWorker(fellowWorker);
+
+        apolloWorker.setPos(board[3][3]);
+        board[3][3].setWorker(apolloWorker);
+
+        Exception thrown = null;
+
+        players.get(0).setWorkerBoxesToMove(apolloWorker);
+        try {
+            players.get(0).move(apolloWorker, board[4][4]);
+        } catch (InvalidMoveException e) {
+            thrown = e;
+        }
+
+        assertNotNull(thrown);
+        assertEquals(fellowWorker.getPos(), board[4][4]);
+        assertEquals(board[4][4].getWorker(), fellowWorker);
+        assertEquals(apolloWorker.getPos(), board[3][3]);
+        assertEquals(board[3][3].getWorker(), apolloWorker);
     }
 }
