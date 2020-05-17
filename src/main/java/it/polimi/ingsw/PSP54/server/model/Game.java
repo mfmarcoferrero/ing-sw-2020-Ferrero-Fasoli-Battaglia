@@ -290,6 +290,10 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             BooleanChoice choice = (BooleanChoice) choiceAction.getChoice();
             currentPlayer.chose(choice.isChoice());
             checkTokens(currentPlayer.getCurrentWorker());
+            if (choiceAction.getVirtualViewID() != currentPlayer.getVirtualViewID()){
+                GameMessage choseWorker = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.choseWorker);
+                notify(choseWorker);
+            }
         }else {
             GameMessage wrongTurn = new StringMessage(choiceAction.getVirtualViewID(), StringMessage.wrongTurnMessage);
             notify(wrongTurn);
