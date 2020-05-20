@@ -1,28 +1,30 @@
 package it.polimi.ingsw.PSP54.server.model;
 
 import it.polimi.ingsw.PSP54.observer.Observable;
-import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
-import it.polimi.ingsw.PSP54.utils.*;
+import it.polimi.ingsw.PSP54.utils.PlayerAction;
+import it.polimi.ingsw.PSP54.utils.choices.*;
+import it.polimi.ingsw.PSP54.utils.messages.BoardMessage;
+import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 
 import java.io.Serializable;
 import java.util.*;
 
-public class Game extends Observable<Object> implements Serializable, Cloneable {
+public class Game extends Observable<GameMessage> implements Serializable, Cloneable {
 
     public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
     public static final int CARD_NUMBER = 5;
     public static final int BOARD_SIZE = 5;
     public static final String[] colors = {"blue", "red", "yellow"};
     private final Box[][] board;
-    private HashMap<Integer, String> cardMap = new HashMap<>();
-    private HashMap<Integer, String> extractedCards = new HashMap<>();
+    private final HashMap<Integer, String> cardMap = new HashMap<>();
+    private final HashMap<Integer, String> extractedCards = new HashMap<>();
     private Vector<Player> players;
     private Player currentPlayer;
-    private boolean powersSet;
 
     public Game() {
-
         players = new Vector<>(1, 1);
         board = new Box[BOARD_SIZE][BOARD_SIZE];
         for (int i = 0; i < board.length; i++) {
@@ -30,22 +32,11 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
                 board[i][j] = new Box(i, j, 0, false);
             }
         }
-        powersSet = false;
         cardMap.put(APOLLO,"Apollo");
         cardMap.put(ARTEMIS,"Artemis");
         cardMap.put(ATHENA,"Athena");
         cardMap.put(ATLAS,"Atlas");
         cardMap.put(DEMETER,"Demeter");
-    }
-
-    /**
-     * Adds a player to the players Vector.
-     * @param name the player's username.
-     */
-    public void newPlayer(String name){
-        Player player = new StandardPlayer(name);
-        players.add(player);
-        notify(board.clone());
     }
 
     /**
@@ -58,7 +49,6 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
         Player player = new StandardPlayer(name, age, virtualViewId);
         player.setGame(this);
         players.add(player);
-        notify(board.clone());
     }
 
     /**
@@ -94,12 +84,12 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
     }
 
     /**
-     *Extract an unique random god card for each player in the game
+     *Extract an unique random god card for each player in the game.
      */
     public void extractCards() {
 
         int numberOfPlayers = players.size();
-        Vector<Integer> deck = new Vector<>();
+        ArrayList<Integer> deck = new ArrayList<>();
 
         for (int i = 0; i < CARD_NUMBER; i++) {
             deck.add(i);
@@ -113,117 +103,223 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
     }
 
     /**
-     * Cards in deck must be different
+     * Show cards that can be chosen to current player.
+     * If all cards are already taken moves on to the next game step.
      */
-    public void extractCardsIWant() {
-
-        int numberOfPlayers = players.size();
-        Vector<Integer> deck = new Vector<>();
-        deck.add(ATHENA);
-        deck.add(APOLLO);
-        deck.add(ARTEMIS);
-        for (int i = 0; i < numberOfPlayers; i++) {
-            extractedCards.put(deck.get(i),cardMap.get(deck.get(i)));
+    public synchronized void displayCards () {
+        if (!getExtractedCards().isEmpty()) {
+            GameMessage cards = new CardsMessage(currentPlayer.getVirtualViewID(), getExtractedCards());
+            notify(cards);
+        }else {//all cards are assigned => worker placement
+            notifyBoard();
+            GameMessage setFirstWorker = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.setFirstWorkerMessage);
+            notify(setFirstWorker);
         }
     }
 
-    synchronized public void chosePower(Choice choice) {
-        GameMessage message = new GameMessage(choice.getVirtualViewID(),GameMessage.cantSelect);
-        int currentIndex = players.indexOf(currentPlayer);
-        switch (choice.getChoiceInt()) {
-            case APOLLO:
-                players.set(currentIndex, currentPlayer.assignPower(APOLLO));
-                currentPlayer = players.get(currentIndex);
-                message.setMessage(GameMessage.apolloMessage);
-                break;
-            case ARTEMIS:
-                players.set(currentIndex, currentPlayer.assignPower(ARTEMIS));
-                currentPlayer = players.get(currentIndex);
-                message.setMessage(GameMessage.artemisMessage);
-                break;
-            case ATHENA:
-                players.set(currentIndex, currentPlayer.assignPower(ATHENA));
-                currentPlayer = players.get(currentIndex);
-                message.setMessage(GameMessage.athenaMessage);
-                break;
-            case ATLAS:
-                players.set(currentIndex, currentPlayer.assignPower(ATLAS));
-                currentPlayer = players.get(currentIndex);
-                message.setMessage(GameMessage.atlasMessage);
-                break;
-            case DEMETER:
-                players.set(currentIndex, currentPlayer.assignPower(DEMETER));
-                currentPlayer = players.get(currentIndex);
-                message.setMessage(GameMessage.demeterMessage);
-                break;
+    /**
+     * Verifies if the assignment can be done and if so decorates the current player with the chosen power.
+     * @param cardSelection the PlayerAction containing the chosen card.
+     */
+    public synchronized void performPowerAssignment(PlayerAction cardSelection) {
+        if (getCurrentPlayer().getVirtualViewID() == cardSelection.getVirtualViewID()) {
+            CardChoice cardChoice = (CardChoice) cardSelection.getChoice();
+            GameMessage powerInfoMessage;
+            int currentIndex = players.indexOf(currentPlayer);
+            switch (cardChoice.getChoiceKey()) {
+                case APOLLO:
+                    players.set(currentIndex, currentPlayer.assignPower(APOLLO));
+                    currentPlayer = players.get(currentIndex);
+                    powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.apolloMessage);
+                    notify(powerInfoMessage);
+                    break;
+                case ARTEMIS:
+                    players.set(currentIndex, currentPlayer.assignPower(ARTEMIS));
+                    currentPlayer = players.get(currentIndex);
+                    powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.artemisMessage);
+                    notify(powerInfoMessage);
+                    break;
+                case ATHENA:
+                    players.set(currentIndex, currentPlayer.assignPower(ATHENA));
+                    currentPlayer = players.get(currentIndex);
+                    powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.athenaMessage);
+                    notify(powerInfoMessage);
+                    break;
+                case ATLAS:
+                    players.set(currentIndex, currentPlayer.assignPower(ATLAS));
+                    currentPlayer = players.get(currentIndex);
+                    powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.atlasMessage);
+                    notify(powerInfoMessage);
+                    break;
+                case DEMETER:
+                    players.set(currentIndex, currentPlayer.assignPower(DEMETER));
+                    currentPlayer = players.get(currentIndex);
+                    powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.demeterMessage);
+                    notify(powerInfoMessage);
+                    break;
+            }
+            extractedCards.remove(((CardChoice) cardSelection.getChoice()).getChoiceKey());
+            endTurn(currentPlayer);
+        }else {
+            GameMessage wrongTurn = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.wrongTurnMessage);
+            notify(wrongTurn);
         }
-        extractedCards.remove(choice.getChoiceInt());
-        int index = players.indexOf(getCurrentPlayer());
-        if (currentPlayer != players.lastElement()) {
-            setCurrentPlayer(players.get(index + 1));
-        } else {
-            setPowersSet(true);
-            setCurrentPlayer(players.get(0));
+    }
+
+    /**
+     * Notifies the observers with a message accordingly with current worker's action tokens.
+     * @param currentWorker the worker chosen by the player at the beginning of his turn.
+     */
+    public void checkTokens(Worker currentWorker) {
+        if (currentWorker.getMoveToken() >= 1 && currentWorker.getBuildToken() == 0){
+            GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
+            notify(move);
+        }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() >= 1){
+            GameMessage build = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildMessage);
+            notify(build);
+        }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() == 0)
+            endTurn(currentPlayer);
+    }
+
+    /**
+     * Verifies if the choice can be done and if so initializes worker's token and notifies with a corresponding message.
+     * @param workerSelection the object representing the player's selection.
+     */
+    public void performWorkerChoice(PlayerAction workerSelection) {
+        if (workerSelection.getVirtualViewID() == currentPlayer.getVirtualViewID()){
+            WorkerChoice workerChoice = (WorkerChoice) workerSelection.getChoice();
+            Worker currentWorker = currentPlayer.getWorker(workerChoice.isMale());
+            currentPlayer.setCurrentWorker(currentWorker);
+            if (currentWorker.getPos() != null) { //set tokens if is already settled
+                currentPlayer.turnInit(workerChoice.isMale());
+                checkTokens(currentWorker);
+
+            }else {
+                GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
+                notify(move);
+            }
+        }else{
+            GameMessage wrongTurn = new StringMessage(workerSelection.getVirtualViewID(), StringMessage.wrongTurnMessage);
+            notify(wrongTurn);
         }
-        notify(message);
     }
 
     /**
-     * Determines whether a player has placed no workers
-     * in order to inform the Controller of the message to be sent.
-     * @param player the current player.
-     * @return true if no worker has been placed, false otherwise.
+     * Verifies if the move can be done and if so performs it and notifies the observers with a corresponding message.
+     * @param moveSelection the message representing the move action.
      */
-    public boolean noWorkerPlaced(Player player){
-
-        return (player.getWorkers()[0].getPos() == null
-                && player.getWorkers()[1].getPos() == null);
-    }
-
-    /**
-     * Sets the initial worker's position on the board.
-     * @param move the message containing information about the Box where the worker is going to be placed.
-     */
-    public void setWorker(Move move) throws InvalidMoveException {
-        players.get(move.getPlayer_ind()).setWorkerPos(players.get(move.getPlayer_ind()).getWorkers()[move.getWorker_ind()], move.getX(), move.getY());
-        notify(board.clone());
-    }
-
-    /**
-     * Metodo per chiamare lo spostamento di un worker e restituire alla view la board che ha subito il cambiamento
-     * @param move oggetto che contiene le informazioni per eseguire lo spostamento
-     */
-    public void move(Move move) throws InvalidMoveException {
-        Worker currentWorker = players.get(move.getPlayer_ind()).getWorkers()[move.getWorker_ind()];
-        if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() == 0){
-            currentWorker = players.get(move.getPlayer_ind()).turnInit(move.isMale());
-        }
-        players.get(move.getPlayer_ind()).setWorkerBoxesToMove(currentWorker);
-        players.get(move.getPlayer_ind()).move(currentWorker,board[move.getX()][move.getY()]);
-        notify(board.clone());
-    }
-
-    /**
-     * Metodo per chiamare la costruzione e restituire alla view la board che ha subito il cambiamento
-     * @param build oggetto che contiene le informazioni per costruire
-     */
-    public void build (Build build) throws InvalidBuildingException {
-        players.get(build.getPlayer_ind()).build(players.get(build.getPlayer_ind()).choseWorker(build.isMale()), board[build.getX()][build.getY()]);
-        notify(board.clone());
-    }
-
-    public void endTurn(Player currentPlayer) {
-
-        for (Player player : players){
-            if (player.equals(currentPlayer)){
-                int i = players.indexOf(player);
-                if (i == players.indexOf(players.lastElement())){
-                    setCurrentPlayer(players.get(0));
-                } else
-                    setCurrentPlayer(players.get(i+1));
+    public void performMove(PlayerAction moveSelection) {
+        if (moveSelection.getVirtualViewID() == currentPlayer.getVirtualViewID()) {
+            MoveChoice moveChoice = (MoveChoice) moveSelection.getChoice();
+            if (currentPlayer.getCurrentWorker().getPos() != null) { //actual move
+                try {
+                    currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
+                    currentPlayer.move(currentPlayer.getCurrentWorker(), getBox(moveChoice.getX(), moveChoice.getY()));
+                    checkTokens(currentPlayer.getCurrentWorker());
+                }
+                catch (InvalidMoveException e) { //retry
+                    GameMessage invalidMove = new StringMessage(moveSelection.getVirtualViewID(), StringMessage.invalidMoveMessage);
+                    notify(invalidMove);
+                }
+            }
+            else { //first placement
+                try {
+                    currentPlayer.setWorkerPos(currentPlayer.getCurrentWorker(), moveChoice.getX(), moveChoice.getY());
+                    notifyBoard();
+                    if (currentPlayer.areWorkerSettled()) {
+                        endTurn(currentPlayer);
+                        if (currentPlayer.equals(players.firstElement())){ //notify actual move
+                            GameMessage choseWorker = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.choseWorker);
+                            notify(choseWorker);
+                        }
+                        else { //next player's first placement
+                            GameMessage firstPlacement = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.setFirstWorkerMessage);
+                            notify(firstPlacement);
+                        }
+                    }
+                    else { //second placement
+                        currentPlayer.nextCurrentWorker(currentPlayer.getCurrentWorker());
+                        GameMessage secondPlacement = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.setSecondWorkerMessage);
+                        notify(secondPlacement);
+                    }
+                }
+                catch (InvalidMoveException e) { //retry
+                    GameMessage invalidMove = new StringMessage(moveSelection.getVirtualViewID(), StringMessage.invalidMoveMessage);
+                    notify(invalidMove);
+                }
             }
         }
+        else {
+            GameMessage wrongTurn = new StringMessage(moveSelection.getVirtualViewID(), StringMessage.wrongTurnMessage);
+            notify(wrongTurn);
+        }
+    }
 
+    /**
+     * Verifies if the move can be done and if so performs it and notifies the observers with a corresponding message.
+     * @param buildSelection the object representing the build action.
+     */
+    public void performBuild(PlayerAction buildSelection){
+        if (buildSelection.getVirtualViewID() == currentPlayer.getVirtualViewID()) {
+            BuildChoice buildChoice = (BuildChoice) buildSelection.getChoice();
+            try {
+                currentPlayer.setWorkerBoxesToBuild(currentPlayer.getCurrentWorker());
+                currentPlayer.build(currentPlayer.getCurrentWorker(), getBox(buildChoice.getX(), buildChoice.getY()));
+                checkTokens(currentPlayer.getCurrentWorker());
+                if (buildSelection.getVirtualViewID() != currentPlayer.getVirtualViewID()){
+                    GameMessage choseWorker = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.choseWorker);
+                    notify(choseWorker);
+                }
+            }
+            catch (InvalidBuildingException e) { //retry
+                GameMessage invalidBuilding = new StringMessage(buildSelection.getVirtualViewID(), StringMessage.invalidBuildingMessage);
+                notify(invalidBuilding);
+            }
+        }else {
+            GameMessage wrongTurn = new StringMessage(buildSelection.getVirtualViewID(), StringMessage.wrongTurnMessage);
+            notify(wrongTurn);
+        }
+    }
+
+    /**
+     *
+     * @param choiceAction
+     */
+    public void performChoice(PlayerAction choiceAction){
+        if (choiceAction.getVirtualViewID() == currentPlayer.getVirtualViewID()){
+            BooleanChoice choice = (BooleanChoice) choiceAction.getChoice();
+            currentPlayer.chose(choice.isChoice());
+            checkTokens(currentPlayer.getCurrentWorker());
+            if (choiceAction.getVirtualViewID() != currentPlayer.getVirtualViewID()){
+                GameMessage choseWorker = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.choseWorker);
+                notify(choseWorker);
+            }
+        }else {
+            GameMessage wrongTurn = new StringMessage(choiceAction.getVirtualViewID(), StringMessage.wrongTurnMessage);
+            notify(wrongTurn);
+        }
+    }
+
+    /**
+     * Notifies observers with a BoardMessage object.
+     */
+    protected void notifyBoard() {
+        GameMessage board = new BoardMessage(null, getBoard());
+        notify(board);
+    }
+
+    /**
+     * Set the nex player in the players Vector to current.
+     * @param currentPlayer player who has just finished his turn.
+     */
+    public void endTurn(Player currentPlayer) {
+
+        currentPlayer.setPlaying(false);
+        int i = players.indexOf(currentPlayer);
+        if (i == players.indexOf(players.lastElement())){
+            setCurrentPlayer(players.get(0));
+        } else
+            setCurrentPlayer(players.get(i+1));
     }
 
     //setters & getters
@@ -241,16 +337,14 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
     }
 
     /**
-     * Sets the playing attribute of currentPlayer to 'true' and notifies the VirtualView
-     * @param currentPlayer the member of the players Vector which is going to play
+     * Sets the playing attribute of currentPlayer to 'true' and notifies the VirtualView.
+     * @param currentPlayer the member of the players Vector which is going to play.
      */
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
-
-        for (Player player : players) {
-            player.setPlaying(currentPlayer == player);
-        }
-
+        currentPlayer.setPlaying(true);
+        GameMessage yourTurn = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.turnMessage);
+        notify(yourTurn);
     }
 
     public Box[][] getBoard() {
@@ -265,15 +359,4 @@ public class Game extends Observable<Object> implements Serializable, Cloneable 
         return extractedCards;
     }
 
-    public HashMap<Integer, String> getCardMap() {
-        return cardMap;
-    }
-
-    public boolean isPowersSet() {
-        return powersSet;
-    }
-
-    public void setPowersSet(boolean powersSet) {
-        this.powersSet = powersSet;
-    }
 }

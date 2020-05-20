@@ -21,9 +21,9 @@ public class DemeterDecoratorTest {
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1");
-        game.newPlayer("2");
-        game.newPlayer("3");
+        game.newPlayer("1", 20, 0);
+        game.newPlayer("2", 21, 1);
+        game.newPlayer("3", 22, 2);
         players = game.getPlayers();
 
         //set Demeter power to player 1
@@ -49,6 +49,7 @@ public class DemeterDecoratorTest {
         y = 2;
 
         demeterWorker = players.get(0).turnInit(true);
+        players.get(0).setCurrentWorker(demeterWorker);
         demeterWorker.setPos(board[x][y]);
         board[x][y].setWorker(demeterWorker);
 
@@ -57,7 +58,10 @@ public class DemeterDecoratorTest {
 
         players.get(0).setWorkerBoxesToMove(demeterWorker);
         players.get(0).move(demeterWorker, board[3][3]);
+        players.get(0).setWorkerBoxesToBuild(demeterWorker);
         players.get(0).build(demeterWorker, board[2][2]);
+        players.get(0).chose(true);
+        players.get(0).setWorkerBoxesToBuild(demeterWorker);
         players.get(0).build(demeterWorker, board[4][4]);
 
         assertEquals(board[3][3], demeterWorker.getPos());
@@ -82,9 +86,12 @@ public class DemeterDecoratorTest {
 
         Exception thrown = null;
 
+        players.get(0).setWorkerBoxesToBuild(demeterWorker);
+
         players.get(0).build(demeterWorker, board[3][1]);
 
         try {
+            players.get(0).setWorkerBoxesToBuild(demeterWorker);
             players.get(0).build(demeterWorker, board[3][1]);
         } catch (InvalidBuildingException e) {
             thrown = e;

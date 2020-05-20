@@ -13,7 +13,6 @@ public class ArtemisDecoratorTest {
 
     private Game game;
     Vector<Player> players;
-    Player player_1;
     Box[][] board;
     Worker artemisWorker;
     int x;
@@ -25,9 +24,9 @@ public class ArtemisDecoratorTest {
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1");
-        game.newPlayer("2");
-        game.newPlayer("3");
+        game.newPlayer("1", 20, 0);
+        game.newPlayer("2", 21, 1);
+        game.newPlayer("3", 22, 2);
         players = game.getPlayers();
 
         //set Artemis power to player_1
@@ -97,7 +96,7 @@ public class ArtemisDecoratorTest {
         assertEquals(artemisWorker.getPos(), board[1][1]);
         assertEquals(board[1][1].getWorker(), artemisWorker);
         assertEquals(expected, result);
-        assertEquals(1, artemisWorker.getMoveToken());
+        assertEquals(-1, artemisWorker.getMoveToken());
     }
 
     @Test
@@ -105,6 +104,7 @@ public class ArtemisDecoratorTest {
         x = 2;
         y = 2;
         artemisWorker = players.get(0).turnInit(true);
+        players.get(0).setCurrentWorker(artemisWorker);
         artemisWorker.setPos(board[x][y]);
         board[x][y].setWorker(artemisWorker);
 
@@ -127,11 +127,13 @@ public class ArtemisDecoratorTest {
         x = 2;
         y = 2;
         artemisWorker = players.get(0).turnInit(true);
+        players.get(0).setCurrentWorker(artemisWorker);
         artemisWorker.setPos(board[x][y]);
         board[x][y].setWorker(artemisWorker);
 
         doubleMove(artemisWorker, board[1][1], board[0][0]);
 
+        players.get(0).setWorkerBoxesToBuild(artemisWorker);
         players.get(0).build(artemisWorker, board[1][1]);
 
         assertEquals(artemisWorker.getPos(), board[0][0]);
@@ -144,6 +146,7 @@ public class ArtemisDecoratorTest {
     private void doubleMove(Worker worker, Box dest1, Box dest2) throws InvalidMoveException {
         players.get(0).setWorkerBoxesToMove(worker);
         players.get(0).move(worker, dest1);
+        players.get(0).chose(true);
         players.get(0).setWorkerBoxesToMove(worker);
         players.get(0).move(worker, dest2);
 

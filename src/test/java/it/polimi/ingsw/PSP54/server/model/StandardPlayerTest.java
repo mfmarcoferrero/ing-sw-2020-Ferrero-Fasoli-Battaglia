@@ -26,9 +26,9 @@ public class StandardPlayerTest {
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1");
-        game.newPlayer("2");
-        game.newPlayer("3");
+        game.newPlayer("1", 20, 0);
+        game.newPlayer("2", 21, 1);
+        game.newPlayer("3", 22, 2);
         players = game.getPlayers();
         players.get(0).setGame(game);
         players.get(1).setGame(game);
@@ -44,12 +44,12 @@ public class StandardPlayerTest {
     @Test
     public void setWorkerPos_BoardCenter_CorrectOutput() throws InvalidMoveException { //TODO: exception Case
 
-        Worker maleWorker = players.get(0).choseWorker(true);
+        Worker maleWorker = players.get(0).getWorker(true);
 
         players.get(0).setWorkerPos(maleWorker, 2,2);
 
-        assertEquals(board[2][2], players.get(0).choseWorker(true).getPos());
-        assertEquals(players.get(0).choseWorker(true), board[2][2].getWorker());
+        assertEquals(board[2][2], players.get(0).getWorker(true).getPos());
+        assertEquals(players.get(0).getWorker(true), board[2][2].getWorker());
 
     }
 
@@ -60,7 +60,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = players.get(0).choseWorker(true);
+        currentWorker = players.get(0).getWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         game.getBoard()[x][y].setWorker(currentWorker);
 
@@ -86,7 +86,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = players.get(0).choseWorker(true);
+        currentWorker = players.get(0).getWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         game.getBoard()[x][y].setWorker(currentWorker);
 
@@ -118,7 +118,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = players.get(0).choseWorker(true);
+        currentWorker = players.get(0).getWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -146,7 +146,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = players.get(0).choseWorker(true);
+        currentWorker = players.get(0).getWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -155,7 +155,7 @@ public class StandardPlayerTest {
         board[2][1].setLevel(3);
         board[3][1].setLevel(3);
         board[3][1].setDome(true);
-        board[3][3].setWorker(players.get(1).choseWorker(false));
+        board[3][3].setWorker(players.get(1).getWorker(false));
 
         //generate expected result
         ArrayList<Box> expected = new ArrayList<>();
@@ -176,7 +176,7 @@ public class StandardPlayerTest {
         x = 2;
         y = 2;
         board[2][2].setLevel(2);
-        currentWorker = players.get(0).choseWorker(true);
+        currentWorker = players.get(0).getWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -202,7 +202,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 4;
         y = 4;
-        currentWorker = players.get(0).choseWorker(true);
+        currentWorker = players.get(0).getWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -224,7 +224,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = players.get(0).choseWorker(true);
+        currentWorker = players.get(0).getWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -250,7 +250,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = players.get(0).choseWorker(true);
+        currentWorker = players.get(0).getWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -286,7 +286,7 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = players.get(0).choseWorker(true);
+        currentWorker = players.get(0).getWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
@@ -314,12 +314,12 @@ public class StandardPlayerTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        currentWorker = players.get(0).choseWorker(true);
+        currentWorker = players.get(0).getWorker(true);
         currentWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(currentWorker);
 
         //set boxes occupation
-        board[1][1].setWorker(players.get(0).choseWorker(false));
+        board[1][1].setWorker(players.get(0).getWorker(false));
 
         //generate expected result
         ArrayList<Box> expected = new ArrayList<>();
@@ -425,7 +425,7 @@ public class StandardPlayerTest {
         board[2][2].setWorker(currentWorker);
 
         //set box levels
-        board[1][1].setWorker(players.get(1).choseWorker(false));
+        board[1][1].setWorker(players.get(1).getWorker(false));
 
         //set available boxes
         currentWorker.setBoxesToMove(players.get(0).setWorkerBoxesToMove(currentWorker));
@@ -522,7 +522,6 @@ public class StandardPlayerTest {
 
         assertTrue(board[3][3].isDome());
         assertNotNull(thrown);
-
     }
 
 }

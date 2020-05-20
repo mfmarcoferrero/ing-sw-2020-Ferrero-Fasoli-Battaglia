@@ -1,15 +1,16 @@
 package it.polimi.ingsw.PSP54.server.virtualView;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
-import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.utils.*;
+import it.polimi.ingsw.PSP54.utils.PlayerAction;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 
 /**
- * Class that filters messages arriving from the clients and eventually passes them to the MVC
+ * Represent the intermediary between a player's Connection and VirtualView.
+ * It handles the incoming player's choices by translating them into actions that will then be performed by the MVC objects.
  */
-public class MessageReceiver implements Observer {
+public class MessageReceiver implements Observer<PlayerChoice> {
     private Connection connection;
-    private VirtualView virtualView;
+    private final VirtualView virtualView;
 
     public MessageReceiver(Connection connection, VirtualView virtualView) {
         this.connection = connection;
@@ -28,62 +29,15 @@ public class MessageReceiver implements Observer {
         return virtualView;
     }
 
-    public void setVirtualView(VirtualView virtualView) {
-        this.virtualView = virtualView;
-    }
-
-
     /**
-     * Viene notificato da connection
-     * In base al tipo di messaggio che arriva decide di compiere un azione sulla virtual_view
-     * @param message
+     * Called whenever the observed object is changed.
+     *
+     * @param message an argument passed to the notify method.
      */
     @Override
-    public void update(Move message){
-        System.out.println("Received move message !!");
-        message.setVirtualViewId(virtualView.getId());
-        virtualView.handleMove(message);
-    }
-
-    @Override
-    public void update(Build message) {
-        System.out.println("Received build message !!");
-        message.setVirtualViewId(virtualView.getId());
-        virtualView.handleBuild(message);
-    }
-
-    @Override
-    public void update(String message) {
-        System.out.println("Received a string !!");
-        if (message.equals("show")) {
-            virtualView.showBoard();
-        }
-    }
-
-    @Override
-    public void update(Choice message) {
-        System.out.println("Received a chosen card !!");
-        message.setVirtualViewID(this.virtualView.getId());
-        virtualView.selectCard(message);
-    }
-
-    @Override
-    public void update(Box[][] message) {
-
-    }
-
-    @Override
-    public void update(GameMessage message) {
-        //only Server -> Client
-    }
-
-    @Override
-    public void update(PlayerMessage message) {
-
-    }
-
-    @Override
-    public void update(CardsToDisplay message) {
-
+    public void update(PlayerChoice message) {
+        int id = getVirtualView().getId();
+        PlayerAction action = new PlayerAction(id, message);
+        getVirtualView().handleAction(action);
     }
 }

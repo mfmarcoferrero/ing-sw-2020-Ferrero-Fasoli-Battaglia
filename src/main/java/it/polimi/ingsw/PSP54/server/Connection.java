@@ -1,21 +1,25 @@
 package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.observer.*;
-import it.polimi.ingsw.PSP54.utils.GameMessage;
-import it.polimi.ingsw.PSP54.utils.PlayerMessage;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 
-public class Connection extends Observable implements Runnable {
+/**
+ * Represents the connection between Server and a Client. It can send an read object.
+ */
+public class Connection extends Observable<PlayerChoice> implements Runnable {
 
-    private Socket socket;
+    private final Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    private Server server;
+    private final Server server;
     private String name;
     private boolean active = true;
     boolean gameMaster  = false;
@@ -46,12 +50,13 @@ public class Connection extends Observable implements Runnable {
      * @param message
      */
     public void asyncSend(final Object message) {
-        new Thread(new Runnable() {
+        /*new Thread(new Runnable() {
             @Override
             public void run() {
                 send(message);
             }
-        }).start();
+        }).start();*/
+        send(message);
     }
 
     /**
@@ -65,8 +70,8 @@ public class Connection extends Observable implements Runnable {
             public void run() {
                 try {
                     while (isActive()) {
-                        Object inputObject = socketIn.readObject(); //TODO: set to PlayerAction
-                        Connection.this.notify(inputObject);
+                        Object inputObject = socketIn.readObject();
+                        Connection.this.notify((PlayerChoice) inputObject);
                     }
                 } catch (Exception e) {
                     setActive(false);
@@ -78,7 +83,7 @@ public class Connection extends Observable implements Runnable {
     }
 
     public synchronized void closeConnection(){
-        send("Connection closed from the server side");
+        asyncSend("Connection closed from the server side");
         try {
             socket.close();
         } catch (IOException e) {
@@ -102,16 +107,18 @@ public class Connection extends Observable implements Runnable {
     public void run() {
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
-            asyncSend(GameMessage.welcomeMessage);
+            GameMessage welcome = new StringMessage(null, StringMessage.welcomeMessage);
+            asyncSend(welcome);
             in = new ObjectInputStream(socket.getInputStream());
-            PlayerMessage player = (PlayerMessage) in.readObject();
-            this.name = player.getPlayerName();
+            PlayerCredentials credentials = (PlayerCredentials) in.readObject();
+            this.name = credentials.getPlayerName();
             if(gameMaster || this == server.currentConnections.firstElement()) {
-                send(GameMessage.setNumberOfPlayersMessage);
+                GameMessage setPlayersNumber = new StringMessage(null, StringMessage.setNumberOfPlayersMessage);
+                asyncSend(setPlayersNumber);
                 numberOfPlayers = (int) in.readObject();
                 server.setNumberOfPlayers(numberOfPlayers);
             }
-            server.lobby(this, player);
+            server.lobby(this, credentials);
             Thread t0 = asyncReadFromSocket(in);
             t0.join();
         } catch(IOException e) {

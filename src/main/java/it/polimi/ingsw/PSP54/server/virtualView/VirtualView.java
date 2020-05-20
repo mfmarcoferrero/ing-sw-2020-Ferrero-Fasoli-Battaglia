@@ -3,158 +3,93 @@ package it.polimi.ingsw.PSP54.server.virtualView;
 import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
-import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.utils.*;
+import it.polimi.ingsw.PSP54.utils.PlayerAction;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 
-public class VirtualView extends Observable<Object> implements Observer {
+public class VirtualView extends Observable<PlayerAction> implements Observer<GameMessage> {
 
-    private Box [][] board;
-    private boolean moveDone = false, buildDone = false, firstWorkerSetDone = false;
     private final int id;
-    private Connection connection;
-    private MessageReceiver messageReceiver;
-    private PlayerMessage player;
-    private String opponent;
+    private final Connection connection;
+    private final MessageReceiver messageReceiver;
+    private final PlayerAction playerCredentials;
+    private final String opponent;
 
     /**
-     * Instantiates a VirtualView with corresponding Connection and MessageReceiver for a 2 players game
-     * @param id
-     * @param p
-     * @param connection
+     * Instantiates a VirtualView Object for a 2 player match.
+     * @param id the unique identifier of the VirtualView.
+     * @param p the PlayerAction object containing player's credentials.
+     * @param connection the Connection the player is using.
+     * @param opponent the name of the first opponent.
      */
-    public VirtualView(int id, PlayerMessage p, Connection connection, String opponent) {
+    public VirtualView(int id, PlayerAction p, Connection connection, String opponent) {
         this.id = id;
         this.connection = connection;
         this.messageReceiver = new MessageReceiver(this.connection,this);
-        this.player = p;
+        this.playerCredentials = p;
         this.opponent = opponent;
         connection.addObserver(this.messageReceiver);
-        connection.asyncSend("opponent is: " + this.opponent + "\n");
+        GameMessage opponentMessage = new StringMessage(id, "Your opponent is:\n" + this.opponent + "\n");
+        connection.asyncSend(opponentMessage);
     }
 
     /**
-     * Instantiates a VirtualView with corresponding Connection and MessageReceiver for a 3 players game
-     * @param id
-     * @param p
-     * @param connection
+     * Instantiates a VirtualView Object for a 3 player match.
+     * @param id the unique identifier of the VirtualView.
+     * @param p the PlayerAction object containing player's credentials.
+     * @param connection the Connection the player is using.
+     * @param opponent1 the name of the first opponent.
+     * @param opponent2 the name of the second opponent.
      */
-    public VirtualView(int id, PlayerMessage p, Connection connection, String opponent1, String opponent2) {
+    public VirtualView(int id, PlayerAction p, Connection connection, String opponent1, String opponent2) {
         this.id = id;
         this.connection = connection;
         this.messageReceiver = new MessageReceiver(this.connection,this);
-        this.player = p;
+        this.playerCredentials = p;
         this.opponent = opponent1;
         connection.addObserver(this.messageReceiver);
-        connection.asyncSend("opponent 1 is: " + opponent1 + "\nopponent 2 is: " + opponent2 + "\n");
+        GameMessage opponentsMessage = new StringMessage(id, "Your opponents are:\n" + "- " + opponent1 + "\n" + "- " + opponent2 + "\n");
+        connection.asyncSend(opponentsMessage);
     }
 
     /**
-     * Notifica il controller con un oggetto di tipo Player che contiene solo le
-     * credenziali
+     * Notifies the observers with a PlayerAction object containing the player's credentials.
      */
     public void addPlayer() {
-        notify(player);
-    }
-    
-    public void selectCard(Choice message) {
-        notify(message);
+        notify(playerCredentials);
     }
 
     /**
-     * Notifica il controller con un oggetto di tipo Move verificando che la mossa
-     * non sia un set iniziale di un worker
-     * @param move
+     * Notifies the observers with a message containing player's action.
+     * @param action the player's action.
      */
-    public void handleMove(Move move) {
-        notify(move);
+    public void handleAction(PlayerAction action) {
+        notify(action);
     }
 
     /**
-     * Notifica il controller con un oggetto di tipo Build
-     * @param build
+     * Sends via socket a GameMessage object.
+     * @param message the message to be sent.
      */
-    public void handleBuild(Build build) {
-        notify(build);
-    }
-
-    public void setMoveDone(boolean moveDone) {
-        this.moveDone = moveDone;
-    }
-
-    public void setBuildDone(boolean buildDone) {
-        this.buildDone = buildDone;
-    }
-
-    public void setFirstWorkerSetDone(boolean workerSet) {
-        this.firstWorkerSetDone = workerSet;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public synchronized void showMessage(Object message) {
+    public void sendMessage(GameMessage message) {
         connection.asyncSend(message);
     }
 
-    public synchronized void showBoard() {
-        connection.asyncSend(board);
-    }
-
-    public Box[][] getBoard() {
-        return board;
-    }
-
     /**
-     * Update the VirtualView's side board
-     * @param message the clone of model's board
+     * Called whenever the observed object is changed.
+     *
+     * @param message an argument passed to the notify method.
      */
     @Override
-    public synchronized void update(Box[][] message) {
-        this.board = message;
+    public void update(GameMessage message) {
+        if (message.getVirtualViewID() == null || message.getVirtualViewID() == getId())
+            sendMessage(message);
     }
 
-    @Override
-    public synchronized void update(GameMessage message) {
-        if (message.getVirtualViewID() == this.id) {
-            showMessage(message.getMessage());
-        }
-    }
+    //getters & setter
 
-    @Override
-    synchronized public void update(CardsToDisplay message) {
-        if (message.getCurrentPlayerID() == this.id) {
-            showMessage(message);
-        }
-    }
-
-    /**
-     * Update the message to be shown to the player
-     * @param message the message to be shown
-     */
-    @Override
-    synchronized public void update(String message) {
-        showMessage(message);
-    }
-
-    @Override
-    synchronized public void update(Choice message) {
-
-    }
-
-    @Override
-    public void update(Move message) {
-
-    }
-
-    @Override
-    public void update(Build message) {
-
-    }
-
-    @Override
-    public void update(PlayerMessage message) {
-
+    public int getId() {
+        return id;
     }
 }

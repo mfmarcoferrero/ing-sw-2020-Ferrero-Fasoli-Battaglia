@@ -1,7 +1,9 @@
 package it.polimi.ingsw.PSP54.server.model;
 
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Your worker may build an additional time but not on the same space
@@ -14,6 +16,11 @@ public class DemeterDecorator extends GodDecorator{
         super(player);
     }
 
+    /**
+     *
+     * @param worker
+     * @return
+     */
     @Override
     public ArrayList<Box> setWorkerBoxesToBuild(Worker worker) {
 
@@ -27,32 +34,47 @@ public class DemeterDecorator extends GodDecorator{
         }
     }
 
+    /**
+     *
+     * @param worker
+     * @param dest
+     * @throws InvalidMoveException
+     */
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
         super.move(worker, dest);
         worker.setBuildToken(2);
     }
 
+    /**
+     *
+     * @param worker
+     * @param dest
+     * @throws InvalidBuildingException
+     */
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
 
-        worker.setBoxesToBuild(setWorkerBoxesToBuild(worker));
-        ArrayList<Box> valid = worker.getBoxesToBuild();
-        int currentBuildToken = worker.getBuildToken();
+        if (worker.getBuildToken() == 2) {
+            super.build(worker, dest);
+            setLastBuilding(dest);
+            worker.setBuildToken(-1);
+            GameMessage buildAgain = new StringMessage(getVirtualViewID(), StringMessage.buildAgain);
+            getGame().notify(buildAgain);
+        }else
+            super.build(worker, dest);
+    }
 
-        if (valid.contains(dest)){
-            if (dest.getLevel() == 3)
-                dest.setDome(true);
-            else {
-                int currentLevel = dest.getLevel();
-                dest.setLevel(currentLevel+1);
-            }
-            if (currentBuildToken == 2)
-                setLastBuilding(dest);
-
-            worker.setBuildToken(currentBuildToken-1);
-
-        } else throw new InvalidBuildingException();
+    /**
+     *
+     * @param choice
+     */
+    @Override
+    public void chose(boolean choice) {
+        if (choice){
+            getCurrentWorker().setBuildToken(1);
+        }else
+            getCurrentWorker().setBuildToken(0);
     }
 
     //getters & setters

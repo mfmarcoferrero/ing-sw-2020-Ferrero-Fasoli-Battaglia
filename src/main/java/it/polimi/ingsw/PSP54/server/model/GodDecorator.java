@@ -20,8 +20,8 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     }
 
     @Override
-    public Worker choseWorker(Boolean male) {
-        return playerToDecorate.choseWorker(male);
+    public Worker getWorker(Boolean male) {
+        return playerToDecorate.getWorker(male);
     }
 
     @Override
@@ -32,6 +32,21 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     @Override
     public ArrayList<Box> setWorkerBoxesToBuild(Worker worker) {
         return playerToDecorate.setWorkerBoxesToBuild(worker);
+    }
+
+    @Override
+    public Worker getCurrentWorker() {
+        return playerToDecorate.getCurrentWorker();
+    }
+
+    @Override
+    public void setCurrentWorker(Worker currentWorker) {
+        playerToDecorate.setCurrentWorker(currentWorker);
+    }
+
+    @Override
+    public void nextCurrentWorker(Worker currentWorker) {
+        playerToDecorate.nextCurrentWorker(currentWorker);
     }
 
     @Override
@@ -47,6 +62,11 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
         playerToDecorate.build(worker, dest);
+    }
+
+    @Override
+    public void chose(boolean choice) {
+        playerToDecorate.chose(choice);
     }
 
     @Override
@@ -82,6 +102,11 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     @Override
     public Game getGame() {
         return playerToDecorate.getGame();
+    }
+
+    @Override
+    public void checkWinner(Worker worker) {
+        playerToDecorate.checkWinner(worker);
     }
 
     @Override
@@ -147,9 +172,5 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
         playerToDecorate.setVirtualViewId(virtualViewId);
     }
 
-    /*@Override
-    public boolean isTurn() {
-        return playerToDecorate.isTurn();
-    }*/
 }
 

@@ -1,7 +1,9 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-import it.polimi.ingsw.PSP54.utils.Choice;
-import it.polimi.ingsw.PSP54.utils.Move;
+import it.polimi.ingsw.PSP54.utils.PlayerAction;
+import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
+import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,13 +24,10 @@ public class GameTest {
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1");
-        game.newPlayer("2");
-        game.newPlayer("3");
+        game.newPlayer("1", 20, 0);
+        game.newPlayer("2", 21, 1);
+        game.newPlayer("3", 22, 2);
         players = game.getPlayers();
-        players.get(0).setGame(game);
-        players.get(1).setGame(game);
-        players.get(2).setGame(game);
     }
 
     @After
@@ -89,37 +88,22 @@ public class GameTest {
         assertEquals("yellow", players.get(2).getColor());
     }
 
-
     @Test
-    public void extractCards_2PlayersExtraction_AllDifferent() {
+    public void performPowerAssignment_ApolloPower_CorrectOutput() {
 
-        game.extractCards();
+        game.setCurrentPlayer(players.get(0));
 
-        HashMap<Integer, String> cards = game.getExtractedCards();
+        game.getExtractedCards().put(0, "Apollo");
 
-        for (int i = 0; i < players.size(); i++) {
-            for (int j = 0; j < players.size(); j++){
-                if (i!=j){
-                    assertNotEquals(cards.get(i), cards.get(j));
-                }
-            }
-        }
+        PlayerAction cardSelection = new PlayerAction(0, new CardChoice(0));
 
-    }
+        game.performPowerAssignment(cardSelection);
 
-    @Test
-    public void setWorker_SouthWestCorner_CorrectInput() throws InvalidMoveException {
+        assertTrue(players.get(0) instanceof ApolloDecorator);
 
-        Move message = new Move(true, 0, 4);
+        assertFalse(players.get(0).isPlaying());
 
-        message.setPlayer_ind(0);
-        message.setVirtualViewId(0);
-        players.get(0).setVirtualViewId(0);
-
-        game.setWorker(message);
-
-        assertEquals(board[0][4], players.get(0).choseWorker(true).getPos());
-        assertEquals(players.get(0).choseWorker(true), board[0][4].getWorker());
+        assertTrue(players.get(1).isPlaying());
 
     }
 }

@@ -3,8 +3,11 @@ package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.server.controller.Controller;
 import it.polimi.ingsw.PSP54.server.model.Game;
-import it.polimi.ingsw.PSP54.utils.PlayerMessage;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
+import it.polimi.ingsw.PSP54.utils.PlayerAction;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -15,15 +18,15 @@ import java.util.concurrent.Executors;
 
 public class Server {
     private static final int PORT= 12345;
-    private ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
 
-    private ExecutorService executor = Executors.newCachedThreadPool();
+    private final ExecutorService executor = Executors.newFixedThreadPool(100);
 
-    private List<Connection> connections = new ArrayList<>();
-    private Map<PlayerMessage, Connection> lobbyBuffer = new HashMap<>(0);
-    private Map<PlayerMessage, Connection> waitingConnection = new HashMap<>();
-    private Vector<Connection> playingConnection = new Vector<>(0,1);
-    private Vector<VirtualView> virtualViews = new Vector<>(0, 1);
+    private final List<Connection> connections = new ArrayList<>();
+    private final Map<PlayerCredentials, Connection> lobbyBuffer = new HashMap<>(0);
+    private final Map<PlayerCredentials, Connection> waitingConnection = new HashMap<>();
+    private final Vector<Connection> playingConnection = new Vector<>(0,1);
+    private final Vector<VirtualView> virtualViews = new Vector<>(0, 1);
     protected Vector<Connection> currentConnections = new Vector<>(0,1);
     private int numberOfPlayers;
 
@@ -43,15 +46,19 @@ public class Server {
             waitingConnection.keySet().removeIf(playerMessage -> waitingConnection.get(playerMessage) == c);
 
         if (playingConnection.contains(c)){
-            c.send("I'm sorry but you lose, wish to you good luck for the next time");
+            GameMessage tryAgain = new StringMessage(null, "I'm sorry but you lose, wish you good luck for the next time");
+            c.asyncSend(tryAgain);
             playingConnection.remove(c);
             if(playingConnection.size()>=1)
             {
-                for (Connection connection : playingConnection)
-                    connection.send(c.getName() + " is not your opponent anymore");
+                for (Connection connection : playingConnection){
+                    GameMessage noMoreOpponent = new StringMessage(null, c.getName() + " is not your opponent anymore");
+                    connection.send(noMoreOpponent);
+                }
             }
             if (playingConnection.size()==1){
-                playingConnection.firstElement().send("You won!");
+                GameMessage youWon = new StringMessage(null, StringMessage.winMessage);
+                playingConnection.firstElement().asyncSend(youWon);
             }
             virtualViews.remove(playingConnection.indexOf(c));
         }
@@ -65,7 +72,7 @@ public class Server {
      * @param c refernce to client
      * @param p reference to in game player associated to client
      */
-    public synchronized void lobby(Connection c, PlayerMessage p) {
+    public synchronized void lobby(Connection c, PlayerCredentials p) {
 
         if (numberOfPlayers < 2 || numberOfPlayers > 3)
             lobbyBuffer.put(p, c);
@@ -77,32 +84,34 @@ public class Server {
                 freeBuffer(lobbyBuffer);
 
             if (waitingConnection.size() == numberOfPlayers ) {
-                List<PlayerMessage> keys = new ArrayList<>(waitingConnection.keySet());
+                List<PlayerCredentials> credentialsChoices = new ArrayList<>(waitingConnection.keySet());
+                List<PlayerAction> playersCredentials = new ArrayList<>();
 
-                for (int i = 0; i < keys.size(); i++) {
-                    Connection client = waitingConnection.get(keys.get(i));
-                    currentConnections.remove(waitingConnection.get(keys.get(i)));
-                    keys.get(i).setVirtualViewID(i);
+                for (int i = 0; i < credentialsChoices.size(); i++) {
+                    Connection client = waitingConnection.get(credentialsChoices.get(i));
+                    currentConnections.remove(waitingConnection.get(credentialsChoices.get(i)));
+                    PlayerAction credentials = new PlayerAction(i, credentialsChoices.get(i));
+                    playersCredentials.add(credentials);
 
                     //initialize a VirtualView for each player, manage dispatching depending on numberOfPlayers
                     if (i == 0) {
                         VirtualView virtualView;
                         if (numberOfPlayers == 2) {
-                            virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName());
+                            virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i + 1).getPlayerName());
                         } else { //numberOfPlayers == 3
-                            virtualView = new VirtualView(i, keys.get(i), client, keys.get(i + 1).getPlayerName(), keys.get(i + 2).getPlayerName());
+                            virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i + 1).getPlayerName(), credentialsChoices.get(i + 2).getPlayerName());
                         }
                         virtualViews.add(i, virtualView);
                     } else if (i == 1) {
                         VirtualView virtualView;
                         if (numberOfPlayers == 2) {
-                            virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName());
+                            virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i - 1).getPlayerName());
                         } else {
-                            virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 1).getPlayerName(), keys.get(i + 1).getPlayerName());
+                            virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i - 1).getPlayerName(), credentialsChoices.get(i + 1).getPlayerName());
                         }
                         virtualViews.add(i, virtualView);
                     } else {
-                        VirtualView virtualView = new VirtualView(i, keys.get(i), client, keys.get(i - 2).getPlayerName(), keys.get(i - 1).getPlayerName());
+                        VirtualView virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i - 2).getPlayerName(), credentialsChoices.get(i - 1).getPlayerName());
                         virtualViews.add(i, virtualView);
                     }
                     playingConnection.add(client);
@@ -130,6 +139,7 @@ public class Server {
      * Per ogni client che si collega e viene accettato dal serverSocket
      * viene eseguito un thread di una connection (tramite un executor)
      */
+    @SuppressWarnings("InfiniteLoopStatement")
     public void run(){
         System.out.println("Server listening on port: " + PORT);
         while(true) {
@@ -147,12 +157,8 @@ public class Server {
         }
     }
 
-    public void setNumberOfPlayers(int numberOfPlayers) {
-        this.numberOfPlayers = numberOfPlayers;
-    }
-
-    private void freeBuffer(Map<PlayerMessage, Connection> buffer){
-        Vector<PlayerMessage> bufferKeys= new Vector<>(buffer.keySet());
+    private void freeBuffer(Map<PlayerCredentials, Connection> buffer){
+        Vector<PlayerCredentials> bufferKeys= new Vector<>(buffer.keySet());
         Vector<Connection> bufferValues = new Vector<>(buffer.values());
         while (waitingConnection.size()<numberOfPlayers && lobbyBuffer.size()>0){
             waitingConnection.put(bufferKeys.get(0),bufferValues.get(0));
@@ -162,11 +168,15 @@ public class Server {
         }
         while(lobbyBuffer.size()>0){
             currentConnections.remove(bufferValues.get(0));
-            bufferValues.get(0).send("the lobby you were has closed, please login again");
+            bufferValues.get(0).asyncSend("the lobby you were has closed, please login again");
             bufferValues.get(0).closeConnection();
             lobbyBuffer.remove(bufferKeys.get(0),bufferValues.get(0));
             bufferValues.remove(0);
             bufferKeys.remove(0);
         }
+    }
+
+    public void setNumberOfPlayers(int numberOfPlayers) {
+        this.numberOfPlayers = numberOfPlayers;
     }
 }

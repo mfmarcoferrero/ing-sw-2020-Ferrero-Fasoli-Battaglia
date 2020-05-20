@@ -3,29 +3,31 @@ package it.polimi.ingsw.PSP54.client.view;
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.utils.*;
-
+import it.polimi.ingsw.PSP54.utils.choices.*;
+import it.polimi.ingsw.PSP54.utils.messages.BoardMessage;
+import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Vector;
+import java.util.*;
 
-public class CliView implements Observer {
+public class CliView implements Observer<GameMessage> {
 
 	private final Scanner inputReader = new Scanner(System.in);
 	private final PrintStream output = new PrintStream(System.out);
-	private Client client;
+	private final Client client;
+	private HashMap<String, Integer> credentials;
+	private static int numberOfPlayers;
 	private boolean maleSelected;
-	private static final String workerSelection = "Select your worker: [Enter m/f]";
 
 	public CliView(Client client) {
 		this.client = client;
 	}
 
 	/**
-	 *Returns the correct character to print in the center of every box, it's called by printBoard(Box[][] board)
-	 * @param box current box which is being printed
-	 * @return the String containing ANSI/UNICODE codes representing the Dome, the Workers or the level of the current box
+	 * Returns the correct character to print in the center of every box, it's called by printBoard(Box[][] board).
+	 * @param box current box which is being printed.
+	 * @return the String containing ANSI/UNICODE codes representing the Dome, the Workers or the level of the current box.
 	 */
 	private String getBoxCenter(Box box){
 
@@ -79,9 +81,9 @@ public class CliView implements Observer {
 	}
 
 	/**
-	 * Prints the ground line of every box in the same line of the board
-	 * @param initGround String containing the left border and the ANSI code for the ground
-	 * @param endGround String containing the right border
+	 * Prints the ground line of every box in the same line of the board.
+	 * @param initGround String containing the left border and the ANSI code for the ground.
+	 * @param endGround String containing the right border.
 	 */
 	private void printGround(String initGround, String endGround) {
 		StringBuilder line;
@@ -98,8 +100,8 @@ public class CliView implements Observer {
 	}
 
 	/**
-	 *prints the board
-	 * @param board bi-dimensional array of boxes representing the game board
+	 * Prints the board.
+	 * @param board bi-dimensional array of boxes representing the game board.
 	 */
 	public void printBoard (Box[][] board) {
 
@@ -291,8 +293,57 @@ public class CliView implements Observer {
 	} //TODO: insert coordinates along borders?
 
 	/**
-	 *asks player which worker he wants to use
-	 * @return true if the choice is the male worker, false if it's the female Worker
+	 * Acquires username and age of the player from command line and stores them in the credentials HashMap.
+	 */
+	public void acquirePlayerCredentials() {
+		output.println("What's your name?");
+		String name = inputReader.next();
+		output.println("What's your age?");
+		int age = acquireInteger();
+
+		HashMap<String, Integer> credentials = new HashMap<>();
+		credentials.put(name, age);
+		setCredentials(credentials);
+	}
+
+	/**
+	 * Creates a PlayerChoice object containing player's credentials and sends it via socket.
+	 * @param credentials the HashMap containing player's name and age.
+	 */
+	public void sendPlayerCredentials(HashMap<String, Integer> credentials) {
+
+		for (Map.Entry<String, Integer> map : credentials.entrySet()){
+			String name = map.getKey();
+			int age = map.getValue();
+			PlayerChoice playerCredentials = new PlayerCredentials(name, age);
+			client.asyncWriteToSocket(playerCredentials);
+		}
+
+	}
+
+	/**
+	 * Acquires game's number of players and stores it into a local variable.
+	 */
+	public void acquireNumberOfPlayers() {
+		int numberOfPlayers = acquireInteger();
+		while (numberOfPlayers < 2 || numberOfPlayers > 3) {
+			output.println("Illegal number of player! It must be '2' or '3', try again");
+			numberOfPlayers = inputReader.nextInt();
+		}
+		setNumberOfPlayers(numberOfPlayers);
+	}
+
+	/**
+	 * Sends the number of players via socket.
+	 * @param numberOfPlayers the number of players.
+	 */
+	public void sendNumberOfPlayers(int numberOfPlayers){
+		client.asyncWriteToSocket(numberOfPlayers);
+	}
+
+	/**
+	 * Asks player which worker he wants to use.
+	 * @return true if the choice is the male worker, false if it's the female Worker.
 	 */
 	public boolean acquireWorkerSelection() {
 
@@ -314,32 +365,35 @@ public class CliView implements Observer {
 		return male;
 	}
 
-	public boolean acquireSetDome() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean acquireBooleanChoice() {
 		boolean loop = true;
-		Boolean setDome = false;
+		boolean choice = false;
 		while (loop) {
 			String dome = inputReader.next();
-			if(dome.equals("yes")) {
-				setDome = true;
+			if(dome.equals("y")) {
+				choice = true;
 				loop = false;
 			}
-			else if(dome.equals("no")){
-				setDome = false;
+			else if(dome.equals("n")){
 				loop = false;
 			} else
-				output.println("Incorrect Input! [Enter y/n]");
+				output.println("Incorrect Input!");
 		}
-		return setDome;
+		return choice;
 	}
 
 	/**
-	 * asks coordinates which player wants to move
-	 * @return an array containing the selected coordinates
+	 * Asks coordinates which player wants to move.
+	 * @return an array containing the selected coordinates.
 	 */
 	public int[] acquireCoordinates() {
 		int[] coordinates = new int[2];
 
-		output.println("Enter cell coordinates");
+		output.println("Enter cell coordinates.");
 		//set x
 		output.println("x:");
 		int y = getCoordinate();
@@ -353,6 +407,10 @@ public class CliView implements Observer {
 		return coordinates;
 	}
 
+	/**
+	 * Asks an integer lower than 6 and greater than 0 until the input is correct.
+	 * @return the given input.
+	 */
 	private int getCoordinate() {
 		int k = 0;
 		boolean loop = true;
@@ -369,84 +427,6 @@ public class CliView implements Observer {
 			}
 		}
 		return k - 1; //return coordinate translated to array index
-	}
-
-	public void acquirePlayerCredentials() {
-		output.println("What's your name?");
-		String name = inputReader.next();
-		output.println("What's your age?");
-		int age = acquireInteger();
-		PlayerMessage playerMessage = new PlayerMessage(name,age,0);
-		client.asyncWriteToSocket(playerMessage);
-	}
-
-	public void acquireNumberOfPlayers() {
-		int numberOfPlayers;
-		numberOfPlayers = acquireInteger();
-		while (numberOfPlayers < 2 || numberOfPlayers > 3) {
-			output.println("Illegal number of player! It must be '2' or '3', try again");
-			numberOfPlayers = inputReader.nextInt();
-		}
-		client.asyncWriteToSocket(numberOfPlayers);
-	}
-
-	private void acquireSecondMove(){
-		boolean loop = true;
-		Boolean secondMove = false;
-		while (loop) {
-			String choice = inputReader.next();
-			if(choice.equals("y")) {
-				secondMove = true;
-				loop = false;
-			}
-			else if(choice.equals("n")){
-				secondMove = false;
-				loop = false;
-			} else
-				output.println("Incorrect Input! [Enter y/n]");
-		}
-		if (secondMove) {
-			sendMove(isMaleSelected());
-		}
-		else {
-			output.println(GameMessage.buildMessage);
-			sendBuild(isMaleSelected());
-		}
-	}
-
-	private void acquireSecondBuild(){
-		boolean loop = true;
-		Boolean secondBuild = false;
-		while (loop) {
-			String choice = inputReader.next();
-			if(choice.equals("y")) {
-				secondBuild = true;
-				loop = false;
-			}
-			else if(choice.equals("n")){
-				secondBuild = false;
-				loop = false;
-			} else
-				output.println("Incorrect Input! [Enter y/n]");
-		}
-		if (secondBuild) {
-			sendBuild(isMaleSelected());
-		}
-		else {
-			sendEndTurn();
-		}
-	}
-
-	private void acquireAtlasBuild(){
-		boolean setDome = acquireSetDome();
-		int[] coordinates = acquireCoordinates();
-		Build build = new Build(isMaleSelected(),coordinates[0],coordinates[1]);
-		if (setDome){
-			build.setSetDome(true);
-			client.asyncWriteToSocket(build);
-		}
-		else
-			client.asyncWriteToSocket(build);
 	}
 
 	/**
@@ -469,145 +449,132 @@ public class CliView implements Observer {
 	}
 
 	/**
-	 * Creates a message for the player containing the extracted cards
+	 * Asks the player which power he wants and sends the choice via socket.
 	 */
-	public void displayCards(HashMap<Integer,String> extractedCards){
+	public void acquireCardSelection(HashMap<Integer,String> extractedCards){
 		Vector<String> cardsName = new Vector<>(extractedCards.values());
 		Vector<Integer> cardsValues = new Vector<>(extractedCards.keySet());
 		boolean found = false;
 
 		if (extractedCards.size() == 1){
-			output.println("You are the last player so you can't choose");
-			client.asyncWriteToSocket(new Choice(cardsValues.get(0)));
+			PlayerChoice cardChoice = new CardChoice(cardsValues.get(0));
+			client.asyncWriteToSocket(cardChoice);
 		}
 		else {
-			output.println("Choose your card: (write the name of the card you want)");
+			output.println("Choose your card: [Enter the name of the God]");
 			for (int i = 0; i < cardsName.size(); i++) {
 				output.println((i + 1) + ") " + cardsName.get(i));
 			}
-
 			String chosenCard = inputReader.next();
 			while (!found) {
 				for (int i = 0; i < cardsName.size(); i++) {
 					if (chosenCard.equals(cardsName.get(i))) {
-						client.asyncWriteToSocket(new Choice(cardsValues.get(i)));
+						PlayerChoice cardChoice = new CardChoice(cardsValues.get(i));
+						client.asyncWriteToSocket(cardChoice);
 						found = true;
 						break;
 					}
 				}
 				if (!found) {
-					output.println("Invalid input: (write the name of the card you want)");
+					output.println("Invalid input! [Enter the name of the God]");
 					chosenCard = inputReader.next();
 				}
 			}
 		}
 	}
 
-	public void sendWorkerPlacement(boolean male){
-		int [] coordinates = acquireCoordinates();
-		Move move = new Move(male, coordinates[0], coordinates[1]);
-		move.setSetFirstPos(true);
+	/**
+	 * Sends a WorkerChoice object via socket.
+	 */
+	public void sendWorkerSelection(){
+		PlayerChoice workerSelection = new WorkerChoice(isMaleSelected());
+		client.asyncWriteToSocket(workerSelection);
+	}
+
+	/**
+	 * Sends a MoveChoice object via socket.
+	 * @param coordinates an array containing the destination cell's coordinates.
+	 */
+	public void sendMove(int[] coordinates) {
+		PlayerChoice move = new MoveChoice(coordinates[0], coordinates[1]);
 		client.asyncWriteToSocket(move);
 	}
 
-	public void sendMove(boolean male){
-		int[] coordinates = acquireCoordinates();
-		Move move = new Move(male, coordinates[0], coordinates[1]);
-		client.asyncWriteToSocket(move);
-	}
-
-	public void sendBuild(boolean male){
-		int[] coordinates = acquireCoordinates();
-		Build build = new Build(male,coordinates[0],coordinates[1]);
+	/**
+	 * Sends a BuildChoice object via socket.
+	 * @param coordinates an array containing the destination cell's coordinates.
+	 */
+	public void sendBuild(int[] coordinates) {
+		PlayerChoice build = new BuildChoice(coordinates[0], coordinates[1]);
 		client.asyncWriteToSocket(build);
 	}
 
-	public void sendEndTurn(){
-		Build build = new Build(true);
-		client.asyncWriteToSocket(build);
+	/**
+	 *
+	 * @param choice
+	 */
+	public void sendBooleanChoice(boolean choice) {
+		PlayerChoice booleanChoice = new BooleanChoice(choice);
+		client.asyncWriteToSocket(booleanChoice);
 	}
-
-	@Override
-	public void update(String message) {
-		output.println(message);
-		if (message.equals(GameMessage.welcomeMessage)) {
-			acquirePlayerCredentials();
-		}
-		if (message.equals(GameMessage.setNumberOfPlayersMessage)) {
-			acquireNumberOfPlayers();
-		}
-		if (message.equals(GameMessage.setFirstWorkerMessage)) {
-			output.println(workerSelection);
-			setMaleSelected(acquireWorkerSelection());
-			sendWorkerPlacement(isMaleSelected());
-		}
-		if (message.equals(GameMessage.setSecondWorkerMessage)){
-			sendWorkerPlacement(!isMaleSelected());
-		}
-		if (message.equals(GameMessage.moveMessage)){
-			output.println(workerSelection);
-			setMaleSelected(acquireWorkerSelection());
-			sendMove(isMaleSelected());
-		}
-		if (message.equals(GameMessage.invalidMoveMessage)){
-			sendMove(isMaleSelected());
-		}
-		if (message.equals(GameMessage.buildMessage)){
-			sendBuild(isMaleSelected());
-		}
-		if (message.equals(GameMessage.invalidBuildingMessage)){
-			sendBuild(isMaleSelected());
-		}
-		if (message.equals(GameMessage.doubleMoveMessage)){
-			acquireSecondMove();
-		}
-		if (message.equals(GameMessage.doubleBuildMessage)){
-			acquireSecondBuild();
-		}
-		if (message.equals(GameMessage.buildOrDome)){
-			acquireAtlasBuild();
-		}
-
-	}
-
-
-	@Override
-	public void update(Box[][] message) {
-		printBoard(message);
-	}
-
-	@Override
-	public void update(CardsToDisplay message) {
-		displayCards(message.getExtractedCards());
-	}
-
+	/**
+	 * Called whenever the observed object is changed.
+	 *
+	 * @param message an argument passed to the notify method.
+	 */
 	@Override
 	public void update(GameMessage message) {
 
-	}
+		if (message instanceof StringMessage){
+			String stringMessage = ((StringMessage) message).getMessage();
+			output.println(stringMessage);
+			switch (stringMessage) {
+				case StringMessage.welcomeMessage:
+					acquirePlayerCredentials();
+					sendPlayerCredentials(getCredentials());
+					break;
+				case StringMessage.setNumberOfPlayersMessage:
+					acquireNumberOfPlayers();
+					sendNumberOfPlayers(getNumberOfPlayers());
+					break;
+				case StringMessage.setFirstWorkerMessage:
+				case StringMessage.choseWorker:
+					setMaleSelected(acquireWorkerSelection());
+					sendWorkerSelection();
+					break;
+				case StringMessage.setSecondWorkerMessage:
+				case StringMessage.moveMessage:
+				case StringMessage.invalidMoveMessage: { //insert coordinates
+					int[] coordinates = acquireCoordinates();
+					sendMove(coordinates);
+					break;
+				}
+				case StringMessage.buildMessage:
+				case StringMessage.invalidBuildingMessage: {
+					int[] coordinates = acquireCoordinates();
+					sendBuild(coordinates);
+					break;
+				}
+				case StringMessage.moveAgain:
+				case StringMessage.buildAgain:
+				case StringMessage.buildOrDome: {
+					boolean choice = acquireBooleanChoice();
+					sendBooleanChoice(choice);
+					break;
+				}
 
-	@Override
-	public void update(Choice message) {
+			}
+		}
+		if (message instanceof CardsMessage){
+			acquireCardSelection(((CardsMessage) message).getCards());
+		}
+		if (message instanceof BoardMessage){
+			printBoard(((BoardMessage)message).getBoard());
 
-	}
-
-	@Override
-	public void update(Move message){
-
-	}
-
-	@Override
-	public void update(Build message){
-
-	}
-
-	@Override
-	public void update(PlayerMessage message){
-
+		}
 	}
 
 	//setters & getters
-
 
 	public boolean isMaleSelected() {
 		return maleSelected;
@@ -616,4 +583,21 @@ public class CliView implements Observer {
 	public void setMaleSelected(boolean maleSelected) {
 		this.maleSelected = maleSelected;
 	}
+
+	public HashMap<String, Integer> getCredentials() {
+		return credentials;
+	}
+
+	public void setCredentials(HashMap<String, Integer> credentials) {
+		this.credentials = credentials;
+	}
+
+	public int getNumberOfPlayers() {
+		return numberOfPlayers;
+	}
+
+	public void setNumberOfPlayers(int numberOfPlayers) {
+		CliView.numberOfPlayers = numberOfPlayers;
+	}
+
 }

@@ -1,28 +1,15 @@
 package it.polimi.ingsw.PSP54.observer;
 
-import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.utils.*;
+/**
+ * A class can implement the Observer interface when it wants to be informed of changes in observable objects.
+ * @param <T> the type of message that implementing class wants to observe.
+ */
+public interface Observer<T> {
 
-public interface Observer {
-
-    //bi-directional
-    void update(String message);
-
-    //from Client to Server
-    void update(Choice message);
-
-    void update(Move message);
-
-    void update(Build message);
-
-    void update(PlayerMessage message);
-
-    void update(Box[][] message);
-
-    //from Server to Client
-
-    void update(GameMessage message);
-
-    void update(CardsToDisplay message);
+    /**
+     *  Called whenever the observed object is changed.
+     * @param message an argument passed to the notify method.
+     */
+    void update(T message);
 
 }

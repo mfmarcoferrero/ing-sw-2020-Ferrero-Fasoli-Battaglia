@@ -4,34 +4,25 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Class representing the player whit his default actions and turn administration
+ * Class representing the player whit his default actions and turn administration.
  */
 public class StandardPlayer implements Player, Serializable, Cloneable {
 
     private static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
     private int cardID;
     private Game game;
-    private String playerName;
+    private final String playerName;
     private int age, virtualViewId;
     private String color;
     private final Worker[] workers = new Worker[2];
+    private Worker currentWorker;
     private boolean playing;
     private boolean winner;
     private boolean loser;
 
-
-    public StandardPlayer(String playerName) {
-        this.playerName = playerName;
-        this.workers[0] = new Worker(true, this, null);
-        this.workers[1] = new Worker(false, this, null);
-        this.winner = false;
-        this.loser = false;
-        this.playing = false;
-    }
-
     /**
-     * Instantiates a new Player with corresponding workers
-     * @param playerName the name of the Player
+     * Instantiates a new Player with corresponding workers.
+     * @param playerName the name of the Player.
      */
     public StandardPlayer(String playerName, int age, int virtualViewId) {
         this.playerName = playerName;
@@ -45,14 +36,14 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     * Decorates the current player
-     * @param cardID the number of the card
-     * @return the decorated player
+     * Decorates the current player with the given power.
+     * @param cardID the number of the card.
+     * @return the decorated player.
      */
     @Override
-    public Player assignPower(int cardID){ //where to be performed?
+    public Player assignPower(int cardID){
 
-        Player actualPlayer = new StandardPlayer(null,0, 0);
+        Player actualPlayer = this;
 
         switch (cardID) {
             case APOLLO:
@@ -76,7 +67,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                 actualPlayer.setCardID(DEMETER);
                 break;
         }
-
         return actualPlayer;
     }
 
@@ -91,32 +81,39 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         if (!getGame().getBoard()[x][y].isOccupied()) {
             worker.setPos(getGame().getBoard()[x][y]);
             getGame().getBoard()[x][y].setWorker(worker);
-            setWorkerBoxesToMove(worker);
-            setWorkerBoxesToBuild(worker);
         } else
             throw new InvalidMoveException();
     }
 
     /**
-     *
-     * @return
+     * Checks if all the player's workers are already on the board.
+     * @return true if both workers are placed, false otherwise.
      */
-    @Override
     public boolean areWorkerSettled() {
-
         return workers[0].getPos() != null && workers[1].getPos() != null;
     }
 
     /**
-     * Select the worker which player is going to use depending on the worker's sex
-     * @param male the worker's sex
-     * @return the chosen worker
+     * This method is invoked only for the initial worker's placement. It sets the unplaced worker to current.
+     * @param currentWorker the worker that has just been settled.
+     */
+    public void nextCurrentWorker(Worker currentWorker) {
+        if (currentWorker.equals(getWorkers()[0]))
+            setCurrentWorker(getWorkers()[1]);
+        else
+            setCurrentWorker(getWorkers()[0]);
+    }
+
+    /**
+     * Select the worker which player is going to use depending on the worker's sex.
+     * @param male the worker's sex.
+     * @return the chosen worker.
      */
     @Override
-    public Worker choseWorker(Boolean male) {
-
-        if (male)
+    public Worker getWorker(Boolean male) {
+        if (male) {
             return this.workers[0];
+        }
         else
             return this.workers[1];
     }
@@ -128,7 +125,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      */
     @Override
     public Worker turnInit(Boolean male) {
-        Worker currentWorker = choseWorker(male);
+        Worker currentWorker = getWorker(male);
         currentWorker.setMoveToken(1);
         currentWorker.setBuildToken(0);
         return currentWorker;
@@ -140,9 +137,9 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      * @return the vector containing available boxes
      */
     @Override
-    public ArrayList<Box> setWorkerBoxesToMove (Worker worker) {
+    public ArrayList<Box> setWorkerBoxesToMove (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
 
-        ArrayList<Box> boxes = new ArrayList<>();
+        ArrayList<Box> valid = new ArrayList<>();
         int deltaX, deltaY, deltaH;
         Box[][] board = getGame().getBoard();
 
@@ -152,11 +149,14 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                 deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
                 deltaH =  board[i][j].getLevel() - worker.getPos().getLevel();
                 if ((deltaX <= 1 && deltaY <= 1) && deltaH <= 1 && !board[i][j].isOccupied() && !board[i][j].isDome())
-                    boxes.add(board[i][j]);
+                    valid.add(board[i][j]);
             }
         }
-        worker.setBoxesToMove(boxes);
-        return boxes;
+        if (valid.isEmpty()){
+            setLoser(true);
+        }
+        worker.setBoxesToMove(valid);
+        return valid;
     }
 
     /**
@@ -165,7 +165,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      * @return the vector containing buildable boxes
      */
     @Override
-    public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){
+    public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
         ArrayList<Box> boxes = new ArrayList<>();
         int deltaX, deltaY;
         Box[][] board = getGame().getBoard();
@@ -204,15 +204,19 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             //set tokens
             worker.setMoveToken(currentMoveToken - 1);
             worker.setBuildToken(1);
-            setWorkerBoxesToMove(worker);
-            setWorkerBoxesToBuild(worker);
+
+            getGame().notifyBoard();
+            checkWinner(worker);
+            if (this.isWinner()){
+                //TODO: notify win && endGame
+            }
 
         } else throw new InvalidMoveException();
 
     }
 
     /**
-     *If valid performs build and modify action tokens
+     * If valid performs build and modify action tokens
      * @param worker selected worker which the player wants to move
      * @param dest selected box where to build
      */
@@ -230,12 +234,35 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                 dest.setLevel(currentLevel+1);
             }
             worker.setBuildToken(currentBuildToken - 1);
-            setWorkerBoxesToMove(worker);
-            setWorkerBoxesToBuild(worker);
+
+            getGame().notifyBoard();
         }
         else
             throw new InvalidBuildingException();
     }
+
+    @Override
+    public void chose(boolean choice) {
+    }
+
+    /**
+     * This method needs to be invoked after every move. It checks if the newly moved worker is on a 3 level building.
+     * @param currentWorker the worker that has just been moved.
+     */
+    @Override
+    public void checkWinner(Worker currentWorker) {
+
+        if (currentWorker.getPos().getLevel() == 3){
+            this.setWinner(true);
+            for (Player player : game.getPlayers()){
+                if (!player.equals(this)){
+                    player.setLoser(true);
+                }
+            }
+        }
+    }
+
+    //setters & getters
 
     /**
      * Creates a reference to the current Game, in order to access board's and other players' info
@@ -267,7 +294,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     @Override
-    public void setLoser(boolean loser) {
+    public void setLoser(boolean loser) { //TODO: notify client & remove player.
         this.loser = loser;
     }
 
@@ -284,10 +311,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public String getPlayerName() {
         return playerName;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
     }
 
     @Override
@@ -314,6 +337,16 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     public Worker[] getWorkers() { return workers; }
 
     @Override
+    public Worker getCurrentWorker() {
+        return currentWorker;
+    }
+
+    @Override
+    public void setCurrentWorker(Worker currentWorker) {
+        this.currentWorker = currentWorker;
+    }
+
+    @Override
     public int getVirtualViewID() {
         return this.virtualViewId;
     }
@@ -332,5 +365,4 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     public void setPlaying(boolean playing) {
         this.playing = playing;
     }
-
 }

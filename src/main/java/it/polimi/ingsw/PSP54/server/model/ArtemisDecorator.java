@@ -1,9 +1,12 @@
 package it.polimi.ingsw.PSP54.server.model;
 
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
+
 import java.util.ArrayList;
 
 /**
- * Your worker may move an additional time but not back to its initial space
+ * Your worker may move an additional time but not back to its initial space.
  */
 public class ArtemisDecorator extends GodDecorator{
 
@@ -19,9 +22,8 @@ public class ArtemisDecorator extends GodDecorator{
      * @return the chosen worker with updated tokens
      */
     @Override
-    public Worker turnInit(Boolean male) {
-
-        Worker currentWorker = choseWorker(male);
+    public Worker turnInit(Boolean male){
+        Worker currentWorker = getWorker(male);
         currentWorker.setMoveToken(2);
         currentWorker.setBuildToken(0);
         return currentWorker;
@@ -48,16 +50,24 @@ public class ArtemisDecorator extends GodDecorator{
         return valid;
     }
 
-    /**
-     *If valid performs build and modify action tokens
-     * @param worker selected worker which the player wants to move
-     * @param dest selected box where to build
-     */
     @Override
-    public void build(Worker worker, Box dest) throws InvalidBuildingException {
+    public void move(Worker worker, Box dest) throws InvalidMoveException {
+        super.move(worker, dest);
+        if (worker.getMoveToken() == 1){
+            worker.setMoveToken(-1);
+            GameMessage moveAgain = new StringMessage(getVirtualViewID(), StringMessage.moveAgain);
+            getGame().notify(moveAgain);
+        }
+    }
 
-        super.build(worker, dest);
-        if (worker.getMoveToken()!=0)
-            worker.setMoveToken(0);
+    @Override
+    public void chose(boolean choice){
+        if (choice){ //move again
+            getCurrentWorker().setMoveToken(1);
+            getCurrentWorker().setBuildToken(0);
+        }else {
+            getCurrentWorker().setMoveToken(0);
+            getCurrentWorker().setBuildToken(1);
+        }
     }
 }

@@ -1,9 +1,8 @@
 package it.polimi.ingsw.PSP54.client;
 
-import it.polimi.ingsw.PSP54.client.gui.GuiMain;
-import it.polimi.ingsw.PSP54.client.gui.GuiView;
 import it.polimi.ingsw.PSP54.client.view.*;
 import it.polimi.ingsw.PSP54.observer.Observable;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,30 +10,22 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.NoSuchElementException;
 
-public class Client extends Observable {
+public class Client extends Observable<GameMessage> {
 
-    private String ip;
-    private int port;
+    private final String ip;
+    private final int port;
     private ObjectOutputStream socketOut;
-    private CliView cliView = new CliView(this);
+    private final CliView cliView;
     //private GuiView guiView = new GuiView(this);
     private int playerInd;
+    private boolean active = true;
 
     public Client(String ip, int port) {
         this.ip = ip;
         this.port = port;
+        this.cliView = new CliView(this);
         addObserver(cliView);
         //addObserver(guiView);
-    }
-
-    private boolean active = true;
-
-    public synchronized boolean isActive(){
-        return active;
-    }
-
-    public synchronized void setActive(boolean active){
-        this.active = active;
     }
 
     /**
@@ -43,14 +34,14 @@ public class Client extends Observable {
      * @param socketIn
      * @return
      */
-    public Thread asyncReadFromSocket(final ObjectInputStream socketIn){
+    public synchronized Thread asyncReadFromSocket(final ObjectInputStream socketIn){
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     while (isActive()) {
                         Object inputObject = socketIn.readObject();
-                        Client.this.notify(inputObject);
+                        Client.this.notify((GameMessage)inputObject);
                     }
                 } catch (Exception e) {
                     setActive(false);
@@ -106,6 +97,14 @@ public class Client extends Observable {
             socketOut.close();
             socket.close();
         }
+    }
+
+    public synchronized boolean isActive(){
+        return active;
+    }
+
+    public synchronized void setActive(boolean active){
+        this.active = active;
     }
 
 }

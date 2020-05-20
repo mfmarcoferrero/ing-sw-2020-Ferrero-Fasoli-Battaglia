@@ -2,58 +2,29 @@ package it.polimi.ingsw.PSP54.client.gui;
 
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
-import it.polimi.ingsw.PSP54.server.model.Box;
-import it.polimi.ingsw.PSP54.utils.*;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
-public class GuiView implements Observer {
-    private Client client;
+public class GuiView implements Observer<GameMessage> {
+    private final Client client;
 
     public GuiView(Client client) {
         this.client = client;
     }
 
     @Override
-    public void update(String message) {
-        if (message.equals(GameMessage.welcomeMessage)) {
-            System.out.println(message);
-        }
-        if (message.equals(GameMessage.setNumberOfPlayersMessage)) {
-            System.out.println(message);
-        }
-    }
-
-    @Override
-    public void update(Choice message) {
-
-    }
-
-    @Override
-    public void update(Move message) {
-
-    }
-
-    @Override
-    public void update(Build message) {
-
-    }
-
-    @Override
-    public void update(PlayerMessage message) {
-
-    }
-
-    @Override
-    public void update(Box[][] message) {
-
-    }
-
-    @Override
     public void update(GameMessage message) {
+        if (message instanceof StringMessage){
+            String stringMessage = ((StringMessage) message).getMessage();
+            if (stringMessage.equals(StringMessage.welcomeMessage)) {
+                System.out.println(message);
+            }
+            if (stringMessage.equals(StringMessage.setNumberOfPlayersMessage)) {
+                System.out.println(message);
+            }
+        }
 
     }
 
-    @Override
-    public void update(CardsToDisplay message) {
 
-    }
 }

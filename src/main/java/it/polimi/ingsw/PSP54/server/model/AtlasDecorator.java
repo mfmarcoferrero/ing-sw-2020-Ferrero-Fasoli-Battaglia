@@ -1,6 +1,7 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-import it.polimi.ingsw.PSP54.utils.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.util.ArrayList;
 
@@ -9,40 +10,36 @@ import java.util.ArrayList;
  */
 public class AtlasDecorator extends GodDecorator {
 
+    private Box selectedBox;
+
     public AtlasDecorator(Player player) {
         super(player);
     }
 
-    /*
-    PSEUDOCODE
-
-    build(Worker worker, Box dest):
-        if !dest.isDome && dest.getLevel() != 3
-            notifyController()
-            acquireChoice()
-            performBuild
-     */
-
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
-        ArrayList<Box> valid = worker.getBoxesToBuild();
-        int currentBuildToken = worker.getBuildToken();
 
+        ArrayList<Box> valid = worker.getBoxesToBuild();
         if (valid.contains(dest)) {
-            if (worker.isDomeBuilder()) {
-                dest.setDome(true);
-                worker.setDomeBuilder(false);
+            if (!dest.isDome() && dest.getLevel() != 3) {
+                this.selectedBox = dest;
+                GameMessage buildOrDome = new StringMessage(this.getVirtualViewID(), StringMessage.buildOrDome);
+                getGame().notify(buildOrDome);
+                worker.setBuildToken(-1);
             } else
                 super.build(worker, dest);
-            worker.setBuildToken(currentBuildToken - 1);
-        }
-        else
+        }else
             throw new InvalidBuildingException();
+    }
 
-        //TODO: endTurn?
-        //Box destAtCall = new Box(dest.getX(), dest.getY(), dest.getLevel(), dest.isDome());
-        //if dest.getLevel == destAtCall.getLevel+1 || dest.isDome
-            //endTurn
-
+    @Override
+    public void chose(boolean choice){
+        if (choice){
+            selectedBox.setDome(true);
+        }else {
+            selectedBox.setLevel(selectedBox.getLevel() + 1);
+        }
+        getGame().notifyBoard();
+        getCurrentWorker().setBuildToken(0);
     }
 }

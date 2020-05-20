@@ -25,9 +25,9 @@ public class ApolloDecoratorTest {
         game = new Game();
         board = game.getBoard();
         //initialize players
-        game.newPlayer("1");
-        game.newPlayer("2");
-        game.newPlayer("3");
+        game.newPlayer("1", 20, 0);
+        game.newPlayer("2", 21, 1);
+        game.newPlayer("3", 22, 2);
         players = game.getPlayers();
 
         //set Apollo power to player_1
@@ -49,7 +49,7 @@ public class ApolloDecoratorTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        apolloWorker = players.get(0).choseWorker(true);
+        apolloWorker = players.get(0).getWorker(true);
         apolloWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(apolloWorker);
 
@@ -75,7 +75,7 @@ public class ApolloDecoratorTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        apolloWorker = players.get(0).choseWorker(true);
+        apolloWorker = players.get(0).getWorker(true);
         apolloWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(apolloWorker);
 
@@ -84,7 +84,7 @@ public class ApolloDecoratorTest {
         board[2][1].setLevel(3);
         board[3][1].setLevel(3);
         board[3][1].setDome(true);
-        board[3][3].setWorker(players.get(1).choseWorker(false));
+        board[3][3].setWorker(players.get(1).getWorker(false));
 
         //generate expected result
         ArrayList<Box> expected = new ArrayList<>();
@@ -105,18 +105,18 @@ public class ApolloDecoratorTest {
         //initialize worker and sets position
         x = 2;
         y = 2;
-        apolloWorker = players.get(0).choseWorker(true);
+        apolloWorker = players.get(0).getWorker(true);
         apolloWorker.setPos(game.getBoard()[x][y]);
         board[x][y].setWorker(apolloWorker);
 
         //set boxes levels
         board[1][1].setLevel(1);
-        board[1][1].setWorker(players.get(1).choseWorker(true));
+        board[1][1].setWorker(players.get(1).getWorker(true));
         board[1][2].setDome(true);
         board[2][1].setLevel(3);
         board[3][1].setLevel(3);
         board[3][1].setDome(true);
-        board[3][1].setWorker(players.get(1).choseWorker(false));
+        board[3][1].setWorker(players.get(1).getWorker(false));
 
         //generate expected result
         ArrayList<Box> expected = new ArrayList<>();
@@ -144,9 +144,9 @@ public class ApolloDecoratorTest {
         board[1][1].setWorker(victimWorker);
 
         //set available boxes
+        players.get(0).setWorkerBoxesToMove(apolloWorker);
 
         //invoke move() method
-        players.get(0).setWorkerBoxesToMove(apolloWorker);
         players.get(0).move(apolloWorker, board[1][1]);
 
 
@@ -177,9 +177,9 @@ public class ApolloDecoratorTest {
 
         Exception thrown = null;
 
+        players.get(0).setWorkerBoxesToMove(apolloWorker);
         //invoke move() method
         try {
-            players.get(0).setWorkerBoxesToMove(apolloWorker);
             players.get(0).move(apolloWorker, board[1][1]);
         }catch (InvalidMoveException e){
             thrown = e;
@@ -196,6 +196,33 @@ public class ApolloDecoratorTest {
         assertEquals(victimExpected.getWorker(), victimWorker);
 
         assertNotNull(thrown);
+    }
 
+    @Test
+    public void move_OccupiedByFellowWorker_ThrowException() {
+
+        apolloWorker = players.get(0).turnInit(true);
+        Worker fellowWorker = players.get(0).getWorker(false);
+
+        fellowWorker.setPos(board[4][4]);
+        board[4][4].setWorker(fellowWorker);
+
+        apolloWorker.setPos(board[3][3]);
+        board[3][3].setWorker(apolloWorker);
+
+        Exception thrown = null;
+
+        players.get(0).setWorkerBoxesToMove(apolloWorker);
+        try {
+            players.get(0).move(apolloWorker, board[4][4]);
+        } catch (InvalidMoveException e) {
+            thrown = e;
+        }
+
+        assertNotNull(thrown);
+        assertEquals(fellowWorker.getPos(), board[4][4]);
+        assertEquals(board[4][4].getWorker(), fellowWorker);
+        assertEquals(apolloWorker.getPos(), board[3][3]);
+        assertEquals(board[3][3].getWorker(), apolloWorker);
     }
 }
