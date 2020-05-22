@@ -1,5 +1,8 @@
 package it.polimi.ingsw.PSP54.server.model;
 
+import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -154,6 +157,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         }
         if (valid.isEmpty()){
             setLoser(true);
+            game.endTurn(this);
         }
         worker.setBoxesToMove(valid);
         return valid;
@@ -177,6 +181,10 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                 if ((deltaX <= 1 && deltaY <= 1) && !board[i][j].isOccupied() && !board[i][j].isDome())
                     boxes.add(board[i][j]);
             }
+        }
+        if (boxes.isEmpty()){
+            setLoser(true);
+            game.endTurn(this);
         }
         worker.setBoxesToBuild(boxes);
         return boxes;
@@ -208,7 +216,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             getGame().notifyBoard();
             checkWinner(worker);
             if (this.isWinner()){
-                //TODO: notify win && endGame
+                game.endTurn(this);
             }
 
         } else throw new InvalidMoveException();

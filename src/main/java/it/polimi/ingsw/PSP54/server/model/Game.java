@@ -283,7 +283,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
 
     /**
      *
-     * @param choiceAction
+     * @param choiceAction action choosen by the player
      */
     public void performChoice(PlayerAction choiceAction){
         if (choiceAction.getVirtualViewID() == currentPlayer.getVirtualViewID()){
@@ -313,7 +313,25 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * @param currentPlayer player who has just finished his turn.
      */
     public void endTurn(Player currentPlayer) {
-
+        if(currentPlayer.isWinner()){
+            GameMessage winnermessage = new StringMessage(currentPlayer.getVirtualViewID(),StringMessage.winMessage);
+            notify(winnermessage);
+            players.remove(currentPlayer);
+            while (players.size()>0) {
+                GameMessage loseforending = new StringMessage(players.get(0).getVirtualViewID(), StringMessage.loseforwinMessage + currentPlayer.getPlayerName() + "has win");
+                notify(loseforending);
+                players.remove(0);
+            }
+        }
+        if (currentPlayer.isLoser()){
+            GameMessage losingmessage = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.loseMessage);
+            notify(losingmessage);
+            players.remove(currentPlayer);
+            for (int i =0; i<players.size();i++){
+                GameMessage haslose = new StringMessage(players.get(i).getVirtualViewID(),currentPlayer.getPlayerName()+StringMessage.opponentlose);
+                notify(haslose);
+            }
+        }
         currentPlayer.setPlaying(false);
         int i = players.indexOf(currentPlayer);
         if (i == players.indexOf(players.lastElement())){

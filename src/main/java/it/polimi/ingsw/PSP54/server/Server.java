@@ -28,6 +28,7 @@ public class Server {
     private final Vector<Connection> playingConnection = new Vector<>(0,1);
     private final Vector<VirtualView> virtualViews = new Vector<>(0, 1);
     protected Vector<Connection> currentConnections = new Vector<>(0,1);
+    protected Vector<String> opponents = new Vector<>();
     private int numberOfPlayers;
 
 
@@ -85,35 +86,21 @@ public class Server {
 
             if (waitingConnection.size() == numberOfPlayers ) {
                 List<PlayerCredentials> credentialsChoices = new ArrayList<>(waitingConnection.keySet());
+                List<PlayerCredentials> opponentskeys = new ArrayList<>(waitingConnection.keySet());
                 List<PlayerAction> playersCredentials = new ArrayList<>();
-
                 for (int i = 0; i < credentialsChoices.size(); i++) {
                     Connection client = waitingConnection.get(credentialsChoices.get(i));
-                    currentConnections.remove(waitingConnection.get(credentialsChoices.get(i)));
+                    currentConnections.remove(client);
                     PlayerAction credentials = new PlayerAction(i, credentialsChoices.get(i));
                     playersCredentials.add(credentials);
-
-                    //initialize a VirtualView for each player, manage dispatching depending on numberOfPlayers
-                    if (i == 0) {
-                        VirtualView virtualView;
-                        if (numberOfPlayers == 2) {
-                            virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i + 1).getPlayerName());
-                        } else { //numberOfPlayers == 3
-                            virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i + 1).getPlayerName(), credentialsChoices.get(i + 2).getPlayerName());
-                        }
-                        virtualViews.add(i, virtualView);
-                    } else if (i == 1) {
-                        VirtualView virtualView;
-                        if (numberOfPlayers == 2) {
-                            virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i - 1).getPlayerName());
-                        } else {
-                            virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i - 1).getPlayerName(), credentialsChoices.get(i + 1).getPlayerName());
-                        }
-                        virtualViews.add(i, virtualView);
-                    } else {
-                        VirtualView virtualView = new VirtualView(i, playersCredentials.get(i), client, credentialsChoices.get(i - 2).getPlayerName(), credentialsChoices.get(i - 1).getPlayerName());
-                        virtualViews.add(i, virtualView);
+                    opponentskeys.remove(credentialsChoices.get(i));
+                    for (int j=0;j<opponentskeys.size();j++) {
+                        opponents.add(opponentskeys.get(j).getPlayerName());
                     }
+                    opponentskeys.add(i,credentialsChoices.get(i));
+                    VirtualView view = new VirtualView(i,playersCredentials.get(i),client,opponents);
+                    opponents.clear();
+                    virtualViews.add(i,view);
                     playingConnection.add(client);
                 }
                 Game model = new Game();
