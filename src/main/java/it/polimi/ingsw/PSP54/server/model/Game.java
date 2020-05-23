@@ -314,22 +314,22 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      */
     public void endTurn(Player currentPlayer) {
         if(currentPlayer.isWinner()){
-            GameMessage winnermessage = new StringMessage(currentPlayer.getVirtualViewID(),StringMessage.winMessage);
-            notify(winnermessage);
+            GameMessage winnerMessage = new StringMessage(currentPlayer.getVirtualViewID(),StringMessage.winMessage);
+            notify(winnerMessage);
             players.remove(currentPlayer);
-            while (players.size()>0) {
-                GameMessage loseforending = new StringMessage(players.get(0).getVirtualViewID(), StringMessage.loseforwinMessage + currentPlayer.getPlayerName() + "has win");
-                notify(loseforending);
+            while (players.size() > 0) {
+                GameMessage youLost = new StringMessage(players.get(0).getVirtualViewID(), "You lost because" + currentPlayer.getPlayerName() + "has win");
+                notify(youLost);
                 players.remove(0);
             }
         }
         if (currentPlayer.isLoser()){
-            GameMessage losingmessage = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.loseMessage);
-            notify(losingmessage);
+            GameMessage losingMessage = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.loseMessage);
+            notify(losingMessage);
             players.remove(currentPlayer);
-            for (int i =0; i<players.size();i++){
-                GameMessage haslose = new StringMessage(players.get(i).getVirtualViewID(),currentPlayer.getPlayerName()+StringMessage.opponentlose);
-                notify(haslose);
+            for (Player player : players) {
+                GameMessage hasLost = new StringMessage(player.getVirtualViewID(), currentPlayer.getPlayerName() + "has lost.");
+                notify(hasLost);
             }
         }
         currentPlayer.setPlaying(false);

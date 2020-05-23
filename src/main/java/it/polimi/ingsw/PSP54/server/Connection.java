@@ -45,37 +45,30 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     }
 
     /**
-     * Invio asincrono di un oggetto al client
-     * Viene istanziato un thread che esegue l'operzione di writeObject e flush
-     * @param message
+     * Instantiates a thread that sends an object via socket.
+     * @param message the message to be send.
+     * @return the thread that is sending the current message.
      */
-    public void asyncSend(final Object message) {
-        /*new Thread(new Runnable() {
-            @Override
-            public void run() {
-                send(message);
-            }
-        }).start();*/
-        send(message);
+    public Thread asyncSend(final Object message) {
+        Thread t = new Thread(() -> send(message));
+        t.start();
+        return t;
     }
 
     /**
-     * Instantiates a thread that reads incoming messages from the client
-     * @param socketIn
-     * @return
+     * Instantiates a thread that reads incoming messages from the client.
+     * @param socketIn the socket from which the messages arrive.
+     * @return the thread that is reading the current incoming message.
      */
     public Thread asyncReadFromSocket(final ObjectInputStream socketIn) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (isActive()) {
-                        Object inputObject = socketIn.readObject();
-                        Connection.this.notify((PlayerChoice) inputObject);
-                    }
-                } catch (Exception e) {
-                    setActive(false);
+        Thread t = new Thread(() -> {
+            try {
+                while (isActive()) {
+                    Object inputObject = socketIn.readObject();
+                    Connection.this.notify((PlayerChoice) inputObject);
                 }
+            } catch (Exception e) {
+                setActive(false);
             }
         });
         t.start();

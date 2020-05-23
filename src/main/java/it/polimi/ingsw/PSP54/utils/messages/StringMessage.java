@@ -25,8 +25,6 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String waitMessage = "Wait for the other player's choice!";
     public static final String winMessage = "You win!";
     public static final String loseMessage = "You lose!";
-    public static final String loseforwinMessage = "You lose because";
-    public static final String opponentlose = "has lose";
     public static final String wrongTurnMessage = "It is not your turn!";
     public static final String invalidMoveMessage = "You can't move here, please retry.";
     public static final String invalidBuildingMessage = "You can't build here, please retry.";
@@ -34,6 +32,8 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String moveAgain = "Do you want to move again? [Enter y/n]";
     public static final String buildAgain = "Do you want to build again? [Enter y/n]";
     public static final String buildOrDome = "Do you want to build a dome? [Enter y/n]";
+    //connection
+    public static final String closedLobby = "The lobby you were in has closed, please login again.";
 
     public String getMessage() {
         return message;
