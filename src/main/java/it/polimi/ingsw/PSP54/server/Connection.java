@@ -34,6 +34,10 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         return active;
     }
 
+    /**
+     * Sends an object via socket.
+     * @param message the object to be sent.
+     */
     public synchronized void send(Object message) {
         try {
             out.reset();
@@ -46,7 +50,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
 
     /**
      * Instantiates a thread that sends an object via socket.
-     * @param message the message to be send.
+     * @param message the message to be sent.
      * @return the thread that is sending the current message.
      */
     public Thread asyncSend(final Object message) {
@@ -60,7 +64,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
      * @param socketIn the socket from which the messages arrive.
      * @return the thread that is reading the current incoming message.
      */
-    public Thread asyncReadFromSocket(final ObjectInputStream socketIn) {
+    public synchronized Thread asyncReadFromSocket(final ObjectInputStream socketIn) {
         Thread t = new Thread(() -> {
             try {
                 while (isActive()) {
@@ -76,7 +80,8 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     }
 
     public synchronized void closeConnection(){
-        asyncSend("Connection closed from the server side");
+        GameMessage connectionClosed = new StringMessage(null, StringMessage.closedConnection);
+        asyncSend(connectionClosed);
         try {
             socket.close();
         } catch (IOException e) {

@@ -316,7 +316,7 @@ public class CliView implements Observer<GameMessage> {
 			String name = map.getKey();
 			int age = map.getValue();
 			PlayerChoice playerCredentials = new PlayerCredentials(name, age);
-			client.asyncWriteToSocket(playerCredentials);
+			client.asyncSend(playerCredentials);
 		}
 
 	}
@@ -338,7 +338,7 @@ public class CliView implements Observer<GameMessage> {
 	 * @param numberOfPlayers the number of players.
 	 */
 	public void sendNumberOfPlayers(int numberOfPlayers){
-		client.asyncWriteToSocket(numberOfPlayers);
+		client.asyncSend(numberOfPlayers);
 	}
 
 	/**
@@ -458,7 +458,7 @@ public class CliView implements Observer<GameMessage> {
 
 		if (extractedCards.size() == 1){
 			PlayerChoice cardChoice = new CardChoice(cardsValues.get(0));
-			client.asyncWriteToSocket(cardChoice);
+			client.asyncSend(cardChoice);
 		}
 		else {
 			output.println("Choose your card: [Enter the name of the God]");
@@ -470,7 +470,7 @@ public class CliView implements Observer<GameMessage> {
 				for (int i = 0; i < cardsName.size(); i++) {
 					if (chosenCard.equals(cardsName.get(i))) {
 						PlayerChoice cardChoice = new CardChoice(cardsValues.get(i));
-						client.asyncWriteToSocket(cardChoice);
+						client.asyncSend(cardChoice);
 						found = true;
 						break;
 					}
@@ -488,7 +488,7 @@ public class CliView implements Observer<GameMessage> {
 	 */
 	public void sendWorkerSelection(){
 		PlayerChoice workerSelection = new WorkerChoice(isMaleSelected());
-		client.asyncWriteToSocket(workerSelection);
+		client.asyncSend(workerSelection);
 	}
 
 	/**
@@ -497,7 +497,7 @@ public class CliView implements Observer<GameMessage> {
 	 */
 	public void sendMove(int[] coordinates) {
 		PlayerChoice move = new MoveChoice(coordinates[0], coordinates[1]);
-		client.asyncWriteToSocket(move);
+		client.asyncSend(move);
 	}
 
 	/**
@@ -506,7 +506,7 @@ public class CliView implements Observer<GameMessage> {
 	 */
 	public void sendBuild(int[] coordinates) {
 		PlayerChoice build = new BuildChoice(coordinates[0], coordinates[1]);
-		client.asyncWriteToSocket(build);
+		client.asyncSend(build);
 	}
 
 	/**
@@ -515,7 +515,7 @@ public class CliView implements Observer<GameMessage> {
 	 */
 	public void sendBooleanChoice(boolean choice) {
 		PlayerChoice booleanChoice = new BooleanChoice(choice);
-		client.asyncWriteToSocket(booleanChoice);
+		client.asyncSend(booleanChoice);
 	}
 	/**
 	 * Called whenever the observed object is changed.

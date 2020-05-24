@@ -35,7 +35,6 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
             GameMessage opponentMessage = new StringMessage(id, "Your opponent is:\n" + opponent + "\n");
             connection.asyncSend(opponentMessage);
         }
-
     }
 
     /**

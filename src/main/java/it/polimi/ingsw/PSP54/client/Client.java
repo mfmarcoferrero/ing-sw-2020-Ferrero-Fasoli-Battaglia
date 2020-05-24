@@ -29,23 +29,19 @@ public class Client extends Observable<GameMessage> {
     }
 
     /**
-     * Thread per la lettura di ciò che arriva dal server
-     * Per ogni tipo di messaggio ricevuto viene eseguita un azione della view o una scrittura su terminale
-     * @param socketIn
-     * @return
+     * Instantiates a thread that reads incoming messages from the client.
+     * @param socketIn the socket from which the messages arrive.
+     * @return the thread that is reading the current incoming message.
      */
     public synchronized Thread asyncReadFromSocket(final ObjectInputStream socketIn){
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (isActive()) {
-                        Object inputObject = socketIn.readObject();
-                        Client.this.notify((GameMessage)inputObject);
-                    }
-                } catch (Exception e) {
-                    setActive(false);
+        Thread t = new Thread(() -> {
+            try {
+                while (isActive()) {
+                    Object inputObject = socketIn.readObject();
+                    Client.this.notify((GameMessage)inputObject);
                 }
+            } catch (Exception e) {
+                setActive(false);
             }
         });
         t.start();
@@ -63,17 +59,14 @@ public class Client extends Observable<GameMessage> {
     }
 
     /**
-     * Invio asincrono di un oggetto al server
-     * Viene istanziato un thread che esegue l'operzione di writeObject e flush
-     * @param message
+     * Instantiates a thread that sends an object via socket.
+     * @param message the message to be send.
+     * @return the thread that is sending the current message.
      */
-    public void asyncWriteToSocket(final Object message) {
-        new Thread( new Runnable() {
-            @Override
-            public void run() {
-                send(message);
-            }
-        }).start();
+    public Thread asyncSend(final Object message) {
+        Thread t = new Thread(() -> send(message));
+        t.start();
+        return t;
     }
 
     /**

@@ -34,6 +34,7 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String buildOrDome = "Do you want to build a dome? [Enter y/n]";
     //connection
     public static final String closedLobby = "The lobby you were in has closed, please login again.";
+    public static final String closedConnection = "Connection closed from server side";
 
     public String getMessage() {
         return message;

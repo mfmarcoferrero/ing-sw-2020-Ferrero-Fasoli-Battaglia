@@ -193,7 +193,6 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             if (currentWorker.getPos() != null) { //set tokens if is already settled
                 currentPlayer.turnInit(workerChoice.isMale());
                 checkTokens(currentWorker);
-
             }else {
                 GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
                 notify(move);
@@ -283,9 +282,9 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
 
     /**
      *
-     * @param choiceAction action choosen by the player
+     * @param choiceAction action chosen by the player
      */
-    public void performChoice(PlayerAction choiceAction){
+    public void performChoice(PlayerAction choiceAction) {
         if (choiceAction.getVirtualViewID() == currentPlayer.getVirtualViewID()){
             BooleanChoice choice = (BooleanChoice) choiceAction.getChoice();
             currentPlayer.chose(choice.isChoice());
