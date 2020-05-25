@@ -1,0 +1,459 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: StandardPlayer</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP54.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: StandardPlayer (it.polimi.ingsw.PSP54.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StandardPlayer</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90.9%
+  </span>
+  <span class="absValue">
+    (30/ 33)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88.1%
+  </span>
+  <span class="absValue">
+    (118/ 134)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP54.server.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.io.Serializable;
+<i>7</i>&nbsp;import java.util.ArrayList;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * Class representing the player whit his default actions and turn administration.
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;public class StandardPlayer implements Player, Serializable, Cloneable {
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    private static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
+<i>15</i>&nbsp;    private int cardID;
+<i>16</i>&nbsp;    private Game game;
+<i>17</i>&nbsp;    private final String playerName;
+<i>18</i>&nbsp;    private int age, virtualViewId;
+<i>19</i>&nbsp;    private String color;
+<b class="fc"><i>20</i>&nbsp;    private final Worker[] workers = new Worker[2];</b>
+<i>21</i>&nbsp;    private Worker currentWorker;
+<i>22</i>&nbsp;    private boolean playing;
+<i>23</i>&nbsp;    private boolean winner;
+<i>24</i>&nbsp;    private boolean loser;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     * Instantiates a new Player with corresponding workers.
+<i>28</i>&nbsp;     * @param playerName the name of the Player.
+<i>29</i>&nbsp;     */
+<b class="fc"><i>30</i>&nbsp;    public StandardPlayer(String playerName, int age, int virtualViewId) {</b>
+<b class="fc"><i>31</i>&nbsp;        this.playerName = playerName;</b>
+<b class="fc"><i>32</i>&nbsp;        this.virtualViewId = virtualViewId;</b>
+<b class="fc"><i>33</i>&nbsp;        this.age = age;</b>
+<b class="fc"><i>34</i>&nbsp;        this.workers[0] = new Worker(true, this, null);</b>
+<b class="fc"><i>35</i>&nbsp;        this.workers[1] = new Worker(false, this, null);</b>
+<b class="fc"><i>36</i>&nbsp;        this.winner = false;</b>
+<b class="fc"><i>37</i>&nbsp;        this.loser = false;</b>
+<b class="fc"><i>38</i>&nbsp;        this.playing = false;</b>
+<b class="fc"><i>39</i>&nbsp;    }</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    /**
+<i>42</i>&nbsp;     * Decorates the current player with the given power.
+<i>43</i>&nbsp;     * @param cardID the number of the card.
+<i>44</i>&nbsp;     * @return the decorated player.
+<i>45</i>&nbsp;     */
+<i>46</i>&nbsp;    @Override
+<i>47</i>&nbsp;    public Player assignPower(int cardID){
+<i>48</i>&nbsp;
+<b class="fc"><i>49</i>&nbsp;        Player actualPlayer = this;</b>
+<i>50</i>&nbsp;
+<b class="fc"><i>51</i>&nbsp;        switch (cardID) {</b>
+<i>52</i>&nbsp;            case APOLLO:
+<b class="fc"><i>53</i>&nbsp;                actualPlayer = new ApolloDecorator(this);</b>
+<b class="fc"><i>54</i>&nbsp;                actualPlayer.setCardID(APOLLO);</b>
+<b class="fc"><i>55</i>&nbsp;                break;</b>
+<i>56</i>&nbsp;            case ARTEMIS:
+<b class="fc"><i>57</i>&nbsp;                actualPlayer = new ArtemisDecorator(this);</b>
+<b class="fc"><i>58</i>&nbsp;                actualPlayer.setCardID(ARTEMIS);</b>
+<b class="fc"><i>59</i>&nbsp;                break;</b>
+<i>60</i>&nbsp;            case ATHENA:
+<b class="fc"><i>61</i>&nbsp;                actualPlayer = new AthenaDecorator(this);</b>
+<b class="fc"><i>62</i>&nbsp;                actualPlayer.setCardID(ATHENA);</b>
+<b class="fc"><i>63</i>&nbsp;                break;</b>
+<i>64</i>&nbsp;            case ATLAS:
+<b class="fc"><i>65</i>&nbsp;                actualPlayer = new AtlasDecorator(this);</b>
+<b class="fc"><i>66</i>&nbsp;                actualPlayer.setCardID(ATLAS);</b>
+<b class="fc"><i>67</i>&nbsp;                break;</b>
+<i>68</i>&nbsp;            case DEMETER:
+<b class="fc"><i>69</i>&nbsp;                actualPlayer = new DemeterDecorator(this);</b>
+<b class="fc"><i>70</i>&nbsp;                actualPlayer.setCardID(DEMETER);</b>
+<i>71</i>&nbsp;                break;
+<i>72</i>&nbsp;        }
+<b class="fc"><i>73</i>&nbsp;        return actualPlayer;</b>
+<i>74</i>&nbsp;    }
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;    /**
+<i>77</i>&nbsp;     * Sets initial position on the board for the selected worker.
+<i>78</i>&nbsp;     * @param worker the selected worker.
+<i>79</i>&nbsp;     * @param x the board abscissa.
+<i>80</i>&nbsp;     * @param y the board ordinate.
+<i>81</i>&nbsp;     */
+<i>82</i>&nbsp;    @Override
+<i>83</i>&nbsp;    public void setWorkerPos (Worker worker, int x, int y) throws InvalidMoveException{
+<b class="fc"><i>84</i>&nbsp;        if (!getGame().getBoard()[x][y].isOccupied()) {</b>
+<b class="fc"><i>85</i>&nbsp;            worker.setPos(getGame().getBoard()[x][y]);</b>
+<b class="fc"><i>86</i>&nbsp;            getGame().getBoard()[x][y].setWorker(worker);</b>
+<i>87</i>&nbsp;        } else
+<b class="fc"><i>88</i>&nbsp;            throw new InvalidMoveException();</b>
+<b class="fc"><i>89</i>&nbsp;    }</b>
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    /**
+<i>92</i>&nbsp;     * Checks if all the player&#39;s workers are already on the board.
+<i>93</i>&nbsp;     * @return true if both workers are placed, false otherwise.
+<i>94</i>&nbsp;     */
+<i>95</i>&nbsp;    public boolean areWorkerSettled() {
+<b class="fc"><i>96</i>&nbsp;        return workers[0].getPos() != null &amp;&amp; workers[1].getPos() != null;</b>
+<i>97</i>&nbsp;    }
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;    /**
+<i>100</i>&nbsp;     * This method is invoked only for the initial worker&#39;s placement. It sets the unplaced worker to current.
+<i>101</i>&nbsp;     * @param currentWorker the worker that has just been settled.
+<i>102</i>&nbsp;     */
+<i>103</i>&nbsp;    public void nextCurrentWorker(Worker currentWorker) {
+<b class="fc"><i>104</i>&nbsp;        if (currentWorker.equals(getWorkers()[0]))</b>
+<b class="fc"><i>105</i>&nbsp;            setCurrentWorker(getWorkers()[1]);</b>
+<i>106</i>&nbsp;        else
+<b class="nc"><i>107</i>&nbsp;            setCurrentWorker(getWorkers()[0]);</b>
+<b class="fc"><i>108</i>&nbsp;    }</b>
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    /**
+<i>111</i>&nbsp;     * Select the worker which player is going to use depending on the worker&#39;s sex.
+<i>112</i>&nbsp;     * @param male the worker&#39;s sex.
+<i>113</i>&nbsp;     * @return the chosen worker.
+<i>114</i>&nbsp;     */
+<i>115</i>&nbsp;    @Override
+<i>116</i>&nbsp;    public Worker getWorker(Boolean male) {
+<b class="fc"><i>117</i>&nbsp;        if (male) {</b>
+<b class="fc"><i>118</i>&nbsp;            return this.workers[0];</b>
+<i>119</i>&nbsp;        }
+<i>120</i>&nbsp;        else
+<b class="fc"><i>121</i>&nbsp;            return this.workers[1];</b>
+<i>122</i>&nbsp;    }
+<i>123</i>&nbsp;
+<i>124</i>&nbsp;    /**
+<i>125</i>&nbsp;     *Initialize current player&#39;s turn by setting worker&#39;s action tokens
+<i>126</i>&nbsp;     * @param male represent the sex of the worker which the player is going to use
+<i>127</i>&nbsp;     * @return the chosen worker with updated tokens
+<i>128</i>&nbsp;     */
+<i>129</i>&nbsp;    @Override
+<i>130</i>&nbsp;    public Worker turnInit(Boolean male) {
+<b class="fc"><i>131</i>&nbsp;        Worker currentWorker = getWorker(male);</b>
+<b class="fc"><i>132</i>&nbsp;        currentWorker.setMoveToken(1);</b>
+<b class="fc"><i>133</i>&nbsp;        currentWorker.setBuildToken(0);</b>
+<b class="fc"><i>134</i>&nbsp;        return currentWorker;</b>
+<i>135</i>&nbsp;    }
+<i>136</i>&nbsp;
+<i>137</i>&nbsp;    /**
+<i>138</i>&nbsp;     * Sets available boxes for the worker to move and stores them in worker&#39;s attribute
+<i>139</i>&nbsp;     * @param worker current worker in use
+<i>140</i>&nbsp;     * @return the vector containing available boxes
+<i>141</i>&nbsp;     */
+<i>142</i>&nbsp;    @Override
+<i>143</i>&nbsp;    public ArrayList&lt;Box&gt; setWorkerBoxesToMove (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
+<i>144</i>&nbsp;
+<b class="fc"><i>145</i>&nbsp;        ArrayList&lt;Box&gt; valid = new ArrayList&lt;&gt;();</b>
+<i>146</i>&nbsp;        int deltaX, deltaY, deltaH;
+<b class="fc"><i>147</i>&nbsp;        Box[][] board = getGame().getBoard();</b>
+<i>148</i>&nbsp;
+<b class="fc"><i>149</i>&nbsp;        for (int i = 0; i &lt; 5; i++) {</b>
+<b class="fc"><i>150</i>&nbsp;            for (int j = 0; j &lt; 5; j++) {</b>
+<b class="fc"><i>151</i>&nbsp;                deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());</b>
+<b class="fc"><i>152</i>&nbsp;                deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());</b>
+<b class="fc"><i>153</i>&nbsp;                deltaH =  board[i][j].getLevel() - worker.getPos().getLevel();</b>
+<b class="fc"><i>154</i>&nbsp;                if ((deltaX &lt;= 1 &amp;&amp; deltaY &lt;= 1) &amp;&amp; deltaH &lt;= 1 &amp;&amp; !board[i][j].isOccupied() &amp;&amp; !board[i][j].isDome())</b>
+<b class="fc"><i>155</i>&nbsp;                    valid.add(board[i][j]);</b>
+<i>156</i>&nbsp;            }
+<i>157</i>&nbsp;        }
+<b class="fc"><i>158</i>&nbsp;        if (valid.isEmpty()){</b>
+<b class="nc"><i>159</i>&nbsp;            setLoser(true);</b>
+<b class="nc"><i>160</i>&nbsp;            game.endTurn(this);</b>
+<i>161</i>&nbsp;        }
+<b class="fc"><i>162</i>&nbsp;        worker.setBoxesToMove(valid);</b>
+<b class="fc"><i>163</i>&nbsp;        return valid;</b>
+<i>164</i>&nbsp;    }
+<i>165</i>&nbsp;
+<i>166</i>&nbsp;    /**
+<i>167</i>&nbsp;     * Set available boxes for the worker to build and stores them in worker&#39;s attribute
+<i>168</i>&nbsp;     * @param worker current worker in use
+<i>169</i>&nbsp;     * @return the vector containing buildable boxes
+<i>170</i>&nbsp;     */
+<i>171</i>&nbsp;    @Override
+<i>172</i>&nbsp;    public ArrayList&lt;Box&gt; setWorkerBoxesToBuild (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
+<b class="fc"><i>173</i>&nbsp;        ArrayList&lt;Box&gt; boxes = new ArrayList&lt;&gt;();</b>
+<i>174</i>&nbsp;        int deltaX, deltaY;
+<b class="fc"><i>175</i>&nbsp;        Box[][] board = getGame().getBoard();</b>
+<i>176</i>&nbsp;
+<b class="fc"><i>177</i>&nbsp;        for (int i = 0; i &lt; 5; i++) {</b>
+<b class="fc"><i>178</i>&nbsp;            for (int j = 0; j &lt; 5; j++) {</b>
+<b class="fc"><i>179</i>&nbsp;                deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());</b>
+<b class="fc"><i>180</i>&nbsp;                deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());</b>
+<b class="fc"><i>181</i>&nbsp;                if ((deltaX &lt;= 1 &amp;&amp; deltaY &lt;= 1) &amp;&amp; !board[i][j].isOccupied() &amp;&amp; !board[i][j].isDome())</b>
+<b class="fc"><i>182</i>&nbsp;                    boxes.add(board[i][j]);</b>
+<i>183</i>&nbsp;            }
+<i>184</i>&nbsp;        }
+<b class="fc"><i>185</i>&nbsp;        if (boxes.isEmpty()){</b>
+<b class="nc"><i>186</i>&nbsp;            setLoser(true);</b>
+<b class="nc"><i>187</i>&nbsp;            game.endTurn(this);</b>
+<i>188</i>&nbsp;        }
+<b class="fc"><i>189</i>&nbsp;        worker.setBoxesToBuild(boxes);</b>
+<b class="fc"><i>190</i>&nbsp;        return boxes;</b>
+<i>191</i>&nbsp;    }
+<i>192</i>&nbsp;
+<i>193</i>&nbsp;    /**
+<i>194</i>&nbsp;     * If valid performs move and modify action tokes
+<i>195</i>&nbsp;     * @param worker selected worker which the player wants to move
+<i>196</i>&nbsp;     * @param dest selected destination box
+<i>197</i>&nbsp;     * @throws InvalidMoveException if the move can&#39;t be done
+<i>198</i>&nbsp;     */
+<i>199</i>&nbsp;    @Override
+<i>200</i>&nbsp;    public void move(Worker worker, Box dest) throws InvalidMoveException{
+<i>201</i>&nbsp;
+<b class="fc"><i>202</i>&nbsp;        ArrayList&lt;Box&gt; valid = worker.getBoxesToMove();</b>
+<b class="fc"><i>203</i>&nbsp;        int currentMoveToken = worker.getMoveToken();</b>
+<i>204</i>&nbsp;
+<i>205</i>&nbsp;
+<b class="fc"><i>206</i>&nbsp;        if (currentMoveToken &gt; 0 &amp;&amp; valid.contains(dest)){</b>
+<i>207</i>&nbsp;            //free current box
+<b class="fc"><i>208</i>&nbsp;            worker.getPos().setWorker(null);</b>
+<i>209</i>&nbsp;            //perform move
+<b class="fc"><i>210</i>&nbsp;            worker.setPos(dest);</b>
+<b class="fc"><i>211</i>&nbsp;            dest.setWorker(worker);</b>
+<i>212</i>&nbsp;            //set tokens
+<b class="fc"><i>213</i>&nbsp;            worker.setMoveToken(currentMoveToken - 1);</b>
+<b class="fc"><i>214</i>&nbsp;            worker.setBuildToken(1);</b>
+<i>215</i>&nbsp;
+<b class="fc"><i>216</i>&nbsp;            getGame().notifyBoard();</b>
+<b class="fc"><i>217</i>&nbsp;            checkWinner(worker);</b>
+<b class="fc"><i>218</i>&nbsp;            if (this.isWinner()){</b>
+<b class="nc"><i>219</i>&nbsp;                game.endTurn(this);</b>
+<i>220</i>&nbsp;            }
+<i>221</i>&nbsp;
+<b class="fc"><i>222</i>&nbsp;        } else throw new InvalidMoveException();</b>
+<i>223</i>&nbsp;
+<b class="fc"><i>224</i>&nbsp;    }</b>
+<i>225</i>&nbsp;
+<i>226</i>&nbsp;    /**
+<i>227</i>&nbsp;     * If valid performs build and modify action tokens
+<i>228</i>&nbsp;     * @param worker selected worker which the player wants to move
+<i>229</i>&nbsp;     * @param dest selected box where to build
+<i>230</i>&nbsp;     */
+<i>231</i>&nbsp;    @Override
+<i>232</i>&nbsp;    public void build (Worker worker, Box dest) throws InvalidBuildingException{
+<i>233</i>&nbsp;
+<b class="fc"><i>234</i>&nbsp;        ArrayList&lt;Box&gt; valid = worker.getBoxesToBuild();</b>
+<b class="fc"><i>235</i>&nbsp;        int currentBuildToken = worker.getBuildToken();</b>
+<i>236</i>&nbsp;
+<b class="fc"><i>237</i>&nbsp;        if (currentBuildToken &gt; 0 &amp;&amp; valid.contains(dest)) {</b>
+<b class="fc"><i>238</i>&nbsp;            if (dest.getLevel() == 3)</b>
+<b class="fc"><i>239</i>&nbsp;                dest.setDome(true);</b>
+<i>240</i>&nbsp;            else {
+<b class="fc"><i>241</i>&nbsp;                int currentLevel = dest.getLevel();</b>
+<b class="fc"><i>242</i>&nbsp;                dest.setLevel(currentLevel+1);</b>
+<i>243</i>&nbsp;            }
+<b class="fc"><i>244</i>&nbsp;            worker.setBuildToken(currentBuildToken - 1);</b>
+<i>245</i>&nbsp;
+<b class="fc"><i>246</i>&nbsp;            getGame().notifyBoard();</b>
+<i>247</i>&nbsp;        }
+<i>248</i>&nbsp;        else
+<b class="fc"><i>249</i>&nbsp;            throw new InvalidBuildingException();</b>
+<b class="fc"><i>250</i>&nbsp;    }</b>
+<i>251</i>&nbsp;
+<i>252</i>&nbsp;    @Override
+<i>253</i>&nbsp;    public void chose(boolean choice) {
+<b class="nc"><i>254</i>&nbsp;    }</b>
+<i>255</i>&nbsp;
+<i>256</i>&nbsp;    /**
+<i>257</i>&nbsp;     * This method needs to be invoked after every move. It checks if the newly moved worker is on a 3 level building.
+<i>258</i>&nbsp;     * @param currentWorker the worker that has just been moved.
+<i>259</i>&nbsp;     */
+<i>260</i>&nbsp;    @Override
+<i>261</i>&nbsp;    public void checkWinner(Worker currentWorker) {
+<i>262</i>&nbsp;
+<b class="fc"><i>263</i>&nbsp;        if (currentWorker.getPos().getLevel() == 3){</b>
+<b class="nc"><i>264</i>&nbsp;            this.setWinner(true);</b>
+<b class="nc"><i>265</i>&nbsp;            for (Player player : game.getPlayers()){</b>
+<b class="nc"><i>266</i>&nbsp;                if (!player.equals(this)){</b>
+<b class="nc"><i>267</i>&nbsp;                    player.setLoser(true);</b>
+<i>268</i>&nbsp;                }
+<b class="nc"><i>269</i>&nbsp;            }</b>
+<i>270</i>&nbsp;        }
+<b class="fc"><i>271</i>&nbsp;    }</b>
+<i>272</i>&nbsp;
+<i>273</i>&nbsp;    //setters &amp; getters
+<i>274</i>&nbsp;
+<i>275</i>&nbsp;    /**
+<i>276</i>&nbsp;     * Creates a reference to the current Game, in order to access board&#39;s and other players&#39; info
+<i>277</i>&nbsp;     * @param game the current Game
+<i>278</i>&nbsp;     */
+<i>279</i>&nbsp;    @Override
+<i>280</i>&nbsp;    public void setGame(Game game) { //it has to be invoked by Controller or Game class
+<b class="fc"><i>281</i>&nbsp;        this.game = game;</b>
+<b class="fc"><i>282</i>&nbsp;    }</b>
+<i>283</i>&nbsp;
+<i>284</i>&nbsp;    @Override
+<i>285</i>&nbsp;    public Game getGame() {
+<b class="fc"><i>286</i>&nbsp;        return game;</b>
+<i>287</i>&nbsp;    }
+<i>288</i>&nbsp;
+<i>289</i>&nbsp;    @Override
+<i>290</i>&nbsp;    public boolean isWinner() {
+<b class="fc"><i>291</i>&nbsp;        return winner;</b>
+<i>292</i>&nbsp;    }
+<i>293</i>&nbsp;
+<i>294</i>&nbsp;    @Override
+<i>295</i>&nbsp;    public void setWinner(boolean winner) {
+<b class="nc"><i>296</i>&nbsp;        this.winner = winner;</b>
+<b class="nc"><i>297</i>&nbsp;    }</b>
+<i>298</i>&nbsp;
+<i>299</i>&nbsp;    @Override
+<i>300</i>&nbsp;    public boolean isLoser() {
+<b class="fc"><i>301</i>&nbsp;        return loser;</b>
+<i>302</i>&nbsp;    }
+<i>303</i>&nbsp;
+<i>304</i>&nbsp;    @Override
+<i>305</i>&nbsp;    public void setLoser(boolean loser) { //TODO: notify client &amp; remove player.
+<b class="nc"><i>306</i>&nbsp;        this.loser = loser;</b>
+<b class="nc"><i>307</i>&nbsp;    }</b>
+<i>308</i>&nbsp;
+<i>309</i>&nbsp;    @Override
+<i>310</i>&nbsp;    public int getAge() {
+<b class="fc"><i>311</i>&nbsp;        return age;</b>
+<i>312</i>&nbsp;    }
+<i>313</i>&nbsp;
+<i>314</i>&nbsp;    @Override
+<i>315</i>&nbsp;    public void setAge(int age) {
+<b class="fc"><i>316</i>&nbsp;        this.age = age;</b>
+<b class="fc"><i>317</i>&nbsp;    }</b>
+<i>318</i>&nbsp;
+<i>319</i>&nbsp;    @Override
+<i>320</i>&nbsp;    public String getPlayerName() {
+<b class="fc"><i>321</i>&nbsp;        return playerName;</b>
+<i>322</i>&nbsp;    }
+<i>323</i>&nbsp;
+<i>324</i>&nbsp;    @Override
+<i>325</i>&nbsp;    public String getColor() {
+<b class="fc"><i>326</i>&nbsp;        return color;</b>
+<i>327</i>&nbsp;    }
+<i>328</i>&nbsp;
+<i>329</i>&nbsp;    @Override
+<i>330</i>&nbsp;    public void setColor(String color) {
+<b class="fc"><i>331</i>&nbsp;        this.color = color;</b>
+<b class="fc"><i>332</i>&nbsp;    }</b>
+<i>333</i>&nbsp;
+<i>334</i>&nbsp;    @Override
+<i>335</i>&nbsp;    public int getCardID() {
+<b class="fc"><i>336</i>&nbsp;        return cardID;</b>
+<i>337</i>&nbsp;    }
+<i>338</i>&nbsp;
+<i>339</i>&nbsp;    @Override
+<i>340</i>&nbsp;    public void setCardID(int cardID) {
+<b class="fc"><i>341</i>&nbsp;        this.cardID = cardID;</b>
+<b class="fc"><i>342</i>&nbsp;    }</b>
+<i>343</i>&nbsp;
+<i>344</i>&nbsp;    @Override
+<b class="fc"><i>345</i>&nbsp;    public Worker[] getWorkers() { return workers; }</b>
+<i>346</i>&nbsp;
+<i>347</i>&nbsp;    @Override
+<i>348</i>&nbsp;    public Worker getCurrentWorker() {
+<b class="fc"><i>349</i>&nbsp;        return currentWorker;</b>
+<i>350</i>&nbsp;    }
+<i>351</i>&nbsp;
+<i>352</i>&nbsp;    @Override
+<i>353</i>&nbsp;    public void setCurrentWorker(Worker currentWorker) {
+<b class="fc"><i>354</i>&nbsp;        this.currentWorker = currentWorker;</b>
+<b class="fc"><i>355</i>&nbsp;    }</b>
+<i>356</i>&nbsp;
+<i>357</i>&nbsp;    @Override
+<i>358</i>&nbsp;    public int getVirtualViewID() {
+<b class="fc"><i>359</i>&nbsp;        return this.virtualViewId;</b>
+<i>360</i>&nbsp;    }
+<i>361</i>&nbsp;
+<i>362</i>&nbsp;    @Override
+<i>363</i>&nbsp;    public void setVirtualViewId(int virtualViewId) {
+<b class="fc"><i>364</i>&nbsp;        this.virtualViewId = virtualViewId;</b>
+<b class="fc"><i>365</i>&nbsp;    }</b>
+<i>366</i>&nbsp;
+<i>367</i>&nbsp;    @Override
+<i>368</i>&nbsp;    public boolean isPlaying() {
+<b class="fc"><i>369</i>&nbsp;        return playing;</b>
+<i>370</i>&nbsp;    }
+<i>371</i>&nbsp;
+<i>372</i>&nbsp;    @Override
+<i>373</i>&nbsp;    public void setPlaying(boolean playing) {
+<b class="fc"><i>374</i>&nbsp;        this.playing = playing;</b>
+<b class="fc"><i>375</i>&nbsp;    }</b>
+<i>376</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-25 15:13</div>
+</div>
+</body>
+</html>
