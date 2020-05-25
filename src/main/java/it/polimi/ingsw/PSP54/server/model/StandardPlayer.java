@@ -22,6 +22,8 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     private boolean playing;
     private boolean winner;
     private boolean loser;
+    private  int cantbuild=2;
+    private int cantmove=2;
 
     /**
      * Instantiates a new Player with corresponding workers.
@@ -141,7 +143,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      */
     @Override
     public ArrayList<Box> setWorkerBoxesToMove (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
-
+        int cantmove=2;
         ArrayList<Box> valid = new ArrayList<>();
         int deltaX, deltaY, deltaH;
         Box[][] board = getGame().getBoard();
@@ -155,9 +157,16 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                     valid.add(board[i][j]);
             }
         }
-        if (valid.isEmpty()){
+        if (valid.isEmpty())
+            cantmove--;
+        if (valid.isEmpty() && cantmove==0){
             setLoser(true);
-            game.endTurn(this);
+            game.ClientHasFinished(this);
+            cantmove=2;
+        }
+        else if(valid.isEmpty() && cantmove==1){
+            GameMessage choosetheother = new StringMessage(this.virtualViewId,StringMessage.newWorkermove);
+            game.CantchooseThis(choosetheother);
         }
         worker.setBoxesToMove(valid);
         return valid;
@@ -182,9 +191,15 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                     boxes.add(board[i][j]);
             }
         }
+        if(boxes.isEmpty())
+            cantbuild--;
+        if(boxes.isEmpty() && cantbuild==1){
+            GameMessage choosetheother = new StringMessage(virtualViewId,StringMessage.newWorkermove);
+            game.CantchooseThis(choosetheother);
+        }
         if (boxes.isEmpty()){
             setLoser(true);
-            game.endTurn(this);
+            game.ClientHasFinished(this);
         }
         worker.setBoxesToBuild(boxes);
         return boxes;
@@ -216,7 +231,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             getGame().notifyBoard();
             checkWinner(worker);
             if (this.isWinner()){
-                game.endTurn(this);
+                game.ClientHasFinished(this);
             }
 
         } else throw new InvalidMoveException();

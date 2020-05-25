@@ -19,18 +19,17 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String demeterMessage = "You have Demeter!\nYour Build: Your Worker may build one additional time, but not on the same space.";
     public static final String artemisMessage = "You have Artemis!\nYour Move: Your Worker may move one additional time, but not back to its initial space.";
     //standard
+    public static final String winMessage = "You won";
     public static final String choseWorker = "Chose your worker: [Enter m/f]";
     public static final String moveMessage = "Make your move!";
     public static final String buildMessage = "Where do you want to build?";
     public static final String waitMessage = "Wait for the other player's choice!";
-    public static final String winMessage = "You win!";
     public static final String loseMessage = "You lose!";
-    public static final String loseforwinMessage = "You lose because";
-    public static final String opponentlose = "has lose";
     public static final String wrongTurnMessage = "It is not your turn!";
     public static final String invalidMoveMessage = "You can't move here, please retry.";
     public static final String invalidBuildingMessage = "You can't build here, please retry.";
     //specials
+    public static final String newWorkermove ="you can't choose this builder for this action, try with the other";
     public static final String moveAgain = "Do you want to move again? [Enter y/n]";
     public static final String buildAgain = "Do you want to build again? [Enter y/n]";
     public static final String buildOrDome = "Do you want to build a dome? [Enter y/n]";
