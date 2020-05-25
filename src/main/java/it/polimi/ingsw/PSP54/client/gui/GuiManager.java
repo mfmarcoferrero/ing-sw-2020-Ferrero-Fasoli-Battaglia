@@ -32,6 +32,13 @@ public class GuiManager implements Observer<GameMessage> {
     private BoardMessage board = null;
     private boolean gameMaster = false;
 
+    /**
+     * Create a static instance of a GuiManager
+     * Using a singleton pattern every controller of a scene can get the only GuiManager
+     * instance related to a single client
+     * @param client
+     * @return
+     */
     public static GuiManager getInstance(Client client) {
         if (instance == null){
             instance = new GuiManager();
@@ -40,26 +47,57 @@ public class GuiManager implements Observer<GameMessage> {
         return instance;
     }
 
+    /**
+     * Get the static instance of this class
+     * @return
+     */
     public static GuiManager getInstance() {
         return instance;
     }
 
+    /**
+     * Called from a LogInSceneController
+     * Save the reference to this controller in GuiManager static instance
+     * @param logInSceneController
+     */
     void setLogInSceneController(LogInSceneController logInSceneController) {
         this.logInSceneController = logInSceneController;
     }
 
+    /**
+     * Called from a NumberOfPlayersSceneController
+     * Save the reference to this controller in GuiManager static instance
+     * @param numberOfPlayersSceneController
+     */
     void setNumberOfPlayersSceneController(NumberOfPlayersSceneController numberOfPlayersSceneController) {
         this.numberOfPlayersSceneController = numberOfPlayersSceneController;
     }
 
+    /**
+     * Called from a BoardSceneController
+     * Save the reference to this controller in GuiManager static instance
+     * @param boardSceneController
+     */
     void setBoardSceneController(BoardSceneController boardSceneController){
         this.boardSceneController = boardSceneController;
     }
 
+    /**
+     * Called from a CardsChoiceSceneController
+     * Save the reference to this controller in GuiManager static instance
+     * @param cardsChoiceSceneController
+     */
     void setCardsChoiceSceneController(CardsChoiceSceneController cardsChoiceSceneController){
         this.cardsChoiceSceneController = cardsChoiceSceneController;
     }
 
+    /**
+     * Load a fxml file in a scene
+     * @param scene
+     * @param path of fxml file
+     * @param <T>
+     * @return
+     */
     static <T> T setLayout(Scene scene, String path) {
 
         FXMLLoader loader = new FXMLLoader();
@@ -75,6 +113,11 @@ public class GuiManager implements Observer<GameMessage> {
 
     }
 
+    /**
+     * Load an image from resources/icons in an ImageView
+     * @param val
+     * @param imageView
+     */
     public void setCardImage(int val, ImageView imageView) {
         if (val == Game.APOLLO){
             imageView.setImage(new Image("file:./resources/icons/01.png"));
@@ -93,6 +136,12 @@ public class GuiManager implements Observer<GameMessage> {
         }
     }
 
+    /**
+     * Called whenever the observed object is changed.
+     * When a welcome message is notified, a new thread running GuiMain start.
+     * When other message are notified, current scene is changed or modified
+     * @param message an argument passed to the notify method.
+     */
     @Override
     public void update(GameMessage message) {
 
@@ -139,6 +188,11 @@ public class GuiManager implements Observer<GameMessage> {
                 myCard = extractedCards.get(0).intValue();
                 cardExtractor = false;
                 sendObject(new CardChoice(myCard));
+                if(gameMaster){
+                    Platform.runLater(() -> {
+                        numberOfPlayersSceneController.setBoardScene();
+                    });
+                }
             }
             else {
                 if (gameMaster) {
@@ -173,8 +227,15 @@ public class GuiManager implements Observer<GameMessage> {
         }
     }
 
+    /**
+     * Send an object to server
+     * @param message
+     */
+    public void sendObject(Object message){
+        instance.client.asyncSend(message);
+    }
 
-
+    //Setter and getter
     public CardsMessage getCardsToDisplay() {
         return cardsToDisplay;
     }
@@ -183,7 +244,5 @@ public class GuiManager implements Observer<GameMessage> {
         this.client = client;
     }
 
-    public void sendObject(Object message){
-        instance.client.asyncSend(message);
-    }
+
 }

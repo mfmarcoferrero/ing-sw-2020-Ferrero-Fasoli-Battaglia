@@ -6,6 +6,9 @@ public class BoardSceneController {
 
     private GuiManager guiManager;
 
+    /**
+     * Called when board.fxml is load
+     */
     @FXML
     public void initialize() {
         guiManager = GuiManager.getInstance();

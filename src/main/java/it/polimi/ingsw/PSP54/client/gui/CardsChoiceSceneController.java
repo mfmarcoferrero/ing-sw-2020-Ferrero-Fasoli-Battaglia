@@ -24,7 +24,9 @@ public class CardsChoiceSceneController {
     @FXML private Button secondCardButton;
     @FXML private Button thirdCardButton;
 
-
+    /**
+     * Called when cards_choice.fxml is load
+     */
     @FXML
     public void initialize() {
         guiManager = GuiManager.getInstance();
@@ -32,6 +34,10 @@ public class CardsChoiceSceneController {
         setCardsToDisplay(guiManager.getCardsToDisplay());
     }
 
+    /**
+     * Set card images for the scene, changing layout when cards to display are 2 or 3
+     * @param cardsToDisplay
+     */
     public void setCardsToDisplay (CardsMessage cardsToDisplay){
         extractedCards = new Vector<>(cardsToDisplay.getCards().keySet());
         if (extractedCards.size() == 2){
@@ -47,19 +53,33 @@ public class CardsChoiceSceneController {
         }
     }
 
-
+    /**
+     * Called when first button is pressed
+     * Send a new CardChoice with the card value of this image
+     * @param event
+     */
     public void firstCardButtonPressed(ActionEvent event){
         this.event = event;
         System.out.println("First button pressed");
         guiManager.sendObject(new CardChoice(extractedCards.get(0)));
     }
 
+    /**
+     * Called when second button is pressed
+     * Send a new CardChoice with the card value of this image
+     * @param event
+     */
     public void secondCardButtonPressed(ActionEvent event){
         this.event = event;
         System.out.println("Second button pressed");
         guiManager.sendObject(new CardChoice(extractedCards.get(1)));
     }
 
+    /**
+     * Called when third button is pressed
+     * Send a new CardChoice with the card value of this image
+     * @param event
+     */
     public void thirdCardButtonPressed(ActionEvent event){
         this.event = event;
         System.out.println("Third button pressed");
@@ -71,14 +91,25 @@ public class CardsChoiceSceneController {
         }
     }
 
+    /**
+     * Set hand cursor when mouse enter on a button
+     * @param event
+     */
     public void setHandCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.HAND);
     }
 
+    /**
+     * Set default cursor when mouse exit from a button
+     * @param event
+     */
     public void setDefaultCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
     }
 
+    /**
+     * Load board.fxml on current stage
+     */
     public void setBoardScene() {
         GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/board.fxml");
     }
