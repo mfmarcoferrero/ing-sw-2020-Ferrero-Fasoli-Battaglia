@@ -6,7 +6,8 @@ import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 import java.util.ArrayList;
 
 /**
- * Your worker may move an additional time but not back to its initial space.
+ * Class representing the Artemis God Card.
+ * From Santorini's rules: "Your Move: Your Worker may move one additional time, but not back to its initial space."
  */
 public class ArtemisDecorator extends GodDecorator{
 
@@ -17,9 +18,10 @@ public class ArtemisDecorator extends GodDecorator{
     }
 
     /**
-     *Initialize current player's turn by setting worker's action tokens
-     * @param male represent the sex of the worker which the player is going to use
-     * @return the chosen worker with updated tokens
+     * Method used to initialize current player's turn.
+     * Sets current worker's moveToken to 2 and buildToken to 0.
+     * @param male represent the sex of the worker which the player is going to use.
+     * @return the chosen worker with updated tokens.
      */
     @Override
     public Worker turnInit(Boolean male){
@@ -30,9 +32,10 @@ public class ArtemisDecorator extends GodDecorator{
     }
 
     /**
-     * Set available boxes for the worker to move and stores them in worker's attribute
-     * @param worker current worker in use
-     * @return the vector containing available boxes
+     * Method used to set available boxes for the worker to move.
+     * Calls the super method and if the current worker's moveToken is 1 removes the initial position from the valid boxes.
+     * @param worker current worker in use.
+     * @return the vector containing available boxes.
      */
     @Override
     public ArrayList<Box> setWorkerBoxesToMove (Worker worker) {
@@ -50,6 +53,13 @@ public class ArtemisDecorator extends GodDecorator{
         return valid;
     }
 
+    /**
+     * Method used to perform a move action.
+     * Calls the super method and eventually notifies a message to the player in accordance to the tokens.
+     * @param worker selected worker which the player wants to move.
+     * @param dest selected destination box.
+     * @throws InvalidMoveException if the move can't be done.
+     */
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
         super.move(worker, dest);
@@ -60,6 +70,11 @@ public class ArtemisDecorator extends GodDecorator{
         }
     }
 
+    /**
+     * Method used to perform a binary choice.
+     * If choice is true restores a moveToken, otherwise set them to zero and sets the buildToken to 1.
+     * @param choice the player's choice.
+     */
     @Override
     public void chose(boolean choice){
         if (choice){ //move again

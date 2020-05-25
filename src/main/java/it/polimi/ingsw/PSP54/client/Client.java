@@ -17,11 +17,9 @@ public class Client extends Observable<GameMessage> {
     private String ip;
     private final Scanner inputReader = new Scanner(System.in);
     private int port;
-    private boolean cliChoice;
     private ObjectOutputStream socketOut;
     private CliView cliView;
     private GuiManager guiManager;
-    private int playerInd;
     private boolean active = true;
 
 

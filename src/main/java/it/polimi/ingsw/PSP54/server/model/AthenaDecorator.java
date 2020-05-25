@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 /**
- *
+ * Class representing the Athena God Card.
+ * From Santorini's rules: "Opponent's Turn: If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn."
  */
-public class AthenaDecorator extends GodDecorator{
+public class AthenaDecorator extends GodDecorator {
 
     private boolean movedUp; //settled on the previous turn
     private final int[] playersPowers = new int[3];
@@ -48,10 +49,11 @@ public class AthenaDecorator extends GodDecorator{
     }
 
     /**
-     * If valid performs move and modify action tokes
-     * @param worker selected worker which the player wants to move
-     * @param dest selected destination box
-     * @throws InvalidMoveException if the move can't be done
+     * Method used to perform a move action.
+     * Performs a standard move action, but if the worker goes up other players are redecorated with AthenaSideEffect.
+     * @param worker selected worker which the player wants to move.
+     * @param dest selected destination box.
+     * @throws InvalidMoveException if the move can't be done.
      */
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
@@ -72,6 +74,5 @@ public class AthenaDecorator extends GodDecorator{
             super.move(worker, dest);
 
         }else throw new InvalidMoveException();
-
     }
 }

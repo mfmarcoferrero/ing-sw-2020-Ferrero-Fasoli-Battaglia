@@ -3,8 +3,8 @@ package it.polimi.ingsw.PSP54.server.model;
 import java.io.Serializable;
 
 public class Box implements Serializable, Cloneable {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private int level;
     private boolean dome;
     private boolean complete;
@@ -23,16 +23,8 @@ public class Box implements Serializable, Cloneable {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public int getLevel() {

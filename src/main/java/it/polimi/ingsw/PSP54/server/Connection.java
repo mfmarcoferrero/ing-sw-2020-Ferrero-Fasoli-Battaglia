@@ -30,10 +30,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         this.server = server;
     }
 
-    private synchronized boolean isActive(){
-        return active;
-    }
-
     /**
      * Sends an object via socket.
      * @param message the object to be sent.
@@ -79,6 +75,9 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         return t;
     }
 
+    /**
+     * Closes a connection.
+     */
     public synchronized void closeConnection(){
         GameMessage connectionClosed = new StringMessage(null, StringMessage.closedConnection);
         asyncSend(connectionClosed);
@@ -90,19 +89,22 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         active = false;
     }
 
-    private void close() {
+    /**
+     *
+     */
+    private void close() { //TODO: JavaDoc
         closeConnection();
         server.deregisterConnection(this);
     }
 
     /**
-     * Ogni connection istanziata viene lanciata come thread
-     * Per ogni thread di connection viene chiamato il metodo server.lobby()
-     * Fino a quando isActive() il thread rimane in ascolto di ciò che viene inviato dal client
-     * e per ogni messaggio ricevuto notifica MessageReceiver
+     * Each instantiated connection is launched as a thread
+     * The Server.lobby() method is called for each connection thread
+     * As long as isActive () the thread listens for what is sent by the client
+     * and for each message received, MessageReceiver notification
      */
     @Override
-    public void run() {
+    public void run() { //TODO: formalize JavaDoc
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             GameMessage welcome = new StringMessage(null, StringMessage.welcomeMessage);
@@ -138,6 +140,10 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
 
     public Socket getSocket() {
         return socket;
+    }
+
+    private synchronized boolean isActive(){
+        return active;
     }
 
     public void setActive(boolean active) {

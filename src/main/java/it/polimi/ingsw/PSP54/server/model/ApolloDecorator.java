@@ -3,7 +3,8 @@ package it.polimi.ingsw.PSP54.server.model;
 import java.util.ArrayList;
 
 /**
- * Your worker may move into an opponent worker's space by forcing their worker to the space just vacated
+ * Class representing the Apollo God Card.
+ * From Santorini's rules : "Your Move: Your Worker may move on an occupied cell, changing position with that worker."
  */
 public class ApolloDecorator extends GodDecorator {
 
@@ -11,6 +12,22 @@ public class ApolloDecorator extends GodDecorator {
         super(player);
     }
 
+    /**
+     * Checks if a box is occupied by a teammate worker.
+     * @param box the box to check.
+     * @return true if the box is not occupied by a teammate worker, false otherwise.
+     */
+    private boolean notMyWorkerPos(Box box) {
+        return (getWorker(true).getPos() != box
+                && getWorker(false).getPos() != box);
+    }
+
+    /**
+     * Method used to set available boxes for the worker to move.
+     * It returns all adjacent boxes up to a level higher, including the occupied ones.
+     * @param worker current worker in use.
+     * @return the vector containing available boxes.
+     */
     @Override
     public ArrayList<Box> setWorkerBoxesToMove (Worker worker){
 
@@ -35,15 +52,12 @@ public class ApolloDecorator extends GodDecorator {
     }
 
     /**
-     *
-     * @param box
-     * @return
+     * Method used to perform a move action.
+     * Performs a normal move action, but if the box is occupied it performs an exchange between the two workers.
+     * @param worker selected worker which the player wants to move.
+     * @param dest selected destination box.
+     * @throws InvalidMoveException if the move can't be done.
      */
-    private boolean notMyWorkerPos(Box box) {
-        return (getWorker(true).getPos() != box
-                && getWorker(false).getPos() != box);
-    }
-
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
         //sets validity indicators

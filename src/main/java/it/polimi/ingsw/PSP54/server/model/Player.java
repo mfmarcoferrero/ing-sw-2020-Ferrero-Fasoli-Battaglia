@@ -12,10 +12,10 @@ public interface Player {
     Player assignPower(int cardID);
 
     /**
-     * Sets initial position on the board for the selected worker
-     * @param worker the selected worker
-     * @param x the board abscissa
-     * @param y the board ordinate
+     * Sets initial position on the board for the selected worker.
+     * @param worker the selected worker.
+     * @param x the board abscissa.
+     * @param y the board ordinate.
      */
     void setWorkerPos (Worker worker, int x, int y) throws InvalidMoveException;
 
@@ -39,28 +39,28 @@ public interface Player {
     Worker getWorker(Boolean male);
 
     /**
-     *Initialize current player's turn by setting worker's action tokens.
+     * Method used to initialize current player's turn.
      * @param male represent the sex of the worker which the player is going to use.
      * @return the chosen worker with updated tokens.
      */
     Worker turnInit(Boolean male);
 
     /**
-     * Sets standard available boxes for the worker to move and stores them in worker's attribute.
+     * Method used to set available boxes for the worker to move.
      * @param worker current worker in use.
      * @return the vector containing available boxes.
      */
     ArrayList<Box> setWorkerBoxesToMove(Worker worker);
 
     /**
-     * Set standard available boxes for the worker to build and stores them in worker's attribute
-     * @param worker current worker in use
-     * @return the vector containing buildable boxes
+     * Method used to set available boxes for the worker to build.
+     * @param worker current worker in use.
+     * @return the vector containing buildable boxes.
      */
     ArrayList<Box> setWorkerBoxesToBuild(Worker worker);
 
     /**
-     * Standard move action.
+     * Method used to perform a move action.
      * @param worker selected worker which the player wants to move.
      * @param dest selected destination box.
      * @throws InvalidMoveException if the move can't be done.
@@ -68,21 +68,21 @@ public interface Player {
     void move(Worker worker, Box dest) throws InvalidMoveException;
 
     /**
-     *Standard build action.
+     * Method used to perform a build action.
      * @param worker selected worker which the player wants to move.
      * @param dest selected box where to build.
      */
     void build(Worker worker, Box dest) throws InvalidBuildingException;
 
     /**
-     *
-     * @param worker
+     * Called to check if the player has won.
+     * @param worker the current worker which the player has moved.
      */
     void checkWinner(Worker worker);
 
     /**
-     *
-     * @param choice
+     * Method used to perform a binary choice.
+     * @param choice the player's choice.
      */
     void chose(boolean choice);
 

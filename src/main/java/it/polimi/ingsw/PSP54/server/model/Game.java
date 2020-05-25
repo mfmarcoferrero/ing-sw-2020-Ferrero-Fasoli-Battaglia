@@ -12,6 +12,9 @@ import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * Class representing the state of a game.
+ */
 public class Game extends Observable<GameMessage> implements Serializable, Cloneable {
 
     public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
@@ -70,8 +73,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     * Sets the color of the players' workers according to the order: first player is blue,
-     * second is red, third is yellow
+     * Sets the color of the players' workers according to the order: first player is blue, second is red, third is yellow.
      */
     public void assignColors(){
 
@@ -204,7 +206,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     * Verifies if the move can be done and if so performs it and notifies the observers with a corresponding message.
+     * Verifies if the move can be done, if so performs it and notifies the observers with a corresponding message.
      * @param moveSelection the message representing the move action.
      */
     public void performMove(PlayerAction moveSelection) {
@@ -255,7 +257,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     * Verifies if the move can be done and if so performs it and notifies the observers with a corresponding message.
+     * Verifies if the move can be done, if so performs it and notifies the observers with a corresponding message.
      * @param buildSelection the object representing the build action.
      */
     public void performBuild(PlayerAction buildSelection){
@@ -281,7 +283,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     *
+     * Verifies if the choice can be done, if so performs it and notifies the observers with a corresponding message.
      * @param choiceAction action chosen by the player
      */
     public void performChoice(PlayerAction choiceAction) {

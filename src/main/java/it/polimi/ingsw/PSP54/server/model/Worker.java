@@ -5,11 +5,10 @@ import java.util.ArrayList;
 
 public class Worker implements Serializable, Cloneable {
     private final Boolean male;
-    private StandardPlayer owner;
+    private final StandardPlayer owner;
     private Box pos;
     private int moveToken;
     private int buildToken;
-    private boolean available, domeBuilder;
     private ArrayList<Box> boxesToBuild;
     private ArrayList<Box> boxesToMove;
 
@@ -27,10 +26,6 @@ public class Worker implements Serializable, Cloneable {
 
     public StandardPlayer getOwner() {
         return owner;
-    }
-
-    public void setOwner(StandardPlayer owner) {
-        this.owner = owner;
     }
 
     public Box getPos() {
@@ -57,14 +52,6 @@ public class Worker implements Serializable, Cloneable {
         this.buildToken = buildToken;
     }
 
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
     public ArrayList<Box> getBoxesToBuild() {
         return boxesToBuild;
     }
@@ -79,13 +66,5 @@ public class Worker implements Serializable, Cloneable {
 
     public void setBoxesToMove(ArrayList<Box> boxesToMove) {
         this.boxesToMove = boxesToMove;
-    }
-
-    public boolean isDomeBuilder() {
-        return domeBuilder;
-    }
-
-    public void setDomeBuilder(boolean domeBuilder) {
-        this.domeBuilder = domeBuilder;
     }
 }

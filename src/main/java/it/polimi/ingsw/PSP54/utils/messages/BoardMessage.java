@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class BoardMessage extends GameMessage implements Serializable, Cloneable {
 
-    private Box[][] board;
+    private final Box[][] board;
 
     public BoardMessage(Integer virtualViewID, Box[][] board){
         super(virtualViewID);
@@ -17,7 +17,4 @@ public class BoardMessage extends GameMessage implements Serializable, Cloneable
         return board;
     }
 
-    public void setBoard(Box[][] board) {
-        this.board = board;
-    }
 }

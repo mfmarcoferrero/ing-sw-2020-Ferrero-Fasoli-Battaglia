@@ -1,8 +1,5 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
-import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -122,9 +119,9 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     *Initialize current player's turn by setting worker's action tokens
-     * @param male represent the sex of the worker which the player is going to use
-     * @return the chosen worker with updated tokens
+     *Initialize current player's turn by setting worker's action tokens.
+     * @param male represent the sex of the worker which the player is going to use.
+     * @return the chosen worker with updated tokens.
      */
     @Override
     public Worker turnInit(Boolean male) {
@@ -135,9 +132,9 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     * Sets available boxes for the worker to move and stores them in worker's attribute
-     * @param worker current worker in use
-     * @return the vector containing available boxes
+     * Sets available boxes for the worker to move and stores them in worker's attribute.
+     * @param worker current worker in use.
+     * @return the vector containing available boxes.
      */
     @Override
     public ArrayList<Box> setWorkerBoxesToMove (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
@@ -164,9 +161,9 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     * Set available boxes for the worker to build and stores them in worker's attribute
-     * @param worker current worker in use
-     * @return the vector containing buildable boxes
+     * Set available boxes for the worker to build and stores them in worker's attribute.
+     * @param worker current worker in use.
+     * @return the vector containing buildable boxes.
      */
     @Override
     public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
@@ -191,10 +188,10 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     * If valid performs move and modify action tokes
-     * @param worker selected worker which the player wants to move
-     * @param dest selected destination box
-     * @throws InvalidMoveException if the move can't be done
+     * If valid performs move and modify action tokes.
+     * @param worker selected worker which the player wants to move.
+     * @param dest selected destination box.
+     * @throws InvalidMoveException if the move can't be done.
      */
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException{
@@ -224,9 +221,9 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     * If valid performs build and modify action tokens
-     * @param worker selected worker which the player wants to move
-     * @param dest selected box where to build
+     * If valid performs build and modify action tokens.
+     * @param worker selected worker which the player wants to move.
+     * @param dest selected box where to build.
      */
     @Override
     public void build (Worker worker, Box dest) throws InvalidBuildingException{
@@ -248,6 +245,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         else
             throw new InvalidBuildingException();
     }
+
 
     @Override
     public void chose(boolean choice) {
@@ -273,8 +271,8 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     //setters & getters
 
     /**
-     * Creates a reference to the current Game, in order to access board's and other players' info
-     * @param game the current Game
+     * Creates a reference to the current Game, in order to access board's and other players' info.
+     * @param game the current Game.
      */
     @Override
     public void setGame(Game game) { //it has to be invoked by Controller or Game class

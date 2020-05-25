@@ -6,7 +6,8 @@ import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 import java.util.ArrayList;
 
 /**
- * Your worker may build an additional time but not on the same space
+ * Class representing the Demeter God Card.
+ * From Santorini's rules: "Your Build: Your Worker may build one additional time, but not on the same space."
  */
 public class DemeterDecorator extends GodDecorator{
 
@@ -17,9 +18,10 @@ public class DemeterDecorator extends GodDecorator{
     }
 
     /**
-     *
-     * @param worker
-     * @return
+     * Method used to set available boxes for the worker to build.
+     * Calls teh super method and eventually removes the previously built box.
+     * @param worker current worker in use.
+     * @return the vector containing buildable boxes.
      */
     @Override
     public ArrayList<Box> setWorkerBoxesToBuild(Worker worker) {
@@ -35,10 +37,11 @@ public class DemeterDecorator extends GodDecorator{
     }
 
     /**
-     *
-     * @param worker
-     * @param dest
-     * @throws InvalidMoveException
+     * Method used to perform a move action.
+     * Calls the super method and sets the buildToken to 2.
+     * @param worker selected worker which the player wants to move.
+     * @param dest selected destination box.
+     * @throws InvalidMoveException if the move can't be done.
      */
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
@@ -47,10 +50,10 @@ public class DemeterDecorator extends GodDecorator{
     }
 
     /**
-     *
-     * @param worker
-     * @param dest
-     * @throws InvalidBuildingException
+     * Method used to perform a build action.
+     * Calls the super method and eventually notifies a message to the player in accordance to the tokens.
+     * @param worker selected worker which the player wants to move.
+     * @param dest selected box where to build.
      */
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {

@@ -22,7 +22,6 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String choseWorker = "Chose your worker: [Enter m/f]";
     public static final String moveMessage = "Make your move!";
     public static final String buildMessage = "Where do you want to build?";
-    public static final String waitMessage = "Wait for the other player's choice!";
     public static final String winMessage = "You win!";
     public static final String loseMessage = "You lose!";
     public static final String wrongTurnMessage = "It is not your turn!";

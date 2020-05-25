@@ -6,7 +6,8 @@ import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 import java.util.ArrayList;
 
 /**
- * Your worker can build a dome on every level
+ * Class representing the Atlas God Card.
+ * From Santorini's rules: "Your Build: Your Worker may build a dome at any level."
  */
 public class AtlasDecorator extends GodDecorator {
 
@@ -16,6 +17,12 @@ public class AtlasDecorator extends GodDecorator {
         super(player);
     }
 
+    /**
+     * Method used to perform a build action.
+     * If the destination Box is a t level 3 it builds a dome, otherwise a message is notified to the player.
+     * @param worker selected worker which the player wants to move.
+     * @param dest selected box where to build.
+     */
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
 
@@ -32,6 +39,11 @@ public class AtlasDecorator extends GodDecorator {
             throw new InvalidBuildingException();
     }
 
+    /**
+     * Method used to perform a binary choice.
+     * If the choice is true it builds a dome in the previously selected box, otherwise adds a level to the box.
+     * @param choice the player's choice.
+     */
     @Override
     public void chose(boolean choice){
         if (choice){
