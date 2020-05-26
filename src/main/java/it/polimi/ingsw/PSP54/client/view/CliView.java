@@ -366,8 +366,8 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 *
-	 * @return
+	 * Keeps asking the user for a string ("y" or "n") until correct input is entered.
+	 * @return true if the given string is "y", false otherwise.
 	 */
 	public boolean acquireBooleanChoice() {
 		boolean loop = true;
@@ -510,8 +510,8 @@ public class CliView implements Observer<GameMessage> {
 	}
 
 	/**
-	 *
-	 * @param choice
+	 * Sends a BooleanChoice object via socket.
+	 * @param choice the choice made by the user.
 	 */
 	public void sendBooleanChoice(boolean choice) {
 		PlayerChoice booleanChoice = new BooleanChoice(choice);
@@ -562,7 +562,6 @@ public class CliView implements Observer<GameMessage> {
 					sendBooleanChoice(choice);
 					break;
 				}
-
 			}
 		}
 		if (message instanceof CardsMessage){

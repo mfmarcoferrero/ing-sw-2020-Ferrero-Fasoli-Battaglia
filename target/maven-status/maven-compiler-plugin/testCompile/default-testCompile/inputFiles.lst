@@ -1,9 +1,7 @@
-C:\Users\matteo\IdeaProjects\ing-sw-2020-Ferrero-Fasoli-Battaglia\src\test\java\it\polimi\ingsw\PSP54\server\test_model\DemeterTest.java
-C:\Users\matteo\IdeaProjects\ing-sw-2020-Ferrero-Fasoli-Battaglia\src\test\java\it\polimi\ingsw\PSP54\server\test_model\AtlasTest.java
-C:\Users\matteo\IdeaProjects\ing-sw-2020-Ferrero-Fasoli-Battaglia\src\test\java\it\polimi\ingsw\PSP54\server\test_model\ArtemisTest.java
-C:\Users\matteo\IdeaProjects\ing-sw-2020-Ferrero-Fasoli-Battaglia\src\test\java\it\polimi\ingsw\PSP54\server\test_model\PlayerTest.java
-C:\Users\matteo\IdeaProjects\ing-sw-2020-Ferrero-Fasoli-Battaglia\src\test\java\it\polimi\ingsw\PSP54\server\test_model\AthenaTest.java
-C:\Users\matteo\IdeaProjects\ing-sw-2020-Ferrero-Fasoli-Battaglia\src\test\java\it\polimi\ingsw\PSP54\server\test_model\GodTest.java
-C:\Users\matteo\IdeaProjects\ing-sw-2020-Ferrero-Fasoli-Battaglia\src\test\java\it\polimi\ingsw\PSP54\server\test_model\WorkerTest.java
-C:\Users\matteo\IdeaProjects\ing-sw-2020-Ferrero-Fasoli-Battaglia\src\test\java\it\polimi\ingsw\PSP54\server\test_model\ApolloTest.java
-C:\Users\matteo\IdeaProjects\ing-sw-2020-Ferrero-Fasoli-Battaglia\src\test\java\it\polimi\ingsw\PSP54\server\test_model\GameTest.java
+/home/alessandro/IdeaProjects/ing-sw-2020-Ferrero-Fasoli-Battaglia/src/test/java/it/polimi/ingsw/PSP54/server/model/DemeterDecoratorTest.java
+/home/alessandro/IdeaProjects/ing-sw-2020-Ferrero-Fasoli-Battaglia/src/test/java/it/polimi/ingsw/PSP54/server/model/ArtemisDecoratorTest.java
+/home/alessandro/IdeaProjects/ing-sw-2020-Ferrero-Fasoli-Battaglia/src/test/java/it/polimi/ingsw/PSP54/server/model/AtlasDecoratorTest.java
+/home/alessandro/IdeaProjects/ing-sw-2020-Ferrero-Fasoli-Battaglia/src/test/java/it/polimi/ingsw/PSP54/server/model/ApolloDecoratorTest.java
+/home/alessandro/IdeaProjects/ing-sw-2020-Ferrero-Fasoli-Battaglia/src/test/java/it/polimi/ingsw/PSP54/server/model/GameTest.java
+/home/alessandro/IdeaProjects/ing-sw-2020-Ferrero-Fasoli-Battaglia/src/test/java/it/polimi/ingsw/PSP54/server/model/AthenaDecoratorTest.java
+/home/alessandro/IdeaProjects/ing-sw-2020-Ferrero-Fasoli-Battaglia/src/test/java/it/polimi/ingsw/PSP54/server/model/StandardPlayerTest.java

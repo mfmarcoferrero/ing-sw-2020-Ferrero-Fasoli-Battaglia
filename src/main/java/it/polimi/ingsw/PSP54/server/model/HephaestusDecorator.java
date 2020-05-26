@@ -3,37 +3,13 @@ package it.polimi.ingsw.PSP54.server.model;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
-import java.util.ArrayList;
 
-/**
- * Class representing the Demeter God Card.
- * From Santorini's rules: "Your Build: Your Worker may build one additional time, but not on the same space."
- */
-public class DemeterDecorator extends GodDecorator{
+public class HephaestusDecorator extends GodDecorator {
 
     private Box lastBuilding;
 
-    public DemeterDecorator(Player player) {
+    public HephaestusDecorator(Player player) {
         super(player);
-    }
-
-    /**
-     * Method used to set available boxes for the worker to build.
-     * Calls teh super method and eventually removes the previously built box.
-     * @param worker current worker in use.
-     * @return the vector containing buildable boxes.
-     */
-    @Override
-    public ArrayList<Box> setWorkerBoxesToBuild(Worker worker) {
-
-        if (worker.getBuildToken() == 2)
-            return super.setWorkerBoxesToBuild(worker);
-        else {
-            ArrayList<Box> valid = super.setWorkerBoxesToBuild(worker);
-            valid.removeIf(check -> check == getLastBuilding());
-
-            return valid;
-        }
     }
 
     /**
@@ -51,37 +27,40 @@ public class DemeterDecorator extends GodDecorator{
 
     /**
      * Method used to perform a build action.
-     * Calls the super method and eventually notifies a message to the player in accordance to the tokens.
+     * Calls the super method and eventually notifies a message to the player in accordance to the building possibilities.
      * @param worker selected worker which the player wants to move.
      * @param dest selected box where to build.
      */
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
-
-        if (worker.getBuildToken() == 2) {
-            super.build(worker, dest);
+        super.build(worker, dest);
+        if (!dest.isDome()) {
             setLastBuilding(dest);
             worker.setBuildToken(-1);
             GameMessage buildAgain = new StringMessage(getVirtualViewID(), StringMessage.buildAgain);
             getGame().notify(buildAgain);
-        }else
-            super.build(worker, dest);
+        }
     }
 
     /**
      * Method used to perform a binary choice.
-     * If choice is true restores a buildToken, otherwise set them to zero.
+     * If choice is true builds another level on the previously built box, otherwise set them to zero.
      * @param choice the player's choice.
      */
     @Override
     public void chose(boolean choice) {
         if (choice){
             getCurrentWorker().setBuildToken(1);
+            try {
+                super.build(getCurrentWorker(), getLastBuilding());
+            } catch (InvalidBuildingException e) {
+                GameMessage invalidBuild = new StringMessage(getVirtualViewID(), "You can't build again!");
+                getGame().notify(invalidBuild);
+                getGame().endTurn(this);
+            }
         }else
             getCurrentWorker().setBuildToken(0);
     }
-
-    //getters & setters
 
     public Box getLastBuilding() {
         return lastBuilding;

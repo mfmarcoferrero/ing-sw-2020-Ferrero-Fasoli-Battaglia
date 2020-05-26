@@ -76,7 +76,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     }
 
     /**
-     * Closes a connection.
+     * Closes the connection.
      */
     public synchronized void closeConnection(){
         GameMessage connectionClosed = new StringMessage(null, StringMessage.closedConnection);
@@ -90,21 +90,21 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     }
 
     /**
-     *
+     * Closes the connection and deletes its reference in the server.
      */
-    private void close() { //TODO: JavaDoc
+    private void close() {
         closeConnection();
         server.deregisterConnection(this);
     }
 
     /**
-     * Each instantiated connection is launched as a thread
-     * The Server.lobby() method is called for each connection thread
-     * As long as isActive () the thread listens for what is sent by the client
-     * and for each message received, MessageReceiver notification
+     * Each instantiated connection is launched as a thread.
+     * Each connection calls the Server.lobby() method.
+     * As long as the connection is active the thread listens for what is sent from the client.
+     * The MessageReceiver is notified every time a message arrives.
      */
     @Override
-    public void run() { //TODO: formalize JavaDoc
+    public void run() {
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             GameMessage welcome = new StringMessage(null, StringMessage.welcomeMessage);

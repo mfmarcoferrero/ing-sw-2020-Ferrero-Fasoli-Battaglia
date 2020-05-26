@@ -31,9 +31,8 @@ public class Client extends Observable<GameMessage> {
     /**
      * Instantiates a thread that reads incoming messages from the client.
      * @param socketIn the socket from which the messages arrive.
-     * @return the thread that is reading the current incoming message.
      */
-    public synchronized Thread asyncReadFromSocket(final ObjectInputStream socketIn){
+    public void asyncReadFromSocket(final ObjectInputStream socketIn){
         Thread t = new Thread(() -> {
             try {
                 while (isActive()) {
@@ -45,9 +44,12 @@ public class Client extends Observable<GameMessage> {
             }
         });
         t.start();
-        return t;
     }
 
+    /**
+     * Sends an object via socket.
+     * @param message the message to be sent.
+     */
     public void send(Object message) {
         try {
             socketOut.reset();
@@ -60,15 +62,17 @@ public class Client extends Observable<GameMessage> {
 
     /**
      * Instantiates a thread that sends an object via socket.
-     * @param message the message to be send.
-     * @return the thread that is sending the current message.
+     * @param message the message to be sent.
      */
-    public Thread asyncSend(final Object message) {
+    public void asyncSend(final Object message) {
         Thread t = new Thread(() -> send(message));
         t.start();
-        return t;
     }
 
+    /**
+     * Initializes which user interface the player has selected.
+     * @param choice the object representing the player's choice.
+     */
     private void setInterfaceChoice(String choice){
         if (choice.equals("c")){
             cliView = new CliView(this);
@@ -83,7 +87,7 @@ public class Client extends Observable<GameMessage> {
     /**
      * Ogni client crea due thread per la lettura e scrittura
      * Ogni thread viene eseguito in modo asincrono e il client si disconnette quando terminano
-     * @throws IOException
+     * @throws IOException if an I/O error occurs when creating the socket.
      */
     public void startClient() throws IOException {
         System.out.println("CLI or GUI? [enter c or g]");
@@ -102,6 +106,7 @@ public class Client extends Observable<GameMessage> {
         } catch(NoSuchElementException e) {
             System.out.println("Connection closed from the client side");
         } finally {
+            //noinspection StatementWithEmptyBody
             while (isActive()) {
 
             }
