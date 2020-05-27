@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class StandardPlayer implements Player, Serializable, Cloneable {
 
-    private static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
+    private static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4, HEPHAESTUS = 5;
     private int cardID;
     private Game game;
     private final String playerName;
@@ -36,9 +36,10 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     * Decorates the current player with the given power.
-     * @param cardID the number of the card.
-     * @return the decorated player.
+     * Called whenever a player needs to be decorated.
+     * Decorates the player at the beginning of a game accordingly to the chosen card.
+     * @param cardID the number of the card
+     * @return the decorated player
      */
     @Override
     public Player assignPower(int cardID){
@@ -65,6 +66,10 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             case DEMETER:
                 actualPlayer = new DemeterDecorator(this);
                 actualPlayer.setCardID(DEMETER);
+                break;
+            case HEPHAESTUS:
+                actualPlayer = new HephaestusDecorator(this);
+                actualPlayer.setCardID(HEPHAESTUS);
                 break;
         }
         return actualPlayer;
@@ -119,7 +124,8 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     *Initialize current player's turn by setting worker's action tokens.
+     * Method used to initialize current player's turn.
+     * Sets the selected worker's moveToken to 1 and the buildToken to zero.
      * @param male represent the sex of the worker which the player is going to use.
      * @return the chosen worker with updated tokens.
      */
@@ -132,12 +138,13 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     * Sets available boxes for the worker to move and stores them in worker's attribute.
+     * Method used to set available boxes for the worker to move.
+     * Returns all adjacent boxes that are at least a level higher than the current worker's position.
      * @param worker current worker in use.
      * @return the vector containing available boxes.
      */
     @Override
-    public ArrayList<Box> setWorkerBoxesToMove (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
+    public ArrayList<Box> setWorkerBoxesToMove (Worker worker){
 
         ArrayList<Box> valid = new ArrayList<>();
         int deltaX, deltaY, deltaH;
@@ -188,7 +195,8 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     * If valid performs move and modify action tokes.
+     * Method used to perform a move action.
+     * If the destination box is contained in worker's boxesToMove performs the move, decrements worker's moveToken and increments the buildToken.
      * @param worker selected worker which the player wants to move.
      * @param dest selected destination box.
      * @throws InvalidMoveException if the move can't be done.
@@ -221,9 +229,11 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     /**
-     * If valid performs build and modify action tokens.
+     * Method used to perform a build action.
+     * If the destination box is contained in worker's boxesToBuild performs the build and decrement worker's buildToken.
      * @param worker selected worker which the player wants to move.
      * @param dest selected box where to build.
+     * @throws InvalidBuildingException if the build can't be done.
      */
     @Override
     public void build (Worker worker, Box dest) throws InvalidBuildingException{
@@ -236,7 +246,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                 dest.setDome(true);
             else {
                 int currentLevel = dest.getLevel();
-                dest.setLevel(currentLevel+1);
+                dest.setLevel(currentLevel + 1);
             }
             worker.setBuildToken(currentBuildToken - 1);
 
@@ -246,10 +256,13 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             throw new InvalidBuildingException();
     }
 
-
+    /**
+     * Method used to perform a binary choice.
+     * Empty method. Binary choice are used to perform special actions. A StandardPlayer cannot make this type of choice.
+     * @param choice the player's choice.
+     */
     @Override
-    public void chose(boolean choice) {
-    }
+    public void chose(boolean choice) { }
 
     /**
      * This method needs to be invoked after every move. It checks if the newly moved worker is on a 3 level building.

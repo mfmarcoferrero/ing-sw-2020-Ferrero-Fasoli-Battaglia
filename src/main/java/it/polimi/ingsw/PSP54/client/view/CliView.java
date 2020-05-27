@@ -517,6 +517,7 @@ public class CliView implements Observer<GameMessage> {
 		PlayerChoice booleanChoice = new BooleanChoice(choice);
 		client.asyncSend(booleanChoice);
 	}
+
 	/**
 	 * Called whenever the observed object is changed.
 	 *

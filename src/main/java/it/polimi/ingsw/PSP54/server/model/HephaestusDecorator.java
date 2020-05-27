@@ -3,7 +3,10 @@ package it.polimi.ingsw.PSP54.server.model;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
-
+/**
+ * Class representing the Hephaestus God Card.
+ * From Santorini's rules: "Your Build: Your Worker may build one additional block (not dome) on top of your first block."
+ */
 public class HephaestusDecorator extends GodDecorator {
 
     private Box lastBuilding;
@@ -30,11 +33,12 @@ public class HephaestusDecorator extends GodDecorator {
      * Calls the super method and eventually notifies a message to the player in accordance to the building possibilities.
      * @param worker selected worker which the player wants to move.
      * @param dest selected box where to build.
+     * @throws InvalidBuildingException if the build can't be done.
      */
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
         super.build(worker, dest);
-        if (!dest.isDome()) {
+        if (!dest.isDome() && dest.getLevel() < 3) {
             setLastBuilding(dest);
             worker.setBuildToken(-1);
             GameMessage buildAgain = new StringMessage(getVirtualViewID(), StringMessage.buildAgain);
@@ -54,7 +58,8 @@ public class HephaestusDecorator extends GodDecorator {
             try {
                 super.build(getCurrentWorker(), getLastBuilding());
             } catch (InvalidBuildingException e) {
-                GameMessage invalidBuild = new StringMessage(getVirtualViewID(), "You can't build again!");
+                getCurrentWorker().setBuildToken(0);
+                GameMessage invalidBuild = new StringMessage(getVirtualViewID(), "You can't build again here!");
                 getGame().notify(invalidBuild);
                 getGame().endTurn(this);
             }

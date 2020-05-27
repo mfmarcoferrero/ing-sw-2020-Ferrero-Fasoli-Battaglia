@@ -71,6 +71,7 @@ public interface Player {
      * Method used to perform a build action.
      * @param worker selected worker which the player wants to move.
      * @param dest selected box where to build.
+     * @throws InvalidBuildingException if the build can't be done.
      */
     void build(Worker worker, Box dest) throws InvalidBuildingException;
 
