@@ -16,6 +16,7 @@ public interface Player {
      * @param worker the selected worker.
      * @param x the board abscissa.
      * @param y the board ordinate.
+     * @throws InvalidMoveException if the designed box is occupied.
      */
     void setWorkerPos (Worker worker, int x, int y) throws InvalidMoveException;
 
