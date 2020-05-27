@@ -25,8 +25,8 @@ public class MinotaurDecorator extends GodDecorator {
             try {
                 deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());
                 deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
-              deltaH =  (board[i][j].getLevel() - worker.getPos().getLevel());
-              if ((deltaX <= 1 && deltaY <= 1) && notMyWorkerPos(board[i][j]) && deltaH <= 1 && !board[i][j].isDome())
+                deltaH =  (board[i][j].getLevel() - worker.getPos().getLevel());
+                if ((deltaX <= 1 && deltaY <= 1) && notMyWorkerPos(board[i][j]) && deltaH <= 1 && !board[i][j].isDome())
                     valid.add(board[i][j]);
             } catch (NullPointerException e) 
               System.out.println("LMAO");
@@ -49,7 +49,7 @@ public class MinotaurDecorator extends GodDecorator {
                 && getWorker(false).getPos() != box);
     }
 
-    @Override
+        @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException {
         //sets validity indicators
         ArrayList<Box> valid = worker.getBoxesToMove();
@@ -57,27 +57,34 @@ public class MinotaurDecorator extends GodDecorator {
 
         if (currentMoveToken > 0 && valid.contains(dest)){
             if (dest.isOccupied()){
-                //perform swap
-                Box current = worker.getPos();
-                Worker opponent = dest.getWorker();
-                opponent.setPos(current);
-                current.setWorker(dest.getWorker());
-                //perform move
-                worker.setPos(dest);
-                dest.setWorker(worker);
-                //update tokens
-                worker.setMoveToken(0);
-                worker.setBuildToken(1);
-                //notify
-                getGame().notifyBoard();
-                super.checkWinner(worker);
-                if (this.isWinner()){
-                    //TODO: notify win && endGame
-                }
-
+		Box current = worker.getPos();
+		int deltaX = dest.getX() - current.getX();
+		int deltaY = dest.getY() - current.getY();
+		int pushX = dest.getX() + deltaX;
+		int pushY = dest.getY() + deltaY;
+		if(0 <= pushX && pushX < 5 && 0 <= pushY && pushY < 5){
+			//perform push
+			Worker opponent = dest.getWorker();
+			Box opponentDest = board[pushX][pushY];
+			opponent.setPos(opponentDest);
+			opponentDest.setWorker(dest.getWorker());
+			//perform move
+			worker.setPos(dest);
+			dest.setWorker(worker);
+			//update tokens
+			worker.setMoveToken(0);
+			worker.setBuildToken(1);
+			//notify
+			getGame().notifyBoard();
+			super.checkWinner(worker);
+			if (this.isWinner()){
+			    System.out.println("INGCUNTI WAS HERE AND TOOK OVER.\n\n\n\n\n\n\n GIB BITCUINS");
+			}
+		} else throw new InvalidMoveException();
             }else
                 super.move(worker, dest);
 
         }else throw new InvalidMoveException();
     }
+
 }
