@@ -7,7 +7,7 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     private final String message;
 
     //init
-    public static final String welcomeMessage = "Welcome!";
+    public static final String welcomeMessage = "█▀▀▄░░░░░░░░░░░▄▀▀█\n░█░░░▀▄░▄▄▄▄▄░▄▀░░░█\n░░▀▄░░░▀░░░░░▀░░░▄▀\n░░░░▌░▄▄░░░▄▄░▐▀▀\n░░░▐░░█▄░░░▄█░░▌▄▄▀▀▀▀█\n░░░▌▄▄▀▀░▄░▀▀▄▄▐░░░░░░█\n▄▀▀▐▀▀░▄▄▄▄▄░▀▀▌▄▄▄░░░█    #Santorini\n█░░░▀▄░█░░░█░▄▀░░░░█▀▀▀       #by Ferrero, Fasoli, Battaglia & ingcunti\n░▀▄░░▀░░▀▀▀░░▀░░░▄█▀\n░░░█░░░░░░░░░░░▄▀▄░▀▄\n░░░█░░░░░░░░░▄▀█░░█░░█\n░░░█░░░░░░░░░░░█▄█░░▄▀\n░░░█░░░░░░░░░░░████▀\n░░░▀▄▄▀▀▄▄▀▀▄▄▄█▀\n";
     public static final String setNumberOfPlayersMessage = "Hey, set the number of player:";
     public static final String turnMessage = "It's your turn!";
     public static final String setFirstWorkerMessage = "Chose the first worker to place: [Enter m/f]";
