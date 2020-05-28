@@ -80,9 +80,6 @@ public class ApolloDecorator extends GodDecorator {
                 //notify
                 getGame().notifyBoard();
                 super.checkWinner(worker);
-                if (this.isWinner()){
-                    //TODO: notify win && endGame
-                }
 
             }else
                 super.move(worker, dest);
