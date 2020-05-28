@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class StandardPlayer implements Player, Serializable, Cloneable {
 
-    private static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4, HEPHAESTUS = 5, PROMETHEUS = 8;
+    private static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4, HEPHAESTUS = 5, MINOTAUR = 6, PROMETHEUS = 8;
     private int cardID;
     private Game game;
     private final String playerName;
@@ -70,6 +70,10 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             case HEPHAESTUS:
                 actualPlayer = new HephaestusDecorator(this);
                 actualPlayer.setCardID(HEPHAESTUS);
+                break;
+            case MINOTAUR:
+                actualPlayer = new MinotaurDecorator(this);
+                actualPlayer.setCardID(MINOTAUR);
                 break;
             case PROMETHEUS:
                 actualPlayer = new PrometheusDecorator(this);

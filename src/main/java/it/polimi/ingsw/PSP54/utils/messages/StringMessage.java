@@ -18,6 +18,9 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String atlasMessage = "You have Atlas!\nYour Build: Your Worker may build a dome at any level.";
     public static final String demeterMessage = "You have Demeter!\nYour Build: Your Worker may build one additional time, but not on the same space.";
     public static final String artemisMessage = "You have Artemis!\nYour Move: Your Worker may move one additional time, but not back to its initial space.";
+    public static final String hephaestusMessage = "You have Hephaestus!\nYour Build: Your Worker may build one additional block (not dome) on top of your first block.";
+    public static final String minotaurMessage = "You have Minotaur!\nYour Move: Your worker may move into an opponent worker's space, if their worker can be forced one space straight backwards to an occupied space at any level.";
+    public static final String prometheusMessage = "Your Turn: If your worker does not move up, it may build both before and after moving.";
     //standard
     public static final String choseWorker = "Chose your worker: [Enter m/f]";
     public static final String moveMessage = "Make your move!";

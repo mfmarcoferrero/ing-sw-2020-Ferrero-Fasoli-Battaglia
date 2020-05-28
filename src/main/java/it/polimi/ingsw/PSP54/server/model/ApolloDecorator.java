@@ -15,11 +15,11 @@ public class ApolloDecorator extends GodDecorator {
     /**
      * Checks if a box is occupied by a teammate worker.
      * @param box the box to check.
-     * @return true if the box is not occupied by a teammate worker, false otherwise.
+     * @return true if the box is occupied by a teammate worker, false otherwise.
      */
-    private boolean notMyWorkerPos(Box box) {
-        return (getWorker(true).getPos() != box
-                && getWorker(false).getPos() != box);
+    private boolean isMyWorkerPos(Box box) {
+        return (getWorker(true).getPos() == box
+                || getWorker(false).getPos() == box);
     }
 
     /**
@@ -40,7 +40,7 @@ public class ApolloDecorator extends GodDecorator {
                 deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());
                 deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());
                 deltaH =  (board[i][j].getLevel() - worker.getPos().getLevel());
-                if ((deltaX <= 1 && deltaY <= 1) && notMyWorkerPos(board[i][j]) && deltaH <= 1 && !board[i][j].isDome())
+                if ((deltaX <= 1 && deltaY <= 1) && !isMyWorkerPos(board[i][j]) && deltaH <= 1 && !board[i][j].isDome())
                     valid.add(board[i][j]);
             }
         }

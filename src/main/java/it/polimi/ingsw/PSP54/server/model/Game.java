@@ -17,7 +17,7 @@ import java.util.*;
  */
 public class Game extends Observable<GameMessage> implements Serializable, Cloneable {
 
-    public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4;
+    public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4, HEPHAESTUS = 5, MINOTAUR = 6, PROMETHEUS = 8;
     public static final int CARD_NUMBER = 5;
     public static final int BOARD_SIZE = 5;
     public static final String[] colors = {"blue", "red", "yellow"};
@@ -40,6 +40,9 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         cardMap.put(ATHENA,"Athena");
         cardMap.put(ATLAS,"Atlas");
         cardMap.put(DEMETER,"Demeter");
+        cardMap.put(HEPHAESTUS, "Hephaestus");
+        cardMap.put(MINOTAUR, "Minotaur");
+        cardMap.put(PROMETHEUS, "Prometheus");
     }
 
     /**
@@ -157,6 +160,24 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
                     players.set(currentIndex, currentPlayer.assignPower(DEMETER));
                     currentPlayer = players.get(currentIndex);
                     powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.demeterMessage);
+                    notify(powerInfoMessage);
+                    break;
+                case HEPHAESTUS:
+                    players.set(currentIndex, currentPlayer.assignPower(HEPHAESTUS));
+                    currentPlayer = players.get(currentIndex);
+                    powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.hephaestusMessage);
+                    notify(powerInfoMessage);
+                    break;
+                case MINOTAUR:
+                    players.set(currentIndex, currentPlayer.assignPower(MINOTAUR));
+                    currentPlayer = players.get(currentIndex);
+                    powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.minotaurMessage);
+                    notify(powerInfoMessage);
+                    break;
+                case PROMETHEUS:
+                    players.set(currentIndex, currentPlayer.assignPower(PROMETHEUS));
+                    currentPlayer = players.get(currentIndex);
+                    powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.prometheusMessage);
                     notify(powerInfoMessage);
                     break;
             }
