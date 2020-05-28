@@ -61,7 +61,7 @@ public class MinotaurDecorator extends GodDecorator {
         }
 
         if (forceTo != null)
-            if (forceTo.isOccupied() && forceTo.isDome())
+            if (forceTo.isOccupied() || forceTo.isDome())
                 forceTo = null;
 
         return forceTo;
