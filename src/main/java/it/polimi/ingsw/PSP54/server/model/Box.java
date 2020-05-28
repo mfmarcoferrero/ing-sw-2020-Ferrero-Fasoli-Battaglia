@@ -67,7 +67,7 @@ public class Box implements Serializable, Cloneable {
         this.worker = worker;
     }
 
-    //TODO: return the worker which is occupying the box?
+    //TODO: return the worker which is occupying the box?Nah
     public boolean isOccupied(){
 
         boolean occupied = false;

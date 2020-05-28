@@ -24,12 +24,12 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String moveMessage = "Make your move!";
     public static final String buildMessage = "Where do you want to build?";
     public static final String waitMessage = "Wait for the other player's choice!";
-    public static final String loseMessage = "You lose!";
+    public static final String loseMessage = " has lose!";
     public static final String wrongTurnMessage = "It is not your turn!";
     public static final String invalidMoveMessage = "You can't move here, please retry.";
     public static final String invalidBuildingMessage = "You can't build here, please retry.";
     //specials
-    public static final String newWorkermove ="you can't choose this builder for this action, try with the other";
+    public static final String newWorkermove ="The worker you have selected can't do the action, so enter f if you were using m or m if you were using f";
     public static final String moveAgain = "Do you want to move again? [Enter y/n]";
     public static final String buildAgain = "Do you want to build again? [Enter y/n]";
     public static final String buildOrDome = "Do you want to build a dome? [Enter y/n]";

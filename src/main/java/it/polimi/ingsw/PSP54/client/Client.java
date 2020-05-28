@@ -82,13 +82,11 @@ public class Client extends Observable<GameMessage> {
      * Ogni thread viene eseguito in modo asincrono e il client si disconnette quando terminano
      * @throws IOException
      */
-    public void startClient(int i) throws IOException {
+    public void startClient() throws IOException {
         Socket socket = new Socket(ip, port);
         System.out.println("Connection established");
-        setClientID(i);
         ObjectInputStream socketIn = new ObjectInputStream(socket.getInputStream());
         socketOut = new ObjectOutputStream(socket.getOutputStream());
-        System.out.println(clientID);
         try {
             Thread t0 = asyncReadFromSocket(socketIn);
             t0.join();
@@ -111,13 +109,5 @@ public class Client extends Observable<GameMessage> {
 
     public void SuspendThread(){
         t.suspend();
-    }
-
-    public int getClientID() {
-        return clientID;
-    }
-
-    public void setClientID(int clientID) {
-        this.clientID = clientID;
     }
 }

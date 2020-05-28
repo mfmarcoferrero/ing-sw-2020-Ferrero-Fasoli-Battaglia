@@ -6,9 +6,6 @@ import it.polimi.ingsw.PSP54.server.model.Box;
 import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.utils.choices.*;
 import it.polimi.ingsw.PSP54.utils.messages.*;
-import javafx.scene.canvas.GraphicsContext;
-
-import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.io.PrintStream;
@@ -664,7 +661,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 
 			@Override
 			public void drawString(String str, int x, int y) {
-
+				output.println(str);
 			}
 
 			@Override
@@ -710,11 +707,11 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 		Font f = new Font("AardvarkCafe",Font.PLAIN,24);
 		win.setFont(f);
 		win.setColor(java.awt.Color.getHSBColor(286,70,72));
-		win.drawString(p.getPlayerName()+"IS THE WINNER",1,1);
+		win.drawString(p.getPlayerName().toUpperCase()+" IS THE WINNER",1,1);
 		client.SuspendThread();
 	}
 
-	public void losingClient (Player p){
+	public void losingClient (){
 		Graphics lose = new Graphics() {
 			@Override
 			public Graphics create() {
@@ -853,7 +850,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 
 			@Override
 			public void drawString(String str, int x, int y) {
-
+				output.println(str);
 			}
 
 			@Override
@@ -896,16 +893,11 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 
 			}
 		};
-		if(client.getClientID()==p.getVirtualViewID()){
 			Font f = new Font("AardvarkCafe",Font.PLAIN,24);
 			lose.setFont(f);
 			lose.setColor(java.awt.Color.getHSBColor(169,68,100));
 			lose.drawString("YOU LOSE",1,1);
 			client.SuspendThread();
-		}
-		else
-			lose.drawString(p.getPlayerName()+"has lose",0,0);
-
 	}
 
 	/**
@@ -957,7 +949,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 			}
 		}
 		if(message instanceof LoseMessage){
-			losingClient(((LoseMessage) message).getPlayer());
+			losingClient();
 		}
 		if(message instanceof WinMessage){
 			EndOfmatch(((WinMessage) message).getPlayer());
@@ -967,8 +959,13 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 		}
 		if (message instanceof BoardMessage){
 			printBoard(((BoardMessage)message).getBoard());
-
 		}
+		if(message instanceof DeleteMessage)
+			PrintafterDelete((DeleteMessage) message);
+	}
+
+	public void PrintafterDelete(DeleteMessage message){
+		int n;
 	}
 
 	//setters & getters

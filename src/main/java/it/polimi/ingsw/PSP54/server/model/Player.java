@@ -131,4 +131,8 @@ public interface Player {
     boolean isPlaying();
 
     void setPlaying(boolean playing);
+
+    void SetSettingturn(int n);
+
+    int getSettingturn();
 }

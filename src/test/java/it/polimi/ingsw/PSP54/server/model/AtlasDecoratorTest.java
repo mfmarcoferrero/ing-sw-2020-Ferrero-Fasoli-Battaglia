@@ -28,8 +28,8 @@ public class AtlasDecoratorTest {
         game.newPlayer("3", 22, 2);
         players = game.getPlayers();
 
-        //set Apollo power to player_1
-        players.set(0, players.get(0).assignPower(0));
+        //set Atlas power to player_1
+        players.set(0, players.get(0).assignPower(3));
         players.get(0).setGame(game);
         //sets other players
         players.get(1).setGame(game);
@@ -66,7 +66,7 @@ public class AtlasDecoratorTest {
     }
 
     @Test
-    public void build_LevelZeroBuilding_CorrectOutput() throws InvalidMoveException, InvalidBuildingException {
+    public void build_LevelZeroDome_CorrectOutput() throws InvalidMoveException, InvalidBuildingException {
 
         x = 2;
         y = 2;
@@ -87,8 +87,34 @@ public class AtlasDecoratorTest {
         assertEquals(0, atlasWorker.getMoveToken());
         assertEquals(0, atlasWorker.getBuildToken());
         assertFalse(players.get(0).isPlaying());
+        assertEquals(0, board[4][4].getLevel());
         assertTrue(board[4][4].isDome());
+    }
 
+    @Test
+    public void build_LevelZeroStandard_CorrectOutput() throws InvalidMoveException, InvalidBuildingException {
+
+        x = 2;
+        y = 2;
+        atlasWorker = players.get(0).turnInit(true);
+        players.get(0).setCurrentWorker(atlasWorker);
+        atlasWorker.setPos(board[x][y]);
+        board[x][y].setWorker(atlasWorker);
+
+        players.get(0).setWorkerBoxesToMove(atlasWorker);
+        players.get(0).move(atlasWorker, board[3][3]);
+
+        players.get(0).setWorkerBoxesToBuild(atlasWorker);
+        players.get(0).build(atlasWorker, board[4][4]);
+
+        players.get(0).chose(false);
+
+
+        assertEquals(0, atlasWorker.getMoveToken());
+        assertEquals(0, atlasWorker.getBuildToken());
+        assertFalse(players.get(0).isPlaying());
+        assertEquals(1, board[4][4].getLevel());
+        assertFalse(board[4][4].isDome());
     }
 
 }

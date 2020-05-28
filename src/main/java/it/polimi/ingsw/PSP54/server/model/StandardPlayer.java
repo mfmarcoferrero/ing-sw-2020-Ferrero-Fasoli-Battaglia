@@ -1,7 +1,5 @@
 package it.polimi.ingsw.PSP54.server.model;
 
-import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
-import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,8 +20,8 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     private boolean playing;
     private boolean winner;
     private boolean loser;
-    private  int cantbuild=2;
-    private int cantmove=2;
+    private int  settingturn=2;
+
 
     /**
      * Instantiates a new Player with corresponding workers.
@@ -142,8 +140,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      * @return the vector containing available boxes
      */
     @Override
-    public ArrayList<Box> setWorkerBoxesToMove (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
-        int cantmove=2;
+    public ArrayList<Box> setWorkerBoxesToMove (Worker worker){
         ArrayList<Box> valid = new ArrayList<>();
         int deltaX, deltaY, deltaH;
         Box[][] board = getGame().getBoard();
@@ -157,17 +154,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                     valid.add(board[i][j]);
             }
         }
-        if (valid.isEmpty())
-            cantmove--;
-        if (valid.isEmpty() && cantmove==0){
-            setLoser(true);
-            game.ClientHasFinished(this);
-            cantmove=2;
-        }
-        else if(valid.isEmpty() && cantmove==1){
-            GameMessage choosetheother = new StringMessage(this.virtualViewId,StringMessage.newWorkermove);
-            game.CantchooseThis(choosetheother);
-        }
         worker.setBoxesToMove(valid);
         return valid;
     }
@@ -178,7 +164,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      * @return the vector containing buildable boxes
      */
     @Override
-    public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
+    public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){
         ArrayList<Box> boxes = new ArrayList<>();
         int deltaX, deltaY;
         Box[][] board = getGame().getBoard();
@@ -190,16 +176,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                 if ((deltaX <= 1 && deltaY <= 1) && !board[i][j].isOccupied() && !board[i][j].isDome())
                     boxes.add(board[i][j]);
             }
-        }
-        if(boxes.isEmpty())
-            cantbuild--;
-        if(boxes.isEmpty() && cantbuild==1){
-            GameMessage choosetheother = new StringMessage(virtualViewId,StringMessage.newWorkermove);
-            game.CantchooseThis(choosetheother);
-        }
-        if (boxes.isEmpty()){
-            setLoser(true);
-            game.ClientHasFinished(this);
         }
         worker.setBoxesToBuild(boxes);
         return boxes;
@@ -224,16 +200,15 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             //perform move
             worker.setPos(dest);
             dest.setWorker(worker);
-            //set tokens
-            worker.setMoveToken(currentMoveToken - 1);
-            worker.setBuildToken(1);
+                //set tokens
+                worker.setMoveToken(currentMoveToken - 1);
+                worker.setBuildToken(1);
 
-            getGame().notifyBoard();
-            checkWinner(worker);
-            if (this.isWinner()){
-                game.ClientHasFinished(this);
-            }
-
+                getGame().notifyBoard();
+                checkWinner(worker);
+                if (this.isWinner()) {
+                    game.ClientHasFinished(this);
+                }
         } else throw new InvalidMoveException();
 
     }
@@ -317,7 +292,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     @Override
-    public void setLoser(boolean loser) { //TODO: notify client & remove player.
+    public void setLoser(boolean loser) {
         this.loser = loser;
     }
 
@@ -387,5 +362,15 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public void setPlaying(boolean playing) {
         this.playing = playing;
+    }
+
+    @Override
+    public void SetSettingturn(int n) {
+        settingturn=n;
+    }
+
+    @Override
+    public int getSettingturn() {
+        return settingturn;
     }
 }
