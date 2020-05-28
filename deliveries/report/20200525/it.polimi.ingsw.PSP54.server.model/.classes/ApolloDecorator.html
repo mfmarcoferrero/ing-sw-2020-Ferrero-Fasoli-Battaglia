@@ -1,0 +1,161 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ApolloDecorator</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP54.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ApolloDecorator (it.polimi.ingsw.PSP54.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ApolloDecorator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94.4%
+  </span>
+  <span class="absValue">
+    (34/ 36)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP54.server.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.ArrayList;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * Your worker may move into an opponent worker&#39;s space by forcing their worker to the space just vacated
+<i>7</i>&nbsp; */
+<i>8</i>&nbsp;public class ApolloDecorator extends GodDecorator {
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;    public ApolloDecorator(Player player) {
+<b class="fc"><i>11</i>&nbsp;        super(player);</b>
+<b class="fc"><i>12</i>&nbsp;    }</b>
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    @Override
+<i>15</i>&nbsp;    public ArrayList&lt;Box&gt; setWorkerBoxesToMove (Worker worker){
+<i>16</i>&nbsp;
+<b class="fc"><i>17</i>&nbsp;        ArrayList&lt;Box&gt; valid = new ArrayList&lt;&gt;();</b>
+<i>18</i>&nbsp;        int deltaX, deltaY, deltaH;
+<b class="fc"><i>19</i>&nbsp;        Box[][] board = getGame().getBoard();</b>
+<i>20</i>&nbsp;
+<b class="fc"><i>21</i>&nbsp;        for (int i = 0; i &lt; 5; i++) {</b>
+<b class="fc"><i>22</i>&nbsp;            for (int j = 0; j &lt; 5; j++) {</b>
+<b class="fc"><i>23</i>&nbsp;                deltaX = Math.abs(worker.getPos().getX() - board[i][j].getX());</b>
+<b class="fc"><i>24</i>&nbsp;                deltaY = Math.abs(worker.getPos().getY() - board[i][j].getY());</b>
+<b class="fc"><i>25</i>&nbsp;                deltaH =  (board[i][j].getLevel() - worker.getPos().getLevel());</b>
+<b class="fc"><i>26</i>&nbsp;                if ((deltaX &lt;= 1 &amp;&amp; deltaY &lt;= 1) &amp;&amp; notMyWorkerPos(board[i][j]) &amp;&amp; deltaH &lt;= 1 &amp;&amp; !board[i][j].isDome())</b>
+<b class="fc"><i>27</i>&nbsp;                    valid.add(board[i][j]);</b>
+<i>28</i>&nbsp;            }
+<i>29</i>&nbsp;        }
+<b class="fc"><i>30</i>&nbsp;        if (valid.isEmpty()){</b>
+<b class="nc"><i>31</i>&nbsp;            setLoser(true);</b>
+<i>32</i>&nbsp;        }
+<b class="fc"><i>33</i>&nbsp;        worker.setBoxesToMove(valid);</b>
+<b class="fc"><i>34</i>&nbsp;        return valid;</b>
+<i>35</i>&nbsp;    }
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    /**
+<i>38</i>&nbsp;     *
+<i>39</i>&nbsp;     * @param box
+<i>40</i>&nbsp;     * @return
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    private boolean notMyWorkerPos(Box box) {
+<b class="fc"><i>43</i>&nbsp;        return (getWorker(true).getPos() != box</b>
+<b class="fc"><i>44</i>&nbsp;                &amp;&amp; getWorker(false).getPos() != box);</b>
+<i>45</i>&nbsp;    }
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    @Override
+<i>48</i>&nbsp;    public void move(Worker worker, Box dest) throws InvalidMoveException {
+<i>49</i>&nbsp;        //sets validity indicators
+<b class="fc"><i>50</i>&nbsp;        ArrayList&lt;Box&gt; valid = worker.getBoxesToMove();</b>
+<b class="fc"><i>51</i>&nbsp;        int currentMoveToken = worker.getMoveToken();</b>
+<i>52</i>&nbsp;
+<b class="fc"><i>53</i>&nbsp;        if (currentMoveToken &gt; 0 &amp;&amp; valid.contains(dest)){</b>
+<b class="fc"><i>54</i>&nbsp;            if (dest.isOccupied()){</b>
+<i>55</i>&nbsp;                //perform swap
+<b class="fc"><i>56</i>&nbsp;                Box current = worker.getPos();</b>
+<b class="fc"><i>57</i>&nbsp;                Worker opponent = dest.getWorker();</b>
+<b class="fc"><i>58</i>&nbsp;                opponent.setPos(current);</b>
+<b class="fc"><i>59</i>&nbsp;                current.setWorker(dest.getWorker());</b>
+<i>60</i>&nbsp;                //perform move
+<b class="fc"><i>61</i>&nbsp;                worker.setPos(dest);</b>
+<b class="fc"><i>62</i>&nbsp;                dest.setWorker(worker);</b>
+<i>63</i>&nbsp;                //update tokens
+<b class="fc"><i>64</i>&nbsp;                worker.setMoveToken(0);</b>
+<b class="fc"><i>65</i>&nbsp;                worker.setBuildToken(1);</b>
+<i>66</i>&nbsp;                //notify
+<b class="fc"><i>67</i>&nbsp;                getGame().notifyBoard();</b>
+<b class="fc"><i>68</i>&nbsp;                super.checkWinner(worker);</b>
+<b class="fc"><i>69</i>&nbsp;                if (this.isWinner()){</b>
+<i>70</i>&nbsp;                    //TODO: notify win &amp;&amp; endGame
+<i>71</i>&nbsp;                }
+<i>72</i>&nbsp;
+<b class="fc"><i>73</i>&nbsp;            }else</b>
+<b class="nc"><i>74</i>&nbsp;                super.move(worker, dest);</b>
+<i>75</i>&nbsp;
+<b class="fc"><i>76</i>&nbsp;        }else throw new InvalidMoveException();</b>
+<b class="fc"><i>77</i>&nbsp;    }</b>
+<i>78</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-25 15:13</div>
+</div>
+</body>
+</html>

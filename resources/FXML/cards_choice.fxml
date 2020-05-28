@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-background-color: #0896C2;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.CardsChoiceSceneController">
+   <children>
+      <AnchorPane layoutX="139.0" layoutY="151.0">
+         <children>
+            <ImageView fx:id="firstCardImage" fitHeight="210.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/01.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="firstCardButton" layoutX="-1.0" mnemonicParsing="false" onAction="#firstCardButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" opacity="0.0" prefHeight="210.0" prefWidth="125.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="339.0" layoutY="151.0" prefHeight="163.0" prefWidth="98.0">
+         <children>
+            <ImageView fx:id="secondCardImage" fitHeight="210.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/02.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="secondCardButton" layoutX="1.0" mnemonicParsing="false" onAction="#secondCardButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" opacity="0.0" prefHeight="210.0" prefWidth="125.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="542.0" layoutY="151.0">
+         <children>
+            <ImageView fx:id="thirdCardImage" fitHeight="210.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/03.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="thirdCardButton" mnemonicParsing="false" onAction="#thirdCardButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" opacity="0.0" prefHeight="210.0" prefWidth="125.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+      <Label layoutX="262.0" layoutY="41.0" text="CHOOSE YOUR POWER">
+         <font>
+            <Font name="Papyrus Condensed" size="34.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

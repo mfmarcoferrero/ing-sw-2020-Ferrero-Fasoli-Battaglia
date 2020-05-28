@@ -86,18 +86,18 @@ public class Server {
 
             if (waitingConnection.size() == numberOfPlayers ) {
                 List<PlayerCredentials> credentialsChoices = new ArrayList<>(waitingConnection.keySet());
-                List<PlayerCredentials> opponentskeys = new ArrayList<>(waitingConnection.keySet());
+                List<PlayerCredentials> opponentsKeys = new ArrayList<>(waitingConnection.keySet());
                 List<PlayerAction> playersCredentials = new ArrayList<>();
                 for (int i = 0; i < credentialsChoices.size(); i++) {
                     Connection client = waitingConnection.get(credentialsChoices.get(i));
                     currentConnections.remove(client);
                     PlayerAction credentials = new PlayerAction(i, credentialsChoices.get(i));
                     playersCredentials.add(credentials);
-                    opponentskeys.remove(credentialsChoices.get(i));
-                    for (int j=0;j<opponentskeys.size();j++) {
-                        opponents.add(opponentskeys.get(j).getPlayerName());
+                    opponentsKeys.remove(credentialsChoices.get(i));
+                    for (PlayerCredentials opponentsKey : opponentsKeys) {
+                        opponents.add(opponentsKey.getPlayerName());
                     }
-                    opponentskeys.add(i,credentialsChoices.get(i));
+                    opponentsKeys.add(i,credentialsChoices.get(i));
                     VirtualView view = new VirtualView(i,playersCredentials.get(i),client,opponents);
                     opponents.clear();
                     virtualViews.add(i,view);
@@ -155,7 +155,8 @@ public class Server {
         }
         while(lobbyBuffer.size()>0){
             currentConnections.remove(bufferValues.get(0));
-            bufferValues.get(0).asyncSend("the lobby you were has closed, please login again");
+            GameMessage closedLobby = new StringMessage(null, StringMessage.closedLobby);
+            bufferValues.get(0).asyncSend(closedLobby);
             bufferValues.get(0).closeConnection();
             lobbyBuffer.remove(bufferKeys.get(0),bufferValues.get(0));
             bufferValues.remove(0);
