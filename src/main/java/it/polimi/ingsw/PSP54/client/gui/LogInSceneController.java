@@ -98,7 +98,13 @@ public class LogInSceneController {
      * Load board.fxml on current stage
      */
     public void setBoardScene() {
-        GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/board.fxml");
+        ((Node)event.getSource()).getScene().getWindow().setWidth(1065);
+        ((Node)event.getSource()).getScene().getWindow().setHeight(620);
+        BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/board.fxml");
+        if (boardSceneController != null){
+            boardSceneController.setBoardScene();
+        }
     }
 
 }
+

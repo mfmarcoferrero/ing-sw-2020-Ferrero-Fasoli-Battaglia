@@ -4,10 +4,7 @@ import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Game;
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
-import it.polimi.ingsw.PSP54.utils.messages.BoardMessage;
-import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
-import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
-import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
+import it.polimi.ingsw.PSP54.utils.messages.*;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -26,8 +23,11 @@ public class GuiManager implements Observer<GameMessage> {
     private BoardSceneController boardSceneController;
     private CardsChoiceSceneController cardsChoiceSceneController;
     private CardsMessage cardsToDisplay;
+    private Vector<String> names;
+    private Vector<Integer> cardValues;
     private int myCard;
-    private boolean cardExtractor = true;
+    private boolean cardExtractor = true, moveChoice = false, buildChoice = false,
+            firstWorkerSet = false, secondWorkerSet = false, boxChoice = false;
     private Client client;
     private BoardMessage board = null;
     private boolean gameMaster = false;
@@ -131,7 +131,7 @@ public class GuiManager implements Observer<GameMessage> {
         if (val == Game.ATLAS){
             imageView.setImage(new Image("file:./resources/icons/04.png"));
         }
-        if (val == Game.APOLLO){
+        if (val == Game.DEMETER){
             imageView.setImage(new Image("file:./resources/icons/05.png"));
         }
     }
@@ -160,11 +160,31 @@ public class GuiManager implements Observer<GameMessage> {
                     });
                     break;
                 case StringMessage.setFirstWorkerMessage:
+                    firstWorkerSet = true;
+                    Platform.runLater(() -> {
+                        boardSceneController.setMessageLabel("SET YOUR FIRST WORKER");
+                        boardSceneController.showPanelMessage();
+                    });
+                    break;
                 case StringMessage.choseWorker:
 
                     break;
                 case StringMessage.setSecondWorkerMessage:
+                    firstWorkerSet = false;
+                    secondWorkerSet = true;
                 case StringMessage.moveMessage:
+                    Platform.runLater(() -> {
+                        if (firstWorkerSet){
+                            setBoxChoice(true);
+                            boardSceneController.setMessageLabel("SET YOUR FIRST WORKER");
+                        }
+                        else if (secondWorkerSet){
+                            setBoxChoice(true);
+                            boardSceneController.setMessageLabel("SET YOUR SECOND WORKER");
+                        }
+                        else
+                            boardSceneController.setMessageLabel("MAKE YOUR MOVE");
+                    });
                 case StringMessage.invalidMoveMessage: { //insert coordinates
 
                     break;
@@ -206,26 +226,33 @@ public class GuiManager implements Observer<GameMessage> {
                 }
             }
         }
-        if (message instanceof BoardMessage){
+        if (message instanceof BoardMessage) {
             System.out.println("Ho ricevuto la board");
-            if (board == null){
-                board = (BoardMessage)message;
-                if (!cardExtractor){
+            if (board == null) {
+                board = (BoardMessage) message;
+                if (!cardExtractor) {
                     Platform.runLater(() -> {
                         logInSceneController.setBoardScene();
                     });
-                }
-                else {
+                } else {
                     Platform.runLater(() -> {
                         cardsChoiceSceneController.setBoardScene();
                     });
                 }
-            }
-            else {
-                board = (BoardMessage)message;
+            } else {
+                board = (BoardMessage) message;
+                Platform.runLater(() -> {
+                    boardSceneController.setBoardImage(board.getBoard());
+                });
             }
         }
+        if (message instanceof CardsPlayersMessage){
+            System.out.println("Ho ricevuto giocatori e carte map");
+            names = new Vector<>(((CardsPlayersMessage) message).getCardsPlayersMap().keySet());
+            cardValues = new Vector<> (((CardsPlayersMessage) message).getCardsPlayersMap().values());
+        }
     }
+
 
     /**
      * Send an object to server
@@ -244,5 +271,51 @@ public class GuiManager implements Observer<GameMessage> {
         this.client = client;
     }
 
+    public boolean isMoveChoice() {
+        return moveChoice;
+    }
 
+    public void setMoveChoice(boolean moveChoice) {
+        this.moveChoice = moveChoice;
+    }
+
+    public boolean isBuildChoice() {
+        return buildChoice;
+    }
+
+    public void setBuildChoice(boolean buildChoice) {
+        this.buildChoice = buildChoice;
+    }
+
+    public boolean isFirstWorkerSet() {
+        return firstWorkerSet;
+    }
+
+    public void setFirstWorkerSet(boolean firstWorkerSet) {
+        this.firstWorkerSet = firstWorkerSet;
+    }
+
+    public boolean isSecondWorkerSet() {
+        return secondWorkerSet;
+    }
+
+    public void setSecondWorkerSet(boolean secondWorkerSet) {
+        this.secondWorkerSet = secondWorkerSet;
+    }
+
+    public Vector<String> getNames() {
+        return names;
+    }
+
+    public Vector<Integer> getCardValues() {
+        return cardValues;
+    }
+
+    public boolean isBoxChoice() {
+        return boxChoice;
+    }
+
+    public void setBoxChoice(boolean boxChoice) {
+        this.boxChoice = boxChoice;
+    }
 }

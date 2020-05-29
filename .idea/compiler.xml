@@ -11,6 +11,7 @@
         <module name="ing-sw-2020-Ferrero-Fasoli-Battaglia-CommitVersion" />
         <module name="ing-sw-2020-Ferrero-Fasoli-Battaglia" />
         <module name="ing-sw-2020-Ferrero-Fasoli-Battaglia-DecoratorVersion" />
+        <module name="ing-sw-2020-Ferrero-Fasoli-Battaglia-CommitFinalVersion" />
         <module name="ing-sw-2020-Ferrero-Fasoli-Battaglia-definitivo" />
       </profile>
     </annotationProcessing>

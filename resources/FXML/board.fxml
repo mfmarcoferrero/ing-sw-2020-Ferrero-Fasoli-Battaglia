@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -12,18 +13,18 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.BoardSceneController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="599.0" prefWidth="1065.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.BoardSceneController">
    <children>
-      <BorderPane prefHeight="450.0" prefWidth="800.0">
+      <BorderPane prefHeight="600.0" prefWidth="1065.0">
          <center>
-            <AnchorPane prefHeight="450.0" prefWidth="800.0">
+            <AnchorPane prefHeight="600.0" prefWidth="1065.0">
                <children>
-                  <ImageView fitHeight="450.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="600.0" fitWidth="1065.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../icons/SantoriniBoard.png" />
                      </image>
                   </ImageView>
-                  <GridPane layoutX="235.0" layoutY="62.0" prefHeight="330.0" prefWidth="330.0">
+                  <GridPane fx:id="gridPane" layoutX="316.0" layoutY="85.0" prefHeight="434.0" prefWidth="433.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -39,178 +40,308 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <AnchorPane>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="0">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="75.0" fitWidth="75.0" onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ImageView>
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="75.0" prefWidth="75.0" GridPane.rowIndex="0" GridPane.columnIndex="0">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="67.0" prefWidth="67.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="55.0" fitWidth="55.0" layoutX="5.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="1">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="67.0" prefWidth="67.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="3.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="2">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="67.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="2.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="3">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="67.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="4.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="4">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="67.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" GridPane.columnIndex="0">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="67.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="2.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="67.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="3.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="3.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="4.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="2.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.columnIndex="0">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="67.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="2.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="67.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="5.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="2.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="4.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="1.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3" GridPane.columnIndex="0">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="67.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="2.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="67.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="3.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="6.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="2.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="3">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="6.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="0">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="67.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="6.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="67.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="6.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="3.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="5.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="4">
                            <children>
-                              <Button mnemonicParsing="false" opacity="0.0" prefHeight="66.0" prefWidth="68.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="1.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
                      </children>
                   </GridPane>
-                  <Label layoutX="63.0" layoutY="225.0" prefHeight="37.0" prefWidth="69.0" text="Giocatore 1">
+                  <Label fx:id="labelPlayer_1" layoutX="96.0" layoutY="299.0" prefHeight="46.0" prefWidth="85.0" text="Giocatore 1" textAlignment="CENTER">
                      <font>
-                        <Font name="Papyrus Condensed" size="19.0" />
+                        <Font name="Papyrus Condensed" size="24.0" />
                      </font>
                   </Label>
-                  <Label layoutX="676.0" layoutY="225.0" text="Giocatore 2">
+                  <Label fx:id="labelPlayer_2" layoutX="884.0" layoutY="299.0" text="Giocatore 2" textAlignment="CENTER">
                      <font>
-                        <Font name="Papyrus Condensed" size="19.0" />
+                        <Font name="Papyrus Condensed" size="24.0" />
                      </font>
                   </Label>
-                  <ImageView fitHeight="150.0" fitWidth="110.0" layoutX="53.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="cardImage_1" fitHeight="180.0" fitWidth="110.0" layoutX="85.0" layoutY="339.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../icons/01.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="150.0" fitWidth="110.0" layoutX="665.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="cardImage_2" fitHeight="180.0" fitWidth="110.0" layoutX="873.0" layoutY="339.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../icons/01.png" />
                      </image>
                   </ImageView>
+                  <Label fx:id="labelPlayer_3" layoutX="95.0" layoutY="20.0" prefHeight="44.0" prefWidth="87.0" text="Giocatore 3" textAlignment="CENTER">
+                     <font>
+                        <Font name="Papyrus Condensed" size="23.0" />
+                     </font>
+                  </Label>
+                  <ImageView fx:id="cardImage_3" fitHeight="180.0" fitWidth="110.0" layoutX="85.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icons/01.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="messageLabel" contentDisplay="CENTER" layoutX="301.0" layoutY="19.0" prefHeight="66.0" prefWidth="460.0" text="It's tour turn" textOverrun="CLIP">
+                     <font>
+                        <Font name="Papyrus Condensed" size="35.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="maleButton" disable="true" layoutX="846.0" layoutY="100.0" mnemonicParsing="false" onAction="#maleButtonClicked" prefHeight="40.0" prefWidth="70.0" text="Male" visible="false">
+                     <font>
+                        <Font name="Papyrus Condensed" size="15.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="femaleButton" disable="true" layoutX="933.0" layoutY="100.0" mnemonicParsing="false" onAction="#femaleButtonClicked" prefHeight="40.0" prefWidth="70.0" text="Female" visible="false">
+                     <font>
+                        <Font name="Papyrus Condensed" size="15.0" />
+                     </font>
+                  </Button>
+                  <Label fx:id="panelMessageLabel" layoutX="844.0" layoutY="52.0" prefHeight="39.0" prefWidth="165.0" text="MALE or FEMALE" visible="false">
+                     <font>
+                        <Font name="Papyrus Condensed" size="26.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
          </center>

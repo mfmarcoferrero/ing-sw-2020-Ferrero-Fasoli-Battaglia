@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.client.gui;
 
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -79,7 +80,13 @@ public class NumberOfPlayersSceneController {
      * Load board.fxml on current stage
      */
     public void setBoardScene() {
-        GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/board.fxml");
+        ((Node)event.getSource()).getScene().getWindow().setWidth(1065);
+        ((Node)event.getSource()).getScene().getWindow().setHeight(620);
+        BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/board.fxml");
+        if (boardSceneController != null){
+            boardSceneController.setBoardScene();
+        }
     }
 
 }
+

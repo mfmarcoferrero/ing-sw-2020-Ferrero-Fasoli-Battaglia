@@ -60,7 +60,12 @@ public class CardsChoiceSceneController {
      */
     public void firstCardButtonPressed(ActionEvent event){
         this.event = event;
-        System.out.println("First button pressed");
+        firstCardButton.setDisable(true);
+        secondCardButton.setDisable(true);
+        thirdCardButton.setDisable(true);
+        secondCardImage.setOpacity(0.5);
+        thirdCardImage.setOpacity(0.5);
+        ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
         guiManager.sendObject(new CardChoice(extractedCards.get(0)));
     }
 
@@ -71,7 +76,12 @@ public class CardsChoiceSceneController {
      */
     public void secondCardButtonPressed(ActionEvent event){
         this.event = event;
-        System.out.println("Second button pressed");
+        firstCardButton.setDisable(true);
+        secondCardButton.setDisable(true);
+        thirdCardButton.setDisable(true);
+        firstCardImage.setOpacity(0.5);
+        thirdCardImage.setOpacity(0.5);
+        ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
         guiManager.sendObject(new CardChoice(extractedCards.get(1)));
     }
 
@@ -82,7 +92,12 @@ public class CardsChoiceSceneController {
      */
     public void thirdCardButtonPressed(ActionEvent event){
         this.event = event;
-        System.out.println("Third button pressed");
+        firstCardButton.setDisable(true);
+        secondCardButton.setDisable(true);
+        thirdCardButton.setDisable(true);
+        firstCardImage.setOpacity(0.5);
+        secondCardImage.setOpacity(0.5);
+        ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
         if(extractedCards.size() == 2){
             guiManager.sendObject(new CardChoice(extractedCards.get(1)));
         }
@@ -104,14 +119,23 @@ public class CardsChoiceSceneController {
      * @param event
      */
     public void setDefaultCursor(MouseEvent event){
-        ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
+        try {
+            ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
+        } catch (Exception e){
+            System.out.println("ERRORE: MouseEvent");
+        }
     }
 
     /**
      * Load board.fxml on current stage
      */
     public void setBoardScene() {
-        GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/board.fxml");
+        ((Node)event.getSource()).getScene().getWindow().setWidth(1065);
+        ((Node)event.getSource()).getScene().getWindow().setHeight(620);
+        BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/board.fxml");
+        if (boardSceneController != null){
+            boardSceneController.setBoardScene();
+        }
     }
 
 }

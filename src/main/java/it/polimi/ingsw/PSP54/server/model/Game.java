@@ -116,9 +116,21 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             notify(cards);
         }else {//all cards are assigned => worker placement
             notifyBoard();
+            CardsPlayersMessage cardsPlayersMessage = new CardsPlayersMessage(null,getCardsPlayersMap());
+            notify(cardsPlayersMessage);
             GameMessage setFirstWorker = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.setFirstWorkerMessage);
             notify(setFirstWorker);
         }
+    }
+
+    private HashMap<String,Integer> getCardsPlayersMap() {
+        HashMap<String,Integer> cardsPlayersMap = new HashMap<>();
+        for (Player p : players){
+            String name = p.getPlayerName();
+            Integer cardValue = p.getCardID();
+            cardsPlayersMap.put(name,cardValue);
+        }
+        return cardsPlayersMap;
     }
 
     /**
