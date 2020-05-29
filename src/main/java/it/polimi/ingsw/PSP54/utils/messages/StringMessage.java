@@ -22,15 +22,17 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String minotaurMessage = "You have Minotaur!\nYour Move: Your worker may move into an opponent worker's space, if their worker can be forced one space straight backwards to an occupied space at any level.";
     public static final String prometheusMessage = "Your Turn: If your worker does not move up, it may build both before and after moving.";
     //standard
+    public static final String winMessage = "You won";
     public static final String choseWorker = "Chose your worker: [Enter m/f]";
     public static final String moveMessage = "Make your move!";
     public static final String buildMessage = "Where do you want to build?";
-    public static final String winMessage = "You win!";
-    public static final String loseMessage = "You lose!";
+    public static final String waitMessage = "Wait for the other player's choice!";
+    public static final String loseMessage = " has lose!";
     public static final String wrongTurnMessage = "It is not your turn!";
     public static final String invalidMoveMessage = "You can't move here, please retry.";
     public static final String invalidBuildingMessage = "You can't build here, please retry.";
     //specials
+    public static final String newWorkermove ="The worker you have selected can't do the action, so enter f if you were using m or m if you were using f";
     public static final String buildFirst = "Do you want to build first? [Enter y/n]";
     public static final String moveAgain = "Do you want to move again? [Enter y/n]";
     public static final String buildAgain = "Do you want to build again? [Enter y/n]";

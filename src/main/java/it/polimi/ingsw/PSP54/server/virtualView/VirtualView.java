@@ -16,7 +16,6 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
     private final Connection connection;
     private final MessageReceiver messageReceiver;
     private final PlayerAction playerCredentials;
-    private final Vector<String> opponents = new Vector<>();
 
     /**
      * Instantiates a VirtualView Object for a 2 player match.

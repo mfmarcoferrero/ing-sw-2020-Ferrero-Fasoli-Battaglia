@@ -19,6 +19,8 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     private boolean playing;
     private boolean winner;
     private boolean loser;
+    private int  settingturn=2;
+
 
     /**
      * Instantiates a new Player with corresponding workers.
@@ -181,7 +183,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      * @return the vector containing buildable boxes.
      */
     @Override
-    public ArrayList<Box> setWorkerBoxesToBuild (Worker worker){ //TODO: Throw LoserException if valid.isEmpty()
+    public ArrayList<Box> setWorkerBoxesToBuild (Worker worker) {
         ArrayList<Box> boxes = new ArrayList<>();
         int deltaX, deltaY;
         Box[][] board = getGame().getBoard();
@@ -229,7 +231,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             getGame().notifyBoard();
             checkWinner(worker);
             if (this.isWinner()){
-                game.endTurn(this);
+                game.ClientHasFinished(this);
             }
 
         } else throw new InvalidMoveException();
@@ -321,7 +323,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     @Override
-    public void setLoser(boolean loser) { //TODO: notify client & remove player.
+    public void setLoser(boolean loser) {
         this.loser = loser;
     }
 
@@ -391,5 +393,15 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public void setPlaying(boolean playing) {
         this.playing = playing;
+    }
+
+    @Override
+    public void SetSettingturn(int n) {
+        settingturn=n;
+    }
+
+    @Override
+    public int getSettingturn() {
+        return settingturn;
     }
 }

@@ -21,7 +21,7 @@ public class Client extends Observable<GameMessage> {
     private CliView cliView;
     private GuiManager guiManager;
     private boolean active = true;
-
+    private Thread t;
 
     public Client(String ip, int port) {
         this.ip = ip;
@@ -32,18 +32,22 @@ public class Client extends Observable<GameMessage> {
      * Instantiates a thread that reads incoming messages from the client.
      * @param socketIn the socket from which the messages arrive.
      */
-    public void asyncReadFromSocket(final ObjectInputStream socketIn){
-        Thread t = new Thread(() -> {
-            try {
-                while (isActive()) {
-                    Object inputObject = socketIn.readObject();
-                    Client.this.notify((GameMessage)inputObject);
+    public synchronized Thread asyncReadFromSocket(final ObjectInputStream socketIn){
+         t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (isActive()) {
+                        Object inputObject = socketIn.readObject();
+                        Client.this.notify((GameMessage)inputObject);
+                    }
+                } catch (Exception e) {
+                    setActive(false);
                 }
-            } catch (Exception e) {
-                setActive(false);
             }
         });
         t.start();
+        return t;
     }
 
     /**
@@ -102,7 +106,8 @@ public class Client extends Observable<GameMessage> {
         ObjectInputStream socketIn = new ObjectInputStream(socket.getInputStream());
         socketOut = new ObjectOutputStream(socket.getOutputStream());
         try {
-            asyncReadFromSocket(socketIn);
+            Thread t0 = asyncReadFromSocket(socketIn);
+            //t0.join();
         } catch(NoSuchElementException e) {
             System.out.println("Connection closed from the client side");
         } finally {
@@ -126,4 +131,7 @@ public class Client extends Observable<GameMessage> {
         this.active = active;
     }
 
+    public void SuspendThread(){
+        t.suspend();
+    }
 }
