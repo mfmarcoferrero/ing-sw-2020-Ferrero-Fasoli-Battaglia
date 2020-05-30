@@ -164,6 +164,21 @@ public class Server {
         }
     }
 
+    public boolean CheckName(String name){
+        Vector<PlayerCredentials> players;
+        boolean outcome=false;
+        if(numberOfPlayers<2 || numberOfPlayers>3 )
+            players = new Vector<>(lobbyBuffer.keySet());
+        else
+            players = new Vector<>(waitingConnection.keySet());
+        for (PlayerCredentials player : players)
+            if (Objects.equals(player.getPlayerName(), name)) {
+                outcome = true;
+                break;
+            }
+        return outcome;
+    }
+
     public void setNumberOfPlayers(int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
     }

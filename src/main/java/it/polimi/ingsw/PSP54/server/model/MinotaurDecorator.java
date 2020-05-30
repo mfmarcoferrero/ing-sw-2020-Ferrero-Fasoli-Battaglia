@@ -98,9 +98,6 @@ public class MinotaurDecorator extends GodDecorator {
                 }
             }
         }
-        if (valid.isEmpty()){
-            setLoser(true);
-        }
         worker.setBoxesToMove(valid);
         return valid;
     }

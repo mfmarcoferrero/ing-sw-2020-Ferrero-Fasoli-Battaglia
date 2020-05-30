@@ -17,8 +17,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     private final Worker[] workers = new Worker[2];
     private Worker currentWorker;
     private boolean playing;
-    private boolean winner;
-    private boolean loser;
     private int  settingturn=2;
 
 
@@ -32,8 +30,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         this.age = age;
         this.workers[0] = new Worker(true, this, null);
         this.workers[1] = new Worker(false, this, null);
-        this.winner = false;
-        this.loser = false;
         this.playing = false;
     }
 
@@ -169,10 +165,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                     valid.add(board[i][j]);
             }
         }
-        if (valid.isEmpty()){
-            setLoser(true);
-            game.endTurn(this);
-        }
         worker.setBoxesToMove(valid);
         return valid;
     }
@@ -196,10 +188,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                     boxes.add(board[i][j]);
             }
         }
-        if (boxes.isEmpty()){
-            setLoser(true);
-            game.endTurn(this);
-        }
         worker.setBoxesToBuild(boxes);
         return boxes;
     }
@@ -213,11 +201,8 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      */
     @Override
     public void move(Worker worker, Box dest) throws InvalidMoveException{
-
         ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
-
-
         if (currentMoveToken > 0 && valid.contains(dest)){
             //free current box
             worker.getPos().setWorker(null);
@@ -227,15 +212,9 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             //set tokens
             worker.setMoveToken(currentMoveToken - 1);
             worker.setBuildToken(1);
-
             getGame().notifyBoard();
             checkWinner(worker);
-            if (this.isWinner()){
-                game.ClientHasFinished(this);
-            }
-
         } else throw new InvalidMoveException();
-
     }
 
     /**
@@ -266,6 +245,12 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             throw new InvalidBuildingException();
     }
 
+    public void checkWinner(Worker worker)
+    {
+        if(worker.getPos().getLevel()==3)
+            game.NotifyWinner(worker.getOwner());
+    }
+
     /**
      * Method used to perform a binary choice.
      * Empty method. Binary choice are used to perform special actions. A StandardPlayer cannot make this type of choice.
@@ -274,25 +259,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public void chose(boolean choice) { }
 
-    /**
-     * This method needs to be invoked after every move. It checks if the newly moved worker is on a 3 level building.
-     * @param currentWorker the worker that has just been moved.
-     */
-    @Override
-    public void checkWinner(Worker currentWorker) {
-
-        if (currentWorker.getPos().getLevel() == 3){
-            this.setWinner(true);
-            for (Player player : game.getPlayers()){
-                if (!player.equals(this)){
-                    player.setLoser(true);
-                }
-            }
-        }
-    }
-
     //setters & getters
-
     /**
      * Creates a reference to the current Game, in order to access board's and other players' info.
      * @param game the current Game.
@@ -305,26 +272,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public Game getGame() {
         return game;
-    }
-
-    @Override
-    public boolean isWinner() {
-        return winner;
-    }
-
-    @Override
-    public void setWinner(boolean winner) {
-        this.winner = winner;
-    }
-
-    @Override
-    public boolean isLoser() {
-        return loser;
-    }
-
-    @Override
-    public void setLoser(boolean loser) {
-        this.loser = loser;
     }
 
     @Override

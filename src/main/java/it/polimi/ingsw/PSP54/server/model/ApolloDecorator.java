@@ -44,9 +44,6 @@ public class ApolloDecorator extends GodDecorator {
                     valid.add(board[i][j]);
             }
         }
-        if (valid.isEmpty()){
-            setLoser(true);
-        }
         worker.setBoxesToMove(valid);
         return valid;
     }

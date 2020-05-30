@@ -108,14 +108,6 @@ public interface Player {
 
     String getColor();
 
-    boolean isWinner();
-
-    void setWinner(boolean winner);
-
-    boolean isLoser();
-
-    void setLoser(boolean loser);
-
     int getCardID();
 
     void setCardID(int cardID);

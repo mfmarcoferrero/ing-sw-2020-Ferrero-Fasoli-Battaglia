@@ -22,7 +22,6 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     private final HashMap<Integer, String> cardMap = new HashMap<>();
     private final HashMap<Integer, String> extractedCards = new HashMap<>();
     private Vector<Player> players;
-    private Vector<Player> modifiableplayers = new Vector<>();
     private Player currentPlayer;
 
     public Game() {
@@ -53,7 +52,6 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         Player player = new StandardPlayer(name, age, virtualViewId);
         player.setGame(this);
         players.add(player);
-        modifiableplayers.add(player);
     }
 
     /**
@@ -207,35 +205,18 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     public void checkTokens(Worker currentWorker) {
 
         if (currentWorker.getMoveToken() >= 1 && currentWorker.getBuildToken() == 0){
-            GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
+            GameMessage move = new StringMessage(currentWorker.getOwner().getVirtualViewID(), StringMessage.moveMessage);
             notify(move);
         }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() >= 1){
-            ArrayList valid=currentPlayer.setWorkerBoxesToBuild(currentWorker);
-            if(valid.isEmpty()){
-                if (players.size()==3){
-                    modifiableplayers.remove(currentWorker.getOwner());
-                    modifiableplayers.add(0,currentWorker.getOwner());
-                    GameMessage losemessage = new LoseMessage(modifiableplayers.get(0).getVirtualViewID(), currentPlayer);
-                    notify(losemessage);
-                    modifiableplayers.remove(0);
-                    for (Player modifiableplayer : modifiableplayers) {
-                        GameMessage lose = new StringMessage(modifiableplayer.getVirtualViewID(), currentWorker.getOwner().getPlayerName() + StringMessage.loseMessage);
-                        notify(lose);
-                    }
-                    Removeplayer(currentPlayer);
-                }
-                else if(players.size()==2) {
-                    players.remove(currentPlayer);
-                    players.add(0, currentPlayer);
-                    GameMessage winmessage = new WinMessage(null, players.lastElement());
-                    notify(winmessage);
-                }
-            }else {
-                GameMessage build = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildMessage);
+            ArrayList<Box> valid=currentWorker.getOwner().setWorkerBoxesToBuild(currentWorker);
+            if(valid.isEmpty())
+                CheckCondition(currentWorker.getOwner());
+            else {
+                GameMessage build = new StringMessage(currentWorker.getOwner().getVirtualViewID(), StringMessage.buildMessage);
                 notify(build);
             }
         }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() == 0)
-            endTurn(currentPlayer);
+            endTurn(currentWorker.getOwner());
     }
 
     /**
@@ -319,7 +300,6 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         if (buildSelection.getVirtualViewID() == currentPlayer.getVirtualViewID()) {
             BuildChoice buildChoice = (BuildChoice) buildSelection.getChoice();
             try {
-                //currentPlayer.setWorkerBoxesToBuild(currentPlayer.getCurrentWorker());
                 currentPlayer.build(currentPlayer.getCurrentWorker(), getBox(buildChoice.getX(), buildChoice.getY()));
                 checkTokens(currentPlayer.getCurrentWorker());
                 if (buildSelection.getVirtualViewID() != currentPlayer.getVirtualViewID()){
@@ -404,23 +384,10 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             notify(yourTurn);
         }
         else {
-            ArrayList validmovemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(true));
-            ArrayList validmovefemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(false));
-            if (validmovemale.isEmpty() && validmovefemale.isEmpty() && players.size() == 3) {
-                GameMessage losemessage = new LoseMessage(currentPlayer.getVirtualViewID(), currentPlayer);
-                notify(losemessage);
-                modifiableplayers.remove(currentPlayer);
-                for (Player modifiableplayer : modifiableplayers) {
-                    GameMessage lose = new StringMessage(modifiableplayer.getVirtualViewID(), currentPlayer.getPlayerName() + StringMessage.loseMessage);
-                    notify(lose);
-                }
-                Removeplayer(currentPlayer);
-            } else if (validmovemale.isEmpty() && validmovefemale.isEmpty() && players.size() == 2) {
-                players.remove(currentPlayer);
-                players.add(0, currentPlayer);
-                GameMessage winmessage = new WinMessage(null, players.lastElement());
-                notify(winmessage);
-            }
+            ArrayList<Box> validmovemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(true));
+            ArrayList<Box> validmovefemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(false));
+            if (validmovemale.isEmpty() && validmovefemale.isEmpty())
+                CheckCondition(currentPlayer);
             if (!validmovemale.isEmpty() || !validmovefemale.isEmpty()) {
                 this.currentPlayer = currentPlayer;
                 currentPlayer.setPlaying(true);
@@ -443,7 +410,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         return extractedCards;
     }
 
-    public void ClientHasFinished(Player currentPlayer){
+    public void NotifyWinner(Player currentPlayer){
             GameMessage winnermessage = new WinMessage(null,currentPlayer);
             notify(winnermessage);
     }
@@ -462,6 +429,27 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         int i=players.indexOf(player);
         players.remove(player);
         setCurrentPlayer(players.elementAt(i));
+    }
+
+    public void CheckCondition (Player currentPlayer){
+        if (players.size()==3){
+            for (Player player : players) {
+                if (Objects.equals(player, currentPlayer)) {
+                    GameMessage losemessage = new LoseMessage(currentPlayer.getVirtualViewID(), currentPlayer);
+                    notify(losemessage);
+                } else {
+                    GameMessage lose = new StringMessage(player.getVirtualViewID(), currentPlayer.getPlayerName() + StringMessage.loseMessage);
+                    notify(lose);
+                }
+            }
+            Removeplayer(currentPlayer);
+        }
+        else if (players.size()==2){
+            players.remove(currentPlayer);
+            players.add(0, currentPlayer);
+            GameMessage winmessage = new WinMessage(null, players.lastElement());
+            notify(winmessage);
+        }
     }
 
 }

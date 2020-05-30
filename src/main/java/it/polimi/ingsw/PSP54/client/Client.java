@@ -107,8 +107,8 @@ public class Client extends Observable<GameMessage> {
         socketOut = new ObjectOutputStream(socket.getOutputStream());
         try {
             Thread t0 = asyncReadFromSocket(socketIn);
-            //t0.join();
-        } catch(NoSuchElementException e) {
+            t0.join();
+        } catch(NoSuchElementException | InterruptedException e) {
             System.out.println("Connection closed from the client side");
         } finally {
             //noinspection StatementWithEmptyBody

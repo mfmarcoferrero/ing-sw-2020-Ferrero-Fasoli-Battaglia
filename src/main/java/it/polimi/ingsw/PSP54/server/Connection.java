@@ -22,7 +22,8 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     private final Server server;
     private String name;
     private boolean active = true;
-    boolean gameMaster  = false;
+    private boolean gameMaster  = false;
+    private boolean namExist;
     int numberOfPlayers;
 
     public Connection(Socket socket, Server server) {
@@ -105,14 +106,28 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
      */
     @Override
     public void run() {
+        int i=0;
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
-            GameMessage welcome = new StringMessage(null, StringMessage.welcomeMessage);
-            asyncSend(welcome);
-            in = new ObjectInputStream(socket.getInputStream());
-            PlayerCredentials credentials = (PlayerCredentials) in.readObject();
-            this.name = credentials.getPlayerName();
-            if(gameMaster || this == server.currentConnections.firstElement()) {
+            PlayerCredentials credentials;
+            do {
+                if (i == 0) {
+                    GameMessage welcome = new StringMessage(null, StringMessage.welcomeMessage);
+                    asyncSend(welcome);
+                } else {
+                    GameMessage invalidname = new StringMessage(null, StringMessage.namealreadyTaken);
+                    asyncSend(invalidname);
+                }
+                System.out.println("qui");
+                in = new ObjectInputStream(socket.getInputStream());
+                System.out.println("qui1");
+                credentials = (PlayerCredentials) in.readObject();
+                this.name = credentials.getPlayerName();
+                System.out.println(name);
+                namExist = server.CheckName(name);
+                i++;
+            } while (namExist);
+            if (gameMaster || this == server.currentConnections.firstElement()) {
                 GameMessage setPlayersNumber = new StringMessage(null, StringMessage.setNumberOfPlayersMessage);
                 asyncSend(setPlayersNumber);
                 numberOfPlayers = (int) in.readObject();

@@ -110,26 +110,6 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     }
 
     @Override
-    public boolean isWinner() {
-        return playerToDecorate.isWinner();
-    }
-
-    @Override
-    public void setWinner(boolean winner) {
-        playerToDecorate.setWinner(winner);
-    }
-
-    @Override
-    public boolean isLoser() {
-        return playerToDecorate.isLoser();
-    }
-
-    @Override
-    public void setLoser(boolean loser) {
-        playerToDecorate.setLoser(loser);
-    }
-
-    @Override
     public Player assignPower(int cardID) {
         return playerToDecorate.assignPower(cardID);
     }

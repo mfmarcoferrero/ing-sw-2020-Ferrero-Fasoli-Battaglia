@@ -10,17 +10,14 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.io.PrintStream;
 import java.text.AttributedCharacterIterator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Vector;
+import java.util.*;
 
 public class CliView extends java.applet.Applet implements Observer<GameMessage> {
 
 	private final Scanner inputReader = new Scanner(System.in);
 	private final PrintStream output = new PrintStream(System.out);
 	private final Client client;
-	private HashMap<String, Integer> credentials;
+	private HashMap<String, Integer> Credentials;
 	private static int numberOfPlayers;
 	private boolean maleSelected;
 
@@ -323,6 +320,14 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 			client.asyncSend(playerCredentials);
 		}
 
+	}
+
+	public void NewName(PlayerCredentials credential){
+		String name = inputReader.next();
+		credential.setName(name);
+		HashMap<String, Integer> credentials = new HashMap<>();
+		credentials.put(credential.getPlayerName(),credential.getAge());
+		setCredentials(credentials);
 	}
 
 	/**
@@ -661,7 +666,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 
 			@Override
 			public void drawString(String str, int x, int y) {
-				output.println(str);
+
 			}
 
 			@Override
@@ -850,7 +855,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 
 			@Override
 			public void drawString(String str, int x, int y) {
-				output.println(str);
+
 			}
 
 			@Override
@@ -919,6 +924,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 					sendWorkerSelection();
 					break;
 				case StringMessage.welcomeMessage:
+				case StringMessage.namealreadyTaken:
 					acquirePlayerCredentials();
 					sendPlayerCredentials(getCredentials());
 					break;
@@ -979,11 +985,11 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 	}
 
 	public HashMap<String, Integer> getCredentials() {
-		return credentials;
+		return Credentials;
 	}
 
 	public void setCredentials(HashMap<String, Integer> credentials) {
-		this.credentials = credentials;
+		this.Credentials = credentials;
 	}
 
 	public int getNumberOfPlayers() {

@@ -32,6 +32,7 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String invalidMoveMessage = "You can't move here, please retry.";
     public static final String invalidBuildingMessage = "You can't build here, please retry.";
     //specials
+    public static final String namealreadyTaken = "the name you choose already exist, please try with a new one";
     public static final String newWorkermove ="The worker you have selected can't do the action, so enter f if you were using m or m if you were using f";
     public static final String buildFirst = "Do you want to build first? [Enter y/n]";
     public static final String moveAgain = "Do you want to move again? [Enter y/n]";
