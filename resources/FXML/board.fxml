@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="599.0" prefWidth="1065.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.BoardSceneController">
    <children>
@@ -293,14 +292,8 @@
                      </children>
                   </GridPane>
                   <Label fx:id="labelPlayer_1" layoutX="96.0" layoutY="299.0" prefHeight="46.0" prefWidth="85.0" text="Giocatore 1" textAlignment="CENTER">
-                     <font>
-                        <Font name="Papyrus Condensed" size="24.0" />
-                     </font>
                   </Label>
                   <Label fx:id="labelPlayer_2" layoutX="884.0" layoutY="299.0" text="Giocatore 2" textAlignment="CENTER">
-                     <font>
-                        <Font name="Papyrus Condensed" size="24.0" />
-                     </font>
                   </Label>
                   <ImageView fx:id="cardImage_1" fitHeight="180.0" fitWidth="110.0" layoutX="85.0" layoutY="339.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -313,34 +306,19 @@
                      </image>
                   </ImageView>
                   <Label fx:id="labelPlayer_3" layoutX="95.0" layoutY="20.0" prefHeight="44.0" prefWidth="87.0" text="Giocatore 3" textAlignment="CENTER">
-                     <font>
-                        <Font name="Papyrus Condensed" size="23.0" />
-                     </font>
                   </Label>
                   <ImageView fx:id="cardImage_3" fitHeight="180.0" fitWidth="110.0" layoutX="85.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../icons/01.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="messageLabel" contentDisplay="CENTER" layoutX="301.0" layoutY="19.0" prefHeight="66.0" prefWidth="460.0" text="It's tour turn" textOverrun="CLIP">
-                     <font>
-                        <Font name="Papyrus Condensed" size="35.0" />
-                     </font>
+                  <Label fx:id="messageLabel" contentDisplay="CENTER" layoutX="301.0" layoutY="19.0" prefHeight="66.0" prefWidth="460.0">
                   </Label>
-                  <Button fx:id="maleButton" disable="true" layoutX="846.0" layoutY="100.0" mnemonicParsing="false" onAction="#maleButtonClicked" prefHeight="40.0" prefWidth="70.0" text="Male" visible="false">
-                     <font>
-                        <Font name="Papyrus Condensed" size="15.0" />
-                     </font>
+                  <Button fx:id="firstButton" layoutX="846.0" layoutY="100.0" mnemonicParsing="false" onAction="#maleButtonClicked" onMouseEntered="#mouseEnterOnButton" onMouseExited="#mouseExitFromButton" prefHeight="40.0" prefWidth="70.0" visible="false">
                   </Button>
-                  <Button fx:id="femaleButton" disable="true" layoutX="933.0" layoutY="100.0" mnemonicParsing="false" onAction="#femaleButtonClicked" prefHeight="40.0" prefWidth="70.0" text="Female" visible="false">
-                     <font>
-                        <Font name="Papyrus Condensed" size="15.0" />
-                     </font>
+                  <Button fx:id="secondButton" layoutX="933.0" layoutY="100.0" mnemonicParsing="false" onAction="#femaleButtonClicked" onMouseEntered="#mouseEnterOnButton" onMouseExited="#mouseExitFromButton" prefHeight="40.0" prefWidth="70.0" visible="false">
                   </Button>
-                  <Label fx:id="panelMessageLabel" layoutX="844.0" layoutY="52.0" prefHeight="39.0" prefWidth="165.0" text="MALE or FEMALE" visible="false">
-                     <font>
-                        <Font name="Papyrus Condensed" size="26.0" />
-                     </font>
+                  <Label fx:id="panelMessageLabel" layoutX="844.0" layoutY="52.0" prefHeight="39.0" prefWidth="165.0" visible="false">
                   </Label>
                </children>
             </AnchorPane>

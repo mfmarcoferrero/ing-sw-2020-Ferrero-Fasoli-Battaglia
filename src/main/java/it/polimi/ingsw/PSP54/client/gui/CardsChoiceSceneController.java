@@ -7,8 +7,10 @@ import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 
 import java.util.Vector;
 
@@ -23,6 +25,7 @@ public class CardsChoiceSceneController {
     @FXML private Button firstCardButton;
     @FXML private Button secondCardButton;
     @FXML private Button thirdCardButton;
+    @FXML private Label chooseYourPowerLabel;
 
     /**
      * Called when cards_choice.fxml is load
@@ -32,6 +35,10 @@ public class CardsChoiceSceneController {
         guiManager = GuiManager.getInstance();
         guiManager.setCardsChoiceSceneController(this);
         setCardsToDisplay(guiManager.getCardsToDisplay());
+    }
+
+    public void setFont(){
+        chooseYourPowerLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",34));
     }
 
     /**

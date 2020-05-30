@@ -8,9 +8,6 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-background-color: #0896C2;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.LogInSceneController">
    <children>
       <Label fx:id="waitingLabel" layoutX="443.0" layoutY="255.0" prefHeight="31.0" prefWidth="192.0" text="Waiting for other players connection..." visible="false">
-         <font>
-            <Font name="Papyrus Condensed" size="16.0" />
-         </font>
       </Label>
       <ImageView fitHeight="197.0" fitWidth="129.0" layoutX="95.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -19,27 +16,18 @@
       </ImageView>
       <TextField fx:id="nicknameField" layoutX="459.0" layoutY="158.0" promptText="Enter Nickname" />
       <TextField fx:id="ageField" layoutX="459.0" layoutY="202.0" promptText="Enter Age" />
-      <Label layoutX="408.0" layoutY="149.0" prefHeight="43.0" prefWidth="57.0" text="Name:">
-         <font>
-            <Font name="Papyrus Condensed" size="23.0" />
-         </font></Label>
-      <Label layoutX="408.0" layoutY="193.0" prefHeight="43.0" prefWidth="57.0" text="Age:">
-         <font>
-            <Font name="Papyrus Condensed" size="23.0" />
-         </font></Label>
+      <Label fx:id="nameLabel" layoutX="408.0" layoutY="149.0" prefHeight="43.0" prefWidth="57.0" text="Name:">
+         </Label>
+      <Label fx:id="ageLabel" layoutX="408.0" layoutY="193.0" prefHeight="43.0" prefWidth="57.0" text="Age:">
+         </Label>
       <Button fx:id="startButton" layoutX="487.0" layoutY="255.0" mnemonicParsing="false" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" onAction="#startButtonPressed" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #B2E2F3;" text="Start Game">
-         <font>
-            <Font name="Papyrus Condensed" size="17.0" />
-         </font></Button>
+         </Button>
       <ImageView fitHeight="227.0" fitWidth="211.0" layoutX="148.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../icons/title_island.png" />
          </image>
       </ImageView>
-      <Label layoutX="312.0" layoutY="33.0" prefHeight="82.0" prefWidth="192.0" text="JOIN A GAME">
-         <font>
-            <Font name="Papyrus Condensed" size="40.0" />
-         </font>
+      <Label fx:id="joinAGameLabel" layoutX="312.0" layoutY="33.0" prefHeight="82.0" prefWidth="192.0" text="JOIN A GAME">
       </Label>
    </children>
 </Pane>
