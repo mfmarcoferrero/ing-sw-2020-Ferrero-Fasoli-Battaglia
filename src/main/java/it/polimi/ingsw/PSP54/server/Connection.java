@@ -109,6 +109,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         int i=0;
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
             PlayerCredentials credentials;
             do {
                 if (i == 0) {
@@ -118,9 +119,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                     GameMessage invalidname = new StringMessage(null, StringMessage.namealreadyTaken);
                     asyncSend(invalidname);
                 }
-                System.out.println("qui");
-                in = new ObjectInputStream(socket.getInputStream());
-                System.out.println("qui1");
                 credentials = (PlayerCredentials) in.readObject();
                 this.name = credentials.getPlayerName();
                 System.out.println(name);

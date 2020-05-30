@@ -322,14 +322,6 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 
 	}
 
-	public void NewName(PlayerCredentials credential){
-		String name = inputReader.next();
-		credential.setName(name);
-		HashMap<String, Integer> credentials = new HashMap<>();
-		credentials.put(credential.getPlayerName(),credential.getAge());
-		setCredentials(credentials);
-	}
-
 	/**
 	 * Acquires game's number of players and stores it into a local variable.
 	 */
