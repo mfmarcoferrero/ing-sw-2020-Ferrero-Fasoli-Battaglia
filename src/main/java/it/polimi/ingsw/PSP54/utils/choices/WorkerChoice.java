@@ -13,4 +13,5 @@ public class WorkerChoice extends PlayerChoice implements Serializable, Cloneabl
     public boolean isMale() {
         return male;
     }
+
 }

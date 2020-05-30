@@ -27,7 +27,7 @@ public class GuiManager implements Observer<GameMessage> {
     private Vector<Integer> cardValues;
     private int myCard;
     private boolean cardExtractor = true, moveChoice = false, buildChoice = false,
-            firstWorkerSet = false, secondWorkerSet = false, boxChoice = false;
+            firstWorkerSet = false, secondWorkerSet = false, boxChoice = false, booleanChoice = false;
     private Client client;
     private BoardMessage board = null;
     private boolean gameMaster = false;
@@ -167,7 +167,11 @@ public class GuiManager implements Observer<GameMessage> {
                     });
                     break;
                 case StringMessage.choseWorker:
-
+                    setBoxChoice(true);
+                    Platform.runLater(() -> {
+                        boardSceneController.setMessageLabel("CHOOSE YOUR WORKER");
+                        boardSceneController.showPanelMessage();
+                    });
                     break;
                 case StringMessage.setSecondWorkerMessage:
                     firstWorkerSet = false;
@@ -176,29 +180,59 @@ public class GuiManager implements Observer<GameMessage> {
                     Platform.runLater(() -> {
                         if (firstWorkerSet){
                             setBoxChoice(true);
-                            boardSceneController.setMessageLabel("SET YOUR FIRST WORKER");
                         }
                         else if (secondWorkerSet){
                             setBoxChoice(true);
                             boardSceneController.setMessageLabel("SET YOUR SECOND WORKER");
                         }
-                        else
+                        else {
                             boardSceneController.setMessageLabel("MAKE YOUR MOVE");
+                            setBoxChoice(true);
+                            setMoveChoice(true);
+                        }
                     });
-                case StringMessage.invalidMoveMessage: { //insert coordinates
-
+                    break;
+                case StringMessage.invalidMoveMessage: {
+                    Platform.runLater(() -> {
+                        setMoveChoice(true);
+                        setBoxChoice(true);
+                        boardSceneController.setMessageLabel("INVALID MOVE, RETRY!!!");
+                    });
                     break;
                 }
                 case StringMessage.buildMessage:
+                    Platform.runLater(() -> {
+                        setBuildChoice(true);
+                        setBoxChoice(true);
+                        boardSceneController.setMessageLabel("BUILD !!!");
+                    });
+                    break;
                 case StringMessage.invalidBuildingMessage: {
-
+                    Platform.runLater(() -> {
+                        setBuildChoice(true);
+                        setBoxChoice(true);
+                        boardSceneController.setMessageLabel("INVALID BUILDING, RETRY!!!");
+                    });
+                    break;
                 }
                 case StringMessage.moveAgain:
+                    Platform.runLater(() -> {
+                        setBooleanChoice(true);
+                        boardSceneController.showMoveAgainMessage();
+                    });
+                    break;
                 case StringMessage.buildAgain:
-                case StringMessage.buildOrDome: {
-
-                }
-
+                    Platform.runLater(() -> {
+                        setBooleanChoice(true);
+                        boardSceneController.showBuildAgainMessage();
+                    });
+                    break;
+                case StringMessage.buildOrDome:
+                    Platform.runLater(() -> {
+                        setBooleanChoice(true);
+                        boardSceneController.showBuildOrDomeMessage();
+                    });
+                    break;
             }
         }
         if (message instanceof CardsMessage){
@@ -317,5 +351,13 @@ public class GuiManager implements Observer<GameMessage> {
 
     public void setBoxChoice(boolean boxChoice) {
         this.boxChoice = boxChoice;
+    }
+
+    public boolean isBooleanChoice() {
+        return booleanChoice;
+    }
+
+    public void setBooleanChoice(boolean booleanChoice) {
+        this.booleanChoice = booleanChoice;
     }
 }

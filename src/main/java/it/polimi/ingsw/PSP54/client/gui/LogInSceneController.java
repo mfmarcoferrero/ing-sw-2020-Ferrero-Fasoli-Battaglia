@@ -9,6 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
+
+import java.io.FileNotFoundException;
 
 public class LogInSceneController {
 
@@ -20,6 +23,9 @@ public class LogInSceneController {
     @FXML private TextField ageField;
     @FXML private Button startButton;
     @FXML private Label waitingLabel;
+    @FXML private Label joinAGameLabel;
+    @FXML private Label ageLabel;
+    @FXML private Label nameLabel;
 
     /**
      * Called when log_in.fxml is load
@@ -28,6 +34,18 @@ public class LogInSceneController {
     public void initialize() {
         guiManager = GuiManager.getInstance();
         guiManager.setLogInSceneController(this);
+    }
+
+    public void setFont(){
+        try {
+            joinAGameLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",40));
+            ageLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",23));
+            nameLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",23));
+            startButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",17));
+            waitingLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -84,14 +102,20 @@ public class LogInSceneController {
      * Load number_of_players.fxml on current stage
      */
     public void setNumberOfPlayersScene() {
-        GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/number_of_players.fxml");
+        NumberOfPlayersSceneController numberOfPlayersSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/number_of_players.fxml");
+        if (numberOfPlayersSceneController != null){
+            numberOfPlayersSceneController.setFont();
+        }
     }
 
     /**
      * Load cards_choice.fxml on current stage
      */
     public void setCardsChoiceScene() {
-        GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/cards_choice.fxml");
+        CardsChoiceSceneController cardsChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/cards_choice.fxml");
+        if (cardsChoiceSceneController != null){
+            cardsChoiceSceneController.setFont();
+        }
     }
 
     /**

@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 
 public class NumberOfPlayersSceneController {
 
@@ -17,6 +18,7 @@ public class NumberOfPlayersSceneController {
     @FXML private Button twoButton;
     @FXML private Button threeButton;
     @FXML private Label waitingLabel;
+    @FXML private Label chooseNumberOfPlayersLabel;
 
     /**
      * Called when number_of_players.fxml is load
@@ -25,6 +27,13 @@ public class NumberOfPlayersSceneController {
     public void initialize() {
         guiManager = GuiManager.getInstance();
         guiManager.setNumberOfPlayersSceneController(this);
+    }
+
+    public void setFont(){
+        twoButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",18));
+        threeButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",18));
+        waitingLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",21));
+        chooseNumberOfPlayersLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",28));
     }
 
     /**
@@ -73,7 +82,10 @@ public class NumberOfPlayersSceneController {
      * Load cards_choice.fxml on current stage
      */
     public void setCardsChoiceScene() {
-        GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/cards_choice.fxml");
+        CardsChoiceSceneController cardsChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/cards_choice.fxml");
+        if (cardsChoiceSceneController != null){
+            cardsChoiceSceneController.setFont();
+        }
     }
 
     /**

@@ -961,10 +961,10 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 			printBoard(((BoardMessage)message).getBoard());
 		}
 		if(message instanceof DeleteMessage)
-			PrintafterDelete((DeleteMessage) message);
+			printAfterDelete((DeleteMessage) message);
 	}
 
-	public void PrintafterDelete(DeleteMessage message){
+	public void printAfterDelete(DeleteMessage message){
 		int n;
 	}
 

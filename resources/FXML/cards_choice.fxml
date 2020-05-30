@@ -3,7 +3,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-background-color: #0896C2;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.CardsChoiceSceneController">
    <children>
@@ -37,10 +36,7 @@
             <Button fx:id="thirdCardButton" mnemonicParsing="false" onAction="#thirdCardButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" opacity="0.0" prefHeight="210.0" prefWidth="125.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
-      <Label layoutX="262.0" layoutY="41.0" text="CHOOSE YOUR POWER">
-         <font>
-            <Font name="Papyrus Condensed" size="34.0" />
-         </font>
+      <Label fx:id="chooseYourPowerLabel" layoutX="262.0" layoutY="41.0" text="CHOOSE YOUR POWER">
       </Label>
    </children>
 </Pane>

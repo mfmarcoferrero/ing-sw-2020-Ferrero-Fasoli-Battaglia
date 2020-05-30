@@ -3,6 +3,8 @@ package it.polimi.ingsw.PSP54.client.gui;
 import it.polimi.ingsw.PSP54.server.model.Box;
 import it.polimi.ingsw.PSP54.server.model.Game;
 import it.polimi.ingsw.PSP54.server.model.Worker;
+import it.polimi.ingsw.PSP54.utils.choices.BooleanChoice;
+import it.polimi.ingsw.PSP54.utils.choices.BuildChoice;
 import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
 import it.polimi.ingsw.PSP54.utils.choices.WorkerChoice;
 import it.polimi.ingsw.PSP54.utils.messages.CardsPlayersMessage;
@@ -17,6 +19,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 import java.util.Vector;
 
@@ -26,17 +30,17 @@ public class BoardSceneController {
     private GuiManager guiManager;
     private ImageView[][] imageBoxes = new ImageView[5][5];
     private ImageView[][] imageWorkerMap = new ImageView[5][5];
-    @FXML ImageView cardImage_1;
-    @FXML ImageView cardImage_2;
-    @FXML ImageView cardImage_3;
-    @FXML Label labelPlayer_1;
-    @FXML Label labelPlayer_2;
-    @FXML Label labelPlayer_3;
-    @FXML Label messageLabel;
-    @FXML GridPane gridPane;
-    @FXML Label panelMessageLabel;
-    @FXML Button maleButton;
-    @FXML Button femaleButton;
+    @FXML private GridPane gridPane;
+    @FXML private ImageView cardImage_1;
+    @FXML private ImageView cardImage_2;
+    @FXML private ImageView cardImage_3;
+    @FXML private Label labelPlayer_1;
+    @FXML private Label labelPlayer_2;
+    @FXML private Label labelPlayer_3;
+    @FXML private Label messageLabel;
+    @FXML private Label panelMessageLabel;
+    @FXML private Button firstButton;
+    @FXML private Button secondButton;
 
 
     /**
@@ -49,7 +53,6 @@ public class BoardSceneController {
     }
 
     public void setBoardScene(){
-        int i,j;
         for(Node node: gridPane.getChildren()){
             if(node instanceof ImageView) {
                 imageBoxes[GridPane.getRowIndex(node)][GridPane.getColumnIndex(node)] = (ImageView) node;
@@ -58,19 +61,29 @@ public class BoardSceneController {
                 imageWorkerMap[GridPane.getRowIndex(node)][GridPane.getColumnIndex(node)] = (ImageView)((AnchorPane) node).getChildren().get(0);
             }
         }
+        labelPlayer_1.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",24));
+        labelPlayer_1.setTextAlignment(TextAlignment.CENTER);
+        labelPlayer_2.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",24));
+        labelPlayer_2.setTextAlignment(TextAlignment.CENTER);
+        labelPlayer_3.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",24));
+        labelPlayer_3.setTextAlignment(TextAlignment.CENTER);
+        messageLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",35));
+        messageLabel.setTextAlignment(TextAlignment.CENTER);
+        panelMessageLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",26));
+        panelMessageLabel.setTextAlignment(TextAlignment.CENTER);
+        firstButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",15));
+        firstButton.setTextAlignment(TextAlignment.CENTER);
+        secondButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",15));
+        secondButton.setTextAlignment(TextAlignment.CENTER);
         setImageCards(guiManager.getCardValues());
         setLabelNames(guiManager.getNames());
-
     }
 
     public void setBoardImage(Box[][] board){
         for (int i = 0; i < Game.BOARD_SIZE; i++){
             for (int j = 0; j < Game.BOARD_SIZE; j++){
-                if (board[i][j].getLevel() != 0 || board[i][j].isDome())
-                    setBuildingImage(imageBoxes[i][j],board[i][j]);
-                if (board[i][j].getWorker() != null){
-                    setWorkerImage(imageWorkerMap[i][j], board[i][j]);
-                }
+                setBuildingImage(imageBoxes[i][j],board[i][j]);
+                setWorkerImage(imageWorkerMap[i][j],board[i][j]);
             }
         }
     }
@@ -80,6 +93,9 @@ public class BoardSceneController {
             case 0:
                 if (box.isDome()) {
                     boxImageView.setImage(new Image("file:./resources/icons/Dome.png"));
+                }
+                if (!box.isDome()){
+                    boxImageView.setImage(null);
                 }
                 break;
             case 1:
@@ -97,6 +113,7 @@ public class BoardSceneController {
                 if (!box.isDome()){
                     boxImageView.setImage(new Image("file:./resources/icons/First+Second_Building.png"));
                 }
+                break;
             case 3:
                 if (box.isDome()){
                     boxImageView.setImage(new Image("file:./resources/icons/First+Second+Third+Dome_Building.png"));
@@ -122,6 +139,8 @@ public class BoardSceneController {
                     break;
             }
         }
+        else
+            boxImageView.setImage(null);
     }
 
     public void setMessageLabel(String message){
@@ -155,33 +174,94 @@ public class BoardSceneController {
     }
 
     public void showPanelMessage(){
+        panelMessageLabel.setText("MALE or FEMALE");
+        firstButton.setText("Male");
+        secondButton.setText("Female");
         panelMessageLabel.setVisible(true);
-        maleButton.setDisable(false);
-        maleButton.setVisible(true);
-        femaleButton.setDisable(false);
-        femaleButton.setVisible(true);
+        firstButton.setVisible(true);
+        secondButton.setVisible(true);
     }
 
-    public void maleButtonClicked(ActionEvent event){
-        guiManager.sendObject(new WorkerChoice(true));
-        panelMessageLabel.setVisible(false);
-        maleButton.setVisible(false);
-        femaleButton.setVisible(false);
+    public void showMoveAgainMessage(){
+        panelMessageLabel.setText("MOVE AGAIN?");
+        firstButton.setText("Yes");
+        secondButton.setText("No");
+        firstButton.setVisible(true);
+        secondButton.setVisible(true);
+        panelMessageLabel.setVisible(true);
     }
 
-    public void femaleButtonClicked(ActionEvent event){
-        guiManager.sendObject(new WorkerChoice(false));
-        panelMessageLabel.setVisible(false);
-        maleButton.setVisible(false);
-        femaleButton.setVisible(false);
+    public void showBuildAgainMessage(){
+        panelMessageLabel.setText("BUILD AGAIN?");
+        firstButton.setText("Yes");
+        secondButton.setText("No");
+        firstButton.setVisible(true);
+        secondButton.setVisible(true);
+        panelMessageLabel.setVisible(true);
+    }
+
+    public void showBuildOrDomeMessage(){
+        panelMessageLabel.setText("BUILD A DOME?");
+        firstButton.setText("Yes");
+        secondButton.setText("No");
+        firstButton.setVisible(true);
+        secondButton.setVisible(true);
+        panelMessageLabel.setVisible(true);
+    }
+
+    public void maleButtonClicked(){
+        if (guiManager.isBooleanChoice()){
+            guiManager.sendObject(new BooleanChoice(true));
+            guiManager.setBooleanChoice(false);
+            panelMessageLabel.setVisible(false);
+            firstButton.setVisible(false);
+            secondButton.setVisible(false);
+        }
+        else {
+            guiManager.sendObject(new WorkerChoice(true));
+            panelMessageLabel.setVisible(false);
+            firstButton.setVisible(false);
+            secondButton.setVisible(false);
+        }
+    }
+
+    public void femaleButtonClicked(){
+        if (guiManager.isBooleanChoice()){
+            guiManager.sendObject(new BooleanChoice(false));
+            guiManager.setBooleanChoice(false);
+            panelMessageLabel.setVisible(false);
+            firstButton.setVisible(false);
+            secondButton.setVisible(false);
+        }
+        else {
+            guiManager.sendObject(new WorkerChoice(false));
+            panelMessageLabel.setVisible(false);
+            firstButton.setVisible(false);
+            secondButton.setVisible(false);
+        }
     }
 
     public void boxClicked(MouseEvent event){
         Node source = (Node)event.getSource();
-        //System.out.printf("Mouse clicked cell in [%d, %d]\n", GridPane.getRowIndex(source), GridPane.getColumnIndex(source));
-        if (guiManager.isBoxChoice()){
-            guiManager.sendObject(new MoveChoice(GridPane.getRowIndex(source),GridPane.getColumnIndex(source)));
-            guiManager.setBoxChoice(false);
+        if (guiManager.isBoxChoice()) {
+            if (guiManager.isFirstWorkerSet() || guiManager.isSecondWorkerSet() || guiManager.isMoveChoice()) {
+                guiManager.sendObject(new MoveChoice(GridPane.getRowIndex(source), GridPane.getColumnIndex(source)));
+                guiManager.setBoxChoice(false);
+                if (guiManager.isSecondWorkerSet()) {
+                    setMessageLabel(null);
+                    guiManager.setSecondWorkerSet(false);
+                }
+                if (guiManager.isMoveChoice()){
+                    setMessageLabel(null);
+                    guiManager.setMoveChoice(false);
+                }
+            }
+            if (guiManager.isBuildChoice()){
+                messageLabel.setText(null);
+                guiManager.sendObject(new BuildChoice(GridPane.getRowIndex(source), GridPane.getColumnIndex(source)));
+                guiManager.setBoxChoice(false);
+                guiManager.setBuildChoice(false);
+            }
         }
     }
 
@@ -196,6 +276,14 @@ public class BoardSceneController {
     public void mouseExitFromBox(MouseEvent event){
         ((Node) event.getSource()).setStyle("-fx-background-color: null;");
         ((Node) event.getSource()).setOpacity(1);
+        ((Node) event.getSource()).getScene().setCursor(Cursor.DEFAULT);
+    }
+
+    public void mouseEnterOnButton(MouseEvent event){
+        ((Node) event.getSource()).getScene().setCursor(Cursor.HAND);
+    }
+
+    public void mouseExitFromButton(MouseEvent event){
         ((Node) event.getSource()).getScene().setCursor(Cursor.DEFAULT);
     }
 
