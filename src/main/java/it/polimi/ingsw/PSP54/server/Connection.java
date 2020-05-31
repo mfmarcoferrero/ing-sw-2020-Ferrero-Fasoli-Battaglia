@@ -115,12 +115,12 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                     GameMessage welcome = new StringMessage(null, StringMessage.welcomeMessage);
                     asyncSend(welcome);
                 } else {
-                    GameMessage invalidname = new StringMessage(null, StringMessage.namealreadyTaken);
-                    asyncSend(invalidname);
+                    GameMessage invalidName = new StringMessage(null, StringMessage.namealreadyTaken);
+                    asyncSend(invalidName);
                 }
                 credentials = (PlayerCredentials) in.readObject();
                 this.name = credentials.getPlayerName();
-                namExist = server.CheckName(name);
+                namExist = server.checkName(name);
                 i++;
             } while (namExist);
             if (gameMaster || this == server.currentConnections.firstElement()) {

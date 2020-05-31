@@ -40,8 +40,6 @@ public class Controller implements Observer<PlayerAction> {
      */
     public void startGame() {
         game.sortPlayers();
-        game.assignColors();
-        game.extractCards();
         game.displayCards();
     }
 
@@ -85,6 +83,7 @@ public class Controller implements Observer<PlayerAction> {
     private void checkChoice(PlayerAction action) {
         game.performChoice(action);
     }
+
     /**
      * Called whenever the observed object is changed.
      *

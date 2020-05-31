@@ -15,7 +15,7 @@ import java.util.*;
 public class Game extends Observable<GameMessage> implements Serializable, Cloneable {
 
     public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4, HEPHAESTUS = 5, MINOTAUR = 6, PROMETHEUS = 8;
-    public static final int CARD_NUMBER = 5;
+    public static final int CARD_NUMBER = 8;
     public static final int BOARD_SIZE = 5;
     public static final String[] colors = {"blue", "red", "yellow"};
     private final Box[][] board;
@@ -82,35 +82,20 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         for (int i = 0; i < numberOfPlayers; i++) {
             players.get(i).setColor(colors[i]);
         }
-
     }
 
-    /**
-     *Extract an unique random god card for each player in the game.
-     */
-    public void extractCards() {
-
-        int numberOfPlayers = players.size();
-        ArrayList<Integer> deck = new ArrayList<>();
-
-        for (int i = 0; i < CARD_NUMBER; i++) {
-            deck.add(i);
-        }
-
-        Collections.shuffle(deck);
-
-        for (int i = 0; i < numberOfPlayers; i++) {
-            extractedCards.put(deck.get(i),cardMap.get(deck.get(i)));
-        }
+    public void sendDeck() {
+        GameMessage deck = new DeckMessage(currentPlayer.getVirtualViewID(), cardMap);
+        notify(deck);
     }
 
     /**
      * Show cards that can be chosen to current player.
      * If all cards are already taken moves on to the next game step.
      */
-    public synchronized void displayCards () {
+    public void displayCards () {
         if (!getExtractedCards().isEmpty()) {
-            GameMessage cards = new CardsMessage(currentPlayer.getVirtualViewID(), getExtractedCards());
+            GameMessage cards = new AvailableCardsMessage(currentPlayer.getVirtualViewID(), getExtractedCards());
             notify(cards);
         }else {//all cards are assigned => worker placement
             notifyBoard();
@@ -120,6 +105,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             notify(setFirstWorker);
         }
     }
+
 
     private HashMap<String,Integer> getCardsPlayersMap() {
         HashMap<String,Integer> cardsPlayersMap = new HashMap<>();
@@ -210,7 +196,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() >= 1){
             ArrayList<Box> valid=currentWorker.getOwner().setWorkerBoxesToBuild(currentWorker);
             if(valid.isEmpty())
-                CheckCondition(currentPlayer);
+                performLosing(currentPlayer);
             else {
                 GameMessage build = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildMessage);
                 notify(build);
@@ -357,64 +343,35 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             setCurrentPlayer(players.get(i+1));
     }
 
-    //setters & getters
 
-    public Vector<Player> getPlayers() {
-        return players;
+    public void notifyWinner(Player currentPlayer) {
+        GameMessage winMessage = new WinMessage(null,currentPlayer);
+        notify(winMessage);
     }
 
-    public void setPlayers(Vector<Player> players) {
-        this.players = players;
-    }
-
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    /**
-     * Sets the playing attribute of currentPlayer to 'true' and notifies the VirtualView.
-     * @param currentPlayer the member of the players Vector which is going to play.
-     */
-    public void setCurrentPlayer(Player currentPlayer) {
-        if(currentPlayer.getSettingturn()>0){
-            this.currentPlayer = currentPlayer;
-            currentPlayer.setPlaying(true);
-            currentPlayer.SetSettingturn(currentPlayer.getSettingturn()-1);
-            GameMessage yourTurn = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.turnMessage);
-            notify(yourTurn);
-        }
-        else if(currentPlayer.getSettingturn()==0){
-            ArrayList<Box> validmovemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(true));
-            ArrayList<Box> validmovefemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(false));
-            if (validmovemale.isEmpty() && validmovefemale.isEmpty())
-                CheckCondition(currentPlayer);
-            if (!validmovemale.isEmpty() || !validmovefemale.isEmpty()) {
-                this.currentPlayer = currentPlayer;
-                currentPlayer.setPlaying(true);
-                GameMessage yourTurn = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.turnMessage);
-                notify(yourTurn);
+    public void performLosing(Player currentPlayer) {
+        if (players.size()==3){
+            for (Player player : players) {
+                if (Objects.equals(player, currentPlayer)) {
+                    GameMessage loseMessage = new LoseMessage(currentPlayer.getVirtualViewID(), currentPlayer);
+                    notify(loseMessage);
+                } else {
+                    GameMessage lose = new StringMessage(player.getVirtualViewID(), currentPlayer.getPlayerName() + StringMessage.loseMessage);
+                    notify(lose);
+                }
             }
+            removePlayer(currentPlayer);
         }
-
+        else if (players.size()==2) {
+            players.remove(currentPlayer);
+            players.add(0, currentPlayer);
+            GameMessage winMessage = new WinMessage(null, players.lastElement());
+            notify(winMessage);
+        }
     }
 
-    public Box[][] getBoard() {
-        return board;
-    }
 
-    public Box getBox(int x, int y) {
-        return board[x][y];
-    }
-
-    public HashMap<Integer, String> getExtractedCards() {
-        return extractedCards;
-    }
-
-    public void NotifyWinner(Player currentPlayer){
-            GameMessage winnermessage = new WinMessage(null,currentPlayer);
-            notify(winnermessage);
-    }
-    public void Removeplayer(Player player){
+    public void removePlayer(Player player){
         GameMessage message = new DeleteMessage(
                 null,
                 player.getWorker(true).getPos().getX(),
@@ -431,25 +388,57 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         setCurrentPlayer(players.elementAt(i));
     }
 
-    public void CheckCondition (Player currentPlayer){
-        if (players.size()==3){
-            for (Player player : players) {
-                if (Objects.equals(player, currentPlayer)) {
-                    GameMessage losemessage = new LoseMessage(currentPlayer.getVirtualViewID(), currentPlayer);
-                    notify(losemessage);
-                } else {
-                    GameMessage lose = new StringMessage(player.getVirtualViewID(), currentPlayer.getPlayerName() + StringMessage.loseMessage);
-                    notify(lose);
-                }
+
+    //setters & getters
+
+    public Vector<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(Vector<Player> players) {
+        this.players = players;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    /**
+     * If the passed Player can play sets its playing attribute to 'true' and notifies the VirtualView.
+     * @param currentPlayer the member of the players Vector which is going to play.
+     */
+    public void setCurrentPlayer(Player currentPlayer) {
+        if(currentPlayer.getSettingturn()>0){
+            currentPlayer.setPlaying(true);
+            currentPlayer.SetSettingturn(currentPlayer.getSettingturn()-1);
+            this.currentPlayer = currentPlayer;
+            GameMessage yourTurn = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.turnMessage);
+            notify(yourTurn);
+        }
+        else if(currentPlayer.getSettingturn()==0){
+            ArrayList<Box> validMoveMale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(true));
+            ArrayList<Box> validMoveFemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(false));
+            if (validMoveMale.isEmpty() && validMoveFemale.isEmpty())
+                performLosing(currentPlayer);
+            if (!validMoveMale.isEmpty() || !validMoveFemale.isEmpty()) {
+                currentPlayer.setPlaying(true);
+                this.currentPlayer = currentPlayer;
+                GameMessage yourTurn = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.turnMessage);
+                notify(yourTurn);
             }
-            Removeplayer(currentPlayer);
         }
-        else if (players.size()==2){
-            players.remove(currentPlayer);
-            players.add(0, currentPlayer);
-            GameMessage winmessage = new WinMessage(null, players.lastElement());
-            notify(winmessage);
-        }
+    }
+
+    public Box[][] getBoard() {
+        return board;
+    }
+
+    public Box getBox(int x, int y) {
+        return board[x][y];
+    }
+
+    public HashMap<Integer, String> getExtractedCards() {
+        return extractedCards;
     }
 
 }

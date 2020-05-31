@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP54.client.gui;
 
 import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
-import it.polimi.ingsw.PSP54.utils.messages.CardsMessage;
+import it.polimi.ingsw.PSP54.utils.messages.AvailableCardsMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -45,7 +45,7 @@ public class CardsChoiceSceneController {
      * Set card images for the scene, changing layout when cards to display are 2 or 3
      * @param cardsToDisplay
      */
-    public void setCardsToDisplay (CardsMessage cardsToDisplay){
+    public void setCardsToDisplay (AvailableCardsMessage cardsToDisplay){
         extractedCards = new Vector<>(cardsToDisplay.getCards().keySet());
         if (extractedCards.size() == 2){
             guiManager.setCardImage(extractedCards.get(0),firstCardImage);

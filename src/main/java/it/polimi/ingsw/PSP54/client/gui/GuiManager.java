@@ -22,7 +22,7 @@ public class GuiManager implements Observer<GameMessage> {
     private NumberOfPlayersSceneController numberOfPlayersSceneController;
     private BoardSceneController boardSceneController;
     private CardsChoiceSceneController cardsChoiceSceneController;
-    private CardsMessage cardsToDisplay;
+    private AvailableCardsMessage cardsToDisplay;
     private Vector<String> names;
     private Vector<Integer> cardValues;
     private boolean cardExtractor = true, moveChoice = false, buildChoice = false,
@@ -232,8 +232,8 @@ public class GuiManager implements Observer<GameMessage> {
                     break;
             }
         }
-        if (message instanceof CardsMessage){
-            this.cardsToDisplay = (CardsMessage) message;
+        if (message instanceof AvailableCardsMessage){
+            this.cardsToDisplay = (AvailableCardsMessage) message;
             Vector<Integer> extractedCards = new Vector<>(cardsToDisplay.getCards().keySet());
             if (extractedCards.size() == 1) {
                 int myCard = extractedCards.get(0);
@@ -282,7 +282,7 @@ public class GuiManager implements Observer<GameMessage> {
     }
 
     //Setter and getter
-    public CardsMessage getCardsToDisplay() {
+    public AvailableCardsMessage getCardsToDisplay() {
         return cardsToDisplay;
     }
 

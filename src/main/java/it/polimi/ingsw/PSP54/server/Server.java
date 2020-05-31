@@ -154,7 +154,7 @@ public class Server {
         }
     }
 
-    public boolean CheckName(String name){
+    public boolean checkName(String name){
         Vector<PlayerCredentials> players;
         boolean outcome=false;
         if(numberOfPlayers<2 || numberOfPlayers>3 )

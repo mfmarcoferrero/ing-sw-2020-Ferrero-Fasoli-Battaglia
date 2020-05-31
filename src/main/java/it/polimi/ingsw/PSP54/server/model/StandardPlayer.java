@@ -225,7 +225,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
      * @throws InvalidBuildingException if the build can't be done.
      */
     @Override
-    public void build (Worker worker, Box dest) throws InvalidBuildingException{
+    public void build (Worker worker, Box dest) throws InvalidBuildingException {
 
         ArrayList<Box> valid = worker.getBoxesToBuild();
         int currentBuildToken = worker.getBuildToken();
@@ -244,10 +244,9 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             throw new InvalidBuildingException();
     }
 
-    public void checkWinner(Worker worker)
-    {
+    public void checkWinner(Worker worker) {
         if(worker.getPos().getLevel()==3)
-            game.NotifyWinner(worker.getOwner());
+            game.notifyWinner(worker.getOwner());
     }
 
     /**

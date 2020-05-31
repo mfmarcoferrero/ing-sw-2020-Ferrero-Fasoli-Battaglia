@@ -1,6 +1,5 @@
 package it.polimi.ingsw.PSP54.client.view;
 
-import it.polimi.ingsw.PSP54.ClientMain;
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
@@ -149,7 +148,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 
 			int l = 0;
 
-			//print the seven conditioned line depending on level of the box or on the presence of a dome/worker in it
+			//print seven lines depending on boxes level or on the presence of a dome/worker in it
 			while (l < 7) {
 
 				//generate and print the five strings containing the representation of the of the first row of boxes
@@ -454,7 +453,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 	/**
 	 * Asks the player which power he wants and sends the choice via socket.
 	 */
-	public void acquireCardSelection(HashMap<Integer,String> extractedCards){
+	public void acquireCardSelection(HashMap<Integer,String> extractedCards) {
 		Vector<String> cardsName = new Vector<>(extractedCards.values());
 		Vector<Integer> cardsValues = new Vector<>(extractedCards.keySet());
 		boolean found = false;
@@ -901,7 +900,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 		ResetConnection();
 	}
 
-	public void ResetConnection(){
+	public void ResetConnection() {
 		boolean loop=true;
 		output.println("do you want to play again? Insert [yes/no]");
 		while (loop) {
@@ -975,14 +974,17 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 					break;
 			}
 		}
+		if (message instanceof DeckMessage){
+			
+		}
 		if(message instanceof LoseMessage){
 			losingClient();
 		}
 		if(message instanceof WinMessage){
 			EndOfmatch(((WinMessage) message).getPlayer());
 		}
-		if (message instanceof CardsMessage){
-			acquireCardSelection(((CardsMessage) message).getCards());
+		if (message instanceof AvailableCardsMessage){
+			acquireCardSelection(((AvailableCardsMessage) message).getCards());
 		}
 		if (message instanceof BoardMessage){
 			printBoard(((BoardMessage)message).getBoard());

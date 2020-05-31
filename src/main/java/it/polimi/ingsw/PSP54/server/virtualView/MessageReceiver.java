@@ -9,7 +9,7 @@ import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
  * It handles the incoming player's choices by translating them into actions that will then be performed by the MVC objects.
  */
 public class MessageReceiver implements Observer<PlayerChoice> {
-    private Connection connection;
+    private final Connection connection;
     private final VirtualView virtualView;
 
     public MessageReceiver(Connection connection, VirtualView virtualView) {
@@ -19,10 +19,6 @@ public class MessageReceiver implements Observer<PlayerChoice> {
 
     public Connection getConnection() {
         return connection;
-    }
-
-    public void setConnection(Connection connection) {
-        this.connection = connection;
     }
 
     public VirtualView getVirtualView() {
