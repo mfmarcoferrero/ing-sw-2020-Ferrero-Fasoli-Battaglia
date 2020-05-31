@@ -17,13 +17,11 @@ import java.net.Socket;
 public class Connection extends Observable<PlayerChoice> implements Runnable {
 
     private final Socket socket;
-    private ObjectInputStream in;
     private ObjectOutputStream out;
     private final Server server;
     private String name;
     private boolean active = true;
     private boolean gameMaster  = false;
-    private boolean namExist;
     int numberOfPlayers;
 
     public Connection(Socket socket, Server server) {
@@ -109,8 +107,9 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         int i=0;
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             PlayerCredentials credentials;
+            boolean namExist;
             do {
                 if (i == 0) {
                     GameMessage welcome = new StringMessage(null, StringMessage.welcomeMessage);
@@ -121,7 +120,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                 }
                 credentials = (PlayerCredentials) in.readObject();
                 this.name = credentials.getPlayerName();
-                System.out.println(name);
                 namExist = server.CheckName(name);
                 i++;
             } while (namExist);
@@ -149,10 +147,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
 
     public String getName(){
         return name;
-    }
-
-    public Socket getSocket() {
-        return socket;
     }
 
     private synchronized boolean isActive(){

@@ -25,7 +25,6 @@ public class GuiManager implements Observer<GameMessage> {
     private CardsMessage cardsToDisplay;
     private Vector<String> names;
     private Vector<Integer> cardValues;
-    private int myCard;
     private boolean cardExtractor = true, moveChoice = false, buildChoice = false,
             firstWorkerSet = false, secondWorkerSet = false, boxChoice = false, booleanChoice = false;
     private Client client;
@@ -155,9 +154,7 @@ public class GuiManager implements Observer<GameMessage> {
                     break;
                 case StringMessage.setNumberOfPlayersMessage:
                     gameMaster = true;
-                    Platform.runLater(() -> {
-                        logInSceneController.setNumberOfPlayersScene();
-                    });
+                    Platform.runLater(() -> logInSceneController.setNumberOfPlayersScene());
                     break;
                 case StringMessage.setFirstWorkerMessage:
                     firstWorkerSet = true;
@@ -239,24 +236,18 @@ public class GuiManager implements Observer<GameMessage> {
             this.cardsToDisplay = (CardsMessage) message;
             Vector<Integer> extractedCards = new Vector<>(cardsToDisplay.getCards().keySet());
             if (extractedCards.size() == 1) {
-                myCard = extractedCards.get(0).intValue();
+                int myCard = extractedCards.get(0);
                 cardExtractor = false;
                 sendObject(new CardChoice(myCard));
                 if(gameMaster){
-                    Platform.runLater(() -> {
-                        numberOfPlayersSceneController.setBoardScene();
-                    });
+                    Platform.runLater(() -> numberOfPlayersSceneController.setBoardScene());
                 }
             }
             else {
                 if (gameMaster) {
-                    Platform.runLater(() -> {
-                        numberOfPlayersSceneController.setCardsChoiceScene();
-                    });
+                    Platform.runLater(() -> numberOfPlayersSceneController.setCardsChoiceScene());
                 } else {
-                    Platform.runLater(() -> {
-                        logInSceneController.setCardsChoiceScene();
-                    });
+                    Platform.runLater(() -> logInSceneController.setCardsChoiceScene());
                 }
             }
         }
@@ -265,19 +256,13 @@ public class GuiManager implements Observer<GameMessage> {
             if (board == null) {
                 board = (BoardMessage) message;
                 if (!cardExtractor) {
-                    Platform.runLater(() -> {
-                        logInSceneController.setBoardScene();
-                    });
+                    Platform.runLater(() -> logInSceneController.setBoardScene());
                 } else {
-                    Platform.runLater(() -> {
-                        cardsChoiceSceneController.setBoardScene();
-                    });
+                    Platform.runLater(() -> cardsChoiceSceneController.setBoardScene());
                 }
             } else {
                 board = (BoardMessage) message;
-                Platform.runLater(() -> {
-                    boardSceneController.setBoardImage(board.getBoard());
-                });
+                Platform.runLater(() -> boardSceneController.setBoardImage(board.getBoard()));
             }
         }
         if (message instanceof CardsPlayersMessage){

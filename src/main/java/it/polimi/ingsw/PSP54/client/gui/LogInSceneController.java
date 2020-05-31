@@ -11,8 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 
-import java.io.FileNotFoundException;
-
 public class LogInSceneController {
 
     private String nickname;

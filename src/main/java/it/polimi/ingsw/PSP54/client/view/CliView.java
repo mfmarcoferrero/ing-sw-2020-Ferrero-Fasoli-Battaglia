@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.client.view;
 
+import it.polimi.ingsw.PSP54.ClientMain;
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Box;
@@ -8,6 +9,7 @@ import it.polimi.ingsw.PSP54.utils.choices.*;
 import it.polimi.ingsw.PSP54.utils.messages.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.AttributedCharacterIterator;
 import java.util.*;
@@ -520,6 +522,8 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 	}
 
 	public void EndOfmatch(Player p){
+		Font f = new Font("Papyrus",Font.PLAIN,24);
+		setFont(f);
 		Graphics win = new Graphics() {
 			@Override
 			public Graphics create() {
@@ -658,7 +662,6 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 
 			@Override
 			public void drawString(String str, int x, int y) {
-
 			}
 
 			@Override
@@ -701,14 +704,15 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 
 			}
 		};
-		Font f = new Font("AardvarkCafe",Font.PLAIN,24);
-		win.setFont(f);
 		win.setColor(java.awt.Color.getHSBColor(286,70,72));
 		win.drawString(p.getPlayerName().toUpperCase()+" IS THE WINNER",1,1);
-		client.SuspendThread();
+		ResetConnection();
 	}
 
 	public void losingClient (){
+
+		Font f = new Font("Papyrus",Font.PLAIN,24);
+		java.awt.Color c = new java.awt.Color(169,68,100);
 		Graphics lose = new Graphics() {
 			@Override
 			public Graphics create() {
@@ -847,7 +851,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 
 			@Override
 			public void drawString(String str, int x, int y) {
-
+				output.println(str);
 			}
 
 			@Override
@@ -890,11 +894,33 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 
 			}
 		};
-			Font f = new Font("AardvarkCafe",Font.PLAIN,24);
-			lose.setFont(f);
-			lose.setColor(java.awt.Color.getHSBColor(169,68,100));
-			lose.drawString("YOU LOSE",1,1);
-			client.SuspendThread();
+		lose.create();
+		lose.setColor(c);
+		lose.setFont(f);
+		lose.drawString("YOU LOSE",1,1);
+		ResetConnection();
+	}
+
+	public void ResetConnection(){
+		boolean loop=true;
+		output.println("do you want to play again? Insert [yes/no]");
+		while (loop) {
+			String Choice = inputReader.next();
+			if(Choice.equals("yes")) {
+				Client c = new Client("127.0.0.1",12345);
+				try {
+					c.startClient();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				loop = false;
+			}
+			else if(Choice.equals("no")){
+				client.SuspendThread();
+				loop = false;
+			} else
+				output.println("Incorrect Input!");
+		}
 	}
 
 	/**
@@ -944,6 +970,9 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 					sendBooleanChoice(choice);
 					break;
 				}
+				case StringMessage.EndForDisconnection:
+					ResetConnection();
+					break;
 			}
 		}
 		if(message instanceof LoseMessage){

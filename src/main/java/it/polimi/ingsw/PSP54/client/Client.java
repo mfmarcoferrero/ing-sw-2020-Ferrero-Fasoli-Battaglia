@@ -14,12 +14,10 @@ import java.util.Scanner;
 
 public class Client extends Observable<GameMessage> {
 
-    private String ip;
+    private final String ip;
     private final Scanner inputReader = new Scanner(System.in);
-    private int port;
+    private final int port;
     private ObjectOutputStream socketOut;
-    private CliView cliView;
-    private GuiManager guiManager;
     private boolean active = true;
     private Thread t;
 
@@ -33,19 +31,16 @@ public class Client extends Observable<GameMessage> {
      * @param socketIn the socket from which the messages arrive.
      */
     public synchronized Thread asyncReadFromSocket(final ObjectInputStream socketIn){
-         t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (isActive()) {
-                        Object inputObject = socketIn.readObject();
-                        Client.this.notify((GameMessage)inputObject);
-                    }
-                } catch (Exception e) {
-                    setActive(false);
-                }
-            }
-        });
+         t = new Thread(() -> {
+             try {
+                 while (isActive()) {
+                     Object inputObject = socketIn.readObject();
+                     Client.this.notify((GameMessage)inputObject);
+                 }
+             } catch (Exception e) {
+                 setActive(false);
+             }
+         });
         t.start();
         return t;
     }
@@ -79,11 +74,11 @@ public class Client extends Observable<GameMessage> {
      */
     private void setInterfaceChoice(String choice){
         if (choice.equals("c")){
-            cliView = new CliView(this);
+            CliView cliView = new CliView(this);
             addObserver(cliView);
         }
         if (choice.equals("g")){
-            guiManager = GuiManager.getInstance(this);
+            GuiManager guiManager = GuiManager.getInstance(this);
             addObserver(guiManager);
         }
     }

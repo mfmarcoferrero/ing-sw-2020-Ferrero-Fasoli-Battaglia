@@ -7,6 +7,7 @@ import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
+import java.io.IOException;
 import java.util.Vector;
 
 
@@ -39,7 +40,7 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
     /**
      * Notifies the observers with a PlayerAction object containing the player's credentials.
      */
-    public void addPlayer() {
+    public void addPlayer(){
         notify(playerCredentials);
     }
 
@@ -47,7 +48,7 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
      * Notifies the observers with a message containing player's action.
      * @param action the player's action.
      */
-    public void handleAction(PlayerAction action) {
+    public void handleAction(PlayerAction action){
         notify(action);
     }
 

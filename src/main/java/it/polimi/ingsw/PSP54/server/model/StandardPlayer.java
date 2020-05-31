@@ -238,7 +238,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                 dest.setLevel(currentLevel + 1);
             }
             worker.setBuildToken(currentBuildToken - 1);
-
             getGame().notifyBoard();
         }
         else

@@ -47,21 +47,11 @@ public class Server {
             waitingConnection.keySet().removeIf(playerMessage -> waitingConnection.get(playerMessage) == c);
 
         if (playingConnection.contains(c)){
-            GameMessage tryAgain = new StringMessage(null, "I'm sorry but you lose, wish you good luck for the next time");
-            c.asyncSend(tryAgain);
-            playingConnection.remove(c);
-            if(playingConnection.size()>=1)
-            {
-                for (Connection connection : playingConnection){
-                    GameMessage noMoreOpponent = new StringMessage(null, c.getName() + " is not your opponent anymore");
-                    connection.send(noMoreOpponent);
-                }
+            for (Connection connection : playingConnection){
+                GameMessage noMoreOpponent = new StringMessage(null, StringMessage.EndForDisconnection);
+                connection.send(noMoreOpponent);
             }
-            if (playingConnection.size()==1){
-                GameMessage youWon = new StringMessage(null, StringMessage.winMessage);
-                playingConnection.firstElement().asyncSend(youWon);
-            }
-            virtualViews.remove(playingConnection.indexOf(c));
+            virtualViews.clear();
         }
     }
 

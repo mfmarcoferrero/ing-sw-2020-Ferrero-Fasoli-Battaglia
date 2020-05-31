@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.observer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

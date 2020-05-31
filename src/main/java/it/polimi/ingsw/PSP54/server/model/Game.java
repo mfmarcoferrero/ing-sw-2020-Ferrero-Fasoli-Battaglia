@@ -205,18 +205,18 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     public void checkTokens(Worker currentWorker) {
 
         if (currentWorker.getMoveToken() >= 1 && currentWorker.getBuildToken() == 0){
-            GameMessage move = new StringMessage(currentWorker.getOwner().getVirtualViewID(), StringMessage.moveMessage);
+            GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
             notify(move);
         }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() >= 1){
             ArrayList<Box> valid=currentWorker.getOwner().setWorkerBoxesToBuild(currentWorker);
             if(valid.isEmpty())
-                CheckCondition(currentWorker.getOwner());
+                CheckCondition(currentPlayer);
             else {
-                GameMessage build = new StringMessage(currentWorker.getOwner().getVirtualViewID(), StringMessage.buildMessage);
+                GameMessage build = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildMessage);
                 notify(build);
             }
         }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() == 0)
-            endTurn(currentWorker.getOwner());
+            endTurn(currentPlayer);
     }
 
     /**
@@ -383,7 +383,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             GameMessage yourTurn = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.turnMessage);
             notify(yourTurn);
         }
-        else {
+        else if(currentPlayer.getSettingturn()==0){
             ArrayList<Box> validmovemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(true));
             ArrayList<Box> validmovefemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(false));
             if (validmovemale.isEmpty() && validmovefemale.isEmpty())
