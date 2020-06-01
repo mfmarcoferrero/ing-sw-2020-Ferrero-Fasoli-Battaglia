@@ -2,7 +2,6 @@ package it.polimi.ingsw.PSP54.client.gui;
 
 import it.polimi.ingsw.PSP54.server.model.Box;
 import it.polimi.ingsw.PSP54.server.model.Game;
-import it.polimi.ingsw.PSP54.server.model.Worker;
 import it.polimi.ingsw.PSP54.utils.choices.BooleanChoice;
 import it.polimi.ingsw.PSP54.utils.choices.BuildChoice;
 import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
@@ -26,10 +25,10 @@ import java.util.Vector;
 
 public class BoardSceneController {
 
-
     private GuiManager guiManager;
     private ImageView[][] imageBoxes = new ImageView[5][5];
     private ImageView[][] imageWorkerMap = new ImageView[5][5];
+    private ImageView myCardImage;
     @FXML private GridPane gridPane;
     @FXML private ImageView cardImage_1;
     @FXML private ImageView cardImage_2;
@@ -92,7 +91,7 @@ public class BoardSceneController {
         switch (box.getLevel()) {
             case 0:
                 if (box.isDome()) {
-                    boxImageView.setImage(new Image("file:./resources/icons/Dome.png"));
+                    boxImageView.setImage(new Image("file:./resources/icons/Dome_2.png"));
                 }
                 if (!box.isDome()){
                     boxImageView.setImage(null);
@@ -108,7 +107,7 @@ public class BoardSceneController {
                 break;
             case 2:
                 if (box.isDome()){
-                    boxImageView.setImage(new Image("file:./resources/icons/Second+Dome_Building.png"));
+                    boxImageView.setImage(new Image("file:./resources/icons/First+Second+Dome_Building.png"));
                 }
                 if (!box.isDome()){
                     boxImageView.setImage(new Image("file:./resources/icons/First+Second_Building.png"));
@@ -129,19 +128,78 @@ public class BoardSceneController {
         if (box.getWorker()!=null) {
             switch (box.getWorker().getOwner().getColor()) {
                 case "blue":
-                    boxImageView.setImage(new Image("file:./resources/icons/MaleWorker_Blue.png"));
+                    if (box.getWorker().getMale()) {
+                        boxImageView.setImage(new Image("file:./resources/icons/MaleWorker_Blue.png"));
+                    }
+                    else {
+                        boxImageView.setImage(new Image("file:./resources/icons/FemaleWorker_Blue.png"));
+                    }
                     break;
                 case "red":
-                    boxImageView.setImage(new Image("file:./resources/icons/MaleWorker_Red.png"));
-                    break;
+                    if (box.getWorker().getMale()) {
+                        boxImageView.setImage(new Image("file:./resources/icons/MaleWorker_Red.png"));
+                    }
+                    else {
+                        boxImageView.setImage(new Image("file:./resources/icons/FemaleWorker_Red.png"));
+                    }                    break;
                 case "yellow":
-                    boxImageView.setImage(new Image("file:./resources/icons/MaleWorker_Yellow.png"));
-                    break;
+                    if (box.getWorker().getMale()) {
+                        boxImageView.setImage(new Image("file:./resources/icons/MaleWorker_Yellow.png"));
+                    }
+                    else {
+                        boxImageView.setImage(new Image("file:./resources/icons/FemaleWorker_Yellow.png"));
+                    }                    break;
             }
         }
         else
             boxImageView.setImage(null);
     }
+
+    public void setCardImageTurn(int playerIndex){
+        switch (playerIndex){
+            case 0:
+                cardImage_1.setOpacity(1);
+                cardImage_2.setOpacity(0.5);
+                if (cardImage_3.isVisible()) {
+                    cardImage_3.setOpacity(0.5);
+                }
+                break;
+            case 1:
+                cardImage_1.setOpacity(0.5);
+                cardImage_2.setOpacity(1);
+                if (cardImage_3.isVisible()) {
+                    cardImage_3.setOpacity(0.5);
+                }
+                break;
+            case 2:
+                cardImage_1.setOpacity(0.5);
+                cardImage_2.setOpacity(0.5);
+                if (cardImage_3.isVisible()) {
+                    cardImage_3.setOpacity(1);
+                }
+                break;
+        }
+    }
+
+    private ImageView getMyCardImage(){
+        int myCardImageIndex = 0;
+        for(int i = 0; i < guiManager.getNames().size(); i++){
+            if (guiManager.getNames().get(i).equals(guiManager.getMyName())){
+                myCardImageIndex = i;
+            }
+        }
+        switch (myCardImageIndex){
+            case 1:
+                return cardImage_1;
+            case 2:
+                return cardImage_2;
+            case 3:
+                return cardImage_3;
+        }
+        return null;
+    }
+
+
 
     public void setMessageLabel(String message){
         messageLabel.setText(message);
@@ -158,6 +216,7 @@ public class BoardSceneController {
             guiManager.setCardImage(cardValues.get(1), cardImage_2);
             cardImage_3.setVisible(false);
         }
+
     }
 
     public void setLabelNames(Vector<String> playerNames){
@@ -170,6 +229,19 @@ public class BoardSceneController {
             labelPlayer_1.setText(playerNames.get(0).toUpperCase());
             labelPlayer_2.setText(playerNames.get(1).toUpperCase());
             labelPlayer_3.setVisible(false);
+        }
+        underlineMyName();
+        myCardImage = getMyCardImage();
+    }
+    private void underlineMyName(){
+        if (guiManager.getMyName().toUpperCase().equals(labelPlayer_1.getText())){
+            labelPlayer_1.setUnderline(true);
+        }
+        if (guiManager.getMyName().toUpperCase().equals(labelPlayer_2.getText())){
+            labelPlayer_2.setUnderline(true);
+        }
+        if (guiManager.getMyName().toUpperCase().equals(labelPlayer_3.getText())){
+            labelPlayer_3.setUnderline(true);
         }
     }
 
