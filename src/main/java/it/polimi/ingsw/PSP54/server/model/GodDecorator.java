@@ -153,13 +153,13 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     }
 
     @Override
-    public void SetSettingturn(int n) {
-        playerToDecorate.SetSettingturn(n);
+    public void setSettingTurns(int n) {
+        playerToDecorate.setSettingTurns(n);
     }
 
     @Override
-    public int getSettingturn() {
-        return playerToDecorate.getSettingturn();
+    public int getSettingTurns() {
+        return playerToDecorate.getSettingTurns();
     }
 }
 

@@ -6,6 +6,7 @@ import it.polimi.ingsw.PSP54.server.model.Box;
 import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.utils.choices.*;
 import it.polimi.ingsw.PSP54.utils.messages.*;
+
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
@@ -301,7 +302,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 		output.println("What's your name?");
 		String name = inputReader.next();
 		output.println("What's your age?");
-		int age = acquireInteger();
+		int age = acquireInteger("Incorrect input! [Enter an integer]");
 
 		HashMap<String, Integer> credentials = new HashMap<>();
 		credentials.put(name, age);
@@ -309,38 +310,15 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 	}
 
 	/**
-	 * Creates a PlayerChoice object containing player's credentials and sends it via socket.
-	 * @param credentials the HashMap containing player's name and age.
-	 */
-	public void sendPlayerCredentials(HashMap<String, Integer> credentials) {
-
-		for (Map.Entry<String, Integer> map : credentials.entrySet()){
-			String name = map.getKey();
-			int age = map.getValue();
-			PlayerChoice playerCredentials = new PlayerCredentials(name, age);
-			client.asyncSend(playerCredentials);
-		}
-
-	}
-
-	/**
 	 * Acquires game's number of players and stores it into a local variable.
 	 */
 	public void acquireNumberOfPlayers() {
-		int numberOfPlayers = acquireInteger();
+		int numberOfPlayers = acquireInteger("Incorrect Input! [Enter an integer]");
 		while (numberOfPlayers < 2 || numberOfPlayers > 3) {
 			output.println("Illegal number of player! It must be '2' or '3', try again");
 			numberOfPlayers = inputReader.nextInt();
 		}
 		setNumberOfPlayers(numberOfPlayers);
-	}
-
-	/**
-	 * Sends the number of players via socket.
-	 * @param numberOfPlayers the number of players.
-	 */
-	public void sendNumberOfPlayers(int numberOfPlayers){
-		client.asyncSend(numberOfPlayers);
 	}
 
 	/**
@@ -435,7 +413,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 	 * Asks an integer until input is valid.
 	 * @return the given number.
 	 */
-	public int acquireInteger() {
+	public int acquireInteger(String errorMessage) {
 		boolean loop = true;
 		int i = 0;
 		while (loop) {
@@ -444,22 +422,57 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 				i = Integer.parseInt(toParse);
 				loop = false;
 			} catch (IllegalArgumentException e){
-				output.println("Incorrect input, enter an integer!");
+				output.println(errorMessage);
 			}
 		}
 		return i;
 	}
 
 	/**
+	 * Asks the challenger to select a God Power Card for each player.
+	 * @param deck the HashMap containing the id and the name of every card in the game.
+	 * @return an HashMap containing the selected cards.
+	 */
+	public HashMap<Integer, String> challengerCardsSetup(HashMap<Integer,String> deck) {
+		ArrayList<String> cardsName = new ArrayList<>(deck.values());
+		ArrayList<Integer> cardsValues = new ArrayList<>(deck.keySet());
+		HashMap<Integer, String> extractedCards = new HashMap<>();
+		// prints available cards
+		output.println("Chose the God Powers for this game: [Enter the number of the cards]");
+		for (int i = 0; i < deck.size(); i++) {
+			output.println((i + 1) + ") " + cardsName.get(i));
+		}
+		// acquire extracted cards
+		for (int i = 0; i < numberOfPlayers; i++){
+			boolean loop = true;
+			int chosenCard = acquireInteger("Invalid Input! [Enter the number of a card]") - 1;
+			while (loop) {
+				if (cardsValues.contains(chosenCard)) {
+					if (!extractedCards.containsKey(chosenCard)) {
+						extractedCards.put(chosenCard, cardsName.get(chosenCard));
+						output.println("You selected " + cardsName.get(chosenCard));
+						loop = false;
+					} else
+						output.println("You've already chosen this card, please try another");
+				} else
+					output.println("Invalid Input! [Enter the number of a card]");
+				if (loop)
+					chosenCard = acquireInteger("Invalid Input! [Enter the number of a card]") - 1;
+			}
+		}
+		return extractedCards;
+	}
+
+	/**
 	 * Asks the player which power he wants and sends the choice via socket.
 	 */
-	public void acquireCardSelection(HashMap<Integer,String> extractedCards) {
-		Vector<String> cardsName = new Vector<>(extractedCards.values());
-		Vector<Integer> cardsValues = new Vector<>(extractedCards.keySet());
+	public void acquireAndSendCardSelection(HashMap<Integer,String> extractedCards) {
+		ArrayList<String> cardsName = new ArrayList<>(extractedCards.values());
+		ArrayList<Integer> cardsValues = new ArrayList<>(extractedCards.keySet());
 		boolean found = false;
 
 		if (extractedCards.size() == 1){
-			PlayerChoice cardChoice = new CardChoice(cardsValues.get(0));
+			PlayerChoice cardChoice = new PowerChoice(cardsValues.get(0));
 			client.asyncSend(cardChoice);
 		}
 		else {
@@ -471,7 +484,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 			while (!found) {
 				for (int i = 0; i < cardsName.size(); i++) {
 					if (chosenCard.equals(cardsName.get(i))) {
-						PlayerChoice cardChoice = new CardChoice(cardsValues.get(i));
+						PlayerChoice cardChoice = new PowerChoice(cardsValues.get(i));
 						client.asyncSend(cardChoice);
 						found = true;
 						break;
@@ -483,6 +496,58 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 				}
 			}
 		}
+	}
+
+	/**
+	 *
+	 * @param players
+	 * @return
+	 */
+	public int acquireStartPlayerSelection(Vector<Player> players) {
+		output.println("Select the Start Player: [Enter the number of the player");
+		for (Player player : players)
+			output.println((players.indexOf(player) + 1) + ") " + player.getPlayerName() );
+		int startIndex = acquireInteger("Invalid Input! [Enter the number of a Player]") - 1;
+		while (startIndex < 0 || startIndex > numberOfPlayers - 1){
+			output.println("Invalid Input! [Enter the number of a Player]");
+			startIndex = acquireInteger("Invalid Input! [Enter the number of a Player]");
+		}
+		return startIndex;
+	}
+
+	public void sendStartPlayerSelection(int  startPlayerIndex) {
+		PlayerChoice startPlayer = new StartPlayerChoice(startPlayerIndex);
+		client.asyncSend(startPlayer);
+	}
+
+	/**
+	 * Creates a PlayerChoice object containing player's credentials and sends it via socket.
+	 * @param credentials the HashMap containing player's name and age.
+	 */
+	public void sendPlayerCredentials(HashMap<String, Integer> credentials) {
+		for (Map.Entry<String, Integer> map : credentials.entrySet()){
+			String name = map.getKey();
+			int age = map.getValue();
+			PlayerChoice playerCredentials = new PlayerCredentials(name, age);
+			client.asyncSend(playerCredentials);
+		}
+	}
+
+	/**
+	 * Sends the number of players via socket.
+	 * @param numberOfPlayers the number of players.
+	 */
+	public void sendNumberOfPlayers(int numberOfPlayers){
+		client.asyncSend(numberOfPlayers);
+	}
+
+	/**
+	 * Sends an ExtractedCardsChoice object via socket.
+	 * @param extractedCards the HashMap to be encapsulated in the message to be sent.
+	 */
+	public void sendExtractedCards(HashMap<Integer, String> extractedCards) {
+		PlayerChoice selectedCards = new ExtractedCardsChoice(extractedCards);
+		client.asyncSend(selectedCards);
 	}
 
 	/**
@@ -520,7 +585,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 		client.asyncSend(booleanChoice);
 	}
 
-	public void EndOfmatch(Player p){
+	public void endOfMatch(Player p){
 		Font f = new Font("Papyrus",Font.PLAIN,24);
 		setFont(f);
 		Graphics win = new Graphics() {
@@ -705,7 +770,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 		};
 		win.setColor(java.awt.Color.getHSBColor(286,70,72));
 		win.drawString(p.getPlayerName().toUpperCase()+" IS THE WINNER",1,1);
-		ResetConnection();
+		resetConnection();
 	}
 
 	public void losingClient (){
@@ -897,10 +962,10 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 		lose.setColor(c);
 		lose.setFont(f);
 		lose.drawString("YOU LOSE",1,1);
-		ResetConnection();
+		resetConnection();
 	}
 
-	public void ResetConnection() {
+	public void resetConnection() {
 		boolean loop=true;
 		output.println("do you want to play again? Insert [yes/no]");
 		while (loop) {
@@ -934,14 +999,14 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 			String stringMessage = ((StringMessage) message).getMessage();
 			output.println(stringMessage);
 			switch (stringMessage) {
-				case StringMessage.newWorkermove:
+				case StringMessage.newWorkerMove:
 				case StringMessage.setFirstWorkerMessage:
 				case StringMessage.choseWorker:
 					setMaleSelected(acquireWorkerSelection());
 					sendWorkerSelection();
 					break;
 				case StringMessage.welcomeMessage:
-				case StringMessage.namealreadyTaken:
+				case StringMessage.nameAlreadyTaken:
 					acquirePlayerCredentials();
 					sendPlayerCredentials(getCredentials());
 					break;
@@ -970,21 +1035,26 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 					break;
 				}
 				case StringMessage.EndForDisconnection:
-					ResetConnection();
+					resetConnection();
 					break;
 			}
 		}
 		if (message instanceof DeckMessage){
-			
+			HashMap<Integer, String> extractedCards = challengerCardsSetup(((DeckMessage) message).getDeck());
+			sendExtractedCards(extractedCards);
+		}
+		if (message instanceof PlayersMessage){
+			int startIndex = acquireStartPlayerSelection(((PlayersMessage) message).getPlayers());
+			sendStartPlayerSelection(startIndex);
 		}
 		if(message instanceof LoseMessage){
 			losingClient();
 		}
 		if(message instanceof WinMessage){
-			EndOfmatch(((WinMessage) message).getPlayer());
+			endOfMatch(((WinMessage) message).getPlayer());
 		}
 		if (message instanceof AvailableCardsMessage){
-			acquireCardSelection(((AvailableCardsMessage) message).getCards());
+			acquireAndSendCardSelection(((AvailableCardsMessage) message).getCards());
 		}
 		if (message instanceof BoardMessage){
 			printBoard(((BoardMessage)message).getBoard());

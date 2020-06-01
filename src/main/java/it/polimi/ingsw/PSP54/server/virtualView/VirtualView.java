@@ -56,13 +56,14 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
      * Sends via socket a GameMessage object.
      * @param message the message to be sent.
      */
-    public void sendMessage(GameMessage message) {
+    public synchronized void sendMessage(GameMessage message) {
         try {
             connection.asyncSend(message).join();
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());
             sendMessage(message);
         }
+        //connection.send(message);
     }
 
     /**

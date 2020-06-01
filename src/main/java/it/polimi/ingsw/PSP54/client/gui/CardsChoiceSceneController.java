@@ -1,6 +1,6 @@
 package it.polimi.ingsw.PSP54.client.gui;
 
-import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
+import it.polimi.ingsw.PSP54.utils.choices.PowerChoice;
 import it.polimi.ingsw.PSP54.utils.messages.AvailableCardsMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -73,7 +73,7 @@ public class CardsChoiceSceneController {
         secondCardImage.setOpacity(0.5);
         thirdCardImage.setOpacity(0.5);
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
-        guiManager.sendObject(new CardChoice(extractedCards.get(0)));
+        guiManager.sendObject(new PowerChoice(extractedCards.get(0)));
     }
 
     /**
@@ -89,7 +89,7 @@ public class CardsChoiceSceneController {
         firstCardImage.setOpacity(0.5);
         thirdCardImage.setOpacity(0.5);
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
-        guiManager.sendObject(new CardChoice(extractedCards.get(1)));
+        guiManager.sendObject(new PowerChoice(extractedCards.get(1)));
     }
 
     /**
@@ -106,10 +106,10 @@ public class CardsChoiceSceneController {
         secondCardImage.setOpacity(0.5);
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
         if(extractedCards.size() == 2){
-            guiManager.sendObject(new CardChoice(extractedCards.get(1)));
+            guiManager.sendObject(new PowerChoice(extractedCards.get(1)));
         }
         if(extractedCards.size() == 3){
-            guiManager.sendObject(new CardChoice(extractedCards.get(2)));
+            guiManager.sendObject(new PowerChoice(extractedCards.get(2)));
         }
     }
 

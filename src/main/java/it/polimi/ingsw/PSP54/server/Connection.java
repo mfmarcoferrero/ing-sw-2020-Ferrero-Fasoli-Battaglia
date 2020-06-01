@@ -115,7 +115,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                     GameMessage welcome = new StringMessage(null, StringMessage.welcomeMessage);
                     asyncSend(welcome);
                 } else {
-                    GameMessage invalidName = new StringMessage(null, StringMessage.namealreadyTaken);
+                    GameMessage invalidName = new StringMessage(null, StringMessage.nameAlreadyTaken);
                     asyncSend(invalidName);
                 }
                 credentials = (PlayerCredentials) in.readObject();

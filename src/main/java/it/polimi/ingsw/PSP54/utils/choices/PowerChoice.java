@@ -5,12 +5,12 @@ import java.io.Serializable;
 /**
  * Represents the player's choice of the God card.
  */
-public class CardChoice extends PlayerChoice implements Serializable, Cloneable {
+public class PowerChoice extends PlayerChoice implements Serializable, Cloneable {
 
     private String choiceName;
     private final int choiceKey;
 
-    public CardChoice(int choiceKey) {
+    public PowerChoice(int choiceKey) {
         this.choiceKey = choiceKey;
     }
 

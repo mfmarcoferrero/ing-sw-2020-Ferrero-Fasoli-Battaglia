@@ -7,6 +7,7 @@ import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Controller implements Observer<PlayerAction> {
@@ -40,7 +41,17 @@ public class Controller implements Observer<PlayerAction> {
      */
     public void startGame() {
         game.sortPlayers();
-        game.displayCards();
+        game.sendDeck();
+    }
+
+    /**
+     *
+     * @param extraction
+     */
+    public void cardsExtraction(PlayerAction extraction) {
+        HashMap<Integer, String> extractedCards = ((ExtractedCardsChoice) extraction.getChoice()).getExtractedCards();
+        game.setExtractedCards(extractedCards);
+        game.displayAvailableCards();
     }
 
     /**
@@ -49,7 +60,18 @@ public class Controller implements Observer<PlayerAction> {
      */
     private void checkPowerAssignment(PlayerAction action) {
         game.performPowerAssignment(action);
-        game.displayCards();
+        game.displayAvailableCards();
+    }
+
+    /**
+     *
+     * @param action
+     */
+    public void setStartPlayer(PlayerAction action) {
+        int index = ((StartPlayerChoice) action.getChoice()).getStartPlayerIndex();
+        game.setCurrentPlayer(game.getPlayers().get(index));
+        game.assignColors();
+        game.start();
     }
 
     /**
@@ -77,8 +99,8 @@ public class Controller implements Observer<PlayerAction> {
     }
 
     /**
-     *
-     * @param action
+     * Invokes model's method to perform, if possible, the choice action.
+     * @param action the object containing information regarding the player's choice.
      */
     private void checkChoice(PlayerAction action) {
         game.performChoice(action);
@@ -95,8 +117,14 @@ public class Controller implements Observer<PlayerAction> {
         if (choice instanceof PlayerCredentials){
             addPlayer(message);
         }
-        if (choice instanceof CardChoice){
+        if (choice instanceof ExtractedCardsChoice){
+            cardsExtraction(message);
+        }
+        if (choice instanceof PowerChoice){
             checkPowerAssignment(message);
+        }
+        if (choice instanceof StartPlayerChoice){
+            setStartPlayer(message);
         }
         if (choice instanceof WorkerChoice){
             checkWorkerSelection(message);

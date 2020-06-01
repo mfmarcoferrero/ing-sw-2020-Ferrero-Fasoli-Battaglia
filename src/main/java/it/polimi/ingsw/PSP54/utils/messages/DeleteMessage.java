@@ -1,6 +1,8 @@
 package it.polimi.ingsw.PSP54.utils.messages;
 
-public class DeleteMessage extends GameMessage{
+import java.io.Serializable;
+
+public class DeleteMessage extends GameMessage implements Serializable, Cloneable {
 
     int X1,Y1,X2,Y2,L1,L2;
     public DeleteMessage(Integer virtualViewID,int x1, int y1, int level1, int x2, int y2, int level2) {

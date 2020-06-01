@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class StandardPlayer implements Player, Serializable, Cloneable {
 
-    private static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4, HEPHAESTUS = 5, MINOTAUR = 6, PROMETHEUS = 8;
+    private static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4, HEPHAESTUS = 5, MINOTAUR = 6, PAN = 7, PROMETHEUS = 8;
     private int cardID;
     private Game game;
     private final String playerName;
@@ -17,7 +17,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     private final Worker[] workers = new Worker[2];
     private Worker currentWorker;
     private boolean playing;
-    private int  settingturn=2;
+    private int settingTurns = 2;
 
 
     /**
@@ -72,6 +72,10 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             case MINOTAUR:
                 actualPlayer = new MinotaurDecorator(this);
                 actualPlayer.setCardID(MINOTAUR);
+                break;
+            case PAN:
+                actualPlayer = new MinotaurDecorator(this);
+                actualPlayer.setCardID(PAN);
                 break;
             case PROMETHEUS:
                 actualPlayer = new PrometheusDecorator(this);
@@ -244,6 +248,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             throw new InvalidBuildingException();
     }
 
+    @Override
     public void checkWinner(Worker worker) {
         if(worker.getPos().getLevel()==3)
             game.notifyWinner(worker.getOwner());
@@ -341,12 +346,12 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     }
 
     @Override
-    public void SetSettingturn(int n) {
-        settingturn=n;
+    public void setSettingTurns(int n) {
+        settingTurns =n;
     }
 
     @Override
-    public int getSettingturn() {
-        return settingturn;
+    public int getSettingTurns() {
+        return settingTurns;
     }
 }

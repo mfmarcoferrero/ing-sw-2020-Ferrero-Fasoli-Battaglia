@@ -3,7 +3,7 @@ package it.polimi.ingsw.PSP54.client.gui;
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Game;
-import it.polimi.ingsw.PSP54.utils.choices.CardChoice;
+import it.polimi.ingsw.PSP54.utils.choices.PowerChoice;
 import it.polimi.ingsw.PSP54.utils.messages.*;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -239,7 +239,7 @@ public class GuiManager implements Observer<GameMessage> {
             if (extractedCards.size() == 1) {
                 int myCard = extractedCards.get(0);
                 cardExtractor = false;
-                sendObject(new CardChoice(myCard));
+                sendObject(new PowerChoice(myCard));
                 if(gameMaster){
                     Platform.runLater(() -> numberOfPlayersSceneController.setBoardScene());
                 }

@@ -14,13 +14,13 @@ import java.util.*;
  */
 public class Game extends Observable<GameMessage> implements Serializable, Cloneable {
 
-    public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4, HEPHAESTUS = 5, MINOTAUR = 6, PROMETHEUS = 8;
-    public static final int CARD_NUMBER = 8;
+    public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4, HEPHAESTUS = 5, MINOTAUR = 6, PAN = 7, PROMETHEUS = 8;
+    public static final int CARD_NUMBER = 9;
     public static final int BOARD_SIZE = 5;
     public static final String[] colors = {"blue", "red", "yellow"};
     private final Box[][] board;
     private final HashMap<Integer, String> cardMap = new HashMap<>();
-    private final HashMap<Integer, String> extractedCards = new HashMap<>();
+    private HashMap<Integer, String> extractedCards = new HashMap<>();
     private Vector<Player> players;
     private Player currentPlayer;
 
@@ -39,6 +39,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         cardMap.put(DEMETER,"Demeter");
         cardMap.put(HEPHAESTUS, "Hephaestus");
         cardMap.put(MINOTAUR, "Minotaur");
+        cardMap.put(PAN, "Pan");
         cardMap.put(PROMETHEUS, "Prometheus");
     }
 
@@ -77,13 +78,21 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      */
     public void assignColors(){
 
-        int numberOfPlayers = players.capacity();
-
-        for (int i = 0; i < numberOfPlayers; i++) {
-            players.get(i).setColor(colors[i]);
+        int currentIndex = players.indexOf(currentPlayer);
+        int c = 0;
+        for (int i = currentIndex; i < players.capacity(); i++) {
+            players.get(i).setColor(colors[c]);
+            c++;
+        }
+        for (int i = 0; i < currentIndex; i++) {
+            players.get(i).setColor(colors[c]);
+            c++;
         }
     }
 
+    /**
+     * Sends via socket a message containing
+     */
     public void sendDeck() {
         GameMessage deck = new DeckMessage(currentPlayer.getVirtualViewID(), cardMap);
         notify(deck);
@@ -93,28 +102,11 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * Show cards that can be chosen to current player.
      * If all cards are already taken moves on to the next game step.
      */
-    public void displayCards () {
+    public void displayAvailableCards() {
         if (!getExtractedCards().isEmpty()) {
             GameMessage cards = new AvailableCardsMessage(currentPlayer.getVirtualViewID(), getExtractedCards());
             notify(cards);
-        }else {//all cards are assigned => worker placement
-            notifyBoard();
-            CardsPlayersMessage cardsPlayersMessage = new CardsPlayersMessage(null,getCardsPlayersMap());
-            notify(cardsPlayersMessage);
-            GameMessage setFirstWorker = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.setFirstWorkerMessage);
-            notify(setFirstWorker);
         }
-    }
-
-
-    private HashMap<String,Integer> getCardsPlayersMap() {
-        HashMap<String,Integer> cardsPlayersMap = new HashMap<>();
-        for (Player p : players){
-            String name = p.getPlayerName();
-            Integer cardValue = p.getCardID();
-            cardsPlayersMap.put(name,cardValue);
-        }
-        return cardsPlayersMap;
     }
 
     /**
@@ -123,7 +115,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      */
     public synchronized void performPowerAssignment(PlayerAction cardSelection) {
         if (getCurrentPlayer().getVirtualViewID() == cardSelection.getVirtualViewID()) {
-            CardChoice cardChoice = (CardChoice) cardSelection.getChoice();
+            PowerChoice cardChoice = (PowerChoice) cardSelection.getChoice();
             GameMessage powerInfoMessage;
             int currentIndex = players.indexOf(currentPlayer);
             switch (cardChoice.getChoiceKey()) {
@@ -169,6 +161,12 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
                     powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.minotaurMessage);
                     notify(powerInfoMessage);
                     break;
+                case PAN:
+                    players.set(currentIndex, currentPlayer.assignPower(PAN));
+                    currentPlayer = players.get(currentIndex);
+                    powerInfoMessage = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.panMessage);
+                    notify(powerInfoMessage);
+                    break;
                 case PROMETHEUS:
                     players.set(currentIndex, currentPlayer.assignPower(PROMETHEUS));
                     currentPlayer = players.get(currentIndex);
@@ -176,12 +174,42 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
                     notify(powerInfoMessage);
                     break;
             }
-            extractedCards.remove(((CardChoice) cardSelection.getChoice()).getChoiceKey());
-            endTurn(currentPlayer);
+            extractedCards.remove(((PowerChoice) cardSelection.getChoice()).getChoiceKey());
+            if (players.indexOf(currentPlayer) != players.indexOf(players.firstElement()))
+                endTurn(currentPlayer);
+            else{
+                GameMessage playersMessage = new PlayersMessage(currentPlayer.getVirtualViewID(), players);
+                notify(playersMessage);
+            }
         }else {
             GameMessage wrongTurn = new StringMessage(cardSelection.getVirtualViewID(), StringMessage.wrongTurnMessage);
             notify(wrongTurn);
         }
+    }
+
+    /**
+     *
+     * @return
+     */
+    private HashMap<String,Integer> getCardsPlayersMap() {
+        HashMap<String,Integer> cardsPlayersMap = new HashMap<>();
+        for (Player p : players){
+            String name = p.getPlayerName();
+            Integer cardValue = p.getCardID();
+            cardsPlayersMap.put(name,cardValue);
+        }
+        return cardsPlayersMap;
+    }
+
+    /**
+     *
+     */
+    public void start() {
+        notifyBoard();
+        CardsPlayersMessage cardsPlayersMessage = new CardsPlayersMessage(null, getCardsPlayersMap());
+        notify(cardsPlayersMessage);
+        GameMessage setFirstWorker = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.setFirstWorkerMessage);
+        notify(setFirstWorker);
     }
 
     /**
@@ -194,7 +222,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
             notify(move);
         }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() >= 1){
-            ArrayList<Box> valid=currentWorker.getOwner().setWorkerBoxesToBuild(currentWorker);
+            ArrayList<Box> valid = currentPlayer.setWorkerBoxesToBuild(currentWorker);
             if(valid.isEmpty())
                 performLosing(currentPlayer);
             else {
@@ -344,12 +372,19 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         }
     }
 
-
+    /**
+     *
+     * @param currentPlayer
+     */
     public void notifyWinner(Player currentPlayer) {
         GameMessage winMessage = new WinMessage(null,currentPlayer);
         notify(winMessage);
     }
 
+    /**
+     *
+     * @param currentPlayer
+     */
     public void performLosing(Player currentPlayer) {
         if (players.size()==3){
             for (Player player : players) {
@@ -371,7 +406,10 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         }
     }
 
-
+    /**
+     *
+     * @param player
+     */
     public void removePlayer(Player player){
         GameMessage message = new DeleteMessage(
                 null,
@@ -409,14 +447,16 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * @param currentPlayer the member of the players Vector which is going to play.
      */
     public void setCurrentPlayer(Player currentPlayer) {
-        if(currentPlayer.getSettingturn()>0){
+        //if (currentPlayer.getSettingTurns()>0)
+        if (currentPlayer.getWorker(true).getPos() == null ||currentPlayer.getWorker(false) == null){
             currentPlayer.setPlaying(true);
-            currentPlayer.SetSettingturn(currentPlayer.getSettingturn()-1);
+            currentPlayer.setSettingTurns(currentPlayer.getSettingTurns()-1);
             this.currentPlayer = currentPlayer;
             GameMessage yourTurn = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.turnMessage);
             notify(yourTurn);
-        }
-        else if(currentPlayer.getSettingturn()==0){
+        } else
+            //if (currentPlayer.getSettingTurns()==0)
+            {
             ArrayList<Box> validMoveMale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(true));
             ArrayList<Box> validMoveFemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(false));
             if (validMoveMale.isEmpty() && validMoveFemale.isEmpty())
@@ -441,6 +481,20 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     public HashMap<Integer, String> getExtractedCards() {
         return extractedCards;
     }
+
+    /**
+     *
+     * @param extractedCards
+     */
+    public void setExtractedCards(HashMap<Integer, String> extractedCards) {
+        this.extractedCards = extractedCards;
+        endTurn(currentPlayer);
+    }
+
+    public HashMap<Integer, String> getCardMap() {
+        return cardMap;
+    }
+
 
 }
 

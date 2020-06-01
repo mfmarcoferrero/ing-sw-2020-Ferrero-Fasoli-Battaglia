@@ -6,7 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -94,13 +93,12 @@ public class GameTest {
 
         game.getExtractedCards().put(0, "Apollo");
 
-        PlayerAction cardSelection = new PlayerAction(0, new CardChoice(0));
+        PlayerAction cardSelection = new PlayerAction(0, new PowerChoice(0));
 
         game.performPowerAssignment(cardSelection);
 
         assertTrue(players.get(0) instanceof ApolloDecorator);
-        assertFalse(players.get(0).isPlaying());
-        assertTrue(players.get(1).isPlaying());
+
     }
 
     @Test
