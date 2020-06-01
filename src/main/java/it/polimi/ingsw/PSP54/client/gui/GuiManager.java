@@ -25,6 +25,7 @@ public class GuiManager implements Observer<GameMessage> {
     private CardsMessage cardsToDisplay;
     private Vector<String> names;
     private Vector<Integer> cardValues;
+    private String myName;
     private boolean cardExtractor = true, moveChoice = false, buildChoice = false,
             firstWorkerSet = false, secondWorkerSet = false, boxChoice = false, booleanChoice = false;
     private Client client;
@@ -252,7 +253,6 @@ public class GuiManager implements Observer<GameMessage> {
             }
         }
         if (message instanceof BoardMessage) {
-            System.out.println("Ho ricevuto la board");
             if (board == null) {
                 board = (BoardMessage) message;
                 if (!cardExtractor) {
@@ -266,7 +266,6 @@ public class GuiManager implements Observer<GameMessage> {
             }
         }
         if (message instanceof CardsPlayersMessage){
-            System.out.println("Ho ricevuto giocatori e carte map");
             names = new Vector<>(((CardsPlayersMessage) message).getCardsPlayersMap().keySet());
             cardValues = new Vector<> (((CardsPlayersMessage) message).getCardsPlayersMap().values());
         }
@@ -344,5 +343,13 @@ public class GuiManager implements Observer<GameMessage> {
 
     public void setBooleanChoice(boolean booleanChoice) {
         this.booleanChoice = booleanChoice;
+    }
+
+    public String getMyName() {
+        return myName;
+    }
+
+    public void setMyName(String myName) {
+        this.myName = myName;
     }
 }

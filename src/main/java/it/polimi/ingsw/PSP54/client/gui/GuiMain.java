@@ -16,6 +16,7 @@ public class GuiMain extends Application implements Runnable{
         LogInSceneController logInSceneController = GuiManager.setLayout(stage.getScene(),"file:./resources/FXML/log_in.fxml");
         logInSceneController.setFont();
         stage.setTitle("Santorini");
+        stage.setResizable(false);
         stage.show();
     }
 

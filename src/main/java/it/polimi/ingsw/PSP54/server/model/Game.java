@@ -353,8 +353,9 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         int i = players.indexOf(currentPlayer);
         if (i == players.indexOf(players.lastElement())){
             setCurrentPlayer(players.get(0));
-        } else
-            setCurrentPlayer(players.get(i+1));
+        } else {
+            setCurrentPlayer(players.get(i + 1));
+        }
     }
 
     //setters & getters
