@@ -276,6 +276,8 @@ public class CliView implements Observer<GameMessage> {
 							line.append(endThird);
 						}
 						toPrint.append(line);
+						if (j == 4)
+							toPrint.append(i+1);
 					}
 					output.println(toPrint.toString());
 					l++;
@@ -290,7 +292,10 @@ public class CliView implements Observer<GameMessage> {
 
 		//print lower border
 		output.println(lowerBorder);
-	} //TODO: insert coordinates along borders?
+		output.println(Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER +
+				"          1                   2                   3                   4                   5         "
+		+ Color.ANSI_RESET);
+	}
 
 	/**
 	 * Acquires username and age of the player from command line and stores them in the credentials HashMap.
