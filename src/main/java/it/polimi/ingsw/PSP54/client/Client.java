@@ -84,8 +84,8 @@ public class Client extends Observable<GameMessage> {
     }
 
     /**
-     * Ogni client crea due thread per la lettura e scrittura
-     * Ogni thread viene eseguito in modo asincrono e il client si disconnette quando terminano
+     * Once acquired the interface choice establishes a connection with the server.
+     * It also starts two different thread to menage the socket reading/writing.
      * @throws IOException if an I/O error occurs when creating the socket.
      */
     public void startClient() throws IOException {
@@ -127,6 +127,6 @@ public class Client extends Observable<GameMessage> {
     }
 
     public void SuspendThread(){
-        t.suspend();
+        t.checkAccess();
     }
 }

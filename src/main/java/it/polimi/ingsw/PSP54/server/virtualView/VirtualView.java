@@ -6,9 +6,7 @@ import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.OpponentMessage;
-import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
-import java.io.IOException;
 import java.util.Vector;
 
 
@@ -16,7 +14,6 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
 
     private final int id;
     private final Connection connection;
-    private final MessageReceiver messageReceiver;
     private final PlayerAction playerCredentials;
 
     /**
@@ -29,9 +26,9 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
     public VirtualView(int id, PlayerAction p, Connection connection, Vector<String> opponents) {
         this.id = id;
         this.connection = connection;
-        this.messageReceiver = new MessageReceiver(this.connection,this);
+        MessageReceiver messageReceiver = new MessageReceiver(this.connection, this);
         this.playerCredentials = p;
-        connection.addObserver(this.messageReceiver);
+        connection.addObserver(messageReceiver);
         if (opponents.size() == 1){
             connection.asyncSend(new OpponentMessage(id,opponents,2));
         }
@@ -75,7 +72,7 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
 
     /**
      * Called whenever the observed object is changed.
-     *
+     * Sends the passed GameMessage if its virtualViewID is null or if it's the same as this VirtualView.
      * @param message an argument passed to the notify method.
      */
     @Override

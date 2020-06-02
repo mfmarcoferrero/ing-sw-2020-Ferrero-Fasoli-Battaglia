@@ -69,7 +69,7 @@ public class MinotaurDecorator extends GodDecorator {
 
     /**
      * Method used to set available boxes for the worker to move.
-     *
+     * It returns all adjacent boxes up to a level higher, including the ones occupied by a forcible worker.
      * @param worker current worker in use.
      * @return the vector containing available boxes.
      */
@@ -104,7 +104,7 @@ public class MinotaurDecorator extends GodDecorator {
 
     /**
      * Method used to perform a move action.
-     *
+     * If the destination box is occupied performs the move and force the opponent's worker, calls the super method otherwise.
      * @param worker selected worker which the player wants to move.
      * @param dest selected destination box.
      * @throws InvalidMoveException if the move can't be done.
@@ -123,6 +123,7 @@ public class MinotaurDecorator extends GodDecorator {
                 victim.setPos(forceTo);
                 forceTo.setWorker(victim);
                 //perform move
+                worker.getPos().setWorker(null);
                 worker.setPos(dest);
                 dest.setWorker(worker);
                 //update tokens

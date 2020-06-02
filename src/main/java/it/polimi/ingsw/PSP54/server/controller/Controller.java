@@ -24,7 +24,7 @@ public class Controller implements Observer<PlayerAction> {
      * @param virtualView the VirtualView to add.
      */
     public void addVirtualView (VirtualView virtualView) {
-        this.virtualViewList.add(virtualView.getId(),virtualView);
+        //this.virtualViewList.add(virtualView.getId(),virtualView);
     }
 
     /**
@@ -45,8 +45,8 @@ public class Controller implements Observer<PlayerAction> {
     }
 
     /**
-     *
-     * @param extraction
+     * Performs the extraction of the cards the Challenger has selected.
+     * @param extraction the PlayerAction containing the designed cards.
      */
     public void cardsExtraction(PlayerAction extraction) {
         HashMap<Integer, String> extractedCards = ((ExtractedCardsChoice) extraction.getChoice()).getExtractedCards();
@@ -64,8 +64,8 @@ public class Controller implements Observer<PlayerAction> {
     }
 
     /**
-     *
-     * @param action
+     * Sets to current teh player designed by the Challenger.
+     * @param action a PlayerAction containing the index of the start player.
      */
     public void setStartPlayer(PlayerAction action) {
         int index = ((StartPlayerChoice) action.getChoice()).getStartPlayerIndex();
@@ -108,7 +108,7 @@ public class Controller implements Observer<PlayerAction> {
 
     /**
      * Called whenever the observed object is changed.
-     *
+     * Calls different methods depending on the type of the PlayerChoice contained in the PlayerAction Message.
      * @param message an argument passed to the notify method.
      */
     @Override

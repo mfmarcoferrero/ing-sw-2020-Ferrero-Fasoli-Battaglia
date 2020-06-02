@@ -188,8 +188,8 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     *
-     * @return
+     * Generates a Map associating the player's names and their corresponding powers.
+     * @return the generated HashMap.
      */
     private HashMap<String,Integer> getCardsPlayersMap() {
         HashMap<String,Integer> cardsPlayersMap = new HashMap<>();
@@ -202,7 +202,8 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     *
+     * Sends all the necessary messages to begin the actual game.
+     * It is called after the Challenger's start player selection.
      */
     public void start() {
         notifyBoard();
@@ -223,6 +224,8 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             notify(move);
         }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() >= 1){
             ArrayList<Box> valid = currentPlayer.setWorkerBoxesToBuild(currentWorker);
+            GameMessage available = new AvailableBoxesMessage(currentPlayer.getVirtualViewID(), valid);
+            notify(available);
             if(valid.isEmpty())
                 performLosing(currentPlayer);
             else {
@@ -264,7 +267,9 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             MoveChoice moveChoice = (MoveChoice) moveSelection.getChoice();
             if (currentPlayer.getCurrentWorker().getPos() != null) { //actual move
                 try {
-                    currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
+                    ArrayList<Box> valid =currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
+                    GameMessage available = new AvailableBoxesMessage(currentPlayer.getVirtualViewID(), valid);
+                    notify(available);
                     currentPlayer.move(currentPlayer.getCurrentWorker(), getBox(moveChoice.getX(), moveChoice.getY()));
                     checkTokens(currentPlayer.getCurrentWorker());
                 }
@@ -373,17 +378,17 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     *
-     * @param currentPlayer
+     * Notifies all the player with a message containing the name of the winner.
+     * @param currentPlayer the player that has won.
      */
     public void notifyWinner(Player currentPlayer) {
-        GameMessage winMessage = new WinMessage(null,currentPlayer);
+        GameMessage winMessage = new WinMessage(null, currentPlayer);
         notify(winMessage);
     }
 
     /**
-     *
-     * @param currentPlayer
+     * Handles the losing of a player by removing him from the game.
+     * @param currentPlayer the player that has lost.
      */
     public void performLosing(Player currentPlayer) {
         if (players.size()==3){
@@ -407,8 +412,8 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     *
-     * @param player
+     * Eliminates a player from the game by removing his workers from the board.
+     * @param player the player to be removed.
      */
     public void removePlayer(Player player){
         GameMessage message = new DeleteMessage(
@@ -447,16 +452,12 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * @param currentPlayer the member of the players Vector which is going to play.
      */
     public void setCurrentPlayer(Player currentPlayer) {
-        //if (currentPlayer.getSettingTurns()>0)
         if (currentPlayer.getWorker(true).getPos() == null ||currentPlayer.getWorker(false) == null){
             currentPlayer.setPlaying(true);
-            currentPlayer.setSettingTurns(currentPlayer.getSettingTurns()-1);
             this.currentPlayer = currentPlayer;
             GameMessage yourTurn = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.turnMessage);
             notify(yourTurn);
-        } else
-            //if (currentPlayer.getSettingTurns()==0)
-            {
+        } else {
             ArrayList<Box> validMoveMale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(true));
             ArrayList<Box> validMoveFemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(false));
             if (validMoveMale.isEmpty() && validMoveFemale.isEmpty())
@@ -483,8 +484,8 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     }
 
     /**
-     *
-     * @param extractedCards
+     * Sets the extracted cards and ends current player's turn.
+     * @param extractedCards the Map associating the card's ids and their names.
      */
     public void setExtractedCards(HashMap<Integer, String> extractedCards) {
         this.extractedCards = extractedCards;

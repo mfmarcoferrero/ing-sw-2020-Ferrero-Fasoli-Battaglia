@@ -7,14 +7,11 @@ import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.utils.choices.*;
 import it.polimi.ingsw.PSP54.utils.messages.*;
 
-import java.awt.*;
-import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.text.AttributedCharacterIterator;
 import java.util.*;
 
-public class CliView extends java.applet.Applet implements Observer<GameMessage> {
+public class CliView implements Observer<GameMessage> {
 
 	private final Scanner inputReader = new Scanner(System.in);
 	private final PrintStream output = new PrintStream(System.out);
@@ -499,9 +496,9 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 	}
 
 	/**
-	 *
-	 * @param players
-	 * @return
+	 * Asks the Challenger to chose the starting player.
+	 * @param players the vector containing all players in the game.
+	 * @return the index of the designed player.
 	 */
 	public int acquireStartPlayerSelection(Vector<Player> players) {
 		output.println("Select the Start Player: [Enter the number of the player");
@@ -515,6 +512,10 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 		return startIndex;
 	}
 
+	/**
+	 * Sends a StartPlayerChoice object via socket.
+	 * @param startPlayerIndex the index of the starting player.
+	 */
 	public void sendStartPlayerSelection(int  startPlayerIndex) {
 		PlayerChoice startPlayer = new StartPlayerChoice(startPlayerIndex);
 		client.asyncSend(startPlayer);
@@ -585,386 +586,26 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 		client.asyncSend(booleanChoice);
 	}
 
-	public void endOfMatch(Player p){
-		Font f = new Font("Papyrus",Font.PLAIN,24);
-		setFont(f);
-		Graphics win = new Graphics() {
-			@Override
-			public Graphics create() {
-				return null;
-			}
-
-			@Override
-			public void translate(int x, int y) {
-
-			}
-
-			@Override
-			public java.awt.Color getColor() {
-				return null;
-			}
-
-			@Override
-			public void setColor(java.awt.Color c) {
-
-			}
-
-			@Override
-			public void setPaintMode() {
-
-			}
-
-			@Override
-			public void setXORMode(java.awt.Color c1) {
-
-			}
-
-			@Override
-			public java.awt.Font getFont() {
-				return null;
-			}
-
-			@Override
-			public void setFont(java.awt.Font font) {
-
-			}
-
-			@Override
-			public FontMetrics getFontMetrics(java.awt.Font f) {
-				return null;
-			}
-
-			@Override
-			public Rectangle getClipBounds() {
-				return null;
-			}
-
-			@Override
-			public void clipRect(int x, int y, int width, int height) {
-
-			}
-
-			@Override
-			public void setClip(int x, int y, int width, int height) {
-
-			}
-
-			@Override
-			public Shape getClip() {
-				return null;
-			}
-
-			@Override
-			public void setClip(Shape clip) {
-
-			}
-
-			@Override
-			public void copyArea(int x, int y, int width, int height, int dx, int dy) {
-
-			}
-
-			@Override
-			public void drawLine(int x1, int y1, int x2, int y2) {
-
-			}
-
-			@Override
-			public void fillRect(int x, int y, int width, int height) {
-
-			}
-
-			@Override
-			public void clearRect(int x, int y, int width, int height) {
-
-			}
-
-			@Override
-			public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-
-			}
-
-			@Override
-			public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-
-			}
-
-			@Override
-			public void drawOval(int x, int y, int width, int height) {
-
-			}
-
-			@Override
-			public void fillOval(int x, int y, int width, int height) {
-
-			}
-
-			@Override
-			public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
-
-			}
-
-			@Override
-			public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
-
-			}
-
-			@Override
-			public void drawPolyline(int[] xPoints, int[] yPoints, int nPoints) {
-
-			}
-
-			@Override
-			public void drawPolygon(int[] xPoints, int[] yPoints, int nPoints) {
-
-			}
-
-			@Override
-			public void fillPolygon(int[] xPoints, int[] yPoints, int nPoints) {
-
-			}
-
-			@Override
-			public void drawString(String str, int x, int y) {
-			}
-
-			@Override
-			public void drawString(AttributedCharacterIterator iterator, int x, int y) {
-
-			}
-
-			@Override
-			public boolean drawImage(Image img, int x, int y, ImageObserver observer) {
-				return false;
-			}
-
-			@Override
-			public boolean drawImage(Image img, int x, int y, int width, int height, ImageObserver observer) {
-				return false;
-			}
-
-			@Override
-			public boolean drawImage(Image img, int x, int y, java.awt.Color bgcolor, ImageObserver observer) {
-				return false;
-			}
-
-			@Override
-			public boolean drawImage(Image img, int x, int y, int width, int height, java.awt.Color bgcolor, ImageObserver observer) {
-				return false;
-			}
-
-			@Override
-			public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, ImageObserver observer) {
-				return false;
-			}
-
-			@Override
-			public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, java.awt.Color bgcolor, ImageObserver observer) {
-				return false;
-			}
-
-			@Override
-			public void dispose() {
-
-			}
-		};
-		win.setColor(java.awt.Color.getHSBColor(286,70,72));
-		win.drawString(p.getPlayerName().toUpperCase()+" IS THE WINNER",1,1);
+	/**
+	 * Handles the ending of a match by printing the name of the winner and closing the game.
+	 * @param winner the player that has won.
+	 */
+	public void endOfMatch(Player winner){
+		output.println(winner.getPlayerName() + " IS THE WINNER");
 		resetConnection();
 	}
 
-	public void losingClient (){
-
-		Font f = new Font("Papyrus",Font.PLAIN,24);
-		java.awt.Color c = new java.awt.Color(169,68,100);
-		Graphics lose = new Graphics() {
-			@Override
-			public Graphics create() {
-				return null;
-			}
-
-			@Override
-			public void translate(int x, int y) {
-
-			}
-
-			@Override
-			public java.awt.Color getColor() {
-				return null;
-			}
-
-			@Override
-			public void setColor(java.awt.Color c) {
-
-			}
-
-			@Override
-			public void setPaintMode() {
-
-			}
-
-			@Override
-			public void setXORMode(java.awt.Color c1) {
-
-			}
-
-			@Override
-			public Font getFont() {
-				return null;
-			}
-
-			@Override
-			public void setFont(Font font) {
-
-			}
-
-			@Override
-			public FontMetrics getFontMetrics(Font f) {
-				return null;
-			}
-
-			@Override
-			public Rectangle getClipBounds() {
-				return null;
-			}
-
-			@Override
-			public void clipRect(int x, int y, int width, int height) {
-
-			}
-
-			@Override
-			public void setClip(int x, int y, int width, int height) {
-
-			}
-
-			@Override
-			public Shape getClip() {
-				return null;
-			}
-
-			@Override
-			public void setClip(Shape clip) {
-
-			}
-
-			@Override
-			public void copyArea(int x, int y, int width, int height, int dx, int dy) {
-
-			}
-
-			@Override
-			public void drawLine(int x1, int y1, int x2, int y2) {
-
-			}
-
-			@Override
-			public void fillRect(int x, int y, int width, int height) {
-
-			}
-
-			@Override
-			public void clearRect(int x, int y, int width, int height) {
-
-			}
-
-			@Override
-			public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-
-			}
-
-			@Override
-			public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-
-			}
-
-			@Override
-			public void drawOval(int x, int y, int width, int height) {
-
-			}
-
-			@Override
-			public void fillOval(int x, int y, int width, int height) {
-
-			}
-
-			@Override
-			public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
-
-			}
-
-			@Override
-			public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
-
-			}
-
-			@Override
-			public void drawPolyline(int[] xPoints, int[] yPoints, int nPoints) {
-
-			}
-
-			@Override
-			public void drawPolygon(int[] xPoints, int[] yPoints, int nPoints) {
-
-			}
-
-			@Override
-			public void fillPolygon(int[] xPoints, int[] yPoints, int nPoints) {
-
-			}
-
-			@Override
-			public void drawString(String str, int x, int y) {
-				output.println(str);
-			}
-
-			@Override
-			public void drawString(AttributedCharacterIterator iterator, int x, int y) {
-
-			}
-
-			@Override
-			public boolean drawImage(Image img, int x, int y, ImageObserver observer) {
-				return false;
-			}
-
-			@Override
-			public boolean drawImage(Image img, int x, int y, int width, int height, ImageObserver observer) {
-				return false;
-			}
-
-			@Override
-			public boolean drawImage(Image img, int x, int y, java.awt.Color bgcolor, ImageObserver observer) {
-				return false;
-			}
-
-			@Override
-			public boolean drawImage(Image img, int x, int y, int width, int height, java.awt.Color bgcolor, ImageObserver observer) {
-				return false;
-			}
-
-			@Override
-			public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, ImageObserver observer) {
-				return false;
-			}
-
-			@Override
-			public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, java.awt.Color bgcolor, ImageObserver observer) {
-				return false;
-			}
-
-			@Override
-			public void dispose() {
-
-			}
-		};
-		lose.create();
-		lose.setColor(c);
-		lose.setFont(f);
-		lose.drawString("YOU LOSE",1,1);
+	/**
+	 * Handles the loosing of a player.
+	 */
+	public void losingPlayer(){
+		output.println("YOU LOSE");
 		resetConnection();
 	}
 
+	/**
+	 * Asks the player if he wants to play again, if so adds him to a new lobby, closes the connection otherwise.
+	 */
 	public void resetConnection() {
 		boolean loop=true;
 		output.println("do you want to play again? Insert [yes/no]");
@@ -1039,6 +680,9 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 					break;
 			}
 		}
+		if (message instanceof OpponentMessage){
+			setNumberOfPlayers(((OpponentMessage) message).getNumberOfPlayers());
+		}
 		if (message instanceof DeckMessage){
 			HashMap<Integer, String> extractedCards = challengerCardsSetup(((DeckMessage) message).getDeck());
 			sendExtractedCards(extractedCards);
@@ -1048,7 +692,7 @@ public class CliView extends java.applet.Applet implements Observer<GameMessage>
 			sendStartPlayerSelection(startIndex);
 		}
 		if(message instanceof LoseMessage){
-			losingClient();
+			losingPlayer();
 		}
 		if(message instanceof WinMessage){
 			endOfMatch(((WinMessage) message).getPlayer());

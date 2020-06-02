@@ -74,7 +74,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
                 actualPlayer.setCardID(MINOTAUR);
                 break;
             case PAN:
-                actualPlayer = new MinotaurDecorator(this);
+                actualPlayer = new PanDecorator(this);
                 actualPlayer.setCardID(PAN);
                 break;
             case PROMETHEUS:

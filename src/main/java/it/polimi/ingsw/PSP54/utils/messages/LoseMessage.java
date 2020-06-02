@@ -5,7 +5,7 @@ import it.polimi.ingsw.PSP54.server.model.Player;
 import java.io.Serializable;
 
 public class LoseMessage extends GameMessage implements Serializable, Cloneable {
-    private Player p;
+    private final Player p;
 
     public LoseMessage(Integer virtualViewID, Player pl) {
         super(virtualViewID);

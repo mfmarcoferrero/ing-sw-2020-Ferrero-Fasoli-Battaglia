@@ -27,8 +27,8 @@ public class Server {
     private final Map<PlayerCredentials, Connection> waitingConnection = new HashMap<>();
     private final Vector<Connection> playingConnection = new Vector<>(0,1);
     private final Vector<VirtualView> virtualViews = new Vector<>(0, 1);
-    protected Vector<Connection> currentConnections = new Vector<>(0,1);
-    protected Vector<String> opponents = new Vector<>();
+    protected final Vector<Connection> currentConnections = new Vector<>(0,1);
+    protected final Vector<String> opponents = new Vector<>();
     private int numberOfPlayers;
 
 
