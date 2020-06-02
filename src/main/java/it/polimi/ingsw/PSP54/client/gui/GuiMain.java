@@ -12,7 +12,7 @@ public class GuiMain extends Application implements Runnable{
 
     @Override
     public void start(Stage stage) {
-        stage.setScene(new Scene(new Pane(),800,450));
+        stage.setScene(new Scene(new Pane(),900,550));
         LogInSceneController logInSceneController = GuiManager.setLayout(stage.getScene(),"file:./resources/FXML/log_in.fxml");
         logInSceneController.setFont();
         stage.setTitle("Santorini");

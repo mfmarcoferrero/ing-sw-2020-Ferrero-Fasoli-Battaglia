@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="900.0" style="-fx-background-color: #0896C2 #0896C2;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.DeckChoiceSceneController">
+   <children>
+      <ImageView fx:id="apolloImageView" fitHeight="200.0" fitWidth="120.0" layoutX="70.0" layoutY="80.0" onMouseClicked="#apolloImageClicked" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../ing-sw-2020-Ferrero-Fasoli-Battaglia/resources/icons/01.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="athenaImageView" fitHeight="200.0" fitWidth="120.0" layoutX="390.0" layoutY="80.0" onMouseClicked="#athenaImageClicked" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../ing-sw-2020-Ferrero-Fasoli-Battaglia/resources/icons/03.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="artemisImageView" fitHeight="200.0" fitWidth="120.0" layoutX="230.0" layoutY="80.0" onMouseClicked="#artemisImageClicked" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../ing-sw-2020-Ferrero-Fasoli-Battaglia/resources/icons/02.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="atlasImageView" fitHeight="200.0" fitWidth="120.0" layoutX="550.0" layoutY="80.0" onMouseClicked="#atlasImageClicked" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../ing-sw-2020-Ferrero-Fasoli-Battaglia/resources/icons/04.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="demeterImageView" fitHeight="200.0" fitWidth="120.0" layoutX="710.0" layoutY="80.0" onMouseClicked="#demeterImageClicked" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../ing-sw-2020-Ferrero-Fasoli-Battaglia/resources/icons/05.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="hephaestusImageView" fitHeight="200.0" fitWidth="120.0" layoutX="130.0" layoutY="320.0" onMouseClicked="#hephaestusImageClicked" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../ing-sw-2020-Ferrero-Fasoli-Battaglia/resources/icons/06.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="minotaurImageView" fitHeight="200.0" fitWidth="120.0" layoutX="303.0" layoutY="320.0" onMouseClicked="#minotaurImageClicked" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../ing-sw-2020-Ferrero-Fasoli-Battaglia/resources/icons/08.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="panImageView" fitHeight="200.0" fitWidth="120.0" layoutX="476.0" layoutY="320.0" onMouseClicked="#panImageClicked" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../ing-sw-2020-Ferrero-Fasoli-Battaglia/resources/icons/09.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="prometheusImageView" fitHeight="200.0" fitWidth="120.0" layoutX="650.0" layoutY="320.0" onMouseClicked="#prometheusImageClicked" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../ing-sw-2020-Ferrero-Fasoli-Battaglia/resources/icons/10.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="choiceLabel" layoutX="317.0" layoutY="10.0" prefHeight="50.0" prefWidth="267.0">
+      </Label>
+   </children>
+</Pane>

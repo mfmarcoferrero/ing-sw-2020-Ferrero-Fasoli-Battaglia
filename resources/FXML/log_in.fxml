@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-background-color: #0896C2;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.LogInSceneController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="900.0" style="-fx-background-color: #0896C2;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.LogInSceneController">
    <children>
-      <Label fx:id="waitingLabel" layoutX="443.0" layoutY="255.0" prefHeight="31.0" prefWidth="192.0" text="Waiting for other players connection..." visible="false">
+      <Label fx:id="waitingLabel" layoutX="495.0" layoutY="329.0" prefHeight="31.0" prefWidth="243.0" text="Waiting for other players connection..." visible="false">
       </Label>
-      <ImageView fitHeight="197.0" fitWidth="129.0" layoutX="95.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="219.0" fitWidth="139.0" layoutX="141.0" layoutY="126.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../icons/title_poseidon.png" />
          </image>
       </ImageView>
-      <TextField fx:id="nicknameField" layoutX="459.0" layoutY="158.0" promptText="Enter Nickname" />
-      <TextField fx:id="ageField" layoutX="459.0" layoutY="202.0" promptText="Enter Age" />
-      <Label fx:id="nameLabel" layoutX="408.0" layoutY="149.0" prefHeight="43.0" prefWidth="57.0" text="Name:">
-         </Label>
-      <Label fx:id="ageLabel" layoutX="408.0" layoutY="193.0" prefHeight="43.0" prefWidth="57.0" text="Age:">
-         </Label>
-      <Button fx:id="startButton" layoutX="487.0" layoutY="255.0" mnemonicParsing="false" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" onAction="#startButtonPressed" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #B2E2F3;" text="Start Game">
-         </Button>
-      <ImageView fitHeight="227.0" fitWidth="211.0" layoutX="148.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true">
+      <TextField fx:id="nicknameField" layoutX="534.0" layoutY="227.0" promptText="Enter Nickname" />
+      <TextField fx:id="ageField" layoutX="534.0" layoutY="271.0" promptText="Enter Age" />
+      <Label fx:id="nameLabel" layoutX="483.0" layoutY="218.0" prefHeight="43.0" prefWidth="57.0" text="Name:">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
+      <Label fx:id="ageLabel" layoutX="483.0" layoutY="262.0" prefHeight="43.0" prefWidth="57.0" text="Age:">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
+      <Button fx:id="startButton" layoutX="562.0" layoutY="324.0" mnemonicParsing="false" onAction="#startButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #B2E2F3;" text="Start Game">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <ImageView fitHeight="251.0" fitWidth="220.0" layoutX="207.0" layoutY="182.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../icons/title_island.png" />
          </image>
       </ImageView>
-      <Label fx:id="joinAGameLabel" layoutX="312.0" layoutY="33.0" prefHeight="82.0" prefWidth="192.0" text="JOIN A GAME">
-      </Label>
+      <Label fx:id="joinAGameLabel" layoutX="354.0" layoutY="36.0" prefHeight="82.0" prefWidth="192.0" text="JOIN A GAME">
+         </Label>
    </children>
 </Pane>

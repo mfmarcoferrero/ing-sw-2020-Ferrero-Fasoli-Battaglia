@@ -36,11 +36,11 @@ public class LogInSceneController {
 
     public void setFont(){
         try {
-            joinAGameLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",40));
+            joinAGameLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",41));
             ageLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",23));
             nameLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",23));
             startButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",17));
-            waitingLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
+            waitingLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",18));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,6 +127,13 @@ public class LogInSceneController {
         BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/board.fxml");
         if (boardSceneController != null){
             boardSceneController.setBoardScene();
+        }
+    }
+
+    public void setDeckChoiceScene(){
+        DeckChoiceSceneController deckChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/deck_choice.fxml");
+        if (deckChoiceSceneController != null){
+            deckChoiceSceneController.setDeckChoiceScene();
         }
     }
 
