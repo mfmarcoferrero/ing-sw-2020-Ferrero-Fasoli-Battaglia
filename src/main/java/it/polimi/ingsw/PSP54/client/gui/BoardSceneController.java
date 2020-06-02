@@ -281,6 +281,15 @@ public class BoardSceneController {
         panelMessageLabel.setVisible(true);
     }
 
+    public void showBuildFirstMessage(){
+        panelMessageLabel.setText("BUILD BEFORE MOVE?");
+        firstButton.setText("Yes");
+        secondButton.setText("No");
+        firstButton.setVisible(true);
+        secondButton.setVisible(true);
+        panelMessageLabel.setVisible(true);
+    }
+
     public void maleButtonClicked(){
         if (guiManager.isBooleanChoice()){
             guiManager.sendObject(new BooleanChoice(true));

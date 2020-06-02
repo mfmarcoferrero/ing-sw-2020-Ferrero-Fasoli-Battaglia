@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="900.0" style="-fx-background-color: #0896C2;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.FirstPlayerChoiceSceneController">
+   <children>
+      <Label fx:id="waitingLabel" layoutX="348.0" layoutY="245.0" text="Waiting for other players connection..." visible="false">
+      </Label>
+      <Button fx:id="thirdPlayerButton" layoutX="583.0" layoutY="262.0" mnemonicParsing="false" onAction="#firstPlayerButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" prefHeight="47.0" prefWidth="76.0" style="-fx-background-color: #B2E2F3;">
+      </Button>
+      <Button fx:id="firstPlayerButton" layoutX="242.0" layoutY="262.0" mnemonicParsing="false" onAction="#secondPlayerButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" prefHeight="47.0" prefWidth="76.0" style="-fx-background-color: #B2E2F3;">
+      </Button>
+      <Button fx:id="secondPlayerButton" layoutX="413.0" layoutY="262.0" mnemonicParsing="false" onAction="#thirdPlayerButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" prefHeight="47.0" prefWidth="76.0" style="-fx-background-color: #B2E2F3;" />
+      <Label fx:id="chooseNumberOfPlayersLabel" layoutX="280.0" layoutY="129.0" prefHeight="66.0" prefWidth="341.0" text="WHO'S THE FIRST TO PLAY?">
+         </Label>
+   </children>
+</Pane>
