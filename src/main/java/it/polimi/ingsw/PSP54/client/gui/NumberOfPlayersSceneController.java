@@ -33,7 +33,7 @@ public class NumberOfPlayersSceneController {
         twoButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",18));
         threeButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",18));
         waitingLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",21));
-        chooseNumberOfPlayersLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",28));
+        chooseNumberOfPlayersLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",29));
     }
 
     /**
@@ -98,6 +98,13 @@ public class NumberOfPlayersSceneController {
         BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/board.fxml");
         if (boardSceneController != null){
             boardSceneController.setBoardScene();
+        }
+    }
+
+    public void setDeckChoiceScene(){
+        DeckChoiceSceneController deckChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/deck_choice.fxml");
+        if (deckChoiceSceneController != null){
+            deckChoiceSceneController.setDeckChoiceScene();
         }
     }
 

@@ -3,6 +3,7 @@ package it.polimi.ingsw.PSP54.client.gui;
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Game;
+import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.utils.choices.PowerChoice;
 import it.polimi.ingsw.PSP54.utils.messages.*;
 import javafx.application.Platform;
@@ -22,10 +23,12 @@ public class GuiManager implements Observer<GameMessage> {
     private NumberOfPlayersSceneController numberOfPlayersSceneController;
     private BoardSceneController boardSceneController;
     private CardsChoiceSceneController cardsChoiceSceneController;
+    private DeckChoiceSceneController deckChoiceSceneController;
     private AvailableCardsMessage cardsToDisplay;
     private Vector<String> names;
     private Vector<Integer> cardValues;
     private String myName;
+    private int numberOfPlayers = 0;
     private boolean cardExtractor = true, moveChoice = false, buildChoice = false,
             firstWorkerSet = false, secondWorkerSet = false, boxChoice = false, booleanChoice = false;
     private Client client;
@@ -92,6 +95,15 @@ public class GuiManager implements Observer<GameMessage> {
     }
 
     /**
+     * Called from a DeckChoiceSceneController
+     * Save the reference to this controller in GuiManager static instance
+     * @param deckChoiceSceneController
+     */
+    void setDeckChoiceSceneController(DeckChoiceSceneController deckChoiceSceneController){
+        this.deckChoiceSceneController = deckChoiceSceneController;
+    }
+
+    /**
      * Load a fxml file in a scene
      * @param scene
      * @param path of fxml file
@@ -107,7 +119,7 @@ public class GuiManager implements Observer<GameMessage> {
             pane = loader.load();
             scene.setRoot(pane);
         } catch (Exception e) {
-            System.out.println("ERRORE: NON RIESCO A CARICARE IL FILE FXML");
+            e.printStackTrace();
         }
         return loader.getController();
 
@@ -133,6 +145,18 @@ public class GuiManager implements Observer<GameMessage> {
         }
         if (val == Game.DEMETER){
             imageView.setImage(new Image("file:./resources/icons/05.png"));
+        }
+        if (val == Game.HEPHAESTUS){
+            imageView.setImage(new Image("file:./resources/icons/06.png"));
+        }
+        if (val == Game.MINOTAUR){
+            imageView.setImage(new Image("file:./resources/icons/08.png"));
+        }
+        if (val == Game.PAN){
+            imageView.setImage(new Image("file:./resources/icons/09.png"));
+        }
+        if (val == Game.PROMETHEUS){
+            imageView.setImage(new Image("file:./resources/icons/10.png"));
         }
     }
 
@@ -269,6 +293,17 @@ public class GuiManager implements Observer<GameMessage> {
             names = new Vector<>(((CardsPlayersMessage) message).getCardsPlayersMap().keySet());
             cardValues = new Vector<> (((CardsPlayersMessage) message).getCardsPlayersMap().values());
         }
+        if(message instanceof DeckMessage){
+            if (gameMaster){
+                Platform.runLater(() -> numberOfPlayersSceneController.setDeckChoiceScene());
+            }
+            else
+                Platform.runLater(() -> logInSceneController.setDeckChoiceScene());
+        }
+        if (message instanceof OpponentMessage){
+            numberOfPlayers = ((OpponentMessage) message).getNumberOfPlayers();
+            System.out.println("Il numero di giocatori è: " + numberOfPlayers);
+        }
     }
 
 
@@ -352,4 +387,9 @@ public class GuiManager implements Observer<GameMessage> {
     public void setMyName(String myName) {
         this.myName = myName;
     }
+
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
+    }
 }
+

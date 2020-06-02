@@ -5,6 +5,7 @@ import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.OpponentMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.IOException;
@@ -31,10 +32,16 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
         this.messageReceiver = new MessageReceiver(this.connection,this);
         this.playerCredentials = p;
         connection.addObserver(this.messageReceiver);
-        for (String opponent : opponents) {
+        if (opponents.size() == 1){
+            connection.asyncSend(new OpponentMessage(id,opponents,2));
+        }
+        if (opponents.size() == 2){
+            connection.asyncSend(new OpponentMessage(id,opponents,3));
+        }
+        /*for (String opponent : opponents) {
             GameMessage opponentMessage = new StringMessage(id, "Your opponent is:\n" + opponent + "\n");
             connection.asyncSend(opponentMessage);
-        }
+        }*/
     }
 
     /**
