@@ -196,27 +196,27 @@ public class GuiManager implements Observer<GameMessage> {
                     firstWorkerSet = true;
                     Platform.runLater(() -> {
                         boardSceneController.setMessageLabel("SET YOUR FIRST WORKER");
-                        boardSceneController.showPanelMessage();
+                        boardSceneController.showMaleOrFemaleMessage();
                     });
                     break;
                 case StringMessage.choseWorker:
                     setBoxChoice(true);
                     Platform.runLater(() -> {
                         boardSceneController.setMessageLabel("CHOOSE YOUR WORKER");
-                        boardSceneController.showPanelMessage();
+                        boardSceneController.showMaleOrFemaleMessage();
                     });
                     break;
                 case StringMessage.setSecondWorkerMessage:
                     firstWorkerSet = false;
                     secondWorkerSet = true;
+                    Platform.runLater(() -> {
+                        setBoxChoice(true);
+                        boardSceneController.setMessageLabel("SET YOUR SECOND WORKER");
+                    });
                 case StringMessage.moveMessage:
                     Platform.runLater(() -> {
-                        if (firstWorkerSet){
+                        if (firstWorkerSet || secondWorkerSet){
                             setBoxChoice(true);
-                        }
-                        else if (secondWorkerSet){
-                            setBoxChoice(true);
-                            boardSceneController.setMessageLabel("SET YOUR SECOND WORKER");
                         }
                         else {
                             boardSceneController.setMessageLabel("MAKE YOUR MOVE");
@@ -317,6 +317,7 @@ public class GuiManager implements Observer<GameMessage> {
         if (message instanceof OpponentMessage){
             numberOfPlayers = ((OpponentMessage) message).getNumberOfPlayers();
             System.out.println("Il numero di giocatori è: " + numberOfPlayers);
+            System.out.println("My name is: " + myName);
         }
         if (message instanceof PlayersMessage){
             players = ((PlayersMessage) message).getPlayers();

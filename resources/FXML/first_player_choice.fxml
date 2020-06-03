@@ -9,11 +9,12 @@
    <children>
       <Label fx:id="waitingLabel" layoutX="348.0" layoutY="245.0" text="Waiting for other players connection..." visible="false">
       </Label>
-      <Button fx:id="thirdPlayerButton" layoutX="583.0" layoutY="262.0" mnemonicParsing="false" onAction="#firstPlayerButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" prefHeight="47.0" prefWidth="76.0" style="-fx-background-color: #B2E2F3;">
+      <Button fx:id="firstPlayerButton" layoutX="242.0" layoutY="262.0" mnemonicParsing="false" onAction="#firstPlayerButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" prefHeight="47.0" prefWidth="76.0" style="-fx-background-color: #B2E2F3;">
       </Button>
-      <Button fx:id="firstPlayerButton" layoutX="242.0" layoutY="262.0" mnemonicParsing="false" onAction="#secondPlayerButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" prefHeight="47.0" prefWidth="76.0" style="-fx-background-color: #B2E2F3;">
+      <Button fx:id="secondPlayerButton" layoutX="413.0" layoutY="262.0" mnemonicParsing="false" onAction="#secondPlayerButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" prefHeight="47.0" prefWidth="76.0" style="-fx-background-color: #B2E2F3;">
       </Button>
-      <Button fx:id="secondPlayerButton" layoutX="413.0" layoutY="262.0" mnemonicParsing="false" onAction="#thirdPlayerButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" prefHeight="47.0" prefWidth="76.0" style="-fx-background-color: #B2E2F3;" />
+      <Button fx:id="thirdPlayerButton" layoutX="583.0" layoutY="262.0" mnemonicParsing="false" onAction="#thirdPlayerButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" prefHeight="47.0" prefWidth="76.0" style="-fx-background-color: #B2E2F3;">
+      </Button>
       <Label fx:id="chooseNumberOfPlayersLabel" layoutX="280.0" layoutY="129.0" prefHeight="66.0" prefWidth="341.0" text="WHO'S THE FIRST TO PLAY?">
          </Label>
    </children>
