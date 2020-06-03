@@ -506,13 +506,13 @@ public class CliView implements Observer<GameMessage> {
 	 * @return the index of the designed player.
 	 */
 	public int acquireStartPlayerSelection(Vector<Player> players) {
-		output.println("Select the Start Player: [Enter the number of the player");
+		output.println("Select the Start Player: [Enter the number of the player]");
 		for (Player player : players)
 			output.println((players.indexOf(player) + 1) + ") " + player.getPlayerName() );
 		int startIndex = acquireInteger("Invalid Input! [Enter the number of a Player]") - 1;
 		while (startIndex < 0 || startIndex > numberOfPlayers - 1){
 			output.println("Invalid Input! [Enter the number of a Player]");
-			startIndex = acquireInteger("Invalid Input! [Enter the number of a Player]");
+			startIndex = acquireInteger("Invalid Input! [Enter the number of a Player]") - 1;
 		}
 		return startIndex;
 	}

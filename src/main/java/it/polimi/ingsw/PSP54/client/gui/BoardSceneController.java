@@ -245,7 +245,7 @@ public class BoardSceneController {
         }
     }
 
-    public void showPanelMessage(){
+    public void showMaleOrFemaleMessage(){
         panelMessageLabel.setText("MALE or FEMALE");
         firstButton.setText("Male");
         secondButton.setText("Female");
@@ -274,6 +274,15 @@ public class BoardSceneController {
 
     public void showBuildOrDomeMessage(){
         panelMessageLabel.setText("BUILD A DOME?");
+        firstButton.setText("Yes");
+        secondButton.setText("No");
+        firstButton.setVisible(true);
+        secondButton.setVisible(true);
+        panelMessageLabel.setVisible(true);
+    }
+
+    public void showBuildFirstMessage(){
+        panelMessageLabel.setText("BUILD BEFORE MOVE?");
         firstButton.setText("Yes");
         secondButton.setText("No");
         firstButton.setVisible(true);
@@ -315,6 +324,7 @@ public class BoardSceneController {
 
     public void boxClicked(MouseEvent event){
         Node source = (Node)event.getSource();
+        mouseExitFromBox(event);
         if (guiManager.isBoxChoice()) {
             if (guiManager.isFirstWorkerSet() || guiManager.isSecondWorkerSet() || guiManager.isMoveChoice()) {
                 guiManager.sendObject(new MoveChoice(GridPane.getRowIndex(source), GridPane.getColumnIndex(source)));
@@ -346,9 +356,11 @@ public class BoardSceneController {
     }
 
     public void mouseExitFromBox(MouseEvent event){
-        ((Node) event.getSource()).setStyle("-fx-background-color: null;");
-        ((Node) event.getSource()).setOpacity(1);
-        ((Node) event.getSource()).getScene().setCursor(Cursor.DEFAULT);
+        if (guiManager.isBoxChoice()) {
+            ((Node) event.getSource()).setStyle("-fx-background-color: null;");
+            ((Node) event.getSource()).setOpacity(1);
+            ((Node) event.getSource()).getScene().setCursor(Cursor.DEFAULT);
+        }
     }
 
     public void mouseEnterOnButton(MouseEvent event){

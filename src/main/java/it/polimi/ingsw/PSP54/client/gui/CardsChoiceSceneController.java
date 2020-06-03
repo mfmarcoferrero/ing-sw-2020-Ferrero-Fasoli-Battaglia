@@ -70,8 +70,7 @@ public class CardsChoiceSceneController {
         firstCardButton.setDisable(true);
         secondCardButton.setDisable(true);
         thirdCardButton.setDisable(true);
-        secondCardImage.setOpacity(0.5);
-        thirdCardImage.setOpacity(0.5);
+        firstCardImage.setOpacity(0.5);
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
         guiManager.sendObject(new PowerChoice(extractedCards.get(0)));
     }
@@ -86,8 +85,7 @@ public class CardsChoiceSceneController {
         firstCardButton.setDisable(true);
         secondCardButton.setDisable(true);
         thirdCardButton.setDisable(true);
-        firstCardImage.setOpacity(0.5);
-        thirdCardImage.setOpacity(0.5);
+        secondCardImage.setOpacity(0.5);
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
         guiManager.sendObject(new PowerChoice(extractedCards.get(1)));
     }
@@ -102,8 +100,7 @@ public class CardsChoiceSceneController {
         firstCardButton.setDisable(true);
         secondCardButton.setDisable(true);
         thirdCardButton.setDisable(true);
-        firstCardImage.setOpacity(0.5);
-        secondCardImage.setOpacity(0.5);
+        thirdCardImage.setOpacity(0.5);
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
         if(extractedCards.size() == 2){
             guiManager.sendObject(new PowerChoice(extractedCards.get(1)));

@@ -118,18 +118,8 @@ public class LogInSceneController {
     }
 
     /**
-     * Load board.fxml on current stage
+     * Load first_player_choice.fxml on current stage
      */
-    public void setBoardScene() {
-        ((Node)event.getSource()).getScene().getWindow().setWidth(1065);
-        ((Node)event.getSource()).getScene().getWindow().setHeight(620);
-        ((Node)event.getSource()).getScene().getWindow().centerOnScreen();
-        BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/board.fxml");
-        if (boardSceneController != null){
-            boardSceneController.setBoardScene();
-        }
-    }
-
     public void setDeckChoiceScene(){
         DeckChoiceSceneController deckChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/deck_choice.fxml");
         if (deckChoiceSceneController != null){

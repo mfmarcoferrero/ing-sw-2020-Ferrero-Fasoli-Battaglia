@@ -16,6 +16,7 @@ public class DeckChoiceSceneController {
 
     private GuiManager guiManager;
     private int cardSelected = 0;
+    private MouseEvent event;
     private HashMap<Integer,String> extractedCards = new HashMap<>();
     @FXML private Label choiceLabel;
     @FXML private ImageView apolloImageView;
@@ -40,11 +41,11 @@ public class DeckChoiceSceneController {
 
     public void setDeckChoiceScene(){
         if (guiManager.getNumberOfPlayers() == 2) {
-            choiceLabel.setText("CHOSE 2 POWER CARDS");
+            choiceLabel.setText("CHOOSE 2 POWER CARDS");
             choiceLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",30));
         }
         if (guiManager.getNumberOfPlayers() == 3){
-            choiceLabel.setText("CHOSE 3 POWER CARDS");
+            choiceLabel.setText("CHOOSE 3 POWER CARDS");
             choiceLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",30));
         }
     }
@@ -71,40 +72,56 @@ public class DeckChoiceSceneController {
             guiManager.sendObject(new ExtractedCardsChoice(extractedCards));
         }
     }
-    public void apolloImageClicked(){
+    public void apolloImageClicked(MouseEvent event){
+        this.event = event;
         extractedCards.put(Game.APOLLO, "Apollo");
         cardImageClicked(apolloImageView);
     }
-    public void artemisImageClicked(){
+    public void artemisImageClicked(MouseEvent event){
+        this.event = event;
         extractedCards.put(Game.ARTEMIS, "Artemis");
         cardImageClicked(artemisImageView);
     }
-    public void athenaImageClicked(){
+    public void athenaImageClicked(MouseEvent event){
+        this.event = event;
         extractedCards.put(Game.ATHENA, "Athena");
         cardImageClicked(athenaImageView);
     }
-    public void atlasImageClicked(){
+    public void atlasImageClicked(MouseEvent event){
+        this.event = event;
         extractedCards.put(Game.ATLAS, "Atlas");
         cardImageClicked(atlasImageView);
     }
-    public void demeterImageClicked(){
+    public void demeterImageClicked(MouseEvent event){
+        this.event = event;
         extractedCards.put(Game.DEMETER, "Demeter");
         cardImageClicked(demeterImageView);
     }
-    public void hephaestusImageClicked(){
+    public void hephaestusImageClicked(MouseEvent event){
+        this.event = event;
         extractedCards.put(Game.HEPHAESTUS, "Hephaestus");
         cardImageClicked(hephaestusImageView);
     }
-    public void minotaurImageClicked(){
+    public void minotaurImageClicked(MouseEvent event){
+        this.event = event;
         extractedCards.put(Game.MINOTAUR, "Minotaur");
         cardImageClicked(minotaurImageView);
     }
-    public void panImageClicked(){
+    public void panImageClicked(MouseEvent event){
+        this.event = event;
         extractedCards.put(Game.PAN, "Pan");
         cardImageClicked(panImageView);
     }
-    public void prometheusImageClicked(){
+    public void prometheusImageClicked(MouseEvent event){
+        this.event = event;
         extractedCards.put(Game.PROMETHEUS, "Prometheus");
         cardImageClicked(prometheusImageView);
+    }
+
+    public void setFirstPlayerChoiceScene(){
+        FirstPlayerChoiceSceneController firstPlayerChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/first_player_choice.fxml");
+        if (firstPlayerChoiceSceneController != null){
+            firstPlayerChoiceSceneController.setFont();
+        }
     }
 }

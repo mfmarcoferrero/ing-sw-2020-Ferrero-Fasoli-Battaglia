@@ -24,12 +24,14 @@ public class GuiManager implements Observer<GameMessage> {
     private BoardSceneController boardSceneController;
     private CardsChoiceSceneController cardsChoiceSceneController;
     private DeckChoiceSceneController deckChoiceSceneController;
+    private FirstPlayerChoiceSceneController firstPlayerChoiceSceneController;
     private AvailableCardsMessage cardsToDisplay;
     private Vector<String> names;
     private Vector<Integer> cardValues;
+    private Vector<Player> players;
     private String myName;
     private int numberOfPlayers = 0;
-    private boolean cardExtractor = true, moveChoice = false, buildChoice = false,
+    private boolean cardExtractor = false, moveChoice = false, buildChoice = false,
             firstWorkerSet = false, secondWorkerSet = false, boxChoice = false, booleanChoice = false;
     private Client client;
     private BoardMessage board = null;
@@ -101,6 +103,15 @@ public class GuiManager implements Observer<GameMessage> {
      */
     void setDeckChoiceSceneController(DeckChoiceSceneController deckChoiceSceneController){
         this.deckChoiceSceneController = deckChoiceSceneController;
+    }
+
+    /**
+     * Called from a FirstPlayerChoiceSceneController
+     * Save the reference to this controller in GuiManager static instance
+     * @param firstPlayerChoiceSceneController
+     */
+    void setFirstPlayerChoiceSceneController(FirstPlayerChoiceSceneController firstPlayerChoiceSceneController){
+        this.firstPlayerChoiceSceneController = firstPlayerChoiceSceneController;
     }
 
     /**
@@ -185,27 +196,27 @@ public class GuiManager implements Observer<GameMessage> {
                     firstWorkerSet = true;
                     Platform.runLater(() -> {
                         boardSceneController.setMessageLabel("SET YOUR FIRST WORKER");
-                        boardSceneController.showPanelMessage();
+                        boardSceneController.showMaleOrFemaleMessage();
                     });
                     break;
                 case StringMessage.choseWorker:
                     setBoxChoice(true);
                     Platform.runLater(() -> {
                         boardSceneController.setMessageLabel("CHOOSE YOUR WORKER");
-                        boardSceneController.showPanelMessage();
+                        boardSceneController.showMaleOrFemaleMessage();
                     });
                     break;
                 case StringMessage.setSecondWorkerMessage:
                     firstWorkerSet = false;
                     secondWorkerSet = true;
+                    Platform.runLater(() -> {
+                        setBoxChoice(true);
+                        boardSceneController.setMessageLabel("SET YOUR SECOND WORKER");
+                    });
                 case StringMessage.moveMessage:
                     Platform.runLater(() -> {
-                        if (firstWorkerSet){
+                        if (firstWorkerSet || secondWorkerSet){
                             setBoxChoice(true);
-                        }
-                        else if (secondWorkerSet){
-                            setBoxChoice(true);
-                            boardSceneController.setMessageLabel("SET YOUR SECOND WORKER");
                         }
                         else {
                             boardSceneController.setMessageLabel("MAKE YOUR MOVE");
@@ -255,18 +266,20 @@ public class GuiManager implements Observer<GameMessage> {
                         boardSceneController.showBuildOrDomeMessage();
                     });
                     break;
+                case StringMessage.buildFirst:
+                    Platform.runLater(() -> {
+                        setBooleanChoice(true);
+                        boardSceneController.showBuildFirstMessage();
+                    });
+                    break;
             }
         }
         if (message instanceof AvailableCardsMessage){
             this.cardsToDisplay = (AvailableCardsMessage) message;
             Vector<Integer> extractedCards = new Vector<>(cardsToDisplay.getCards().keySet());
-            if (extractedCards.size() == 1) {
+            if (cardExtractor) {
                 int myCard = extractedCards.get(0);
-                cardExtractor = false;
                 sendObject(new PowerChoice(myCard));
-                if(gameMaster){
-                    Platform.runLater(() -> numberOfPlayersSceneController.setBoardScene());
-                }
             }
             else {
                 if (gameMaster) {
@@ -279,8 +292,8 @@ public class GuiManager implements Observer<GameMessage> {
         if (message instanceof BoardMessage) {
             if (board == null) {
                 board = (BoardMessage) message;
-                if (!cardExtractor) {
-                    Platform.runLater(() -> logInSceneController.setBoardScene());
+                if (cardExtractor) {
+                    Platform.runLater(() -> firstPlayerChoiceSceneController.setBoardScene());
                 } else {
                     Platform.runLater(() -> cardsChoiceSceneController.setBoardScene());
                 }
@@ -289,11 +302,12 @@ public class GuiManager implements Observer<GameMessage> {
                 Platform.runLater(() -> boardSceneController.setBoardImage(board.getBoard()));
             }
         }
-        if (message instanceof CardsPlayersMessage){
+        if (message instanceof CardsPlayersMessage) {
             names = new Vector<>(((CardsPlayersMessage) message).getCardsPlayersMap().keySet());
             cardValues = new Vector<> (((CardsPlayersMessage) message).getCardsPlayersMap().values());
         }
         if(message instanceof DeckMessage){
+            cardExtractor = true;
             if (gameMaster){
                 Platform.runLater(() -> numberOfPlayersSceneController.setDeckChoiceScene());
             }
@@ -303,6 +317,11 @@ public class GuiManager implements Observer<GameMessage> {
         if (message instanceof OpponentMessage){
             numberOfPlayers = ((OpponentMessage) message).getNumberOfPlayers();
             System.out.println("Il numero di giocatori è: " + numberOfPlayers);
+            System.out.println("My name is: " + myName);
+        }
+        if (message instanceof PlayersMessage){
+            players = ((PlayersMessage) message).getPlayers();
+            Platform.runLater(() -> deckChoiceSceneController.setFirstPlayerChoiceScene());
         }
     }
 
@@ -390,6 +409,10 @@ public class GuiManager implements Observer<GameMessage> {
 
     public int getNumberOfPlayers() {
         return numberOfPlayers;
+    }
+
+    public Vector<Player> getPlayers() {
+        return players;
     }
 }
 
