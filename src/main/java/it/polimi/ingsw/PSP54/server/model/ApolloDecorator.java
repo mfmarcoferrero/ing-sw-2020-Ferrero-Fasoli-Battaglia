@@ -76,7 +76,8 @@ public class ApolloDecorator extends GodDecorator {
                 worker.setBuildToken(1);
                 //notify
                 getGame().notifyBoard();
-                checkWinner(worker);
+                if (current.getLevel() < dest.getLevel())
+                    checkWinner(worker);
 
             }else
                 super.move(worker, dest);

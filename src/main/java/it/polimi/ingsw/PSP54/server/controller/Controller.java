@@ -64,12 +64,12 @@ public class Controller implements Observer<PlayerAction> {
     }
 
     /**
-     * Sets to current teh player designed by the Challenger.
+     * Sets to current the player designed by the Challenger.
      * @param action a PlayerAction containing the index of the start player.
      */
     public void setStartPlayer(PlayerAction action) {
-        int index = ((StartPlayerChoice) action.getChoice()).getStartPlayerIndex();
-        game.setCurrentPlayer(game.getPlayers().get(index));
+        game.translatePlayersVector(((StartPlayerChoice) action.getChoice()).getStartPlayerIndex());
+        game.setCurrentPlayer(game.getPlayers().get(0));
         game.assignColors();
         game.start();
     }

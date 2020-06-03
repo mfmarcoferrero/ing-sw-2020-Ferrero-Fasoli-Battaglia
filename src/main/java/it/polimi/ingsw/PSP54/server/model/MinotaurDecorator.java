@@ -117,6 +117,8 @@ public class MinotaurDecorator extends GodDecorator {
 
         if (currentMoveToken > 0 && valid.contains(dest)){
             if (dest.isOccupied()){
+                //save a reference to the current position
+                Box current = worker.getPos();
                 //perform force
                 Box forceTo = diametricallyOppositeBox(dest, worker.getPos());
                 Worker victim = dest.getWorker();
@@ -131,7 +133,8 @@ public class MinotaurDecorator extends GodDecorator {
                 worker.setBuildToken(1);
                 //notify
                 getGame().notifyBoard();
-                super.checkWinner(worker);
+                if (current.getLevel() < dest.getLevel())
+                    checkWinner(worker);
 
             }else
                 super.move(worker, dest);

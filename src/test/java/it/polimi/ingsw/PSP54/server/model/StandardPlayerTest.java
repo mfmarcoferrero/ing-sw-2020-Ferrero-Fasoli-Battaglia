@@ -42,7 +42,7 @@ public class StandardPlayerTest {
 
 
     @Test
-    public void setWorkerPos_BoardCenter_CorrectOutput() throws InvalidMoveException { //TODO: exception Case
+    public void setWorkerPos_BoardCenter_CorrectOutput() throws InvalidMoveException {
 
         Worker maleWorker = players.get(0).getWorker(true);
 

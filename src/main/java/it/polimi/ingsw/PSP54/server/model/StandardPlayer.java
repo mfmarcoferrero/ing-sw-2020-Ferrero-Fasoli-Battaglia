@@ -8,7 +8,6 @@ import java.util.ArrayList;
  */
 public class StandardPlayer implements Player, Serializable, Cloneable {
 
-    private static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4, HEPHAESTUS = 5, MINOTAUR = 6, PAN = 7, PROMETHEUS = 8;
     private int cardID;
     private Game game;
     private final String playerName;
@@ -45,41 +44,41 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         Player actualPlayer = this;
 
         switch (cardID) {
-            case APOLLO:
+            case Game.APOLLO:
                 actualPlayer = new ApolloDecorator(this);
-                actualPlayer.setCardID(APOLLO);
+                actualPlayer.setCardID(Game.APOLLO);
                 break;
-            case ARTEMIS:
+            case Game.ARTEMIS:
                 actualPlayer = new ArtemisDecorator(this);
-                actualPlayer.setCardID(ARTEMIS);
+                actualPlayer.setCardID(Game.ARTEMIS);
                 break;
-            case ATHENA:
+            case Game.ATHENA:
                 actualPlayer = new AthenaDecorator(this);
-                actualPlayer.setCardID(ATHENA);
+                actualPlayer.setCardID(Game.ATHENA);
                 break;
-            case ATLAS:
+            case Game.ATLAS:
                 actualPlayer = new AtlasDecorator(this);
-                actualPlayer.setCardID(ATLAS);
+                actualPlayer.setCardID(Game.ATLAS);
                 break;
-            case DEMETER:
+            case Game.DEMETER:
                 actualPlayer = new DemeterDecorator(this);
-                actualPlayer.setCardID(DEMETER);
+                actualPlayer.setCardID(Game.DEMETER);
                 break;
-            case HEPHAESTUS:
+            case Game.HEPHAESTUS:
                 actualPlayer = new HephaestusDecorator(this);
-                actualPlayer.setCardID(HEPHAESTUS);
+                actualPlayer.setCardID(Game.HEPHAESTUS);
                 break;
-            case MINOTAUR:
+            case Game.MINOTAUR:
                 actualPlayer = new MinotaurDecorator(this);
-                actualPlayer.setCardID(MINOTAUR);
+                actualPlayer.setCardID(Game.MINOTAUR);
                 break;
-            case PAN:
+            case Game.PAN:
                 actualPlayer = new PanDecorator(this);
-                actualPlayer.setCardID(PAN);
+                actualPlayer.setCardID(Game.PAN);
                 break;
-            case PROMETHEUS:
+            case Game.PROMETHEUS:
                 actualPlayer = new PrometheusDecorator(this);
-                actualPlayer.setCardID(PROMETHEUS);
+                actualPlayer.setCardID(Game.PROMETHEUS);
                 break;
         }
         return actualPlayer;
@@ -207,7 +206,10 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     public void move(Worker worker, Box dest) throws InvalidMoveException{
         ArrayList<Box> valid = worker.getBoxesToMove();
         int currentMoveToken = worker.getMoveToken();
+
         if (currentMoveToken > 0 && valid.contains(dest)){
+            //save a reference to the current position
+            Box current = worker.getPos();
             //free current box
             worker.getPos().setWorker(null);
             //perform move
@@ -217,7 +219,9 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
             worker.setMoveToken(currentMoveToken - 1);
             worker.setBuildToken(1);
             getGame().notifyBoard();
-            checkWinner(worker);
+            if (current.getLevel() < dest.getLevel())
+                checkWinner(worker);
+
         } else throw new InvalidMoveException();
     }
 

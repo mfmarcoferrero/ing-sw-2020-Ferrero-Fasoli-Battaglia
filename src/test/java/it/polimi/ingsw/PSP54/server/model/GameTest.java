@@ -66,7 +66,6 @@ public class GameTest {
             assertEquals(Integer.toString(i), name);
             i--;
         }
-
     }
 
     @Test
@@ -87,6 +86,14 @@ public class GameTest {
     }
 
     @Test
+    public void translatesPlayersVector() {
+        game.setCurrentPlayer(players.get(0));
+        game.translatePlayersVector(2);
+
+        assertTrue(game.getPlayers().get(1).isPlaying());
+    }
+
+    @Test
     public void performPowerAssignment_ApolloPower_CorrectOutput() {
 
         game.setCurrentPlayer(players.get(0));
@@ -98,7 +105,44 @@ public class GameTest {
         game.performPowerAssignment(cardSelection);
 
         assertTrue(players.get(0) instanceof ApolloDecorator);
+    }
 
+    @Test
+    public void performPowerAssignment_GameInitialization_CorrectOutput() {
+
+        game.setCurrentPlayer(players.get(0));
+        HashMap<Integer, String> extractedCards = new HashMap<>();
+        extractedCards.put(Game.ATLAS, "Atlas");
+        extractedCards.put(Game.DEMETER, "Demeter");
+        extractedCards.put(Game.HEPHAESTUS, "Hephaestus");
+
+        game.setExtractedCards(extractedCards);
+
+        game.setCurrentPlayer(players.get(1));
+
+        PlayerChoice choice = new PowerChoice(Game.ATLAS);
+        game.performPowerAssignment(new PlayerAction(1, choice));
+
+        assertTrue(players.get(2).isPlaying());
+        assertTrue(players.get(1) instanceof AtlasDecorator);
+
+        choice = new PowerChoice(Game.DEMETER);
+        game.performPowerAssignment(new PlayerAction(2, choice));
+
+        assertTrue(players.get(0).isPlaying());
+        assertTrue(players.get(2) instanceof DemeterDecorator);
+
+        choice = new PowerChoice(Game.HEPHAESTUS);
+        game.performPowerAssignment(new PlayerAction(0, choice));
+        assertTrue(players.get(0).isPlaying());
+        assertTrue(players.get(0) instanceof HephaestusDecorator);
+
+        game.setCurrentPlayer(players.get(0));
+        game.start();
+
+        Worker hephaestusWorker = game.getCurrentPlayer().getWorker(true);
+        hephaestusWorker.setPos(board[2][2]);
+        board[2][2].setWorker(hephaestusWorker);
     }
 
     @Test
@@ -170,6 +214,32 @@ public class GameTest {
     }
 
     @Test
+    public void performMove_ActualMove_CorrectOutput() {
+
+        game.setCurrentPlayer(players.get(1));
+
+        game.getCurrentPlayer().getWorker(true).setPos(board[2][2]);
+        game.getCurrentPlayer().getWorker(false).setPos(board[2][3]);
+
+        board[2][2].setWorker(game.getCurrentPlayer().getWorker(true));
+        board[2][3].setWorker(game.getCurrentPlayer().getWorker(false));
+
+        PlayerChoice workerChoice = new WorkerChoice(true);
+        PlayerAction workerSelection = new PlayerAction(1, workerChoice);
+
+        game.performWorkerChoice(workerSelection); //select first worker
+
+        PlayerChoice moveChoice = new MoveChoice(2, 3);
+        PlayerAction moveAction = new PlayerAction(1, moveChoice);
+
+        game.performMove(moveAction);
+
+        assertEquals(board[2][2], players.get(1).getWorker(true).getPos());
+        assertTrue(players.get(1).isPlaying());
+        assertEquals(players.get(1).getWorker(true), game.getCurrentPlayer().getCurrentWorker());
+    }
+
+    @Test
     public void performBuild_OccupiedBox_InvalidBuilding() {
 
         game.setCurrentPlayer(players.get(2));
@@ -191,5 +261,29 @@ public class GameTest {
         assertTrue(players.get(2).isPlaying());
         assertEquals(players.get(2).getWorker(true), game.getCurrentPlayer().getCurrentWorker());
     }
+
+    @Test
+    public void performChoice_AtlasChoice_CorrectOutput() {
+
+        players.get(0).assignPower(Game.ATLAS);
+        Worker atlasMaleWorker = players.get(0).getWorker(true);
+        Worker atlasFemaleWorker = players.get(0).getWorker(false);
+
+        atlasMaleWorker.setPos(board[3][3]);
+        board[3][3].setWorker(atlasMaleWorker);
+
+        atlasFemaleWorker.setPos(board[2][2]);
+        board[2][2].setWorker(atlasFemaleWorker);
+
+        game.setCurrentPlayer(players.get(0));
+
+        PlayerChoice choice = new WorkerChoice(false);
+        game.performWorkerChoice(new PlayerAction(0, choice));
+
+        choice = new MoveChoice(1, 1);
+        game.performMove(new PlayerAction(0, choice));
+    }
+
+
     
 }

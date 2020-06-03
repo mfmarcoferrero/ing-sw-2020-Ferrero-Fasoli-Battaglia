@@ -67,7 +67,6 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
             System.out.println(e.getMessage());
             sendMessage(message);
         }
-        //connection.send(message);
     }
 
     /**

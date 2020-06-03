@@ -469,36 +469,36 @@ public class CliView implements Observer<GameMessage> {
 	 * Asks the player which power he wants and sends the choice via socket.
 	 */
 	public void acquireAndSendCardSelection(HashMap<Integer,String> extractedCards) {
-		ArrayList<String> cardsName = new ArrayList<>(extractedCards.values());
-		ArrayList<Integer> cardsValues = new ArrayList<>(extractedCards.keySet());
-		boolean found = false;
+		ArrayList<String> cardsNames = new ArrayList<>(extractedCards.values());
+		ArrayList<Integer> cardsIDs = new ArrayList<>(extractedCards.keySet());
+		HashMap<Integer, Integer> extractedCardsMap = new HashMap<>();
+		boolean loop = true;
 
 		if (extractedCards.size() == 1){
-			PlayerChoice cardChoice = new PowerChoice(cardsValues.get(0));
+			PlayerChoice cardChoice = new PowerChoice(cardsIDs.get(0));
 			client.asyncSend(cardChoice);
 		}
 		else {
-			output.println("Choose your card: [Enter the name of the God]");
-			for (int i = 0; i < cardsName.size(); i++) {
-				output.println((i + 1) + ") " + cardsName.get(i));
+			output.println("Choose your card: [Enter the number of the God]");
+			for (int i = 0; i < extractedCards.size(); i++) {
+				output.println((i + 1) + ") " + cardsNames.get(i));
+				extractedCardsMap.put(i + 1, cardsIDs.get(i));
 			}
-			String chosenCard = inputReader.next();
-			while (!found) {
-				for (int i = 0; i < cardsName.size(); i++) {
-					if (chosenCard.equals(cardsName.get(i))) {
-						PlayerChoice cardChoice = new PowerChoice(cardsValues.get(i));
-						client.asyncSend(cardChoice);
-						found = true;
-						break;
-					}
+			int chosenCard = acquireInteger("Invalid Input! [Enter the number of a God]");
+			while (loop) {
+				if (extractedCardsMap.containsKey(chosenCard)) {
+					PlayerChoice cardChoice = new PowerChoice(extractedCardsMap.get(chosenCard));
+					client.asyncSend(cardChoice);
+					loop = false;
 				}
-				if (!found) {
-					output.println("Invalid input! [Enter the name of the God]");
-					chosenCard = inputReader.next();
+				if (loop) {
+					output.println("Invalid Input! [Enter the number of a God]");
+					chosenCard = acquireInteger("Invalid Input! [Enter the number of a God]");
 				}
 			}
 		}
 	}
+
 
 	/**
 	 * Asks the Challenger to chose the starting player.
@@ -675,7 +675,8 @@ public class CliView implements Observer<GameMessage> {
 				}
 				case StringMessage.moveAgain:
 				case StringMessage.buildAgain:
-				case StringMessage.buildOrDome: {
+				case StringMessage.buildOrDome:
+				case StringMessage.buildFirst: {
 					boolean choice = acquireBooleanChoice();
 					sendBooleanChoice(choice);
 					break;

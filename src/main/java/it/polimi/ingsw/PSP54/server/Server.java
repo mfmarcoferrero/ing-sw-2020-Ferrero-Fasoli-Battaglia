@@ -32,12 +32,18 @@ public class Server {
     private int numberOfPlayers;
 
 
-    //Register connection
+    /**
+     *
+     * @param c
+     */
     private synchronized void registerConnection(Connection c){
         connections.add(c);
     }
 
-    //Deregister connection
+    /**
+     *
+     * @param c
+     */
     public synchronized void deregisterConnection(Connection c){
         currentConnections.remove(c);
         /*every time a client disconnects if it has already entered the lobby and is in the waitingconnections vector
@@ -112,9 +118,8 @@ public class Server {
     }
 
     /**
-     * Viene eseguito il server
-     * Per ogni client che si collega e viene accettato dal serverSocket
-     * viene eseguito un thread di una connection (tramite un executor)
+     * Initializes the Server. For each accepted Client a thread starts in order to handle the connection.
+     * When the first Client connects it's set to GameMaster (he will chose the number of player for his game)
      */
     @SuppressWarnings("InfiniteLoopStatement")
     public void run(){
@@ -134,6 +139,10 @@ public class Server {
         }
     }
 
+    /**
+     *
+     * @param buffer
+     */
     private void freeBuffer(Map<PlayerCredentials, Connection> buffer){
         Vector<PlayerCredentials> bufferKeys= new Vector<>(buffer.keySet());
         Vector<Connection> bufferValues = new Vector<>(buffer.values());
@@ -154,6 +163,11 @@ public class Server {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public boolean checkName(String name){
         Vector<PlayerCredentials> players;
         boolean outcome=false;

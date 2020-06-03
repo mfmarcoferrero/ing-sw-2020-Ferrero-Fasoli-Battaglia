@@ -15,7 +15,7 @@ import java.util.*;
 public class Game extends Observable<GameMessage> implements Serializable, Cloneable {
 
     public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4, HEPHAESTUS = 5, MINOTAUR = 6, PAN = 7, PROMETHEUS = 8;
-    public static final int CARD_NUMBER = 9;
+    public static final int SIMPLE_GOD_CARD_NUMBER = 9;
     public static final int BOARD_SIZE = 5;
     public static final String[] colors = {"blue", "red", "yellow"};
     private final Box[][] board;
@@ -23,6 +23,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     private HashMap<Integer, String> extractedCards = new HashMap<>();
     private Vector<Player> players;
     private Player currentPlayer;
+    private Player winner;
 
     public Game() {
         players = new Vector<>(1, 1);
@@ -78,16 +79,27 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      */
     public void assignColors(){
 
-        int currentIndex = players.indexOf(currentPlayer);
         int c = 0;
-        for (int i = currentIndex; i < players.capacity(); i++) {
-            players.get(i).setColor(colors[c]);
+        for (Player player : players) {
+            player.setColor(colors[c]);
             c++;
         }
-        for (int i = 0; i < currentIndex; i++) {
-            players.get(i).setColor(colors[c]);
-            c++;
-        }
+    }
+
+    /**
+     * Translates the Players' Vector so that the Start Player is at index = 0.
+     * @param index index of the Start Player before the method's call.
+     */
+    public void translatePlayersVector(int index) {
+        Vector<Player> temp = new Vector<>(2, 1);
+
+        for (int i = index; i < players.capacity(); i++)
+            temp.add(players.get(i));
+
+        for (int i = 0; i < index; i++)
+            temp.add(players.get(i));
+
+        setPlayers(temp);
     }
 
     /**
@@ -382,6 +394,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * @param currentPlayer the player that has won.
      */
     public void notifyWinner(Player currentPlayer) {
+        setWinner(currentPlayer);
         GameMessage winMessage = new WinMessage(null, currentPlayer);
         notify(winMessage);
     }
@@ -431,7 +444,6 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         players.remove(player);
         setCurrentPlayer(players.elementAt(i));
     }
-
 
     //setters & getters
 
@@ -496,6 +508,12 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         return cardMap;
     }
 
+    public Player getWinner() {
+        return winner;
+    }
 
+    public void setWinner(Player winner) {
+        this.winner = winner;
+    }
 }
 
