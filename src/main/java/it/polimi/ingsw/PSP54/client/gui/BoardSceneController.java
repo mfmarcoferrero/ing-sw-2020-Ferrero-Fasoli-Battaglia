@@ -9,6 +9,7 @@ import it.polimi.ingsw.PSP54.utils.choices.WorkerChoice;
 import it.polimi.ingsw.PSP54.utils.messages.CardsPlayersMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -61,19 +62,19 @@ public class BoardSceneController {
             }
         }
         labelPlayer_1.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",24));
-        labelPlayer_1.setTextAlignment(TextAlignment.CENTER);
+        labelPlayer_1.setAlignment(Pos.CENTER);
         labelPlayer_2.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",24));
-        labelPlayer_2.setTextAlignment(TextAlignment.CENTER);
+        labelPlayer_2.setAlignment(Pos.CENTER);
         labelPlayer_3.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",24));
-        labelPlayer_3.setTextAlignment(TextAlignment.CENTER);
+        labelPlayer_3.setAlignment(Pos.CENTER);
         messageLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",35));
-        messageLabel.setTextAlignment(TextAlignment.CENTER);
+        messageLabel.setAlignment(Pos.CENTER);
         panelMessageLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",26));
-        panelMessageLabel.setTextAlignment(TextAlignment.CENTER);
+        panelMessageLabel.setAlignment(Pos.CENTER);
         firstButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",15));
-        firstButton.setTextAlignment(TextAlignment.CENTER);
+        firstButton.setAlignment(Pos.CENTER);
         secondButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",15));
-        secondButton.setTextAlignment(TextAlignment.CENTER);
+        secondButton.setAlignment(Pos.CENTER);
         setImageCards(guiManager.getCardValues());
         setLabelNames(guiManager.getNames());
     }
@@ -203,6 +204,7 @@ public class BoardSceneController {
 
     public void setMessageLabel(String message){
         messageLabel.setText(message);
+        messageLabel.setAlignment(Pos.CENTER);
     }
 
     public void setImageCards(Vector<Integer> cardValues){
@@ -247,6 +249,7 @@ public class BoardSceneController {
 
     public void showMaleOrFemaleMessage(){
         panelMessageLabel.setText("MALE or FEMALE");
+        panelMessageLabel.setAlignment(Pos.CENTER);
         firstButton.setText("Male");
         secondButton.setText("Female");
         panelMessageLabel.setVisible(true);
@@ -256,6 +259,7 @@ public class BoardSceneController {
 
     public void showMoveAgainMessage(){
         panelMessageLabel.setText("MOVE AGAIN?");
+        panelMessageLabel.setAlignment(Pos.CENTER);
         firstButton.setText("Yes");
         secondButton.setText("No");
         firstButton.setVisible(true);
@@ -265,6 +269,7 @@ public class BoardSceneController {
 
     public void showBuildAgainMessage(){
         panelMessageLabel.setText("BUILD AGAIN?");
+        panelMessageLabel.setAlignment(Pos.CENTER);
         firstButton.setText("Yes");
         secondButton.setText("No");
         firstButton.setVisible(true);
@@ -274,6 +279,7 @@ public class BoardSceneController {
 
     public void showBuildOrDomeMessage(){
         panelMessageLabel.setText("BUILD A DOME?");
+        panelMessageLabel.setAlignment(Pos.CENTER);
         firstButton.setText("Yes");
         secondButton.setText("No");
         firstButton.setVisible(true);
@@ -283,6 +289,7 @@ public class BoardSceneController {
 
     public void showBuildFirstMessage(){
         panelMessageLabel.setText("BUILD BEFORE MOVE?");
+        panelMessageLabel.setAlignment(Pos.CENTER);
         firstButton.setText("Yes");
         secondButton.setText("No");
         firstButton.setVisible(true);

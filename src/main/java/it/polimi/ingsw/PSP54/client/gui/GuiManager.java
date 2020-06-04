@@ -192,6 +192,9 @@ public class GuiManager implements Observer<GameMessage> {
                     gameMaster = true;
                     Platform.runLater(() -> logInSceneController.setNumberOfPlayersScene());
                     break;
+                case StringMessage.nameAlreadyTaken:
+                    Platform.runLater(() -> logInSceneController.setInvalidNameLabel());
+                    break;
                 case StringMessage.setFirstWorkerMessage:
                     firstWorkerSet = true;
                     Platform.runLater(() -> {
@@ -200,7 +203,6 @@ public class GuiManager implements Observer<GameMessage> {
                     });
                     break;
                 case StringMessage.choseWorker:
-                    setBoxChoice(true);
                     Platform.runLater(() -> {
                         boardSceneController.setMessageLabel("CHOOSE YOUR WORKER");
                         boardSceneController.showMaleOrFemaleMessage();

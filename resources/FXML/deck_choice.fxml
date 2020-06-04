@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="900.0" style="-fx-background-color: #0896C2 #0896C2;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.DeckChoiceSceneController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="900.0" style="-fx-background-color: #0896C2 #0896C2;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.DeckChoiceSceneController">
    <children>
       <ImageView fx:id="apolloImageView" fitHeight="200.0" fitWidth="120.0" layoutX="70.0" layoutY="80.0" onMouseClicked="#apolloImageClicked" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -52,7 +51,7 @@
             <Image url="@../../../ing-sw-2020-Ferrero-Fasoli-Battaglia/resources/icons/10.png" />
          </image>
       </ImageView>
-      <Label fx:id="choiceLabel" layoutX="317.0" layoutY="10.0" prefHeight="50.0" prefWidth="267.0">
+      <Label fx:id="choiceLabel" layoutX="310.0" layoutY="14.0" prefHeight="50.0" prefWidth="280.0">
       </Label>
    </children>
 </Pane>

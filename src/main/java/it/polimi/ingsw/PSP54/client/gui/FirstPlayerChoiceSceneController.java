@@ -35,14 +35,19 @@ public class FirstPlayerChoiceSceneController {
     public void setFont(){
         chooseNumberOfPlayersLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",35));
         if (guiManager.getPlayers().size() == 2){
-            firstPlayerButton.setText(guiManager.getPlayers().get(0).getPlayerName());
-            thirdPlayerButton.setText(guiManager.getPlayers().get(1).getPlayerName());
+            firstPlayerButton.setText(guiManager.getPlayers().get(0).getPlayerName().toUpperCase());
+            firstPlayerButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
+            thirdPlayerButton.setText(guiManager.getPlayers().get(1).getPlayerName().toUpperCase());
+            thirdPlayerButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
             secondPlayerButton.setVisible(false);
         }
         if (guiManager.getPlayers().size() == 3){
-            firstPlayerButton.setText(guiManager.getPlayers().get(0).getPlayerName());
-            secondPlayerButton.setText(guiManager.getPlayers().get(1).getPlayerName());
-            thirdPlayerButton.setText(guiManager.getPlayers().get(2).getPlayerName());
+            firstPlayerButton.setText(guiManager.getPlayers().get(0).getPlayerName().toUpperCase());
+            firstPlayerButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
+            secondPlayerButton.setText(guiManager.getPlayers().get(1).getPlayerName().toUpperCase());
+            secondPlayerButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
+            thirdPlayerButton.setText(guiManager.getPlayers().get(2).getPlayerName().toUpperCase());
+            thirdPlayerButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
         }
     }
 
