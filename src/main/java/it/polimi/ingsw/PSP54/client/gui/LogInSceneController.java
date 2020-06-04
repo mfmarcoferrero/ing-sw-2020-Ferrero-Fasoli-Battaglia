@@ -24,6 +24,7 @@ public class LogInSceneController {
     @FXML private Label joinAGameLabel;
     @FXML private Label ageLabel;
     @FXML private Label nameLabel;
+    @FXML private Label invalidNameLabel;
 
     /**
      * Called when log_in.fxml is load
@@ -41,6 +42,7 @@ public class LogInSceneController {
             nameLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",23));
             startButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",17));
             waitingLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",18));
+            invalidNameLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,11 +58,21 @@ public class LogInSceneController {
         if (!nicknameField.getText().trim().isEmpty() && !ageField.getText().trim().isEmpty()) {
             startButton.setVisible(false);
             waitingLabel.setVisible(true);
+            invalidNameLabel.setVisible(false);
             saveNickname();
             saveAge();
             PlayerCredentials playerMessage = new PlayerCredentials(nickname,age);
             guiManager.sendObject(playerMessage);
         }
+    }
+
+    /**
+     * Called when a nickname already chosen is in your game
+     */
+    public void setInvalidNameLabel(){
+        startButton.setVisible(true);
+        waitingLabel.setVisible(false);
+        invalidNameLabel.setVisible(true);
     }
 
     /**

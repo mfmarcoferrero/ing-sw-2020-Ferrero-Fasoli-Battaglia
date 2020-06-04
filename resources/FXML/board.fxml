@@ -164,32 +164,32 @@
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </ImageView>
-                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="75.0" prefWidth="75.0" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="75.0" prefWidth="75.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
                            <children>
                               <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
                            <children>
                               <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="2">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="0">
                            <children>
                               <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="3">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="0">
                            <children>
                               <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="0" GridPane.columnIndex="4">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="0">
                            <children>
                               <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" GridPane.columnIndex="0">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
                            <children>
                               <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
@@ -214,7 +214,7 @@
                               <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.columnIndex="0">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
                            <children>
                               <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
@@ -239,7 +239,7 @@
                               <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3" GridPane.columnIndex="0">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
                            <children>
                               <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
@@ -264,7 +264,7 @@
                               <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="0">
+                        <AnchorPane onMouseClicked="#boxClicked" onMouseEntered="#mouseEnterOnBox" onMouseExited="#mouseExitFromBox" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
                            <children>
                               <ImageView fitHeight="55.0" fitWidth="40.0" layoutX="25.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
@@ -291,21 +291,21 @@
                         </AnchorPane>
                      </children>
                   </GridPane>
-                  <Label fx:id="labelPlayer_1" layoutX="96.0" layoutY="299.0" prefHeight="46.0" prefWidth="85.0" text="Giocatore 1" textAlignment="CENTER">
-                  </Label>
-                  <Label fx:id="labelPlayer_2" layoutX="884.0" layoutY="299.0" text="Giocatore 2" textAlignment="CENTER">
+                  <Label fx:id="labelPlayer_1" layoutX="96.0" layoutY="293.0" prefHeight="46.0" prefWidth="85.0" text="Giocatore 1" textAlignment="CENTER">
                   </Label>
                   <ImageView fx:id="cardImage_1" fitHeight="180.0" fitWidth="110.0" layoutX="85.0" layoutY="339.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../icons/01.png" />
                      </image>
                   </ImageView>
+                  <Label fx:id="labelPlayer_2" layoutX="884.0" layoutY="293.0" prefHeight="46.0" prefWidth="85.0" text="Giocatore 1" textAlignment="CENTER">
+                  </Label>
                   <ImageView fx:id="cardImage_2" fitHeight="180.0" fitWidth="110.0" layoutX="873.0" layoutY="339.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../icons/01.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="labelPlayer_3" layoutX="95.0" layoutY="20.0" prefHeight="44.0" prefWidth="87.0" text="Giocatore 3" textAlignment="CENTER">
+                  <Label fx:id="labelPlayer_3" layoutX="95.0" layoutY="23.0" prefHeight="44.0" prefWidth="87.0" text="Giocatore 3" textAlignment="CENTER">
                   </Label>
                   <ImageView fx:id="cardImage_3" fitHeight="180.0" fitWidth="110.0" layoutX="85.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -314,12 +314,13 @@
                   </ImageView>
                   <Label fx:id="messageLabel" contentDisplay="CENTER" layoutX="301.0" layoutY="19.0" prefHeight="66.0" prefWidth="460.0">
                   </Label>
-                  <Button fx:id="firstButton" layoutX="846.0" layoutY="100.0" mnemonicParsing="false" onAction="#maleButtonClicked" onMouseEntered="#mouseEnterOnButton" onMouseExited="#mouseExitFromButton" prefHeight="40.0" prefWidth="70.0" visible="false">
+                  <Button fx:id="firstButton" layoutX="846.0" layoutY="100.0" mnemonicParsing="false" onAction="#maleButtonClicked" onMouseEntered="#mouseEnterOnButton" onMouseExited="#mouseExitFromButton" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #B2E2F3;" visible="false">
                   </Button>
-                  <Button fx:id="secondButton" layoutX="933.0" layoutY="100.0" mnemonicParsing="false" onAction="#femaleButtonClicked" onMouseEntered="#mouseEnterOnButton" onMouseExited="#mouseExitFromButton" prefHeight="40.0" prefWidth="70.0" visible="false">
+                  <Button fx:id="secondButton" layoutX="933.0" layoutY="100.0" mnemonicParsing="false" onAction="#femaleButtonClicked" onMouseEntered="#mouseEnterOnButton" onMouseExited="#mouseExitFromButton" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #B2E2F3;" visible="false">
                   </Button>
-                  <Label fx:id="panelMessageLabel" layoutX="844.0" layoutY="52.0" prefHeight="39.0" prefWidth="165.0" visible="false">
+                  <Label fx:id="panelMessageLabel" layoutX="800.0" layoutY="45.0" prefHeight="39.0" prefWidth="253.0" visible="false">
                   </Label>
+
                </children>
             </AnchorPane>
          </center>
