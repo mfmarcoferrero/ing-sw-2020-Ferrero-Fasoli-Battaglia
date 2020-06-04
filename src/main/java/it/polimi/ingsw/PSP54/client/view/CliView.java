@@ -635,7 +635,7 @@ public class CliView implements Observer<GameMessage> {
 
 	/**
 	 * Called whenever the observed object is changed.
-	 *
+	 * Calls different methods depending on the type of the incoming GameMessage.
 	 * @param message an argument passed to the notify method.
 	 */
 	@Override

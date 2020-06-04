@@ -504,10 +504,6 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         endTurn(currentPlayer);
     }
 
-    public HashMap<Integer, String> getCardMap() {
-        return cardMap;
-    }
-
     public Player getWinner() {
         return winner;
     }

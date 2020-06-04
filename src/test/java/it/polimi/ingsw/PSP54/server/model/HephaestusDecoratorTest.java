@@ -118,6 +118,8 @@ public class HephaestusDecoratorTest {
         players.get(0).setWorkerBoxesToBuild(hephaestusWorker);
         players.get(0).build(hephaestusWorker, board[4][4]);
 
+        assertEquals(0, hephaestusWorker.getBuildToken());
+
         players.get(0).chose(true);
 
         assertEquals(0, hephaestusWorker.getMoveToken());

@@ -38,12 +38,13 @@ public class HephaestusDecorator extends GodDecorator {
     @Override
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
         super.build(worker, dest);
-        if (!dest.isDome() && dest.getLevel() < 3) {
+        if (lastBuilding == null && !dest.isDome() && dest.getLevel() < 3) {
             setLastBuilding(dest);
             worker.setBuildToken(-1);
             GameMessage buildAgain = new StringMessage(getVirtualViewID(), StringMessage.buildAgain);
             getGame().notify(buildAgain);
-        }
+        } else
+            worker.setBuildToken(0);
     }
 
     /**

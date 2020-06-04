@@ -125,8 +125,4 @@ public interface Player {
     boolean isPlaying();
 
     void setPlaying(boolean playing);
-
-    void setSettingTurns(int n);
-
-    int getSettingTurns();
 }

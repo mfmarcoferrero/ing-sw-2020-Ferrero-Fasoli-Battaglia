@@ -348,14 +348,4 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     public void setPlaying(boolean playing) {
         this.playing = playing;
     }
-
-    @Override
-    public void setSettingTurns(int n) {
-        settingTurns =n;
-    }
-
-    @Override
-    public int getSettingTurns() {
-        return settingTurns;
-    }
 }

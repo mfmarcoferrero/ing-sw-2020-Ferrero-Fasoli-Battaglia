@@ -151,15 +151,5 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     public void setVirtualViewId(int virtualViewId) {
         playerToDecorate.setVirtualViewId(virtualViewId);
     }
-
-    @Override
-    public void setSettingTurns(int n) {
-        playerToDecorate.setSettingTurns(n);
-    }
-
-    @Override
-    public int getSettingTurns() {
-        return playerToDecorate.getSettingTurns();
-    }
 }
 
