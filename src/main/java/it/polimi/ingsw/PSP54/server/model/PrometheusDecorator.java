@@ -34,6 +34,19 @@ public class PrometheusDecorator extends GodDecorator{
     }
 
     /**
+     * Method used to perform a move action.
+     * Calls the super method and set usedPower to false.
+     * @param worker selected worker which the player wants to move.
+     * @param dest selected destination box.
+     * @throws InvalidMoveException if the move can't be done.
+     */
+    @Override
+    public void move(Worker worker, Box dest) throws InvalidMoveException {
+        super.move(worker, dest);
+        setUsedPower(false);
+    }
+
+    /**
      * Method used to set available boxes for the worker to move.
      * Calls the super method and removes all the upper boxes from the ArrayList if the player has chosen to use the power.
      * @param worker current worker in use.
@@ -46,7 +59,6 @@ public class PrometheusDecorator extends GodDecorator{
 
         if (usedPower){
             valid.removeIf(check -> check.getLevel() == worker.getPos().getLevel() + 1);
-            setUsedPower(false);
         }
         return valid;
     }
