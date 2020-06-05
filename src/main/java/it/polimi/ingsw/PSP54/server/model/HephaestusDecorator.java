@@ -58,6 +58,7 @@ public class HephaestusDecorator extends GodDecorator {
             getCurrentWorker().setBuildToken(1);
             try {
                 super.build(getCurrentWorker(), getLastBuilding());
+                setLastBuilding(null);
             } catch (InvalidBuildingException e) {
                 getCurrentWorker().setBuildToken(0);
                 GameMessage invalidBuild = new StringMessage(getVirtualViewID(), "You can't build again here!");
