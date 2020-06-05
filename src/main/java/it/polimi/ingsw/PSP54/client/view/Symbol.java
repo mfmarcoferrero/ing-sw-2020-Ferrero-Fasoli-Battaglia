@@ -3,8 +3,8 @@ package it.polimi.ingsw.PSP54.client.view;
 public enum Symbol {
 
     UNICODE_BORDER("｜"),
-    UNICODE_MALE_WORKER("♂♂"),
-    UNICODE_FEMALE_WORKER("♀♀"),
+    UNICODE_MALE_WORKER("♂ "),
+    UNICODE_FEMALE_WORKER("♀ "),
     UNICODE_DOME("██"),
     UNICODE_SQUARE("██");
 

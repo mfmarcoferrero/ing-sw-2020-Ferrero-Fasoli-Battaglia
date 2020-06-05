@@ -279,7 +279,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             MoveChoice moveChoice = (MoveChoice) moveSelection.getChoice();
             if (currentPlayer.getCurrentWorker().getPos() != null) { //actual move
                 try {
-                    ArrayList<Box> valid =currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
+                    ArrayList<Box> valid = currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
                     GameMessage available = new AvailableBoxesMessage(currentPlayer.getVirtualViewID(), valid);
                     notify(available);
                     currentPlayer.move(currentPlayer.getCurrentWorker(), getBox(moveChoice.getX(), moveChoice.getY()));

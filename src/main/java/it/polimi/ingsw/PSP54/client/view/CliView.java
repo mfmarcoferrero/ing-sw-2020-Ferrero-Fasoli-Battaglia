@@ -108,23 +108,15 @@ public class CliView implements Observer<GameMessage> {
 		StringBuilder line = null;
 		StringBuilder toPrint;
 
-		//String containing upper border
-		String upperBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER
-				+ "⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽"
-				+ Color.ANSI_BACKGROUND_RESET;
-
-		//String containing lower border
-		String lowerBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER
-				+ "⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺"
+		//String containing middle border
+		String border = Color.ANSI_BORDER_BACKGROUND.toString() + Color.ANSI_BORDER
+				+ "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼"
 				+ Color.ANSI_RESET;
 
-		//String containing middle border
-		String middleBorder = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER
-				+ "⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼";
-
 		//Strings containing beginning/end of lines, it contains border and blocks with corresponding colors
-		String initGround = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "|" + Color.ANSI_GROUND_BACKGROUND + Color.ANSI_GROUND;
-		String endGround = Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER + "|";
+		String initGround = Color.ANSI_BORDER_BACKGROUND.toString() + Color.ANSI_BORDER + "|" + Color.ANSI_GROUND_BACKGROUND + Color.ANSI_GROUND;
+		String endGround = Color.ANSI_BORDER_BACKGROUND.toString() + Color.ANSI_BORDER + "|"
+				+ Color.ANSI_RESET;
 
 		String initFirst = initGround + Symbol.UNICODE_SQUARE + Color.ANSI_FIRST_BACKGROUND + Color.ANSI_FIRST ;
 		String endFirst = Color.ANSI_GROUND_BACKGROUND.toString() + Color.ANSI_GROUND.toString() + Symbol.UNICODE_SQUARE + endGround;
@@ -136,7 +128,7 @@ public class CliView implements Observer<GameMessage> {
 		String endThird = Color.ANSI_SECOND_BACKGROUND.toString() + Color.ANSI_SECOND.toString() + Symbol.UNICODE_SQUARE + endSecond;
 
 		//print border and first ground level
-		output.println(upperBorder);
+		output.println(border);
 
 		//print Board
 		for (int i = 0; i < 5; i++) {
@@ -276,8 +268,11 @@ public class CliView implements Observer<GameMessage> {
 							line.append(endThird);
 						}
 						toPrint.append(line);
-						if (j == 4)
-							toPrint.append(i+1);
+						if (j == 4) {
+							toPrint.append(Color.ANSI_BORDER);
+							toPrint.append(i + 1);
+
+						}
 					}
 					output.println(toPrint.toString());
 					l++;
@@ -287,12 +282,12 @@ public class CliView implements Observer<GameMessage> {
 			//print the last line
 			printGround(initGround, endGround);
 			if (i < 4)
-				output. println(middleBorder);
+				output. println(border);
 		}
 
 		//print lower border
-		output.println(lowerBorder);
-		output.println(Color.ANSI_BACKGROUND_RESET.toString() + Color.ANSI_BORDER +
+		output.println(border);
+		output.println(Color.ANSI_BORDER +
 				"          1                   2                   3                   4                   5         "
 		+ Color.ANSI_RESET);
 	}
