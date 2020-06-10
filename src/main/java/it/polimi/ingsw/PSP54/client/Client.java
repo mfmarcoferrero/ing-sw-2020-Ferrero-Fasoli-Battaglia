@@ -89,6 +89,9 @@ public class Client extends Observable<GameMessage> {
      * @throws IOException if an I/O error occurs when creating the socket.
      */
     public void startClient() throws IOException {
+        Socket socket = new Socket(ip, port);
+        System.out.println("Connection established");
+
         System.out.println("CLI or GUI? [enter c or g]");
         String choice = inputReader.next();
         while (!choice.equals("c") && !choice.equals("g")) {
@@ -96,8 +99,6 @@ public class Client extends Observable<GameMessage> {
             choice = inputReader.next();
         }
         setInterfaceChoice(choice);
-        Socket socket = new Socket(ip, port);
-        System.out.println("Connection established");
         ObjectInputStream socketIn = new ObjectInputStream(socket.getInputStream());
         socketOut = new ObjectOutputStream(socket.getOutputStream());
         try {
