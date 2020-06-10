@@ -3,6 +3,9 @@ package it.polimi.ingsw.PSP54.utils.messages;
 import java.io.Serializable;
 import java.util.HashMap;
 
+/**
+ * Represents the GameMessage containing all the cards in the deck.
+ */
 public class DeckMessage extends GameMessage implements Serializable, Cloneable {
 
     private final HashMap<Integer, String> deck;

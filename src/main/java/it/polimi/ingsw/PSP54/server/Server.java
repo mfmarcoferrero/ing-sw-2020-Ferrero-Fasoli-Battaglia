@@ -31,24 +31,25 @@ public class Server {
     protected final Vector<String> opponents = new Vector<>();
     private int numberOfPlayers;
 
+    public Server() throws IOException {
+        this.serverSocket = new ServerSocket(PORT);
+    }
 
     /**
-     *
-     * @param c
+     * Adds a connection to the Server's Vector.
+     * @param c the Connection that is going to be registered.
      */
     private synchronized void registerConnection(Connection c){
         connections.add(c);
     }
 
     /**
-     *
-     * @param c
+     * Removes a connection from the Server's Vectors either if the associated Player is waiting in the lobby or playing.
+     * @param c the Connection that is going to be unregistered.
      */
     public synchronized void deregisterConnection(Connection c){
         currentConnections.remove(c);
-        /*every time a client disconnects if it has already entered the lobby and is in the waitingconnections vector
-         we create a collection that allows to implement the iterator interface so is possible to search the element that refers to the client
-         and delete it*/
+
         if (waitingConnection.containsValue(c))
             waitingConnection.keySet().removeIf(playerMessage -> waitingConnection.get(playerMessage) == c);
 
@@ -62,12 +63,10 @@ public class Server {
     }
 
     /**
-     * Ogni thread di connection inserisce nella HashMap waitingConnection un istanza del giocatore
-     * con le proprie credenziali e la corrispondente connection
-     * Quando i giocatori in attesa raggiungono il numero desiderato per giocare viene istanziato completamente
-     * gli oggetti necessari per avviare una partita
-     * @param c refernce to client
-     * @param p reference to in game player associated to client
+     * Associates every connected Client to his Player credentials after checking for usernames' uniqueness.
+     * When the selected number of player for a game is satisfied instantiates the MVC pattern instances and starts the game.
+     * @param c the connection associated to a newly registered Player.
+     * @param p the player's credentials.
      */
     public synchronized void lobby(Connection c, PlayerCredentials p) {
 
@@ -113,10 +112,6 @@ public class Server {
         }
     }
 
-    public Server() throws IOException {
-        this.serverSocket = new ServerSocket(PORT);
-    }
-
     /**
      * Initializes the Server. For each accepted Client a thread starts in order to handle the connection.
      * When the first Client connects it's set to GameMaster (he will chose the number of player for his game)
@@ -140,33 +135,34 @@ public class Server {
     }
 
     /**
-     *
-     * @param buffer
+     * Handles pending Clients that have been added in the lobbyBuffer HashMap.
+     * @param buffer the HashMap containing the pending connections.
      */
     private void freeBuffer(Map<PlayerCredentials, Connection> buffer){
         Vector<PlayerCredentials> bufferKeys= new Vector<>(buffer.keySet());
         Vector<Connection> bufferValues = new Vector<>(buffer.values());
-        while (waitingConnection.size()<numberOfPlayers && lobbyBuffer.size()>0){
-            waitingConnection.put(bufferKeys.get(0),bufferValues.get(0));
-            lobbyBuffer.remove(bufferKeys.get(0),bufferValues.get(0));
+
+        while (waitingConnection.size() < numberOfPlayers && lobbyBuffer.size() > 0){
+            waitingConnection.put(bufferKeys.get(0), bufferValues.get(0));
+            lobbyBuffer.remove(bufferKeys.get(0), bufferValues.get(0));
             bufferKeys.remove(0);
             bufferValues.remove(0);
         }
-        while(lobbyBuffer.size()>0){
+        while(lobbyBuffer.size() > 0){
             currentConnections.remove(bufferValues.get(0));
             GameMessage closedLobby = new StringMessage(null, StringMessage.closedLobby);
             bufferValues.get(0).asyncSend(closedLobby);
             bufferValues.get(0).closeConnection();
-            lobbyBuffer.remove(bufferKeys.get(0),bufferValues.get(0));
+            lobbyBuffer.remove(bufferKeys.get(0), bufferValues.get(0));
             bufferValues.remove(0);
             bufferKeys.remove(0);
         }
     }
 
     /**
-     *
-     * @param name
-     * @return
+     * Checks for usernames' uniqueness.
+     * @param name the name selected by the Player.
+     * @return true if the name is already taken, false otherwise.
      */
     public boolean checkName(String name){
         Vector<PlayerCredentials> players;
@@ -182,6 +178,8 @@ public class Server {
             }
         return outcome;
     }
+
+    //getters & setters
 
     public void setNumberOfPlayers(int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;

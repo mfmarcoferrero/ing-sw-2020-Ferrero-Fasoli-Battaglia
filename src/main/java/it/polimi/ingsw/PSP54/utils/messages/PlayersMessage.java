@@ -4,6 +4,9 @@ import it.polimi.ingsw.PSP54.server.model.Player;
 
 import java.util.Vector;
 
+/**
+ * Represents the GameMessage containing all players of the current game.
+ */
 public class PlayersMessage extends GameMessage{
     private final Vector<Player> players;
 

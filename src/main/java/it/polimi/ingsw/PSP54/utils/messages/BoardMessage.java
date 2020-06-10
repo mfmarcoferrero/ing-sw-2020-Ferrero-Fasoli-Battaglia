@@ -4,6 +4,9 @@ import it.polimi.ingsw.PSP54.server.model.Box;
 
 import java.io.Serializable;
 
+/**
+ * Class representing the board update.
+ */
 public class BoardMessage extends GameMessage implements Serializable, Cloneable {
 
     private final Box[][] board;

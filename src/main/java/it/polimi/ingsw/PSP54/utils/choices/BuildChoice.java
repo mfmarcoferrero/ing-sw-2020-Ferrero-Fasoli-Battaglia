@@ -10,8 +10,6 @@ public class BuildChoice extends PlayerChoice implements Serializable, Cloneable
     private final int x;
     private final int y;
 
-
-
     public BuildChoice(int x, int y) {
         this.x = x;
         this.y = y;

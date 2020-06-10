@@ -5,6 +5,9 @@ import it.polimi.ingsw.PSP54.server.model.Box;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ *
+ */
 public class AvailableBoxesMessage extends GameMessage implements Serializable, Cloneable {
 
     private final List<Box> availableBoxes;
