@@ -232,14 +232,22 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     public void checkTokens(Worker currentWorker) {
 
         if (currentWorker.getMoveToken() >= 1 && currentWorker.getBuildToken() == 0){
-            GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
-            notify(move);
+            ArrayList<Box> valid = currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
+            if (valid.isEmpty()) {
+                GameMessage cantMove = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.workerCantMove);
+                notify(cantMove);
+            } else {
+                GameMessage available = new AvailableBoxesMessage(currentPlayer.getVirtualViewID(), valid);
+                notify(available);
+                GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
+                notify(move);
+            }
         }else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() >= 1){
             ArrayList<Box> valid = currentPlayer.setWorkerBoxesToBuild(currentWorker);
             GameMessage available = new AvailableBoxesMessage(currentPlayer.getVirtualViewID(), valid);
             notify(available);
             if(valid.isEmpty())
-                performLosing(currentPlayer);
+                performLoss(currentPlayer);
             else {
                 GameMessage build = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildMessage);
                 notify(build);
@@ -279,9 +287,6 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             MoveChoice moveChoice = (MoveChoice) moveSelection.getChoice();
             if (currentPlayer.getCurrentWorker().getPos() != null) { //actual move
                 try {
-                    ArrayList<Box> valid = currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
-                    GameMessage available = new AvailableBoxesMessage(currentPlayer.getVirtualViewID(), valid);
-                    notify(available);
                     currentPlayer.move(currentPlayer.getCurrentWorker(), getBox(moveChoice.getX(), moveChoice.getY()));
                     checkTokens(currentPlayer.getCurrentWorker());
                 }
@@ -403,7 +408,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * Handles the losing of a player by removing him from the game.
      * @param currentPlayer the player that has lost.
      */
-    public void performLosing(Player currentPlayer) {
+    public void performLoss(Player currentPlayer) {
         if (players.size()==3){
             for (Player player : players) {
                 if (Objects.equals(player, currentPlayer)) {
@@ -421,6 +426,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             players.add(0, currentPlayer);
             GameMessage winMessage = new WinMessage(null, players.lastElement());
             notify(winMessage);
+            notifyBoard();
         }
     }
 
@@ -473,7 +479,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             ArrayList<Box> validMoveMale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(true));
             ArrayList<Box> validMoveFemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(false));
             if (validMoveMale.isEmpty() && validMoveFemale.isEmpty())
-                performLosing(currentPlayer);
+                performLoss(currentPlayer);
             if (!validMoveMale.isEmpty() || !validMoveFemale.isEmpty()) {
                 currentPlayer.setPlaying(true);
                 this.currentPlayer = currentPlayer;

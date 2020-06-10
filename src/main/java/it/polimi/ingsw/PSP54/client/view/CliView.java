@@ -607,11 +607,11 @@ public class CliView implements Observer<GameMessage> {
 	 * Asks the player if he wants to play again, if so adds him to a new lobby, closes the connection otherwise.
 	 */
 	public void resetConnection() {
-		boolean loop=true;
-		output.println("do you want to play again? Insert [yes/no]");
+		boolean loop = true;
+		output.println("do you want to play again? Insert [y/n]");
 		while (loop) {
 			String Choice = inputReader.next();
-			if(Choice.equals("yes")) {
+			if(Choice.equals("y")) {
 				Client c = new Client("127.0.0.1",12345);
 				try {
 					c.startClient();
@@ -620,8 +620,8 @@ public class CliView implements Observer<GameMessage> {
 				}
 				loop = false;
 			}
-			else if(Choice.equals("no")){
-				client.SuspendThread();
+			else if(Choice.equals("n")){
+				client.setActive(false);
 				loop = false;
 			} else
 				output.println("Incorrect Input!");
@@ -643,6 +643,7 @@ public class CliView implements Observer<GameMessage> {
 				case StringMessage.newWorkerMove:
 				case StringMessage.setFirstWorkerMessage:
 				case StringMessage.choseWorker:
+				case StringMessage.workerCantMove:
 					setMaleSelected(acquireWorkerSelection());
 					sendWorkerSelection();
 					break;
