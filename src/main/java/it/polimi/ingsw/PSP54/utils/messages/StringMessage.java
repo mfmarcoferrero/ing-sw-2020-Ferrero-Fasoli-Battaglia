@@ -44,6 +44,7 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     //connection
     public static final String closedLobby = "The lobby you were in has closed, please login again.";
     public static final String closedConnection = "Connection closed from server side";
+    public static final String serverUnreachable = "Server is Unreachable";
 
     public String getMessage() {
         return message;

@@ -4,11 +4,14 @@ import it.polimi.ingsw.PSP54.client.gui.GuiManager;
 import it.polimi.ingsw.PSP54.client.view.*;
 import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -83,6 +86,22 @@ public class Client extends Observable<GameMessage> {
         }
     }
 
+    public void serverPing() {
+        new Thread(()->{
+            try {
+                InetAddress host = InetAddress.getByName(ip);
+                while (isActive()){
+                    if (!host.isReachable(5000)) {
+                        GameMessage serverUnreachable = new StringMessage(null, StringMessage.serverUnreachable);
+                        notify(serverUnreachable);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     /**
      * Once acquired the interface choice establishes a connection with the server.
      * It also starts two different thread to menage the socket reading/writing.
@@ -102,6 +121,7 @@ public class Client extends Observable<GameMessage> {
         ObjectInputStream socketIn = new ObjectInputStream(socket.getInputStream());
         socketOut = new ObjectOutputStream(socket.getOutputStream());
         try {
+            serverPing();
             Thread t0 = asyncReadFromSocket(socketIn);
             t0.join();
         } catch(NoSuchElementException | InterruptedException e) {
