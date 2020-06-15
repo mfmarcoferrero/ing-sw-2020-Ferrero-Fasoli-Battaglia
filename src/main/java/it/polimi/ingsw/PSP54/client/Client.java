@@ -41,7 +41,8 @@ public class Client extends Observable<GameMessage> {
                      Client.this.notify((GameMessage)inputObject);
                  }
              } catch (Exception e) {
-                 setActive(false);
+                 GameMessage serverUnreachable = new StringMessage(null, StringMessage.serverUnreachable);
+                 notify(serverUnreachable);
              }
          });
         t.start();
