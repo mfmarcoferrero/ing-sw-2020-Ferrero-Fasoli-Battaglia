@@ -14,15 +14,16 @@ import java.util.Scanner;
 
 public class Client extends Observable<GameMessage> {
 
-    private final String ip;
+    private String ip = null;
+    private static final String serverIp = "127.0.0.1";
     private final Scanner inputReader = new Scanner(System.in);
     private final int port;
     private ObjectOutputStream socketOut;
     private boolean active = true;
     private Thread t;
 
-    public Client(String ip, int port) {
-        this.ip = ip;
+    public Client(int port) {
+        //this.ip = ip;
         this.port = port;
     }
 
@@ -96,6 +97,13 @@ public class Client extends Observable<GameMessage> {
             choice = inputReader.next();
         }
         setInterfaceChoice(choice);
+        System.out.println("Enter the IP address of a server you want to connect: ");
+        ip = inputReader.next();
+        while (!ip.equals(serverIp)) {
+            System.out.println("IP Address ERROR.(The IP Address you chose may be wrong)");
+            System.out.println("Enter the IP address of a server you want to connect: ");
+            ip = inputReader.next();
+        }
         Socket socket = new Socket(ip, port);
         System.out.println("Connection established");
         ObjectInputStream socketIn = new ObjectInputStream(socket.getInputStream());

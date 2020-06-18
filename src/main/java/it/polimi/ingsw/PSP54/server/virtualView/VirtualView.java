@@ -4,6 +4,8 @@ import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
+import it.polimi.ingsw.PSP54.utils.choices.BooleanChoice;
+import it.polimi.ingsw.PSP54.utils.messages.EndGameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.OpponentMessage;
 
@@ -53,6 +55,17 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
      * @param action the player's action.
      */
     public void handleAction(PlayerAction action){
+        if (action.getChoice() instanceof BooleanChoice){
+            if(((BooleanChoice) action.getChoice()).isGameEnded()){
+                // se è una scelta presa alla fine della partita e non voglio rincominciare
+                // la partita invio un messaggio di fine partita dicendo di chiudere la connessione
+                if (!((BooleanChoice) action.getChoice()).isChoice()) {
+                    connection.asyncSend(new EndGameMessage(null, true));
+                }
+                else
+                    connection.asyncSend(new EndGameMessage(null,false));
+            }
+        }
         notify(action);
     }
 

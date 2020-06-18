@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class BooleanChoice extends PlayerChoice implements Serializable, Cloneable {
 
     private final boolean choice;
+    private boolean gameEnded;
 
     public BooleanChoice(boolean choice) {
         this.choice = choice;
@@ -15,5 +16,13 @@ public class BooleanChoice extends PlayerChoice implements Serializable, Cloneab
 
     public boolean isChoice() {
         return choice;
+    }
+
+    public boolean isGameEnded() {
+        return gameEnded;
+    }
+
+    public void setGameEnded(boolean gameEnded) {
+        this.gameEnded = gameEnded;
     }
 }

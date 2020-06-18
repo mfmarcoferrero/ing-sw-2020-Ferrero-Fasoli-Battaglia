@@ -69,7 +69,7 @@ public class FirstPlayerChoiceSceneController {
 
     public void firstPlayerButtonPressed(ActionEvent event) {
         this.event = event;
-        System.out.println("Ho scelto: " + guiManager.getPlayers().get(0).getPlayerName());
+        //System.out.println("Ho scelto: " + guiManager.getPlayers().get(0).getPlayerName());
         guiManager.sendObject(new StartPlayerChoice(0));
         firstPlayerButton.setDisable(true);
         secondPlayerButton.setDisable(true);
@@ -78,7 +78,7 @@ public class FirstPlayerChoiceSceneController {
 
     public void secondPlayerButtonPressed(ActionEvent event) {
         this.event = event;
-        System.out.println("Ho scelto: " + guiManager.getPlayers().get(1).getPlayerName());
+        //System.out.println("Ho scelto: " + guiManager.getPlayers().get(1).getPlayerName());
         guiManager.sendObject(new StartPlayerChoice(1));
         firstPlayerButton.setDisable(true);
         secondPlayerButton.setDisable(true);
@@ -88,11 +88,11 @@ public class FirstPlayerChoiceSceneController {
     public void thirdPlayerButtonPressed(ActionEvent event) {
         this.event = event;
         if (guiManager.getPlayers().size() == 2) {
-            System.out.println("Ho scelto: " + guiManager.getPlayers().get(1).getPlayerName());
+            //System.out.println("Ho scelto: " + guiManager.getPlayers().get(1).getPlayerName());
             guiManager.sendObject(new StartPlayerChoice(1));
         }
         if (guiManager.getPlayers().size() == 3){
-            System.out.println("Ho scelto: " + guiManager.getPlayers().get(2).getPlayerName());
+            //System.out.println("Ho scelto: " + guiManager.getPlayers().get(2).getPlayerName());
             guiManager.sendObject(new StartPlayerChoice(2));
         }
         firstPlayerButton.setDisable(true);
@@ -113,3 +113,4 @@ public class FirstPlayerChoiceSceneController {
         }
     }
 }
+

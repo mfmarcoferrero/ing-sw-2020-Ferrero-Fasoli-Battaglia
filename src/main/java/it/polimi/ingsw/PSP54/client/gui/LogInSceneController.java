@@ -139,5 +139,8 @@ public class LogInSceneController {
         }
     }
 
+    public GuiManager getGuiManager() {
+        return guiManager;
+    }
 }
 

@@ -612,7 +612,7 @@ public class CliView implements Observer<GameMessage> {
 		while (loop) {
 			String Choice = inputReader.next();
 			if(Choice.equals("yes")) {
-				Client c = new Client("127.0.0.1",12345);
+				Client c = new Client(12345);
 				try {
 					c.startClient();
 				} catch (IOException e) {
