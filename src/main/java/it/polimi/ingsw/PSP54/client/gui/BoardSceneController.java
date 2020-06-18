@@ -30,6 +30,7 @@ public class BoardSceneController {
     private ImageView[][] imageBoxes = new ImageView[5][5];
     private ImageView[][] imageWorkerMap = new ImageView[5][5];
     private ImageView myCardImage;
+    private MouseEvent event;
     @FXML private GridPane gridPane;
     @FXML private ImageView cardImage_1;
     @FXML private ImageView cardImage_2;
@@ -52,6 +53,12 @@ public class BoardSceneController {
         guiManager.setBoardSceneController(this);
     }
 
+
+    /**
+     * Set font and text alignment of labels and buttons
+     * Set cards images and player names on main game scene
+     * Save ImageView references of board GridPane
+     */
     public void setBoardScene(){
         for(Node node: gridPane.getChildren()){
             if(node instanceof ImageView) {
@@ -79,6 +86,10 @@ public class BoardSceneController {
         setLabelNames(guiManager.getNames());
     }
 
+    /**
+     * Set worker and building images on every ImageView in GridPane
+     * @param board is an instance of a board that server send to client
+     */
     public void setBoardImage(Box[][] board){
         for (int i = 0; i < Game.BOARD_SIZE; i++){
             for (int j = 0; j < Game.BOARD_SIZE; j++){
@@ -88,6 +99,11 @@ public class BoardSceneController {
         }
     }
 
+    /**
+     * Set the image of a building on an ImageView, using an instance of Box
+     * @param boxImageView ImageView that represent a box in our GridPane
+     * @param box contains variables for levels and dome
+     */
     private void setBuildingImage(ImageView boxImageView, Box box){
         switch (box.getLevel()) {
             case 0:
@@ -125,6 +141,11 @@ public class BoardSceneController {
         }
     }
 
+    /**
+     * Set the image of a worker on an ImageView, using an instance of Box
+     * @param boxImageView ImageView that represent a box in our GridPane
+     * @param box contains variables for levels and dome
+     */
     public void setWorkerImage(ImageView boxImageView, Box box){
         if (box.getWorker()!=null) {
             switch (box.getWorker().getOwner().getColor()) {
@@ -156,6 +177,7 @@ public class BoardSceneController {
             boxImageView.setImage(null);
     }
 
+    /*
     public void setCardImageTurn(int playerIndex){
         switch (playerIndex){
             case 0:
@@ -180,7 +202,7 @@ public class BoardSceneController {
                 }
                 break;
         }
-    }
+    }*/
 
     private ImageView getMyCardImage(){
         int myCardImageIndex = 0;
@@ -200,13 +222,19 @@ public class BoardSceneController {
         return null;
     }
 
-
-
+    /**
+     * Set main label text used for messages that reference to player's action
+     * @param message
+     */
     public void setMessageLabel(String message){
         messageLabel.setText(message);
         messageLabel.setAlignment(Pos.CENTER);
     }
 
+    /**
+     * Set ImageView with the image every player's card
+     * @param cardValues
+     */
     public void setImageCards(Vector<Integer> cardValues){
         if (cardValues.size() == 3) {
             guiManager.setCardImage(cardValues.get(0), cardImage_1);
@@ -221,6 +249,10 @@ public class BoardSceneController {
 
     }
 
+    /**
+     * Set label texts that represent players names
+     * @param playerNames
+     */
     public void setLabelNames(Vector<String> playerNames){
         if (playerNames.size() == 3) {
             labelPlayer_1.setText(playerNames.get(0).toUpperCase());
@@ -235,6 +267,10 @@ public class BoardSceneController {
         underlineMyName();
         myCardImage = getMyCardImage();
     }
+
+    /**
+     * Underline label text that is the name of the player using this GUI
+     */
     private void underlineMyName(){
         if (guiManager.getMyName().toUpperCase().equals(labelPlayer_1.getText())){
             labelPlayer_1.setUnderline(true);
@@ -247,6 +283,10 @@ public class BoardSceneController {
         }
     }
 
+    /**
+     * Set label text and choice buttons text for male or female worker choice
+     * Set choice buttons visible
+     */
     public void showMaleOrFemaleMessage(){
         panelMessageLabel.setText("MALE or FEMALE");
         panelMessageLabel.setAlignment(Pos.CENTER);
@@ -257,6 +297,10 @@ public class BoardSceneController {
         secondButton.setVisible(true);
     }
 
+    /**
+     * Set label text and choice buttons text for double build choice
+     * Set choice buttons visible
+     */
     public void showMoveAgainMessage(){
         panelMessageLabel.setText("MOVE AGAIN?");
         panelMessageLabel.setAlignment(Pos.CENTER);
@@ -267,6 +311,10 @@ public class BoardSceneController {
         panelMessageLabel.setVisible(true);
     }
 
+    /**
+     * Set label text and choice buttons text for double build choice
+     * Set choice buttons visible
+     */
     public void showBuildAgainMessage(){
         panelMessageLabel.setText("BUILD AGAIN?");
         panelMessageLabel.setAlignment(Pos.CENTER);
@@ -277,6 +325,10 @@ public class BoardSceneController {
         panelMessageLabel.setVisible(true);
     }
 
+    /**
+     * Set label text and choice buttons text for build or dome choice
+     * Set choice button visible
+     */
     public void showBuildOrDomeMessage(){
         panelMessageLabel.setText("BUILD A DOME?");
         panelMessageLabel.setAlignment(Pos.CENTER);
@@ -287,6 +339,10 @@ public class BoardSceneController {
         panelMessageLabel.setVisible(true);
     }
 
+    /**
+     * Set label text and choice buttons text for build before move choice
+     * Set choice buttons visible
+     */
     public void showBuildFirstMessage(){
         panelMessageLabel.setText("BUILD BEFORE MOVE?");
         panelMessageLabel.setAlignment(Pos.CENTER);
@@ -297,6 +353,10 @@ public class BoardSceneController {
         panelMessageLabel.setVisible(true);
     }
 
+    /**
+     * On first choice button clicked a boolean choice with true flag is sent to server
+     * If is a male or female worker choice, a WorkerChoice message is sent with male flag set true
+     */
     public void maleButtonClicked(){
         if (guiManager.isBooleanChoice()){
             guiManager.sendObject(new BooleanChoice(true));
@@ -313,6 +373,10 @@ public class BoardSceneController {
         }
     }
 
+    /**
+     * On second choice button clicked a boolean choice with false flag is sent to server
+     * If is a male or female worker choice, a WorkerChoice message is sent with male flag set false
+     */
     public void femaleButtonClicked(){
         if (guiManager.isBooleanChoice()){
             guiManager.sendObject(new BooleanChoice(false));
@@ -329,8 +393,13 @@ public class BoardSceneController {
         }
     }
 
+    /**
+     * If a GridPane element is clicked, a new Move or Build message is sent with GridPane coordinates
+     * @param event
+     */
     public void boxClicked(MouseEvent event){
         Node source = (Node)event.getSource();
+        this.event = event;
         mouseExitFromBox(event);
         if (guiManager.isBoxChoice()) {
             if (guiManager.isFirstWorkerSet() || guiManager.isSecondWorkerSet() || guiManager.isMoveChoice()) {
@@ -354,6 +423,11 @@ public class BoardSceneController {
         }
     }
 
+    /**
+     * If a box can be clicked, when cursor enter on a GridPane element hand cursor and
+     * red background is set on that box
+     * @param event
+     */
     public void mouseEnterOnBox(MouseEvent event){
         if (guiManager.isBoxChoice()) {
             ((Node) event.getSource()).setStyle("-fx-background-color: #E4001F;");
@@ -362,21 +436,51 @@ public class BoardSceneController {
         }
     }
 
+    /**
+     * When cursor exit from GridPane element default cursor and no background colour is set
+     * @param event
+     */
     public void mouseExitFromBox(MouseEvent event){
         if (guiManager.isBoxChoice()) {
-            ((Node) event.getSource()).setStyle("-fx-background-color: null;");
-            ((Node) event.getSource()).setOpacity(1);
-            ((Node) event.getSource()).getScene().setCursor(Cursor.DEFAULT);
+            try {
+                ((Node) event.getSource()).setStyle("-fx-background-color: null;");
+                ((Node) event.getSource()).setOpacity(1);
+                ((Node) event.getSource()).getScene().setCursor(Cursor.DEFAULT);
+            } catch (Exception e ){
+                System.out.println("Problemi con mouse event");
+            }
         }
     }
 
+    /**
+     * When mouse enter on a button hand cursor is set
+     * @param event
+     */
     public void mouseEnterOnButton(MouseEvent event){
         ((Node) event.getSource()).getScene().setCursor(Cursor.HAND);
     }
 
+    /**
+     * When mouse exit from a button default cursor is set
+     * @param event
+     */
     public void mouseExitFromButton(MouseEvent event){
         ((Node) event.getSource()).getScene().setCursor(Cursor.DEFAULT);
     }
 
+    /**
+     * Load end_scene.fxml on current stage and set end_scene font
+     * @param winnerName
+     */
+    public void setEndScene(String winnerName){
+        ((Node)event.getSource()).getScene().getWindow().setWidth(600);
+        ((Node)event.getSource()).getScene().getWindow().setHeight(350);
+        ((Node)event.getSource()).getScene().getWindow().centerOnScreen();
+        EndSceneController endSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/end_scene.fxml");
+        if (endSceneController != null){
+            endSceneController.setFont(winnerName);
+        }
+    }
 
 }
+

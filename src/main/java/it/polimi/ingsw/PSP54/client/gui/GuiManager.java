@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.client.gui;
 
+
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.model.Game;
@@ -12,19 +13,23 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Vector;
 
 public class GuiManager implements Observer<GameMessage> {
 
     private static GuiManager instance = null;
+    Thread guiThread;
     private LogInSceneController logInSceneController;
     private NumberOfPlayersSceneController numberOfPlayersSceneController;
     private BoardSceneController boardSceneController;
     private CardsChoiceSceneController cardsChoiceSceneController;
     private DeckChoiceSceneController deckChoiceSceneController;
     private FirstPlayerChoiceSceneController firstPlayerChoiceSceneController;
+    private EndSceneController endSceneController;
     private AvailableCardsMessage cardsToDisplay;
     private Vector<String> names;
     private Vector<Integer> cardValues;
@@ -32,10 +37,12 @@ public class GuiManager implements Observer<GameMessage> {
     private String myName;
     private int numberOfPlayers = 0;
     private boolean cardExtractor = false, moveChoice = false, buildChoice = false,
-            firstWorkerSet = false, secondWorkerSet = false, boxChoice = false, booleanChoice = false;
+            firstWorkerSet = false, secondWorkerSet = false, boxChoice = false, booleanChoice = false,
+            winner = false, loser = false;
     private Client client;
     private BoardMessage board = null;
     private boolean gameMaster = false;
+    private Stage stage;
 
     /**
      * Create a static instance of a GuiManager
@@ -115,6 +122,15 @@ public class GuiManager implements Observer<GameMessage> {
     }
 
     /**
+     * Called from a EndSceneController
+     * Save the reference to this controller in GuiManager static instance
+     * @param endSceneController
+     */
+    void setEndSceneController(EndSceneController endSceneController){
+        this.endSceneController = endSceneController;
+    }
+
+    /**
      * Load a fxml file in a scene
      * @param scene
      * @param path of fxml file
@@ -185,7 +201,7 @@ public class GuiManager implements Observer<GameMessage> {
             System.out.println(stringMessage);
             switch (stringMessage) {
                 case StringMessage.welcomeMessage:
-                    Thread guiThread = new Thread(new GuiMain());
+                    guiThread = new Thread(new GuiMain());
                     guiThread.start();
                     break;
                 case StringMessage.setNumberOfPlayersMessage:
@@ -325,7 +341,32 @@ public class GuiManager implements Observer<GameMessage> {
             players = ((PlayersMessage) message).getPlayers();
             Platform.runLater(() -> deckChoiceSceneController.setFirstPlayerChoiceScene());
         }
+        if (message instanceof WinMessage){
+            System.out.println("YOU WIN !");
+            winner = true;
+            Platform.runLater(() -> boardSceneController.setEndScene(((WinMessage) message).getPlayer().getPlayerName()));
+        }
+        if (message instanceof LoseMessage){
+            System.out.println("YOU LOSE !");
+            loser = false;
+            Platform.runLater(() -> boardSceneController.setEndScene(((LoseMessage) message).getPlayer().getPlayerName()));
+        }
+        if (message instanceof EndGameMessage){
+            if (((EndGameMessage) message).getCloseConnection()){
+                System.exit(0);
+            }
+            else {
+                Platform.runLater(() -> stage.close());
+                Client c = new Client(12345);
+                try {
+                    c.startClient();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
+
 
 
     /**
@@ -415,6 +456,26 @@ public class GuiManager implements Observer<GameMessage> {
 
     public Vector<Player> getPlayers() {
         return players;
+    }
+
+    public boolean isWinner() {
+        return winner;
+    }
+
+    public boolean isLoser() {
+        return loser;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }
 

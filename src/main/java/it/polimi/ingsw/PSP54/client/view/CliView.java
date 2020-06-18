@@ -598,29 +598,30 @@ public class CliView implements Observer<GameMessage> {
         resetConnection();
     }
 
-    /**
-     * Asks the player if he wants to play again, if so adds him to a new lobby, closes the connection otherwise.
-     */
-    public void resetConnection() {
-        boolean loop = true;
-        output.println("do you want to play again? Insert [y/n]");
-        while (loop) {
-            String Choice = inputReader.next();
-            if (Choice.equals("y")) {
-                Client c = new Client("127.0.0.1", 12345);
-                try {
-                    c.startClient();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                loop = false;
-            } else if (Choice.equals("n")) {
-                client.setActive(false);
-                loop = false;
-            } else
-                output.println("Incorrect Input!");
-        }
-    }
+	/**
+	 * Asks the player if he wants to play again, if so adds him to a new lobby, closes the connection otherwise.
+	 */
+	public void resetConnection() {
+		boolean loop=true;
+		output.println("do you want to play again? Insert [yes/no]");
+		while (loop) {
+			String Choice = inputReader.next();
+			if(Choice.equals("yes")) {
+				Client c = new Client(12345);
+				try {
+					c.startClient();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				loop = false;
+			}
+			else if(Choice.equals("no")){
+				client.SuspendThread();
+				loop = false;
+			} else
+				output.println("Incorrect Input!");
+		}
+	}
 
     /**
      * Called whenever the observed object is changed.
