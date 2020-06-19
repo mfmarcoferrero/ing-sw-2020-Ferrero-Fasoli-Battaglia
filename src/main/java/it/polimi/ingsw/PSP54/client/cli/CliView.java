@@ -1,4 +1,4 @@
-package it.polimi.ingsw.PSP54.client.view;
+package it.polimi.ingsw.PSP54.client.cli;
 
 import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.Observer;

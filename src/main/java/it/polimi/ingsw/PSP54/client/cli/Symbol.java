@@ -1,4 +1,4 @@
-package it.polimi.ingsw.PSP54.client.view;
+package it.polimi.ingsw.PSP54.client.cli;
 
 public enum Symbol {
 
