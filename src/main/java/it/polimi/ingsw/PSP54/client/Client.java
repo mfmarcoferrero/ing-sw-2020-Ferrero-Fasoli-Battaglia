@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP54.client;
 
 import it.polimi.ingsw.PSP54.client.gui.GuiManager;
-import it.polimi.ingsw.PSP54.client.view.*;
+import it.polimi.ingsw.PSP54.client.cli.*;
 import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
@@ -17,7 +17,6 @@ import java.util.Scanner;
 public class Client extends Observable<GameMessage> {
 
     private String ip = null;
-    private static final String serverIp = "127.0.0.1";
     private final Scanner inputReader = new Scanner(System.in);
     private final int port;
     private ObjectOutputStream socketOut;
@@ -104,6 +103,22 @@ public class Client extends Observable<GameMessage> {
     }
 
     /**
+     * Verifies if an IP address is correct
+     * @param ipAddr
+     * @return
+     */
+    public boolean checkIpAddr(String ipAddr) {
+        boolean isReachable;
+        try {
+            InetAddress server = InetAddress.getByName(ipAddr);
+            isReachable = server.isReachable(1000);
+        } catch (IOException e) {
+            isReachable = false;
+        }
+        return isReachable;
+    }
+
+    /**
      * Once acquired the interface choice establishes a connection with the server.
      * It also starts two different thread to menage the socket reading/writing.
      * @throws IOException if an I/O error occurs when creating the socket.
@@ -118,9 +133,8 @@ public class Client extends Observable<GameMessage> {
         setInterfaceChoice(choice);
         System.out.println("Enter the IP address of a server you want to connect: ");
         ip = inputReader.next();
-        while (!ip.equals(serverIp)) {
-            System.out.println("IP Address ERROR.(The IP Address you chose may be wrong)");
-            System.out.println("Enter the IP address of a server you want to connect: ");
+        while (!checkIpAddr(ip)) {
+            System.out.println("ERROR: Server unreachable, try again!");
             ip = inputReader.next();
         }
         Socket socket = new Socket(ip, port);
