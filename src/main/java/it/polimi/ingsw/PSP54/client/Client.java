@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.Timer;
 
@@ -23,7 +25,6 @@ public class Client extends Observable<GameMessage> {
     private ObjectOutputStream socketOut;
     private boolean active = true;
     private Thread t;
-    private Timer ping;
 
     public Client(int port) {
         //this.ip = ip;
@@ -92,8 +93,7 @@ public class Client extends Observable<GameMessage> {
      * It also starts two different thread to menage the socket reading/writing.
      * @throws IOException if an I/O error occurs when creating the socket.
      */
-    public void startClient() throws IOException {
-        Ping();
+    public void startClient(){
         System.out.println("CLI or GUI? [enter c or g]");
         String choice = inputReader.next();
         while (!choice.equals("c") && !choice.equals("g")) {
@@ -108,14 +108,29 @@ public class Client extends Observable<GameMessage> {
             System.out.println("Enter the IP address of a server you want to connect: ");
             ip = inputReader.next();
         }
-        Socket socket = new Socket(ip, port);
-        System.out.println("Connection established");
-        ObjectInputStream socketIn = new ObjectInputStream(socket.getInputStream());
-        socketOut = new ObjectOutputStream(socket.getOutputStream());
+        Socket socket = null;
         try {
+            socket = new Socket(ip, port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Objects.requireNonNull(socket).setSoTimeout(5000);
+        } catch (SocketException e) {
+            try {
+                Objects.requireNonNull(socket).close();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+        System.out.println("Connection established");
+        ObjectInputStream socketIn = null;
+        try {
+            socketIn = new ObjectInputStream(Objects.requireNonNull(socket).getInputStream());
+            socketOut = new ObjectOutputStream(Objects.requireNonNull(socket).getOutputStream());
             Thread t0 = asyncReadFromSocket(socketIn);
             t0.join();
-        } catch(NoSuchElementException | InterruptedException e) {
+        } catch(NoSuchElementException | InterruptedException | IOException e) {
             System.out.println("Connection closed from the client side");
         } finally {
             //noinspection StatementWithEmptyBody
@@ -123,17 +138,17 @@ public class Client extends Observable<GameMessage> {
 
             }
             if (!isActive()) {
-                socketIn.close();
-                socketOut.close();
-                socket.close();
+                try {
+                    Objects.requireNonNull(socketIn).close();
+                    socketOut.close();
+                    socket.close();
+                }catch(IOException e){
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    public void Ping(){
-        ping = new Timer();
-        ping.scheduleAtFixedRate(new Ping(this), 2000, 1000);
-    }
 
     public synchronized boolean isActive(){
         return active;
