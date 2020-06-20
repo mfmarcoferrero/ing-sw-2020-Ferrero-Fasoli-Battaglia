@@ -139,17 +139,16 @@ public class GuiManager implements Observer<GameMessage> {
      */
     static <T> T setLayout(Scene scene, String path) {
 
-        FXMLLoader loader = new FXMLLoader();
+        FXMLLoader loader = new FXMLLoader(GuiManager.class.getClassLoader().getResource(path));
         Pane pane;
         try {
-            loader.setLocation(new URL(path));
             pane = loader.load();
             scene.setRoot(pane);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return loader.getController();
 
+        return loader.getController();
     }
 
     /**
@@ -159,31 +158,31 @@ public class GuiManager implements Observer<GameMessage> {
      */
     public void setCardImage(int val, ImageView imageView) {
         if (val == Game.APOLLO){
-            imageView.setImage(new Image("file:./resources/icons/01.png"));
+            imageView.setImage(new Image("icons/01.png"));
         }
         if (val == Game.ARTEMIS){
-            imageView.setImage(new Image("file:./resources/icons/02.png"));
+            imageView.setImage(new Image("icons/02.png"));
         }
         if (val == Game.ATHENA){
-            imageView.setImage(new Image("file:./resources/icons/03.png"));
+            imageView.setImage(new Image("icons/03.png"));
         }
         if (val == Game.ATLAS){
-            imageView.setImage(new Image("file:./resources/icons/04.png"));
+            imageView.setImage(new Image("icons/04.png"));
         }
         if (val == Game.DEMETER){
-            imageView.setImage(new Image("file:./resources/icons/05.png"));
+            imageView.setImage(new Image("icons/05.png"));
         }
         if (val == Game.HEPHAESTUS){
-            imageView.setImage(new Image("file:./resources/icons/06.png"));
+            imageView.setImage(new Image("icons/06.png"));
         }
         if (val == Game.MINOTAUR){
-            imageView.setImage(new Image("file:./resources/icons/08.png"));
+            imageView.setImage(new Image("icons/08.png"));
         }
         if (val == Game.PAN){
-            imageView.setImage(new Image("file:./resources/icons/09.png"));
+            imageView.setImage(new Image("icons/09.png"));
         }
         if (val == Game.PROMETHEUS){
-            imageView.setImage(new Image("file:./resources/icons/10.png"));
+            imageView.setImage(new Image("icons/10.png"));
         }
     }
 

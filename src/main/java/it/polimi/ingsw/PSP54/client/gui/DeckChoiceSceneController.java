@@ -42,11 +42,11 @@ public class DeckChoiceSceneController {
     public void setDeckChoiceScene(){
         if (guiManager.getNumberOfPlayers() == 2) {
             choiceLabel.setText("CHOOSE 2 POWER CARDS");
-            choiceLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",30));
+            choiceLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",30));
         }
         if (guiManager.getNumberOfPlayers() == 3){
             choiceLabel.setText("CHOOSE 3 POWER CARDS");
-            choiceLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",30));
+            choiceLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",30));
         }
     }
 
@@ -119,7 +119,7 @@ public class DeckChoiceSceneController {
     }
 
     public void setFirstPlayerChoiceScene(){
-        FirstPlayerChoiceSceneController firstPlayerChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/first_player_choice.fxml");
+        FirstPlayerChoiceSceneController firstPlayerChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"FXML/first_player_choice.fxml");
         if (firstPlayerChoiceSceneController != null){
             firstPlayerChoiceSceneController.setFont();
         }

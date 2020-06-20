@@ -68,19 +68,19 @@ public class BoardSceneController {
                 imageWorkerMap[GridPane.getRowIndex(node)][GridPane.getColumnIndex(node)] = (ImageView)((AnchorPane) node).getChildren().get(0);
             }
         }
-        labelPlayer_1.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",24));
+        labelPlayer_1.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",24));
         labelPlayer_1.setAlignment(Pos.CENTER);
-        labelPlayer_2.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",24));
+        labelPlayer_2.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",24));
         labelPlayer_2.setAlignment(Pos.CENTER);
-        labelPlayer_3.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",24));
+        labelPlayer_3.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",24));
         labelPlayer_3.setAlignment(Pos.CENTER);
-        messageLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",35));
+        messageLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",35));
         messageLabel.setAlignment(Pos.CENTER);
-        panelMessageLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",26));
+        panelMessageLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",26));
         panelMessageLabel.setAlignment(Pos.CENTER);
-        firstButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",15));
+        firstButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",15));
         firstButton.setAlignment(Pos.CENTER);
-        secondButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",15));
+        secondButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",15));
         secondButton.setAlignment(Pos.CENTER);
         setImageCards(guiManager.getCardValues());
         setLabelNames(guiManager.getNames());
@@ -108,7 +108,7 @@ public class BoardSceneController {
         switch (box.getLevel()) {
             case 0:
                 if (box.isDome()) {
-                    boxImageView.setImage(new Image("file:./resources/icons/Dome_2.png"));
+                    boxImageView.setImage(new Image("icons/Dome_2.png"));
                 }
                 if (!box.isDome()){
                     boxImageView.setImage(null);
@@ -116,26 +116,26 @@ public class BoardSceneController {
                 break;
             case 1:
                 if (box.isDome()){
-                    boxImageView.setImage(new Image("file:./resources/icons/First+Dome_Building.png"));
+                    boxImageView.setImage(new Image("icons/First+Dome_Building.png"));
                 }
                 if (!box.isDome()){
-                    boxImageView.setImage(new Image("file:./resources/icons/FirstLevel.png"));
+                    boxImageView.setImage(new Image("icons/FirstLevel.png"));
                 }
                 break;
             case 2:
                 if (box.isDome()){
-                    boxImageView.setImage(new Image("file:./resources/icons/First+Second+Dome_Building.png"));
+                    boxImageView.setImage(new Image("icons/First+Second+Dome_Building.png"));
                 }
                 if (!box.isDome()){
-                    boxImageView.setImage(new Image("file:./resources/icons/First+Second_Building.png"));
+                    boxImageView.setImage(new Image("icons/First+Second_Building.png"));
                 }
                 break;
             case 3:
                 if (box.isDome()){
-                    boxImageView.setImage(new Image("file:./resources/icons/First+Second+Third+Dome_Building.png"));
+                    boxImageView.setImage(new Image("icons/First+Second+Third+Dome_Building.png"));
                 }
                 if (!box.isDome()){
-                    boxImageView.setImage(new Image("file:./resources/icons/First+Second+Third_Building.png"));
+                    boxImageView.setImage(new Image("icons/First+Second+Third_Building.png"));
                 }
                 break;
         }
@@ -151,25 +151,25 @@ public class BoardSceneController {
             switch (box.getWorker().getOwner().getColor()) {
                 case "blue":
                     if (box.getWorker().getMale()) {
-                        boxImageView.setImage(new Image("file:./resources/icons/MaleWorker_Blue.png"));
+                        boxImageView.setImage(new Image("icons/MaleWorker_Blue.png"));
                     }
                     else {
-                        boxImageView.setImage(new Image("file:./resources/icons/FemaleWorker_Blue.png"));
+                        boxImageView.setImage(new Image("icons/FemaleWorker_Blue.png"));
                     }
                     break;
                 case "red":
                     if (box.getWorker().getMale()) {
-                        boxImageView.setImage(new Image("file:./resources/icons/MaleWorker_Red.png"));
+                        boxImageView.setImage(new Image("icons/MaleWorker_Red.png"));
                     }
                     else {
-                        boxImageView.setImage(new Image("file:./resources/icons/FemaleWorker_Red.png"));
+                        boxImageView.setImage(new Image("icons/FemaleWorker_Red.png"));
                     }                    break;
                 case "yellow":
                     if (box.getWorker().getMale()) {
-                        boxImageView.setImage(new Image("file:./resources/icons/MaleWorker_Yellow.png"));
+                        boxImageView.setImage(new Image("icons/MaleWorker_Yellow.png"));
                     }
                     else {
-                        boxImageView.setImage(new Image("file:./resources/icons/FemaleWorker_Yellow.png"));
+                        boxImageView.setImage(new Image("icons/FemaleWorker_Yellow.png"));
                     }                    break;
             }
         }
@@ -476,7 +476,7 @@ public class BoardSceneController {
         ((Node)event.getSource()).getScene().getWindow().setWidth(600);
         ((Node)event.getSource()).getScene().getWindow().setHeight(350);
         ((Node)event.getSource()).getScene().getWindow().centerOnScreen();
-        EndSceneController endSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/end_scene.fxml");
+        EndSceneController endSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"FXML/end_scene.fxml");
         if (endSceneController != null){
             endSceneController.setFont(winnerName);
         }

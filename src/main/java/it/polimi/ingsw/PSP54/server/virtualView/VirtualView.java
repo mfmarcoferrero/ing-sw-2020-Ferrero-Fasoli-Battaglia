@@ -63,6 +63,7 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
                     connection.asyncSend(new EndGameMessage(null, true));
                 }
                 else
+                    //altrimenti bisognerebbe ributtare la connection dentro lobby
                     connection.asyncSend(new EndGameMessage(null,false));
             }
         }

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="900.0" style="-fx-background-color: #0896C2;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.LogInSceneController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="900.0" style="-fx-background-color: #0896C2;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.LogInSceneController">
    <children>
       <Label fx:id="waitingLabel" layoutX="495.0" layoutY="329.0" prefHeight="31.0" prefWidth="243.0" text="Waiting for other players connection..." visible="false">
       </Label>
@@ -31,14 +28,10 @@
          <font>
             <Font size="14.0" />
          </font></Button>
-      <ImageView fitHeight="251.0" fitWidth="220.0" layoutX="207.0" layoutY="182.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../icons/title_island.png" />
-         </image>
-      </ImageView>
+      <ImageView fx:id="islandImageView" fitHeight="251.0" fitWidth="220.0" layoutX="207.0" layoutY="182.0" pickOnBounds="true" preserveRatio="true" />
       <Label fx:id="joinAGameLabel" layoutX="354.0" layoutY="36.0" prefHeight="82.0" prefWidth="192.0" text="JOIN A GAME">
          </Label>
-      <Label fx:id="invalidNameLabel" layoutX="463.0" layoutY="388.0" prefHeight="31.0" prefWidth="299.0" visible="false" text="A user with this nickname already exists. Try with a new one." textFill="#831515">
+      <Label fx:id="invalidNameLabel" layoutX="463.0" layoutY="388.0" prefHeight="31.0" prefWidth="299.0" text="A user with this nickname already exists. Try with a new one." textFill="#831515" visible="false">
       </Label>
    </children>
 </Pane>

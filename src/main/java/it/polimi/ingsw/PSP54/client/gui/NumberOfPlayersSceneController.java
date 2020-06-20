@@ -30,10 +30,10 @@ public class NumberOfPlayersSceneController {
     }
 
     public void setFont(){
-        twoButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",18));
-        threeButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",18));
-        waitingLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",21));
-        chooseNumberOfPlayersLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",29));
+        twoButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",18));
+        threeButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",18));
+        waitingLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",21));
+        chooseNumberOfPlayersLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",29));
     }
 
     /**
@@ -95,14 +95,14 @@ public class NumberOfPlayersSceneController {
         ((Node)event.getSource()).getScene().getWindow().setWidth(1065);
         ((Node)event.getSource()).getScene().getWindow().setHeight(620);
         ((Node)event.getSource()).getScene().getWindow().centerOnScreen();
-        BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/board.fxml");
+        BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"FXML/board.fxml");
         if (boardSceneController != null){
             boardSceneController.setBoardScene();
         }
     }
 
     public void setDeckChoiceScene(){
-        DeckChoiceSceneController deckChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/deck_choice.fxml");
+        DeckChoiceSceneController deckChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"FXML/deck_choice.fxml");
         if (deckChoiceSceneController != null){
             deckChoiceSceneController.setDeckChoiceScene();
         }

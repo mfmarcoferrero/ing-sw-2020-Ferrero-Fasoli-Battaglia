@@ -10,10 +10,13 @@ import javafx.stage.Stage;
  */
 public class GuiMain extends Application implements Runnable{
 
+    private Stage mainStage;
+
     @Override
     public void start(Stage stage) {
+        mainStage = stage;
         stage.setScene(new Scene(new Pane(),900,550));
-        LogInSceneController logInSceneController = GuiManager.setLayout(stage.getScene(),"file:./resources/FXML/log_in.fxml");
+        LogInSceneController logInSceneController = GuiManager.setLayout(stage.getScene(), "FXML/log_in.fxml");
         logInSceneController.setFont();
         logInSceneController.getGuiManager().setStage(stage);
         stage.setTitle("Santorini");
