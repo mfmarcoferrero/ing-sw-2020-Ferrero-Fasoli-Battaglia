@@ -111,13 +111,10 @@ public class Client extends Observable<GameMessage> {
         Socket socket = null;
         try {
             socket = new Socket(ip, port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             Objects.requireNonNull(socket).setSoTimeout(5000);
-        } catch (SocketException e) {
+        } catch (IOException e) {
             GameMessage dropconnection = new StringMessage(null, StringMessage.EndForDisconnection);
+            notify(dropconnection);
         }
         System.out.println("Connection established");
         ObjectInputStream socketIn = null;
