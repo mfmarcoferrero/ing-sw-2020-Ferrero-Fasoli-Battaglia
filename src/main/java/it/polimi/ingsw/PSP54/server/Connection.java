@@ -1,15 +1,17 @@
 package it.polimi.ingsw.PSP54.server;
 
+import it.polimi.ingsw.PSP54.Ping;
 import it.polimi.ingsw.PSP54.observer.*;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.Timer;
 
 /**
  * Represents the connection between Server and a Client. It can send an read object.
@@ -23,6 +25,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     private boolean active = true;
     private boolean gameMaster  = false;
     int numberOfPlayers;
+    private Timer ping;
 
     public Connection(Socket socket, Server server) {
         this.socket = socket;
@@ -106,6 +109,12 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     public void run() {
         int i=0;
         try {
+            socket.setSoTimeout(5000);
+        } catch (SocketException e) {
+            this.close();
+        }
+        Ping();
+        try {
             out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             PlayerCredentials credentials;
@@ -139,6 +148,11 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         } finally {
             close();
         }
+    }
+
+    public void Ping(){
+        ping = new Timer();
+        ping.scheduleAtFixedRate(new Ping(this), 5000, 1000);
     }
 
     public void setGameMaster(boolean gameMaster) {

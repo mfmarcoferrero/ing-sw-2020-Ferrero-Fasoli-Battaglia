@@ -33,21 +33,21 @@ public class FirstPlayerChoiceSceneController {
     }
 
     public void setFont(){
-        chooseNumberOfPlayersLabel.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",35));
+        chooseNumberOfPlayersLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",35));
         if (guiManager.getPlayers().size() == 2){
             firstPlayerButton.setText(guiManager.getPlayers().get(0).getPlayerName().toUpperCase());
-            firstPlayerButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
+            firstPlayerButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",16));
             thirdPlayerButton.setText(guiManager.getPlayers().get(1).getPlayerName().toUpperCase());
-            thirdPlayerButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
+            thirdPlayerButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",16));
             secondPlayerButton.setVisible(false);
         }
         if (guiManager.getPlayers().size() == 3){
             firstPlayerButton.setText(guiManager.getPlayers().get(0).getPlayerName().toUpperCase());
-            firstPlayerButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
+            firstPlayerButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",16));
             secondPlayerButton.setText(guiManager.getPlayers().get(1).getPlayerName().toUpperCase());
-            secondPlayerButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
+            secondPlayerButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",16));
             thirdPlayerButton.setText(guiManager.getPlayers().get(2).getPlayerName().toUpperCase());
-            thirdPlayerButton.setFont(Font.loadFont("file:./resources/PapyrusCondensed.ttf",16));
+            thirdPlayerButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",16));
         }
     }
 
@@ -88,11 +88,9 @@ public class FirstPlayerChoiceSceneController {
     public void thirdPlayerButtonPressed(ActionEvent event) {
         this.event = event;
         if (guiManager.getPlayers().size() == 2) {
-            //System.out.println("Ho scelto: " + guiManager.getPlayers().get(1).getPlayerName());
             guiManager.sendObject(new StartPlayerChoice(1));
         }
         if (guiManager.getPlayers().size() == 3){
-            //System.out.println("Ho scelto: " + guiManager.getPlayers().get(2).getPlayerName());
             guiManager.sendObject(new StartPlayerChoice(2));
         }
         firstPlayerButton.setDisable(true);
@@ -107,7 +105,7 @@ public class FirstPlayerChoiceSceneController {
         ((Node)event.getSource()).getScene().getWindow().setWidth(1065);
         ((Node)event.getSource()).getScene().getWindow().setHeight(620);
         ((Node)event.getSource()).getScene().getWindow().centerOnScreen();
-        BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/board.fxml");
+        BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"FXML/board.fxml");
         if (boardSceneController != null){
             boardSceneController.setBoardScene();
         }
