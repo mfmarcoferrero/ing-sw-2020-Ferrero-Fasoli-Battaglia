@@ -16,7 +16,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Vector;
 
 public class GuiManager implements Observer<GameMessage> {
@@ -138,7 +137,7 @@ public class GuiManager implements Observer<GameMessage> {
      * @return
      */
     static <T> T setLayout(Scene scene, String path) {
-
+        scene.getStylesheets().add(GuiManager.class.getResource("/fontstyle.css").toExternalForm());
         FXMLLoader loader = new FXMLLoader(GuiManager.class.getClassLoader().getResource(path));
         Pane pane;
         try {

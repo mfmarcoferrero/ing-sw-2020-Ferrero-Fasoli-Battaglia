@@ -38,23 +38,23 @@ public class EndSceneController {
         if (guiManager.isWinner()) {
             if (winnerName.equals(guiManager.getMyName())){
                 winOrLoseLabel.setText("YOU WIN !");
-                winOrLoseLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",50));
+                winOrLoseLabel.setFont(Font.font("papyrus", 50));
                 winnerNameLabel.setVisible(false);
             }
             else
                 winOrLoseLabel.setText("YOU LOSE !  ");
-                winOrLoseLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",50));
+                winOrLoseLabel.setFont(Font.font("papyrus", 50));
                 winnerNameLabel.setText("THE WINNER IS: " + winnerName.toUpperCase());
-                winnerNameLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",28));
+                winnerNameLabel.setFont(Font.font("papyrus", 28));
                 winnerNameLabel.setAlignment(Pos.CENTER);
         }
         if (guiManager.isLoser()){
             winOrLoseLabel.setText(winnerName.toUpperCase() + " LOSE !");
         }
         winOrLoseLabel.setAlignment(Pos.CENTER);
-        joinANewGameLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",25));
-        yesButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",23));
-        noButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",23));
+        joinANewGameLabel.setFont(Font.font("papyrus", 25));
+        yesButton.setFont(Font.font("papyrus", 23));
+        noButton.setFont(Font.font("papyrus", 23));
     }
 
     /**

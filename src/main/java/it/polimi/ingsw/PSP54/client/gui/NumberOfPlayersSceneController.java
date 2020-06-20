@@ -30,10 +30,10 @@ public class NumberOfPlayersSceneController {
     }
 
     public void setFont(){
-        twoButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",18));
-        threeButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",18));
-        waitingLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",21));
-        chooseNumberOfPlayersLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",29));
+        twoButton.setFont(Font.font("papyrus",18));
+        threeButton.setFont(Font.font("papyrus",18));
+        waitingLabel.setFont(Font.font("papyrus",21));
+        chooseNumberOfPlayersLabel.setFont(Font.font("papyrus",29));
     }
 
     /**

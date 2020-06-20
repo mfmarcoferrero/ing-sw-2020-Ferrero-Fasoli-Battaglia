@@ -673,6 +673,7 @@ public class CliView implements Observer<GameMessage> {
                     break;
                 }
                 case StringMessage.EndForDisconnection:
+                    inputReader.close();
                     resetConnection();
                     break;
             }
@@ -692,6 +693,7 @@ public class CliView implements Observer<GameMessage> {
             losingPlayer();
         }
         if (message instanceof WinMessage) {
+            inputReader.close();
             endOfMatch(((WinMessage) message).getPlayer());
         }
         if (message instanceof AvailableCardsMessage) {

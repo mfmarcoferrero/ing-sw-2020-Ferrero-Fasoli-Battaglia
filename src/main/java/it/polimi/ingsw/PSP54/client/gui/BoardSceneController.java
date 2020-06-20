@@ -68,19 +68,19 @@ public class BoardSceneController {
                 imageWorkerMap[GridPane.getRowIndex(node)][GridPane.getColumnIndex(node)] = (ImageView)((AnchorPane) node).getChildren().get(0);
             }
         }
-        labelPlayer_1.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",24));
+        labelPlayer_1.setFont(Font.font("papyrus",24));
         labelPlayer_1.setAlignment(Pos.CENTER);
-        labelPlayer_2.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",24));
+        labelPlayer_2.setFont(Font.font("papyrus",24));
         labelPlayer_2.setAlignment(Pos.CENTER);
-        labelPlayer_3.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",24));
+        labelPlayer_3.setFont(Font.font("papyrus",24));
         labelPlayer_3.setAlignment(Pos.CENTER);
-        messageLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",35));
+        messageLabel.setFont(Font.font("papyrus",35));
         messageLabel.setAlignment(Pos.CENTER);
-        panelMessageLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",26));
+        panelMessageLabel.setFont(Font.font("papyrus",26));
         panelMessageLabel.setAlignment(Pos.CENTER);
-        firstButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",15));
+        firstButton.setFont(Font.font("papyrus",15));
         firstButton.setAlignment(Pos.CENTER);
-        secondButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",15));
+        secondButton.setFont(Font.font("papyrus",15));
         secondButton.setAlignment(Pos.CENTER);
         setImageCards(guiManager.getCardValues());
         setLabelNames(guiManager.getNames());

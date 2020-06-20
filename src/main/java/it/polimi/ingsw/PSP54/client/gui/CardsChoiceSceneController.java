@@ -38,7 +38,7 @@ public class CardsChoiceSceneController {
     }
 
     public void setFont(){
-        chooseYourPowerLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",34));
+        chooseYourPowerLabel.setFont(Font.font("papyrus",34));
     }
 
     /**

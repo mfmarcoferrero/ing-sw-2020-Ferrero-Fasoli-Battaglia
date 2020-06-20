@@ -42,13 +42,14 @@ public class LogInSceneController {
     }
 
     public void setFont(){
+
         try {
-            joinAGameLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",41));
-            ageLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",23));
-            nameLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",23));
-            startButton.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",17));
-            waitingLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",18));
-            invalidNameLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",16));
+            joinAGameLabel.setFont(Font.font("papyrus",41));
+            ageLabel.setFont(Font.font("papyrus", 23));
+            nameLabel.setFont(Font.font("papyrus",23));
+            startButton.setFont(Font.font("papyrus",17));
+            waitingLabel.setFont(Font.font("papyrus",18));
+            invalidNameLabel.setFont(Font.font("papyrus",16));
             islandImageView.setImage(new Image("icons/title_island.png"));
         } catch (Exception e) {
             e.printStackTrace();

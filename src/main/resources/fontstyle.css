@@ -1,0 +1,7 @@
+@font-face {
+    src: url('PapyrusCondensed.ttf');
+}
+
+.label .text .button{
+    -fx-font-family: 'papyrus';
+}

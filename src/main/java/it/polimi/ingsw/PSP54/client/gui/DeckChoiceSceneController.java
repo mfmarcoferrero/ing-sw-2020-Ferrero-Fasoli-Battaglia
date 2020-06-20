@@ -42,11 +42,11 @@ public class DeckChoiceSceneController {
     public void setDeckChoiceScene(){
         if (guiManager.getNumberOfPlayers() == 2) {
             choiceLabel.setText("CHOOSE 2 POWER CARDS");
-            choiceLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",30));
+            choiceLabel.setFont(Font.font("papyrus",30));
         }
         if (guiManager.getNumberOfPlayers() == 3){
             choiceLabel.setText("CHOOSE 3 POWER CARDS");
-            choiceLabel.setFont(Font.loadFont("file:./src/main/resources/PapyrusCondensed.ttf",30));
+            choiceLabel.setFont(Font.font("papyrus",30));
         }
     }
 

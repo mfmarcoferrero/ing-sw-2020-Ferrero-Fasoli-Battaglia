@@ -113,7 +113,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         } catch (SocketException e) {
             this.close();
         }
-        Ping();
+        ping();
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
@@ -150,7 +150,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         }
     }
 
-    public void Ping(){
+    public void ping(){
         ping = new Timer();
         ping.scheduleAtFixedRate(new Ping(this), 5000, 1000);
     }

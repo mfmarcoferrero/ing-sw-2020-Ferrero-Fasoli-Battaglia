@@ -86,26 +86,29 @@ public class Client extends Observable<GameMessage> {
         }
     }
 
+
     public void serverPing() {
         new Thread(()->{
+            boolean loop = true;
+            GameMessage serverUnreachable = new StringMessage(null, StringMessage.serverUnreachable);
             try {
                 InetAddress host = InetAddress.getByName(ip);
-                while (isActive()){
+                while (loop){
                     if (!host.isReachable(5000)) {
-                        GameMessage serverUnreachable = new StringMessage(null, StringMessage.serverUnreachable);
                         notify(serverUnreachable);
+                        loop = false;
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                notify(serverUnreachable);
             }
         });
     }
 
     /**
-     * Verifies if an IP address is correct
-     * @param ipAddr
-     * @return
+     * Verifies whether a String is a reachable IP address.
+     * @param ipAddr the IP address to reach.
+     * @return true if is reachable, false otherwise.
      */
     public boolean checkIpAddr(String ipAddr) {
         boolean isReachable;
@@ -131,6 +134,7 @@ public class Client extends Observable<GameMessage> {
             choice = inputReader.next();
         }
         setInterfaceChoice(choice);
+        //set & check IP
         System.out.println("Enter the IP address of a server you want to connect: ");
         ip = inputReader.next();
         while (!checkIpAddr(ip)) {
