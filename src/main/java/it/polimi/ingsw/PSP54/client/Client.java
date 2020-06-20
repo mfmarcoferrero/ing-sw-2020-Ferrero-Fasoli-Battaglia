@@ -5,6 +5,7 @@ import it.polimi.ingsw.PSP54.client.gui.GuiManager;
 import it.polimi.ingsw.PSP54.client.view.*;
 import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -91,9 +92,8 @@ public class Client extends Observable<GameMessage> {
     /**
      * Once acquired the interface choice establishes a connection with the server.
      * It also starts two different thread to menage the socket reading/writing.
-     * @throws IOException if an I/O error occurs when creating the socket.
      */
-    public void startClient(){
+    public void startClient() {
         System.out.println("CLI or GUI? [enter c or g]");
         String choice = inputReader.next();
         while (!choice.equals("c") && !choice.equals("g")) {
@@ -103,11 +103,11 @@ public class Client extends Observable<GameMessage> {
         setInterfaceChoice(choice);
         System.out.println("Enter the IP address of a server you want to connect: ");
         ip = inputReader.next();
-        while (!ip.equals(serverIp)) {
+        /*while (!ip.equals(serverIp)) {
             System.out.println("IP Address ERROR.(The IP Address you chose may be wrong)");
             System.out.println("Enter the IP address of a server you want to connect: ");
             ip = inputReader.next();
-        }
+        }*/
         Socket socket = null;
         try {
             socket = new Socket(ip, port);
@@ -117,17 +117,13 @@ public class Client extends Observable<GameMessage> {
         try {
             Objects.requireNonNull(socket).setSoTimeout(5000);
         } catch (SocketException e) {
-            try {
-                Objects.requireNonNull(socket).close();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+            GameMessage dropconnection = new StringMessage(null, StringMessage.EndForDisconnection);
         }
         System.out.println("Connection established");
         ObjectInputStream socketIn = null;
-        try {
+        try{
             socketIn = new ObjectInputStream(Objects.requireNonNull(socket).getInputStream());
-            socketOut = new ObjectOutputStream(Objects.requireNonNull(socket).getOutputStream());
+            socketOut = new ObjectOutputStream(socket.getOutputStream());
             Thread t0 = asyncReadFromSocket(socketIn);
             t0.join();
         } catch(NoSuchElementException | InterruptedException | IOException e) {
@@ -142,13 +138,13 @@ public class Client extends Observable<GameMessage> {
                     Objects.requireNonNull(socketIn).close();
                     socketOut.close();
                     socket.close();
-                }catch(IOException e){
+                }catch (IOException e){
                     e.printStackTrace();
+                    System.out.println("ciao");
                 }
             }
         }
     }
-
 
     public synchronized boolean isActive(){
         return active;

@@ -147,7 +147,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
 
     public void Ping(){
         ping = new Timer();
-        ping.scheduleAtFixedRate(new Ping(this), 3000, 1000);
+        ping.scheduleAtFixedRate(new Ping(this), 2000, 1000);
     }
 
     public void setGameMaster(boolean gameMaster) {
