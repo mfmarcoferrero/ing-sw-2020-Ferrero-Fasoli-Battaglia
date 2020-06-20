@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.client;
 
+import it.polimi.ingsw.PSP54.Ping;
 import it.polimi.ingsw.PSP54.client.gui.GuiManager;
 import it.polimi.ingsw.PSP54.client.view.*;
 import it.polimi.ingsw.PSP54.observer.Observable;
@@ -11,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.Timer;
 
 public class Client extends Observable<GameMessage> {
 
@@ -21,6 +23,7 @@ public class Client extends Observable<GameMessage> {
     private ObjectOutputStream socketOut;
     private boolean active = true;
     private Thread t;
+    private Timer ping;
 
     public Client(int port) {
         //this.ip = ip;
@@ -90,6 +93,7 @@ public class Client extends Observable<GameMessage> {
      * @throws IOException if an I/O error occurs when creating the socket.
      */
     public void startClient() throws IOException {
+        Ping();
         System.out.println("CLI or GUI? [enter c or g]");
         String choice = inputReader.next();
         while (!choice.equals("c") && !choice.equals("g")) {
@@ -124,6 +128,11 @@ public class Client extends Observable<GameMessage> {
                 socket.close();
             }
         }
+    }
+
+    public void Ping(){
+        ping = new Timer();
+        ping.scheduleAtFixedRate(new Ping(this), 2000, 1000);
     }
 
     public synchronized boolean isActive(){

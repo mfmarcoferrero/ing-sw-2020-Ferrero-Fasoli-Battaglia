@@ -5,4 +5,5 @@ public class PingMessage {
     public PingMessage(String name) {
         this.name=name;
     }
+    public PingMessage(){}
 }
