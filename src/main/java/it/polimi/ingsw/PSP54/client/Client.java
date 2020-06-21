@@ -10,8 +10,10 @@ import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Scanner;
@@ -89,9 +91,27 @@ public class Client extends Observable<GameMessage> {
     }
 
     /**
+     * Verifies whether a String represents a reachable IP address.
+     * @param ip the IP address to reach.
+     * @return true if ip is reachable, false otherwise.
+     */
+    private boolean checkIpAddr(String ip) {
+        boolean isReachable;
+
+        InetAddress server = null;
+        try {
+            server = InetAddress.getByName(ip);
+            isReachable = server.isReachable(1000);
+        } catch (IOException e) {
+            isReachable = false;
+        }
+        return isReachable;
+    }
+
+
+    /**
      * Once acquired the interface choice establishes a connection with the server.
      * It also starts two different thread to menage the socket reading/writing.
-     * @throws IOException if an I/O error occurs when creating the socket.
      */
     public void startClient() {
         System.out.println("CLI or GUI? [enter c or g]");
