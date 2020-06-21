@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.client;
 
+import it.polimi.ingsw.PSP54.Ping;
 import it.polimi.ingsw.PSP54.client.gui.GuiManager;
 import it.polimi.ingsw.PSP54.client.cli.*;
 import it.polimi.ingsw.PSP54.observer.Observable;
@@ -9,10 +10,12 @@ import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Scanner;
+import java.util.Timer;
 
 public class Client extends Observable<GameMessage> {
 
@@ -40,8 +43,7 @@ public class Client extends Observable<GameMessage> {
                      Client.this.notify((GameMessage)inputObject);
                  }
              } catch (Exception e) {
-                 GameMessage serverUnreachable = new StringMessage(null, StringMessage.serverUnreachable);
-                 notify(serverUnreachable);
+                 setActive(false);
              }
          });
         t.start();
@@ -86,47 +88,12 @@ public class Client extends Observable<GameMessage> {
         }
     }
 
-
-    public void serverPing() {
-        new Thread(()->{
-            boolean loop = true;
-            GameMessage serverUnreachable = new StringMessage(null, StringMessage.serverUnreachable);
-            try {
-                InetAddress host = InetAddress.getByName(ip);
-                while (loop){
-                    if (!host.isReachable(5000)) {
-                        notify(serverUnreachable);
-                        loop = false;
-                    }
-                }
-            } catch (Exception e) {
-                notify(serverUnreachable);
-            }
-        });
-    }
-
-    /**
-     * Verifies whether a String is a reachable IP address.
-     * @param ipAddr the IP address to reach.
-     * @return true if is reachable, false otherwise.
-     */
-    public boolean checkIpAddr(String ipAddr) {
-        boolean isReachable;
-        try {
-            InetAddress server = InetAddress.getByName(ipAddr);
-            isReachable = server.isReachable(1000);
-        } catch (IOException e) {
-            isReachable = false;
-        }
-        return isReachable;
-    }
-
     /**
      * Once acquired the interface choice establishes a connection with the server.
      * It also starts two different thread to menage the socket reading/writing.
      * @throws IOException if an I/O error occurs when creating the socket.
      */
-    public void startClient() throws IOException {
+    public void startClient() {
         System.out.println("CLI or GUI? [enter c or g]");
         String choice = inputReader.next();
         while (!choice.equals("c") && !choice.equals("g")) {
@@ -134,22 +101,29 @@ public class Client extends Observable<GameMessage> {
             choice = inputReader.next();
         }
         setInterfaceChoice(choice);
-        //set & check IP
+        //set & check IP address
         System.out.println("Enter the IP address of a server you want to connect: ");
         ip = inputReader.next();
         while (!checkIpAddr(ip)) {
             System.out.println("ERROR: Server unreachable, try again!");
             ip = inputReader.next();
         }
-        Socket socket = new Socket(ip, port);
-        System.out.println("Connection established");
-        ObjectInputStream socketIn = new ObjectInputStream(socket.getInputStream());
-        socketOut = new ObjectOutputStream(socket.getOutputStream());
+        Socket socket = null;
         try {
-            serverPing();
+            socket = new Socket(ip, port);
+            Objects.requireNonNull(socket).setSoTimeout(5000);
+        } catch (IOException e) {
+            GameMessage dropconnection = new StringMessage(null, StringMessage.EndForDisconnection);
+            notify(dropconnection);
+        }
+        System.out.println("Connection established");
+        ObjectInputStream socketIn = null;
+        try{
+            socketIn = new ObjectInputStream(Objects.requireNonNull(socket).getInputStream());
+            socketOut = new ObjectOutputStream(socket.getOutputStream());
             Thread t0 = asyncReadFromSocket(socketIn);
             t0.join();
-        } catch(NoSuchElementException | InterruptedException e) {
+        } catch(NoSuchElementException | InterruptedException | IOException e) {
             System.out.println("Connection closed from the client side");
         } finally {
             //noinspection StatementWithEmptyBody
@@ -157,9 +131,14 @@ public class Client extends Observable<GameMessage> {
 
             }
             if (!isActive()) {
-                socketIn.close();
-                socketOut.close();
-                socket.close();
+                try {
+                    Objects.requireNonNull(socketIn).close();
+                    socketOut.close();
+                    socket.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                    System.out.println("ciao");
+                }
             }
         }
     }

@@ -356,11 +356,7 @@ public class GuiManager implements Observer<GameMessage> {
             else {
                 Platform.runLater(() -> stage.close());
                 Client c = new Client(12345);
-                try {
                     c.startClient();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
