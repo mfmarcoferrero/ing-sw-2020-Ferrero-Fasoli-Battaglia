@@ -106,11 +106,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     public void run() {
         int i=0;
         try {
-            socket.setSoTimeout(5000);
-        } catch (SocketException e) {
-            this.close();
-        }
-        try {
             out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             PlayerCredentials credentials;
