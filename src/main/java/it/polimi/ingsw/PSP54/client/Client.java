@@ -4,7 +4,6 @@ import it.polimi.ingsw.PSP54.client.gui.GuiManager;
 import it.polimi.ingsw.PSP54.client.cli.*;
 import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
-import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,7 +15,6 @@ import java.util.Scanner;
 
 public class Client extends Observable<GameMessage> {
 
-    private String ip = null;
     private final Scanner inputReader = new Scanner(System.in);
     private final int port;
     private ObjectOutputStream socketOut;
@@ -24,7 +22,6 @@ public class Client extends Observable<GameMessage> {
     private Thread t;
 
     public Client(int port) {
-        //this.ip = ip;
         this.port = port;
     }
 
@@ -40,8 +37,7 @@ public class Client extends Observable<GameMessage> {
                      Client.this.notify((GameMessage)inputObject);
                  }
              } catch (Exception e) {
-                 GameMessage serverUnreachable = new StringMessage(null, StringMessage.serverUnreachable);
-                 notify(serverUnreachable);
+                 System.err.println(e.getMessage());
              }
          });
         t.start();
@@ -86,25 +82,6 @@ public class Client extends Observable<GameMessage> {
         }
     }
 
-
-    public void serverPing() {
-        new Thread(()->{
-            boolean loop = true;
-            GameMessage serverUnreachable = new StringMessage(null, StringMessage.serverUnreachable);
-            try {
-                InetAddress host = InetAddress.getByName(ip);
-                while (loop){
-                    if (!host.isReachable(5000)) {
-                        notify(serverUnreachable);
-                        loop = false;
-                    }
-                }
-            } catch (Exception e) {
-                notify(serverUnreachable);
-            }
-        });
-    }
-
     /**
      * Verifies whether a String is a reachable IP address.
      * @param ipAddr the IP address to reach.
@@ -136,7 +113,7 @@ public class Client extends Observable<GameMessage> {
         setInterfaceChoice(choice);
         //set & check IP
         System.out.println("Enter the IP address of a server you want to connect: ");
-        ip = inputReader.next();
+        String ip = inputReader.next();
         while (!checkIpAddr(ip)) {
             System.out.println("ERROR: Server unreachable, try again!");
             ip = inputReader.next();
@@ -146,7 +123,6 @@ public class Client extends Observable<GameMessage> {
         ObjectInputStream socketIn = new ObjectInputStream(socket.getInputStream());
         socketOut = new ObjectOutputStream(socket.getOutputStream());
         try {
-            serverPing();
             Thread t0 = asyncReadFromSocket(socketIn);
             t0.join();
         } catch(NoSuchElementException | InterruptedException e) {
