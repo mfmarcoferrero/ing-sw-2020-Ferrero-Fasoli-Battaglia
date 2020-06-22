@@ -24,7 +24,7 @@ public class Controller implements Observer<PlayerAction> {
      * @param virtualView the VirtualView to add.
      */
     public void addVirtualView (VirtualView virtualView) {
-        //this.virtualViewList.add(virtualView.getId(),virtualView);
+        this.virtualViewList.add(virtualView.getId(),virtualView);
     }
 
     /**

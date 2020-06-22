@@ -20,7 +20,7 @@ public class Server {
     private static final int PORT= 12345;
     private final ServerSocket serverSocket;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(100);
+    private final ExecutorService executor = Executors.newCachedThreadPool();
 
     private final List<Connection> connections = new ArrayList<>();
     private final Map<PlayerCredentials, Connection> lobbyBuffer = new HashMap<>(0);
@@ -30,6 +30,7 @@ public class Server {
     protected final Vector<Connection> currentConnections = new Vector<>(0,1);
     protected final Vector<String> opponents = new Vector<>();
     private int numberOfPlayers;
+    private int numberOfGames = 0;
 
     public Server() throws IOException {
         this.serverSocket = new ServerSocket(PORT);
@@ -55,8 +56,10 @@ public class Server {
 
         if (playingConnection.contains(c)){
             for (Connection connection : playingConnection){
-                GameMessage noMoreOpponent = new StringMessage(null, StringMessage.EndForDisconnection);
-                connection.send(noMoreOpponent);
+                if (connection.getGameID() == c.getGameID()) {
+                    GameMessage noMoreOpponent = new StringMessage(null, StringMessage.endForDisconnection);
+                    connection.send(noMoreOpponent);
+                }
             }
             virtualViews.clear();
         }
@@ -80,11 +83,13 @@ public class Server {
                 freeBuffer(lobbyBuffer);
 
             if (waitingConnection.size() == numberOfPlayers ) {
+
                 List<PlayerCredentials> credentialsChoices = new ArrayList<>(waitingConnection.keySet());
                 List<PlayerCredentials> opponentsKeys = new ArrayList<>(waitingConnection.keySet());
                 List<PlayerAction> playersCredentials = new ArrayList<>();
                 for (int i = 0; i < credentialsChoices.size(); i++) {
                     Connection client = waitingConnection.get(credentialsChoices.get(i));
+                    client.setGameID(getNumberOfGames());
                     currentConnections.remove(client);
                     PlayerAction credentials = new PlayerAction(i, credentialsChoices.get(i));
                     playersCredentials.add(credentials);
@@ -107,6 +112,7 @@ public class Server {
                     virtualViews.get(i).addPlayer();
                 }
                 waitingConnection.clear();
+                setNumberOfGames(numberOfGames + 1);
                 controller.startGame();
             }
         }
@@ -183,5 +189,13 @@ public class Server {
 
     public void setNumberOfPlayers(int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
+    }
+
+    public int getNumberOfGames() {
+        return numberOfGames;
+    }
+
+    public void setNumberOfGames(int numberOfGames) {
+        this.numberOfGames = numberOfGames;
     }
 }

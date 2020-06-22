@@ -1,6 +1,9 @@
 package it.polimi.ingsw.PSP54.client.gui;
 
 import it.polimi.ingsw.PSP54.utils.choices.BooleanChoice;
+import it.polimi.ingsw.PSP54.utils.choices.NewGameChoice;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
+import it.polimi.ingsw.PSP54.utils.choices.StopPlayingChoice;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -62,8 +65,7 @@ public class EndSceneController {
      */
     public void yesButtonPressed(){
         yesButton.setDisable(true);
-        BooleanChoice restartChoice = new BooleanChoice(true);
-        restartChoice.setGameEnded(true);
+        PlayerChoice restartChoice = new NewGameChoice();
         guiManager.sendObject(restartChoice);
     }
 
@@ -72,8 +74,7 @@ public class EndSceneController {
      */
     public void noButtonPressed(){
         noButton.setDisable(true);
-        BooleanChoice restartChoice = new BooleanChoice(false);
-        restartChoice.setGameEnded(true);
+        PlayerChoice restartChoice = new StopPlayingChoice();
         guiManager.sendObject(restartChoice);
     }
 

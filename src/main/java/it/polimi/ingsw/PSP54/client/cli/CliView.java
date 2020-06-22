@@ -7,7 +7,6 @@ import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.utils.choices.*;
 import it.polimi.ingsw.PSP54.utils.messages.*;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 
@@ -295,6 +294,7 @@ public class CliView implements Observer<GameMessage> {
     public void acquirePlayerCredentials() {
         output.println("What's your name?");
         String name = inputReader.next();
+
         output.println("What's your age?");
         int age = acquireInteger("Incorrect input! [Enter an integer]");
 
@@ -587,7 +587,7 @@ public class CliView implements Observer<GameMessage> {
      */
     public void endOfMatch(Player winner) {
         output.println(winner.getPlayerName() + " IS THE WINNER");
-        resetConnection();
+        playAgain();
     }
 
     /**
@@ -595,28 +595,24 @@ public class CliView implements Observer<GameMessage> {
      */
     public void losingPlayer() {
         output.println("YOU LOSE");
-        resetConnection();
+        playAgain();
     }
 
 	/**
 	 * Asks the player if he wants to play again, if so adds him to a new lobby, closes the connection otherwise.
 	 */
-	public void resetConnection() {
+	public void playAgain() {
 		boolean loop=true;
-		output.println("do you want to play again? Insert [yes/no]");
+		output.println("do you want to play again? [Enter y/n]");
 		while (loop) {
 			String Choice = inputReader.next();
-			if(Choice.equals("yes")) {
-				Client c = new Client(12345);
-				try {
-					c.startClient();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				loop = false;
+			if(Choice.equals("y")) {
+                PlayerChoice playAgain = new NewGameChoice();
+                client.asyncSend(playAgain);
+                loop = false;
 			}
-			else if(Choice.equals("no")){
-				client.SuspendThread();
+			else if(Choice.equals("n")){
+				PlayerChoice stopPlaying = new StopPlayingChoice();
 				loop = false;
 			} else
 				output.println("Incorrect Input!");
@@ -635,13 +631,6 @@ public class CliView implements Observer<GameMessage> {
             String stringMessage = ((StringMessage) message).getMessage();
             output.println(stringMessage);
             switch (stringMessage) {
-                case StringMessage.newWorkerMove:
-                case StringMessage.setFirstWorkerMessage:
-                case StringMessage.choseWorker:
-                case StringMessage.workerCantMove:
-                    setMaleSelected(acquireWorkerSelection());
-                    sendWorkerSelection();
-                    break;
                 case StringMessage.welcomeMessage:
                 case StringMessage.nameAlreadyTaken:
                     acquirePlayerCredentials();
@@ -650,6 +639,12 @@ public class CliView implements Observer<GameMessage> {
                 case StringMessage.setNumberOfPlayersMessage:
                     acquireNumberOfPlayers();
                     sendNumberOfPlayers(getNumberOfPlayers());
+                    break;
+                case StringMessage.setFirstWorkerMessage:
+                case StringMessage.choseWorker:
+                case StringMessage.workerCantMove:
+                    setMaleSelected(acquireWorkerSelection());
+                    sendWorkerSelection();
                     break;
                 case StringMessage.setSecondWorkerMessage:
                 case StringMessage.moveMessage:
@@ -672,9 +667,9 @@ public class CliView implements Observer<GameMessage> {
                     sendBooleanChoice(choice);
                     break;
                 }
-                case StringMessage.EndForDisconnection:
+                case StringMessage.endForDisconnection:
                     inputReader.close();
-                    resetConnection();
+                    playAgain();
                     break;
             }
         }

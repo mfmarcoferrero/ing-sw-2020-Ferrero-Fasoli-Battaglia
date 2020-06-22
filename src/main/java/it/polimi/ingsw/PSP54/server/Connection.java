@@ -1,15 +1,17 @@
 package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.observer.*;
+import it.polimi.ingsw.PSP54.utils.choices.NewGameChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
+import it.polimi.ingsw.PSP54.utils.choices.StopPlayingChoice;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.SocketException;
+
 
 /**
  * Represents the connection between Server and a Client. It can send an read object.
@@ -22,7 +24,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     private String name;
     private boolean active = true;
     private boolean gameMaster  = false;
-    int numberOfPlayers;
+    private int gameID;
 
     public Connection(Socket socket, Server server) {
         this.socket = socket;
@@ -64,6 +66,11 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
             try {
                 while (isActive()) {
                     Object inputObject = socketIn.readObject();
+                    if (inputObject instanceof StopPlayingChoice)
+                        close();
+                    if (inputObject instanceof NewGameChoice)
+
+
                     Connection.this.notify((PlayerChoice) inputObject);
                 }
             } catch (Exception e) {
@@ -87,6 +94,8 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         }
         active = false;
     }
+
+    //TODO: Ping, if unreachable => close
 
     /**
      * Closes the connection and deletes its reference in the server.
@@ -126,7 +135,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
             if (gameMaster || this == server.currentConnections.firstElement()) {
                 GameMessage setPlayersNumber = new StringMessage(null, StringMessage.setNumberOfPlayersMessage);
                 asyncSend(setPlayersNumber);
-                numberOfPlayers = (int) in.readObject();
+                int numberOfPlayers = (int) in.readObject();
                 server.setNumberOfPlayers(numberOfPlayers);
             }
             server.lobby(this, credentials);
@@ -139,6 +148,17 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         } finally {
             close();
         }
+    }
+
+    //getters & setters
+
+
+    public int getGameID() {
+        return gameID;
+    }
+
+    public void setGameID(int gameID) {
+        this.gameID = gameID;
     }
 
     public void setGameMaster(boolean gameMaster) {

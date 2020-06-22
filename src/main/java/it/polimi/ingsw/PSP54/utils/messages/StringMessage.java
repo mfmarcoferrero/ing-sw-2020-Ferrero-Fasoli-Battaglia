@@ -23,7 +23,6 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String panMessage = "You have Pan!\nWin Condition: You also win if your Worker moves down two or more levels.";
     public static final String prometheusMessage = "You have Prometheus!\nYour Turn: If your worker does not move up, it may build both before and after moving.";
     //standard
-    public static final String winMessage = "You won";
     public static final String choseWorker = "Chose your worker: [Enter m/f]";
     public static final String moveMessage = "Make your move!";
     public static final String buildMessage = "Where do you want to build?";
@@ -35,16 +34,14 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String workerCantMove = "You can't chose this worker, he can't move!\nPlease, retry:";
     //specials
     public static final String nameAlreadyTaken = "the name you choose already exist, please try with a new one";
-    public static final String newWorkerMove = "The worker you have selected can't do the action, so enter f if you were using m or m if you were using f";
     public static final String buildFirst = "Do you want to build first? [Enter y/n]";
     public static final String moveAgain = "Do you want to move again? [Enter y/n]";
     public static final String buildAgain = "Do you want to build again? [Enter y/n]";
     public static final String buildOrDome = "Do you want to build a dome? [Enter y/n]";
-    public static final String EndForDisconnection = "the match is cancelled because one of the player has lose connection";
+    public static final String endForDisconnection = "the match is cancelled because one of the player has lose connection";
     //connection
     public static final String closedLobby = "The lobby you were in has closed, please login again.";
     public static final String closedConnection = "Connection closed from server side";
-    public static final String serverUnreachable = "Server is Unreachable";
 
     public String getMessage() {
         return message;
