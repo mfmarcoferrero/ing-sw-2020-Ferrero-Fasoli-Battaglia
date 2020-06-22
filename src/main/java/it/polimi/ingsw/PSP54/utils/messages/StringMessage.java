@@ -38,7 +38,7 @@ public class StringMessage extends GameMessage implements Serializable, Cloneabl
     public static final String moveAgain = "Do you want to move again? [Enter y/n]";
     public static final String buildAgain = "Do you want to build again? [Enter y/n]";
     public static final String buildOrDome = "Do you want to build a dome? [Enter y/n]";
-    public static final String endForDisconnection = "the match is cancelled because one of the player has lose connection";
+    public static final String endForDisconnection = "The match was cancelled because one of the player has lost connection.";
     //connection
     public static final String closedLobby = "The lobby you were in has closed, please login again.";
     public static final String closedConnection = "Connection closed from server side";

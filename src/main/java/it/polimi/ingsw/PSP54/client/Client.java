@@ -19,7 +19,9 @@ public class Client extends Observable<GameMessage> {
     private final int port;
     private ObjectOutputStream socketOut;
     private boolean active = true;
-    private Thread t;
+    private ObjectInputStream socketIn;
+    public Thread readingTask;
+
 
     public Client(int port) {
         this.port = port;
@@ -30,7 +32,7 @@ public class Client extends Observable<GameMessage> {
      * @param socketIn the socket from which the messages arrive.
      */
     public synchronized Thread asyncReadFromSocket(final ObjectInputStream socketIn){
-         t = new Thread(() -> {
+         readingTask = new Thread(() -> {
              try {
                  while (isActive()) {
                      Object inputObject = socketIn.readObject();
@@ -40,8 +42,8 @@ public class Client extends Observable<GameMessage> {
                  System.err.println(e.getMessage());
              }
          });
-        t.start();
-        return t;
+        readingTask.start();
+        return readingTask;
     }
 
     /**
@@ -120,11 +122,11 @@ public class Client extends Observable<GameMessage> {
         }
         Socket socket = new Socket(ip, port);
         System.out.println("Connection established");
-        ObjectInputStream socketIn = new ObjectInputStream(socket.getInputStream());
+        socketIn = new ObjectInputStream(socket.getInputStream());
         socketOut = new ObjectOutputStream(socket.getOutputStream());
         try {
-            Thread t0 = asyncReadFromSocket(socketIn);
-            t0.join();
+            Thread t = asyncReadFromSocket(socketIn);
+            t.join();
         } catch(NoSuchElementException | InterruptedException e) {
             System.out.println("Connection closed from the client side");
         } finally {
@@ -147,10 +149,5 @@ public class Client extends Observable<GameMessage> {
     public synchronized void setActive(boolean active){
         this.active = active;
     }
-
-    public void SuspendThread(){
-        t.checkAccess();
-    }
-
 
 }

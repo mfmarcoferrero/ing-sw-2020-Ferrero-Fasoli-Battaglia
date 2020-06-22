@@ -607,13 +607,15 @@ public class CliView implements Observer<GameMessage> {
 		while (loop) {
 			String Choice = inputReader.next();
 			if(Choice.equals("y")) {
+                loop = false;
                 PlayerChoice playAgain = new NewGameChoice();
                 client.asyncSend(playAgain);
-                loop = false;
 			}
 			else if(Choice.equals("n")){
+                loop = false;
 				PlayerChoice stopPlaying = new StopPlayingChoice();
-				loop = false;
+				client.asyncSend(stopPlaying);
+				System.exit(0);
 			} else
 				output.println("Incorrect Input!");
 		}
@@ -648,7 +650,7 @@ public class CliView implements Observer<GameMessage> {
                     break;
                 case StringMessage.setSecondWorkerMessage:
                 case StringMessage.moveMessage:
-                case StringMessage.invalidMoveMessage: { //insert coordinates
+                case StringMessage.invalidMoveMessage: {
                     int[] coordinates = acquireCoordinates();
                     sendMove(coordinates);
                     break;
@@ -668,7 +670,6 @@ public class CliView implements Observer<GameMessage> {
                     break;
                 }
                 case StringMessage.endForDisconnection:
-                    inputReader.close();
                     playAgain();
                     break;
             }
@@ -688,7 +689,7 @@ public class CliView implements Observer<GameMessage> {
             losingPlayer();
         }
         if (message instanceof WinMessage) {
-            inputReader.close();
+
             endOfMatch(((WinMessage) message).getPlayer());
         }
         if (message instanceof AvailableCardsMessage) {

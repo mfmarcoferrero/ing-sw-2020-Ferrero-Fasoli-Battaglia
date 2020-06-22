@@ -1,6 +1,7 @@
 package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.observer.*;
+import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 import it.polimi.ingsw.PSP54.utils.choices.NewGameChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 
 
@@ -20,11 +22,13 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
 
     private final Socket socket;
     private ObjectOutputStream out;
+    private ObjectInputStream in;
     private final Server server;
-    private String name;
+    private PlayerCredentials credentials;
     private boolean active = true;
     private boolean gameMaster  = false;
     private int gameID;
+    private VirtualView virtualView;
 
     public Connection(Socket socket, Server server) {
         this.socket = socket;
@@ -66,12 +70,13 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
             try {
                 while (isActive()) {
                     Object inputObject = socketIn.readObject();
+
                     if (inputObject instanceof StopPlayingChoice)
                         close();
                     if (inputObject instanceof NewGameChoice)
-
-
-                    Connection.this.notify((PlayerChoice) inputObject);
+                        server.reinsertConnection(this);
+                    else
+                        Connection.this.notify((PlayerChoice) inputObject);
                 }
             } catch (Exception e) {
                 setActive(false);
@@ -79,6 +84,25 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         });
         t.start();
         return t;
+    }
+
+    /**
+     *
+     * @param socket
+     */
+    public synchronized void ping(Socket socket) {
+        new Thread(() -> {
+            InetAddress clientIP = socket.getInetAddress();
+            while (true) {
+                try {
+                    if (!clientIP.isReachable(5000))
+                        break;
+                } catch (IOException e) {
+                    break;
+                }
+            }
+            close();
+        });
     }
 
     /**
@@ -95,14 +119,27 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         active = false;
     }
 
-    //TODO: Ping, if unreachable => close
-
     /**
      * Closes the connection and deletes its reference in the server.
      */
     private void close() {
         closeConnection();
         server.deregisterConnection(this);
+    }
+
+    /**
+     *
+     */
+    public void getNumberOfPlayers() {
+        GameMessage setPlayersNumber = new StringMessage(null, StringMessage.setNumberOfPlayersMessage);
+        asyncSend(setPlayersNumber);
+        try {
+            int numberOfPlayers = (int) in.readObject();
+            server.setNumberOfPlayers(numberOfPlayers);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -116,7 +153,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         int i=0;
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            in = new ObjectInputStream(socket.getInputStream());
             PlayerCredentials credentials;
             boolean namExist;
             do {
@@ -128,8 +165,8 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                     asyncSend(invalidName);
                 }
                 credentials = (PlayerCredentials) in.readObject();
-                this.name = credentials.getPlayerName();
-                namExist = server.checkName(name);
+                setCredentials(credentials);
+                namExist = server.checkName(getCredentials().getPlayerName());
                 i++;
             } while (namExist);
             if (gameMaster || this == server.currentConnections.firstElement()) {
@@ -139,6 +176,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                 server.setNumberOfPlayers(numberOfPlayers);
             }
             server.lobby(this, credentials);
+            ping(socket);
             Thread t0 = asyncReadFromSocket(in);
             t0.join();
         } catch(IOException e) {
@@ -165,10 +203,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         this.gameMaster = gameMaster;
     }
 
-    public String getName(){
-        return name;
-    }
-
     private synchronized boolean isActive(){
         return active;
     }
@@ -177,4 +211,19 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         this.active = active;
     }
 
+    public PlayerCredentials getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(PlayerCredentials credentials) {
+        this.credentials = credentials;
+    }
+
+    public VirtualView getVirtualView() {
+        return virtualView;
+    }
+
+    public void setVirtualView(VirtualView virtualView) {
+        this.virtualView = virtualView;
+    }
 }
