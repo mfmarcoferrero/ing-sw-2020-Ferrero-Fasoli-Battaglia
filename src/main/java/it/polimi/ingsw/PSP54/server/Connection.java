@@ -109,8 +109,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
      * Closes the connection.
      */
     public synchronized void closeConnection(){
-        GameMessage connectionClosed = new StringMessage(null, StringMessage.closedConnection);
-        asyncSend(connectionClosed);
         try {
             socket.close();
         } catch (IOException e) {
@@ -189,7 +187,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     }
 
     //getters & setters
-
 
     public int getGameID() {
         return gameID;

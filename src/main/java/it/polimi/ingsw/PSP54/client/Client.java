@@ -4,6 +4,7 @@ import it.polimi.ingsw.PSP54.client.gui.GuiManager;
 import it.polimi.ingsw.PSP54.client.cli.*;
 import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -39,7 +40,8 @@ public class Client extends Observable<GameMessage> {
                      Client.this.notify((GameMessage)inputObject);
                  }
              } catch (Exception e) {
-                 System.err.println(e.getMessage());
+                 GameMessage connectionClosed = new StringMessage(null, StringMessage.closedConnection);
+                 notify(connectionClosed);
              }
          });
         readingTask.start();
@@ -101,6 +103,25 @@ public class Client extends Observable<GameMessage> {
     }
 
     /**
+     *
+     * @param socket
+     */
+    public synchronized void ping(Socket socket) {
+        new Thread(() -> {
+            InetAddress clientIP = socket.getInetAddress();
+            while (true) {
+                try {
+                    if (!clientIP.isReachable(5000))
+                        break;
+                } catch (IOException e) {
+                    break;
+                }
+            }
+            System.out.println("Server unreachable, retry later.");
+        });
+    }
+
+    /**
      * Once acquired the interface choice establishes a connection with the server.
      * It also starts two different thread to menage the socket reading/writing.
      * @throws IOException if an I/O error occurs when creating the socket.
@@ -125,6 +146,7 @@ public class Client extends Observable<GameMessage> {
         socketIn = new ObjectInputStream(socket.getInputStream());
         socketOut = new ObjectOutputStream(socket.getOutputStream());
         try {
+            //ping(socket);
             Thread t = asyncReadFromSocket(socketIn);
             t.join();
         } catch(NoSuchElementException | InterruptedException e) {
