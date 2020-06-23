@@ -46,8 +46,8 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
 
     /**
      * Adds a player to the players Vector.
-     * @param name          the player's username.
-     * @param age           the player's age.
+     * @param name the player's username.
+     * @param age the player's age.
      * @param virtualViewId the unique identifier for the VirtualView to which the player interfaces.
      */
     public void newPlayer(String name, int age, int virtualViewId) {

@@ -5,6 +5,8 @@ import it.polimi.ingsw.PSP54.server.controller.Controller;
 import it.polimi.ingsw.PSP54.server.model.Game;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
+import it.polimi.ingsw.PSP54.utils.choices.EndGameChoice;
+import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
@@ -19,8 +21,7 @@ import java.util.concurrent.Executors;
 public class Server {
     private static final int PORT= 12345;
     private final ServerSocket serverSocket;
-
-    private final ExecutorService executor = Executors.newFixedThreadPool(100);
+    private final ExecutorService executor = Executors.newCachedThreadPool();
 
     private final List<Connection> connections = new ArrayList<>();
     private final Map<PlayerCredentials, Connection> lobbyBuffer = new HashMap<>(0);
@@ -28,8 +29,10 @@ public class Server {
     private final Vector<Connection> playingConnection = new Vector<>(0,1);
     private final Vector<VirtualView> virtualViews = new Vector<>(0, 1);
     protected final Vector<Connection> currentConnections = new Vector<>(0,1);
+
     protected final Vector<String> opponents = new Vector<>();
     private int numberOfPlayers;
+    private int numberOfGames = 0;
 
     public Server() throws IOException {
         this.serverSocket = new ServerSocket(PORT);
@@ -55,11 +58,26 @@ public class Server {
 
         if (playingConnection.contains(c)){
             for (Connection connection : playingConnection){
-                GameMessage noMoreOpponent = new StringMessage(null, StringMessage.EndForDisconnection);
-                connection.send(noMoreOpponent);
+                if (connection.getGameID() == c.getGameID() && !connection.equals(c)) {
+                    PlayerChoice end = new EndGameChoice();
+                    connection.notify(end);
+                    GameMessage endForDisconnection = new StringMessage(null, StringMessage.endForDisconnection);
+                    connection.asyncSend(endForDisconnection);
+                }
             }
             virtualViews.clear();
         }
+    }
+
+    /**
+     * Reinsert an existing connection into the lobby. This method is called when a player has ended a game and wants to play again.
+     * @param connection the connection to be reinserted into the lobby.
+     */
+    public synchronized void reinsertConnection(Connection connection) {
+        currentConnections.add(connection);
+        if (currentConnections.size() == 1)
+            connection.getNumberOfPlayers();
+        lobby(connection, connection.getCredentials());
     }
 
     /**
@@ -80,11 +98,13 @@ public class Server {
                 freeBuffer(lobbyBuffer);
 
             if (waitingConnection.size() == numberOfPlayers ) {
+
                 List<PlayerCredentials> credentialsChoices = new ArrayList<>(waitingConnection.keySet());
                 List<PlayerCredentials> opponentsKeys = new ArrayList<>(waitingConnection.keySet());
                 List<PlayerAction> playersCredentials = new ArrayList<>();
                 for (int i = 0; i < credentialsChoices.size(); i++) {
                     Connection client = waitingConnection.get(credentialsChoices.get(i));
+                    client.setGameID(getNumberOfGames());
                     currentConnections.remove(client);
                     PlayerAction credentials = new PlayerAction(i, credentialsChoices.get(i));
                     playersCredentials.add(credentials);
@@ -94,6 +114,7 @@ public class Server {
                     }
                     opponentsKeys.add(i,credentialsChoices.get(i));
                     VirtualView view = new VirtualView(i,playersCredentials.get(i),client,opponents);
+                    client.setVirtualView(view);
                     opponents.clear();
                     virtualViews.add(i,view);
                     playingConnection.add(client);
@@ -107,6 +128,7 @@ public class Server {
                     virtualViews.get(i).addPlayer();
                 }
                 waitingConnection.clear();
+                setNumberOfGames(numberOfGames + 1);
                 controller.startGame();
             }
         }
@@ -183,5 +205,13 @@ public class Server {
 
     public void setNumberOfPlayers(int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
+    }
+
+    public int getNumberOfGames() {
+        return numberOfGames;
+    }
+
+    public void setNumberOfGames(int numberOfGames) {
+        this.numberOfGames = numberOfGames;
     }
 }

@@ -15,7 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.Vector;
 
 public class GuiManager implements Observer<GameMessage> {
@@ -288,6 +287,24 @@ public class GuiManager implements Observer<GameMessage> {
                         boardSceneController.showBuildFirstMessage();
                     });
                     break;
+                case StringMessage.endForDisconnection:
+                    /* TODO: Play Again?
+                            if(true)
+                                PlayerChoice playAgain = new NewGameChoice();
+                                client.asyncSend(playAgain);
+                            else
+                                System.exit(0);
+                    Platform.runLater(() -> stage.close());
+                    Client c = new Client(12345);
+                    try {
+                        c.startClient();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }*/
+                    break;
+                case StringMessage.closedConnection:
+                    System.exit(0);
+                    break;
             }
         }
         if (message instanceof AvailableCardsMessage){
@@ -348,16 +365,6 @@ public class GuiManager implements Observer<GameMessage> {
             System.out.println("YOU LOSE !");
             loser = false;
             Platform.runLater(() -> boardSceneController.setEndScene(((LoseMessage) message).getPlayer().getPlayerName()));
-        }
-        if (message instanceof EndGameMessage){
-            if (((EndGameMessage) message).getCloseConnection()){
-                System.exit(0);
-            }
-            else {
-                Platform.runLater(() -> stage.close());
-                Client c = new Client(12345);
-                    c.startClient();
-            }
         }
     }
 

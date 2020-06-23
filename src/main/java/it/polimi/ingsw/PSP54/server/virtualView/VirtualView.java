@@ -4,8 +4,6 @@ import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
-import it.polimi.ingsw.PSP54.utils.choices.BooleanChoice;
-import it.polimi.ingsw.PSP54.utils.messages.EndGameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.OpponentMessage;
 
@@ -19,7 +17,7 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
     private final PlayerAction playerCredentials;
 
     /**
-     * Instantiates a VirtualView Object for a 2 player match.
+     * Instantiates a VirtualView Object for each player in a match.
      * @param id the unique identifier of the VirtualView.
      * @param p the PlayerAction object containing player's credentials.
      * @param connection the Connection the player is using.
@@ -37,10 +35,6 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
         if (opponents.size() == 2){
             connection.asyncSend(new OpponentMessage(id,opponents,3));
         }
-        /*for (String opponent : opponents) {
-            GameMessage opponentMessage = new StringMessage(id, "Your opponent is:\n" + opponent + "\n");
-            connection.asyncSend(opponentMessage);
-        }*/
     }
 
     /**
@@ -55,18 +49,6 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
      * @param action the player's action.
      */
     public void handleAction(PlayerAction action){
-        if (action.getChoice() instanceof BooleanChoice){
-            if(((BooleanChoice) action.getChoice()).isGameEnded()){
-                // se è una scelta presa alla fine della partita e non voglio rincominciare
-                // la partita invio un messaggio di fine partita dicendo di chiudere la connessione
-                if (!((BooleanChoice) action.getChoice()).isChoice()) {
-                    connection.asyncSend(new EndGameMessage(null, true));
-                }
-                else
-                    //altrimenti bisognerebbe ributtare la connection dentro lobby
-                    connection.asyncSend(new EndGameMessage(null,false));
-            }
-        }
         notify(action);
     }
 

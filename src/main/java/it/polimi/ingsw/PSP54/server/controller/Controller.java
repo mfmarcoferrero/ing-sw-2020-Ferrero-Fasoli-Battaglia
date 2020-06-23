@@ -14,6 +14,7 @@ public class Controller implements Observer<PlayerAction> {
 
     private final Game game;
     private final ArrayList<VirtualView> virtualViewList = new ArrayList<>();
+    private boolean gameEnded = false;
 
     public Controller (Game game) {
         this.game = game;
@@ -24,7 +25,7 @@ public class Controller implements Observer<PlayerAction> {
      * @param virtualView the VirtualView to add.
      */
     public void addVirtualView (VirtualView virtualView) {
-        //this.virtualViewList.add(virtualView.getId(),virtualView);
+        this.virtualViewList.add(virtualView.getId(),virtualView);
     }
 
     /**
@@ -113,30 +114,43 @@ public class Controller implements Observer<PlayerAction> {
      */
     @Override
     public void update(PlayerAction message) {
-        PlayerChoice choice = message.getChoice();
-        if (choice instanceof PlayerCredentials){
-            addPlayer(message);
+        if (!isGameEnded()) {
+            PlayerChoice choice = message.getChoice();
+            if (choice instanceof PlayerCredentials) {
+                addPlayer(message);
+            }
+            if (choice instanceof ExtractedCardsChoice) {
+                cardsExtraction(message);
+            }
+            if (choice instanceof PowerChoice) {
+                checkPowerAssignment(message);
+            }
+            if (choice instanceof StartPlayerChoice) {
+                setStartPlayer(message);
+            }
+            if (choice instanceof WorkerChoice) {
+                checkWorkerSelection(message);
+            }
+            if (choice instanceof MoveChoice) {
+                checkMove(message);
+            }
+            if (choice instanceof BuildChoice) {
+                checkBuild(message);
+            }
+            if (choice instanceof BooleanChoice) {
+                checkChoice(message);
+            }
+            if (choice instanceof EndGameChoice) {
+                setGameEnded(true);
+            }
         }
-        if (choice instanceof ExtractedCardsChoice){
-            cardsExtraction(message);
-        }
-        if (choice instanceof PowerChoice){
-            checkPowerAssignment(message);
-        }
-        if (choice instanceof StartPlayerChoice){
-            setStartPlayer(message);
-        }
-        if (choice instanceof WorkerChoice){
-            checkWorkerSelection(message);
-        }
-        if (choice instanceof MoveChoice){
-            checkMove(message);
-        }
-        if (choice instanceof BuildChoice){
-            checkBuild(message);
-        }
-        if (choice instanceof BooleanChoice){
-            checkChoice(message);
-        }
+    }
+
+    public boolean isGameEnded() {
+        return gameEnded;
+    }
+
+    public void setGameEnded(boolean gameEnded) {
+        this.gameEnded = gameEnded;
     }
 }
