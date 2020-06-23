@@ -4,8 +4,6 @@ import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
-import it.polimi.ingsw.PSP54.utils.choices.BooleanChoice;
-import it.polimi.ingsw.PSP54.utils.messages.EndGameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.OpponentMessage;
 

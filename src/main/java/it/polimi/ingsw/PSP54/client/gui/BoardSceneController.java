@@ -6,8 +6,6 @@ import it.polimi.ingsw.PSP54.utils.choices.BooleanChoice;
 import it.polimi.ingsw.PSP54.utils.choices.BuildChoice;
 import it.polimi.ingsw.PSP54.utils.choices.MoveChoice;
 import it.polimi.ingsw.PSP54.utils.choices.WorkerChoice;
-import it.polimi.ingsw.PSP54.utils.messages.CardsPlayersMessage;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -20,7 +18,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 
 import java.util.Vector;
 

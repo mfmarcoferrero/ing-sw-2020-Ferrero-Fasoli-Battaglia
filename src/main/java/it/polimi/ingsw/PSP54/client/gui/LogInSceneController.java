@@ -13,9 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 
-import javax.imageio.ImageIO;
-import java.net.URL;
-
 public class LogInSceneController {
 
     private String nickname;

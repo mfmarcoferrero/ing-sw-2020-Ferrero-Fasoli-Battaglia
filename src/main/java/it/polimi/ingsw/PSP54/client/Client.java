@@ -37,11 +37,12 @@ public class Client extends Observable<GameMessage> {
              try {
                  while (isActive()) {
                      Object inputObject = socketIn.readObject();
-                     Client.this.notify((GameMessage)inputObject);
+                     notify((GameMessage)inputObject);
                  }
              } catch (Exception e) {
                  GameMessage connectionClosed = new StringMessage(null, StringMessage.closedConnection);
                  notify(connectionClosed);
+                 setActive(false);
              }
          });
         readingTask.start();
@@ -103,22 +104,23 @@ public class Client extends Observable<GameMessage> {
     }
 
     /**
-     *
-     * @param socket
+     * Checks if the server is still reachable, if not notifies a message.
+     * @param socket the open socket.
      */
     public synchronized void ping(Socket socket) {
         new Thread(() -> {
-            InetAddress clientIP = socket.getInetAddress();
+            InetAddress serverIP = socket.getInetAddress();
             while (true) {
                 try {
-                    if (!clientIP.isReachable(5000))
+                    if (!serverIP.isReachable(1000))
                         break;
                 } catch (IOException e) {
                     break;
                 }
             }
-            System.out.println("Server unreachable, retry later.");
-        });
+            notify(new StringMessage(null, StringMessage.closedConnection));
+            setActive(false);
+        }).start();
     }
 
     /**
@@ -130,7 +132,7 @@ public class Client extends Observable<GameMessage> {
         System.out.println("CLI or GUI? [enter c or g]");
         String choice = inputReader.next();
         while (!choice.equals("c") && !choice.equals("g")) {
-            System.out.println("ERROR [enter c or g]");
+            System.out.println("ERROR [enter c/g]");
             choice = inputReader.next();
         }
         setInterfaceChoice(choice);
@@ -146,7 +148,7 @@ public class Client extends Observable<GameMessage> {
         socketIn = new ObjectInputStream(socket.getInputStream());
         socketOut = new ObjectOutputStream(socket.getOutputStream());
         try {
-            //ping(socket);
+            ping(socket);
             Thread t = asyncReadFromSocket(socketIn);
             t.join();
         } catch(NoSuchElementException | InterruptedException e) {

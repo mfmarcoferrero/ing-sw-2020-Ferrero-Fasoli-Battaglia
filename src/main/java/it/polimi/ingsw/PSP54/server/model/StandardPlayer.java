@@ -16,7 +16,6 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     private final Worker[] workers = new Worker[2];
     private Worker currentWorker;
     private boolean playing;
-    private int settingTurns = 2;
 
 
     /**

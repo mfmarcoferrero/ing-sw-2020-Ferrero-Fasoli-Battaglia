@@ -62,7 +62,7 @@ public class Server {
                     PlayerChoice end = new EndGameChoice();
                     connection.notify(end);
                     GameMessage endForDisconnection = new StringMessage(null, StringMessage.endForDisconnection);
-                    connection.send(endForDisconnection);
+                    connection.asyncSend(endForDisconnection);
                 }
             }
             virtualViews.clear();

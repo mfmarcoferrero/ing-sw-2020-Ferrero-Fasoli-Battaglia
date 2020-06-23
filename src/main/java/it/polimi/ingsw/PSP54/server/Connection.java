@@ -87,22 +87,23 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     }
 
     /**
-     *
-     * @param socket
+     * Checks if the associated client is still reachable, if not closes the connection.
+     * @param socket the socket
      */
     public synchronized void ping(Socket socket) {
         new Thread(() -> {
+            boolean loop = true;
             InetAddress clientIP = socket.getInetAddress();
-            while (true) {
+            while (loop) {
                 try {
-                    if (!clientIP.isReachable(5000))
-                        break;
+                    if (!clientIP.isReachable(1000))
+                        loop = false;
                 } catch (IOException e) {
-                    break;
+                    loop = false;
                 }
             }
             close();
-        });
+        }).start();
     }
 
     /**

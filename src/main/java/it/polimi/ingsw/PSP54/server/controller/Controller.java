@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class Controller implements Observer<PlayerAction> {
 
-    private Game game;
+    private final Game game;
     private final ArrayList<VirtualView> virtualViewList = new ArrayList<>();
     private boolean gameEnded = false;
 
@@ -114,7 +114,7 @@ public class Controller implements Observer<PlayerAction> {
      */
     @Override
     public void update(PlayerAction message) {
-        if (!gameEnded) {
+        if (!isGameEnded()) {
             PlayerChoice choice = message.getChoice();
             if (choice instanceof PlayerCredentials) {
                 addPlayer(message);

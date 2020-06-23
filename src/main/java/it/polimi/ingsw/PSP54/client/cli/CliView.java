@@ -615,6 +615,7 @@ public class CliView implements Observer<GameMessage> {
                 loop = false;
 				PlayerChoice stopPlaying = new StopPlayingChoice();
 				client.asyncSend(stopPlaying);
+				client.setActive(false);
 				System.exit(0);
 			} else
 				output.println("Incorrect Input!");
@@ -672,6 +673,9 @@ public class CliView implements Observer<GameMessage> {
                 case StringMessage.endForDisconnection:
                     playAgain();
                     break;
+                case StringMessage.closedConnection:
+                    System.exit(0);
+                    break;
             }
         }
         if (message instanceof OpponentMessage) {
@@ -689,7 +693,6 @@ public class CliView implements Observer<GameMessage> {
             losingPlayer();
         }
         if (message instanceof WinMessage) {
-
             endOfMatch(((WinMessage) message).getPlayer());
         }
         if (message instanceof AvailableCardsMessage) {

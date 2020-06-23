@@ -1,6 +1,5 @@
 package it.polimi.ingsw.PSP54.client.gui;
 
-import it.polimi.ingsw.PSP54.utils.choices.BooleanChoice;
 import it.polimi.ingsw.PSP54.utils.choices.NewGameChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.StopPlayingChoice;
