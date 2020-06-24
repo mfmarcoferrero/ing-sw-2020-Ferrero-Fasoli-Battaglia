@@ -134,10 +134,8 @@ public class CardsChoiceSceneController {
      * Load board.fxml on current stage
      */
     public void setBoardScene() {
-        ((Node)event.getSource()).getScene().getWindow().setWidth(1065);
-        ((Node)event.getSource()).getScene().getWindow().setHeight(620);
-        ((Node)event.getSource()).getScene().getWindow().centerOnScreen();
-        BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"FXML/board.fxml");
+        guiManager.setBoardSceneSize();
+        BoardSceneController boardSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/board.fxml");
         if (boardSceneController != null){
             boardSceneController.setBoardScene();
         }

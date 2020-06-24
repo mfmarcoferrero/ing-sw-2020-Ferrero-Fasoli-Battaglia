@@ -97,7 +97,7 @@ public class EndSceneController {
      * Load log_in.fxml on current stage
      */
     public void setLogInScene(){
-        LogInSceneController logInSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"FXML/log_in.fxml");
+        LogInSceneController logInSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/log_in.fxml");
         if (logInSceneController != null){
             logInSceneController.setFont();
         }

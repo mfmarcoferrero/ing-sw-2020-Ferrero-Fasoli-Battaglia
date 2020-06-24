@@ -110,6 +110,7 @@ public class Client extends Observable<GameMessage> {
     public synchronized void ping(Socket socket) {
         new Thread(() -> {
             InetAddress serverIP = socket.getInetAddress();
+            System.out.println("Ping - ServerIP: " + serverIP);
             while (true) {
                 try {
                     if (!serverIP.isReachable(1000))
@@ -148,7 +149,7 @@ public class Client extends Observable<GameMessage> {
         socketIn = new ObjectInputStream(socket.getInputStream());
         socketOut = new ObjectOutputStream(socket.getOutputStream());
         try {
-            ping(socket);
+            //ping(socket);
             Thread t = asyncReadFromSocket(socketIn);
             t.join();
         } catch(NoSuchElementException | InterruptedException e) {

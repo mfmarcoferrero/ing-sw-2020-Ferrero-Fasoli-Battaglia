@@ -69,7 +69,6 @@ public class FirstPlayerChoiceSceneController {
 
     public void firstPlayerButtonPressed(ActionEvent event) {
         this.event = event;
-        //System.out.println("Ho scelto: " + guiManager.getPlayers().get(0).getPlayerName());
         guiManager.sendObject(new StartPlayerChoice(0));
         firstPlayerButton.setDisable(true);
         secondPlayerButton.setDisable(true);
@@ -78,7 +77,6 @@ public class FirstPlayerChoiceSceneController {
 
     public void secondPlayerButtonPressed(ActionEvent event) {
         this.event = event;
-        //System.out.println("Ho scelto: " + guiManager.getPlayers().get(1).getPlayerName());
         guiManager.sendObject(new StartPlayerChoice(1));
         firstPlayerButton.setDisable(true);
         secondPlayerButton.setDisable(true);
@@ -102,10 +100,8 @@ public class FirstPlayerChoiceSceneController {
      * Load board.fxml on current stage
      */
     public void setBoardScene() {
-        ((Node)event.getSource()).getScene().getWindow().setWidth(1065);
-        ((Node)event.getSource()).getScene().getWindow().setHeight(620);
-        ((Node)event.getSource()).getScene().getWindow().centerOnScreen();
-        BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"FXML/board.fxml");
+        guiManager.setBoardSceneSize();
+        BoardSceneController boardSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/board.fxml");
         if (boardSceneController != null){
             boardSceneController.setBoardScene();
         }

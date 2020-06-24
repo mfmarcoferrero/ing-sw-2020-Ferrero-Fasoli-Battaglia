@@ -174,33 +174,6 @@ public class BoardSceneController {
             boxImageView.setImage(null);
     }
 
-    /*
-    public void setCardImageTurn(int playerIndex){
-        switch (playerIndex){
-            case 0:
-                cardImage_1.setOpacity(1);
-                cardImage_2.setOpacity(0.5);
-                if (cardImage_3.isVisible()) {
-                    cardImage_3.setOpacity(0.5);
-                }
-                break;
-            case 1:
-                cardImage_1.setOpacity(0.5);
-                cardImage_2.setOpacity(1);
-                if (cardImage_3.isVisible()) {
-                    cardImage_3.setOpacity(0.5);
-                }
-                break;
-            case 2:
-                cardImage_1.setOpacity(0.5);
-                cardImage_2.setOpacity(0.5);
-                if (cardImage_3.isVisible()) {
-                    cardImage_3.setOpacity(1);
-                }
-                break;
-        }
-    }*/
-
     private ImageView getMyCardImage(){
         int myCardImageIndex = 0;
         for(int i = 0; i < guiManager.getNames().size(); i++){
@@ -470,10 +443,10 @@ public class BoardSceneController {
      * @param winnerName
      */
     public void setEndScene(String winnerName){
-        ((Node)event.getSource()).getScene().getWindow().setWidth(600);
-        ((Node)event.getSource()).getScene().getWindow().setHeight(350);
-        ((Node)event.getSource()).getScene().getWindow().centerOnScreen();
-        EndSceneController endSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"FXML/end_scene.fxml");
+        guiManager.getStage().setWidth(600);
+        guiManager.getStage().setHeight(350);
+        guiManager.getStage().centerOnScreen();
+        EndSceneController endSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/end_scene.fxml");
         if (endSceneController != null){
             endSceneController.setFont(winnerName);
         }
