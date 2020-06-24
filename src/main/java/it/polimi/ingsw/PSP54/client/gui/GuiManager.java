@@ -149,6 +149,12 @@ public class GuiManager implements Observer<GameMessage> {
         return loader.getController();
     }
 
+    public void setBoardSceneSize(){
+        stage.setWidth(1065);
+        stage.setHeight(620);
+        stage.centerOnScreen();
+    }
+
     /**
      * Load an image from resources/icons in an ImageView
      * @param val
@@ -285,6 +291,14 @@ public class GuiManager implements Observer<GameMessage> {
                     Platform.runLater(() -> {
                         setBooleanChoice(true);
                         boardSceneController.showBuildFirstMessage();
+                    });
+                    break;
+                case StringMessage.workerCantMove:
+                    Platform.runLater(() -> {
+                        Platform.runLater(() -> {
+                            boardSceneController.setMessageLabel("THIS WORKER CAN'T MOVE. CHOOSE AGAIN ! ");
+                            boardSceneController.showMaleOrFemaleMessage();
+                        });
                     });
                     break;
                 case StringMessage.endForDisconnection:

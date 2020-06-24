@@ -312,7 +312,7 @@
                         <Image url="@../icons/01.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="messageLabel" contentDisplay="CENTER" layoutX="301.0" layoutY="19.0" prefHeight="66.0" prefWidth="460.0">
+                  <Label fx:id="messageLabel" contentDisplay="CENTER" layoutX="208.0" layoutY="23.0" prefHeight="66.0" prefWidth="649.0">
                   </Label>
                   <Button fx:id="firstButton" layoutX="846.0" layoutY="100.0" mnemonicParsing="false" onAction="#maleButtonClicked" onMouseEntered="#mouseEnterOnButton" onMouseExited="#mouseExitFromButton" prefHeight="40.0" prefWidth="70.0" style="-fx-background-color: #B2E2F3;" visible="false">
                   </Button>

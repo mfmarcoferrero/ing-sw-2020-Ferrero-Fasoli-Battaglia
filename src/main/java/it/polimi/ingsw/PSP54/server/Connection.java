@@ -94,6 +94,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         new Thread(() -> {
             boolean loop = true;
             InetAddress clientIP = socket.getInetAddress();
+            System.out.println("Ping - ClientIP: " + clientIP);
             while (loop) {
                 try {
                     if (!clientIP.isReachable(1000))
@@ -175,7 +176,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                 server.setNumberOfPlayers(numberOfPlayers);
             }
             server.lobby(this, credentials);
-            ping(socket);
+            //ping(socket);
             Thread t0 = asyncReadFromSocket(in);
             t0.join();
         } catch(IOException e) {

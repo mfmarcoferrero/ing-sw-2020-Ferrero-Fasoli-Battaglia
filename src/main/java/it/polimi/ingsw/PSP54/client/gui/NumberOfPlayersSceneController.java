@@ -82,27 +82,14 @@ public class NumberOfPlayersSceneController {
      * Load cards_choice.fxml on current stage
      */
     public void setCardsChoiceScene() {
-        CardsChoiceSceneController cardsChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"file:./resources/FXML/cards_choice.fxml");
+        CardsChoiceSceneController cardsChoiceSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"file:./resources/FXML/cards_choice.fxml");
         if (cardsChoiceSceneController != null){
             cardsChoiceSceneController.setFont();
         }
     }
 
-    /**
-     * Load board.fxml on current stage
-     */
-    public void setBoardScene() {
-        ((Node)event.getSource()).getScene().getWindow().setWidth(1065);
-        ((Node)event.getSource()).getScene().getWindow().setHeight(620);
-        ((Node)event.getSource()).getScene().getWindow().centerOnScreen();
-        BoardSceneController boardSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"FXML/board.fxml");
-        if (boardSceneController != null){
-            boardSceneController.setBoardScene();
-        }
-    }
-
     public void setDeckChoiceScene(){
-        DeckChoiceSceneController deckChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"FXML/deck_choice.fxml");
+        DeckChoiceSceneController deckChoiceSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/deck_choice.fxml");
         if (deckChoiceSceneController != null){
             deckChoiceSceneController.setDeckChoiceScene();
         }

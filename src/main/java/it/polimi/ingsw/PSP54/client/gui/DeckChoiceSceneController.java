@@ -119,7 +119,7 @@ public class DeckChoiceSceneController {
     }
 
     public void setFirstPlayerChoiceScene(){
-        FirstPlayerChoiceSceneController firstPlayerChoiceSceneController = GuiManager.setLayout(((Node)event.getSource()).getScene(),"FXML/first_player_choice.fxml");
+        FirstPlayerChoiceSceneController firstPlayerChoiceSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/first_player_choice.fxml");
         if (firstPlayerChoiceSceneController != null){
             firstPlayerChoiceSceneController.setFont();
         }
