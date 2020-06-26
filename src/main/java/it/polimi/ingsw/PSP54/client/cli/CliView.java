@@ -8,6 +8,7 @@ import it.polimi.ingsw.PSP54.utils.choices.*;
 import it.polimi.ingsw.PSP54.utils.messages.*;
 
 import java.io.PrintStream;
+import java.net.SocketException;
 import java.util.*;
 
 public class CliView implements Observer<GameMessage> {
@@ -700,6 +701,14 @@ public class CliView implements Observer<GameMessage> {
         }
         if (message instanceof BoardMessage) {
             printBoard(((BoardMessage) message).getBoard());
+        }
+        if (message instanceof LobbyAccessMessage){
+            client.ping(client.getSocketOut());
+            try {
+                client.getSocket().setSoTimeout(5000);
+            } catch (SocketException e) {
+                e.printStackTrace(); //TODO
+            }
         }
     }
 

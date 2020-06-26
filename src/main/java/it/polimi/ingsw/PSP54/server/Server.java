@@ -9,6 +9,7 @@ import it.polimi.ingsw.PSP54.utils.choices.EndGameChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.LobbyAccessMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.IOException;
@@ -59,8 +60,10 @@ public class Server {
         if (playingConnection.contains(c)){
             for (Connection connection : playingConnection){
                 if (connection.getGameID() == c.getGameID() && !connection.equals(c)) {
+
                     PlayerChoice end = new EndGameChoice();
                     connection.notify(end);
+
                     GameMessage endForDisconnection = new StringMessage(null, StringMessage.endForDisconnection);
                     connection.asyncSend(endForDisconnection);
                 }
@@ -73,7 +76,7 @@ public class Server {
      * Reinsert an existing connection into the lobby. This method is called when a player has ended a game and wants to play again.
      * @param connection the connection to be reinserted into the lobby.
      */
-    public synchronized void reinsertConnection(Connection connection) {
+    public void reinsertConnection(Connection connection) {
         currentConnections.add(connection);
         if (currentConnections.size() == 1)
             connection.getNumberOfPlayers();

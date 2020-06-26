@@ -1,20 +1,25 @@
 package it.polimi.ingsw.PSP54.server;
 
+import it.polimi.ingsw.PSP54.client.Client;
 import it.polimi.ingsw.PSP54.observer.*;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 
+import it.polimi.ingsw.PSP54.utils.PingMessage;
 import it.polimi.ingsw.PSP54.utils.choices.NewGameChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 import it.polimi.ingsw.PSP54.utils.choices.StopPlayingChoice;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.LobbyAccessMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import java.net.Socket;
-
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -31,6 +36,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     private boolean gameMaster  = false;
     private int gameID;
     private VirtualView virtualView;
+    ScheduledExecutorService pingService = Executors.newScheduledThreadPool(1);
 
     public Connection(Socket socket, Server server) {
         this.socket = socket;
@@ -38,16 +44,52 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     }
 
     /**
+     *
+     */
+    private static class PingSender implements Runnable {
+
+        private final ObjectOutputStream outputStream;
+
+        public PingSender(ObjectOutputStream outputStream) {
+            this.outputStream = outputStream;
+        }
+
+        @Override
+        public void run() {
+            synchronized (outputStream) {
+                try {
+                    outputStream.reset();
+                    outputStream.writeObject(new PingMessage());
+                    outputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param output
+     */
+    public void ping(ObjectOutputStream output) {
+        pingService.scheduleAtFixedRate(new PingSender(output), 0, 2500, TimeUnit.MILLISECONDS);
+    }
+
+    /**
      * Sends an object via socket.
      * @param message the object to be sent.
      */
     public synchronized void send(Object message) {
-        try {
-            out.reset();
-            out.writeObject(message);
-            out.flush();
-        } catch(IOException e) {
-            System.err.println(e.getMessage());
+        //noinspection SynchronizeOnNonFinalField
+        synchronized (out) {
+            try {
+                out.reset();
+                out.writeObject(message);
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -72,46 +114,20 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
             try {
                 while (isActive()) {
                     Object inputObject = socketIn.readObject();
-
                     if (inputObject instanceof StopPlayingChoice)
                         close();
-                    if (inputObject instanceof NewGameChoice)
+                    else if (inputObject instanceof NewGameChoice)
                         server.reinsertConnection(this);
-                    else
+                    else if (inputObject instanceof PlayerChoice)
                         Connection.this.notify((PlayerChoice) inputObject);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 setActive(false);
             }
         });
         t.start();
         return t;
-    }
-
-    private static boolean isReachable(Socket socket, int timeOutMillis) {
-       try {
-            try (Socket soc = new Socket()) {
-                soc.connect(socket.getRemoteSocketAddress(), timeOutMillis);
-            }
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    /**
-     * Checks if the associated client is still reachable, if not closes the connection.
-     * @param socket the socket
-     */
-    public synchronized void ping(Socket socket) {
-        new Thread(() -> {
-            boolean loop = true;
-            while (loop) {
-                if (!isReachable(socket, 5000))
-                    loop = false;
-            }
-            close();
-        }).start();
     }
 
     /**
@@ -120,8 +136,9 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     public synchronized void closeConnection(){
         try {
             socket.close();
+            System.out.println(getCredentials().getPlayerName() + "'s connection closed");
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
         active = false;
     }
@@ -135,18 +152,16 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     }
 
     /**
-     *
+     * Sends a message to the GameMaster in order to acquire the number of player for the game.
      */
     public void getNumberOfPlayers() {
         GameMessage setPlayersNumber = new StringMessage(null, StringMessage.setNumberOfPlayersMessage);
         asyncSend(setPlayersNumber);
         try {
-            int numberOfPlayers = (int) in.readObject();
-            server.setNumberOfPlayers(numberOfPlayers);
+            server.setNumberOfPlayers((int) in.readObject()); // TODO thread-safe reinsertion and numberOfPlayer acquisition
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -161,7 +176,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            PlayerCredentials credentials;
             boolean namExist;
             do {
                 if (i == 0) {
@@ -171,26 +185,24 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                     GameMessage invalidName = new StringMessage(null, StringMessage.nameAlreadyTaken);
                     asyncSend(invalidName);
                 }
-                credentials = (PlayerCredentials) in.readObject();
-                setCredentials(credentials);
+                setCredentials((PlayerCredentials) in.readObject());
                 namExist = server.checkName(getCredentials().getPlayerName());
                 i++;
             } while (namExist);
             if (gameMaster || this == server.currentConnections.firstElement()) {
-                GameMessage setPlayersNumber = new StringMessage(null, StringMessage.setNumberOfPlayersMessage);
-                asyncSend(setPlayersNumber);
-                int numberOfPlayers = (int) in.readObject();
-                server.setNumberOfPlayers(numberOfPlayers);
+                getNumberOfPlayers();
             }
+            GameMessage lobbyAccessMessage = new LobbyAccessMessage(null);
+            send(lobbyAccessMessage);
             server.lobby(this, credentials);
-            ping(socket);
+            ping(out);
+            socket.setSoTimeout(5000);
             Thread t0 = asyncReadFromSocket(in);
             t0.join();
-        } catch(IOException e) {
-            System.err.println(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            pingService.shutdown();
             close();
         }
     }

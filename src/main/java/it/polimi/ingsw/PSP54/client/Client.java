@@ -3,6 +3,7 @@ package it.polimi.ingsw.PSP54.client;
 import it.polimi.ingsw.PSP54.client.gui.GuiManager;
 import it.polimi.ingsw.PSP54.client.cli.*;
 import it.polimi.ingsw.PSP54.observer.Observable;
+import it.polimi.ingsw.PSP54.utils.PingMessage;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
@@ -13,15 +14,19 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Client extends Observable<GameMessage> {
 
-
+    private boolean active = true;
     private final Scanner inputReader = new Scanner(System.in);
     private final int port;
+    private Socket socket;
     private ObjectOutputStream socketOut;
-    private boolean active = true;
     private ObjectInputStream socketIn;
+    ScheduledExecutorService pingService = Executors.newScheduledThreadPool(1);
     public Thread readingTask;
 
 
@@ -38,7 +43,8 @@ public class Client extends Observable<GameMessage> {
              try {
                  while (isActive()) {
                      Object inputObject = socketIn.readObject();
-                     notify((GameMessage)inputObject);
+                     if (inputObject instanceof GameMessage)
+                        notify((GameMessage)inputObject);
                  }
              } catch (Exception e) {
                  GameMessage connectionClosed = new StringMessage(null, StringMessage.closedConnection);
@@ -60,7 +66,7 @@ public class Client extends Observable<GameMessage> {
             socketOut.writeObject(message);
             socketOut.flush();
         } catch(IOException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -104,33 +110,39 @@ public class Client extends Observable<GameMessage> {
         return isReachable;
     }
 
+    /**
+     *
+     */
+    private static class PingSender implements Runnable {
 
-    private static boolean isReachable(Socket socket, int timeOutMillis) {
-        try {
-            try (Socket soc = new Socket()) {
-                soc.connect(socket.getRemoteSocketAddress(), timeOutMillis);
+        private final ObjectOutputStream outputStream;
+
+        public PingSender(ObjectOutputStream outputStream) {
+            this.outputStream = outputStream;
+        }
+
+        @Override
+        public void run() {
+            synchronized (outputStream) {
+                try {
+                    outputStream.reset();
+                    outputStream.writeObject(new PingMessage());
+                    outputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            return true;
-        } catch (IOException e) {
-            return false;
         }
     }
 
     /**
-     * Checks if the server is still reachable, if not notifies a message.
-     * @param socket the open socket.
+     *
+     * @param output
      */
-    public synchronized void ping(Socket socket) {
-        new Thread(() -> {
-            boolean loop = true;
-            while (loop) {
-                if (!isReachable(socket, 5000))
-                    loop = false;
-            }
-            notify(new StringMessage(null, StringMessage.closedConnection));
-            setActive(false);
-        }).start();
+    public void ping(ObjectOutputStream output) {
+        pingService.scheduleAtFixedRate(new PingSender(output), 0, 1000, TimeUnit.MILLISECONDS);
     }
+
 
     /**
      * Once acquired the interface choice establishes a connection with the server.
@@ -152,27 +164,43 @@ public class Client extends Observable<GameMessage> {
             System.out.println("ERROR: Server unreachable, try again!");
             ip = inputReader.next();
         }
-        Socket socket = new Socket(ip, port);
+        setSocket(new Socket(ip, port));
         System.out.println("Connection established");
         socketIn = new ObjectInputStream(socket.getInputStream());
-        socketOut = new ObjectOutputStream(socket.getOutputStream());
+        setSocketOut(new ObjectOutputStream(socket.getOutputStream()));
         try {
-            ping(socket);
             Thread t = asyncReadFromSocket(socketIn);
             t.join();
         } catch(NoSuchElementException | InterruptedException e) {
             System.out.println("Connection closed from the client side");
-        } finally {
+        }finally {
             //noinspection StatementWithEmptyBody
             while (isActive()) {
 
             }
             if (!isActive()) {
+                pingService.shutdown();
                 socketIn.close();
                 socketOut.close();
                 socket.close();
             }
         }
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
+
+    public ObjectOutputStream getSocketOut() {
+        return socketOut;
+    }
+
+    public void setSocketOut(ObjectOutputStream socketOut) {
+        this.socketOut = socketOut;
     }
 
     public synchronized boolean isActive(){

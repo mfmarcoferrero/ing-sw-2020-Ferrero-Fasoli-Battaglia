@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.net.SocketException;
 import java.util.Vector;
 
 public class GuiManager implements Observer<GameMessage> {
@@ -379,6 +380,14 @@ public class GuiManager implements Observer<GameMessage> {
             System.out.println("YOU LOSE !");
             loser = false;
             Platform.runLater(() -> boardSceneController.setEndScene(((LoseMessage) message).getPlayer().getPlayerName()));
+        }
+        if (message instanceof LobbyAccessMessage) {
+            client.ping(client.getSocketOut());
+            try {
+                client.getSocket().setSoTimeout(5000);
+            } catch (SocketException e) {
+                e.printStackTrace(); //TODO
+            }
         }
     }
 
