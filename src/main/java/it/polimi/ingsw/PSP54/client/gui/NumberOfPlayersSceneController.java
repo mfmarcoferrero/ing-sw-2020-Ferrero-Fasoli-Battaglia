@@ -82,7 +82,7 @@ public class NumberOfPlayersSceneController {
      * Load cards_choice.fxml on current stage
      */
     public void setCardsChoiceScene() {
-        CardsChoiceSceneController cardsChoiceSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"file:./resources/FXML/cards_choice.fxml");
+        CardsChoiceSceneController cardsChoiceSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/cards_choice.fxml");
         if (cardsChoiceSceneController != null){
             cardsChoiceSceneController.setFont();
         }
