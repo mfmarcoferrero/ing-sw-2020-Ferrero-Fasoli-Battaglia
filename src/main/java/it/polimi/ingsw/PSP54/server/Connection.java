@@ -2,6 +2,7 @@ package it.polimi.ingsw.PSP54.server;
 
 import it.polimi.ingsw.PSP54.observer.*;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
+
 import it.polimi.ingsw.PSP54.utils.choices.NewGameChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
@@ -11,8 +12,9 @@ import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
+
 import java.net.Socket;
+
 
 
 /**
@@ -86,6 +88,17 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         return t;
     }
 
+    private static boolean isReachable(Socket socket, int timeOutMillis) {
+       try {
+            try (Socket soc = new Socket()) {
+                soc.connect(socket.getRemoteSocketAddress(), timeOutMillis);
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     /**
      * Checks if the associated client is still reachable, if not closes the connection.
      * @param socket the socket
@@ -93,15 +106,9 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     public synchronized void ping(Socket socket) {
         new Thread(() -> {
             boolean loop = true;
-            InetAddress clientIP = socket.getInetAddress();
-            System.out.println("Ping - ClientIP: " + clientIP);
             while (loop) {
-                try {
-                    if (!clientIP.isReachable(1000))
-                        loop = false;
-                } catch (IOException e) {
+                if (!isReachable(socket, 5000))
                     loop = false;
-                }
             }
             close();
         }).start();
@@ -176,7 +183,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                 server.setNumberOfPlayers(numberOfPlayers);
             }
             server.lobby(this, credentials);
-            //ping(socket);
+            ping(socket);
             Thread t0 = asyncReadFromSocket(in);
             t0.join();
         } catch(IOException e) {

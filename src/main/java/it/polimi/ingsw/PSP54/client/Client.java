@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 public class Client extends Observable<GameMessage> {
 
+
     private final Scanner inputReader = new Scanner(System.in);
     private final int port;
     private ObjectOutputStream socketOut;
@@ -103,21 +104,28 @@ public class Client extends Observable<GameMessage> {
         return isReachable;
     }
 
+
+    private static boolean isReachable(Socket socket, int timeOutMillis) {
+        try {
+            try (Socket soc = new Socket()) {
+                soc.connect(socket.getRemoteSocketAddress(), timeOutMillis);
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     /**
      * Checks if the server is still reachable, if not notifies a message.
      * @param socket the open socket.
      */
     public synchronized void ping(Socket socket) {
         new Thread(() -> {
-            InetAddress serverIP = socket.getInetAddress();
-            System.out.println("Ping - ServerIP: " + serverIP);
-            while (true) {
-                try {
-                    if (!serverIP.isReachable(1000))
-                        break;
-                } catch (IOException e) {
-                    break;
-                }
+            boolean loop = true;
+            while (loop) {
+                if (!isReachable(socket, 5000))
+                    loop = false;
             }
             notify(new StringMessage(null, StringMessage.closedConnection));
             setActive(false);
@@ -149,7 +157,7 @@ public class Client extends Observable<GameMessage> {
         socketIn = new ObjectInputStream(socket.getInputStream());
         socketOut = new ObjectOutputStream(socket.getOutputStream());
         try {
-            //ping(socket);
+            ping(socket);
             Thread t = asyncReadFromSocket(socketIn);
             t.join();
         } catch(NoSuchElementException | InterruptedException e) {
