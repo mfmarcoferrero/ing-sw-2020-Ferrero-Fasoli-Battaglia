@@ -534,7 +534,7 @@ public class CliView implements Observer<GameMessage> {
      * @param numberOfPlayers the number of players.
      */
     public void sendNumberOfPlayers(int numberOfPlayers) {
-        client.asyncSend(numberOfPlayers);
+        client.asyncSend(new NumberOfPlayers(numberOfPlayers));
     }
 
     /**

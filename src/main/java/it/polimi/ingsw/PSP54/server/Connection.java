@@ -1,14 +1,11 @@
 package it.polimi.ingsw.PSP54.server;
 
-import it.polimi.ingsw.PSP54.client.Client;
+import it.polimi.ingsw.PSP54.client.gui.NumberOfPlayersSceneController;
 import it.polimi.ingsw.PSP54.observer.*;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 
 import it.polimi.ingsw.PSP54.utils.PingMessage;
-import it.polimi.ingsw.PSP54.utils.choices.NewGameChoice;
-import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
-import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
-import it.polimi.ingsw.PSP54.utils.choices.StopPlayingChoice;
+import it.polimi.ingsw.PSP54.utils.choices.*;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
 import it.polimi.ingsw.PSP54.utils.messages.LobbyAccessMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
@@ -36,7 +33,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     private boolean gameMaster  = false;
     private int gameID;
     private VirtualView virtualView;
-    ScheduledExecutorService pingService = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService pingService = Executors.newScheduledThreadPool(1);
 
     public Connection(Socket socket, Server server) {
         this.socket = socket;
@@ -114,6 +111,10 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
             try {
                 while (isActive()) {
                     Object inputObject = socketIn.readObject();
+                    if (inputObject instanceof NumberOfPlayers) {
+                        server.setNumberOfPlayers(((NumberOfPlayers) inputObject).getNumberOfPlayers());
+                        server.lobby(this, this.getCredentials());
+                    }
                     if (inputObject instanceof StopPlayingChoice)
                         close();
                     else if (inputObject instanceof NewGameChoice)
@@ -122,7 +123,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                         Connection.this.notify((PlayerChoice) inputObject);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 setActive(false);
             }
         });
@@ -152,19 +152,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     }
 
     /**
-     * Sends a message to the GameMaster in order to acquire the number of player for the game.
-     */
-    public void getNumberOfPlayers() {
-        GameMessage setPlayersNumber = new StringMessage(null, StringMessage.setNumberOfPlayersMessage);
-        asyncSend(setPlayersNumber);
-        try {
-            server.setNumberOfPlayers((int) in.readObject()); // TODO thread-safe reinsertion and numberOfPlayer acquisition
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Each instantiated connection is launched as a thread.
      * Each connection calls the Server.lobby() method.
      * As long as the connection is active the thread listens for what is sent from the client.
@@ -190,7 +177,9 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                 i++;
             } while (namExist);
             if (gameMaster || this == server.currentConnections.firstElement()) {
-                getNumberOfPlayers();
+                GameMessage setPlayersNumber = new StringMessage(null, StringMessage.setNumberOfPlayersMessage);
+                asyncSend(setPlayersNumber);
+                server.setNumberOfPlayers(((NumberOfPlayers)in.readObject()).getNumberOfPlayers());
             }
             GameMessage lobbyAccessMessage = new LobbyAccessMessage(null);
             send(lobbyAccessMessage);

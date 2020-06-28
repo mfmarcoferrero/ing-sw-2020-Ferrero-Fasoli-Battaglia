@@ -78,9 +78,11 @@ public class Server {
      */
     public void reinsertConnection(Connection connection) {
         currentConnections.add(connection);
-        if (currentConnections.size() == 1)
-            connection.getNumberOfPlayers();
-        lobby(connection, connection.getCredentials());
+        if (currentConnections.size() == 1) {
+            GameMessage setPlayersNumber = new StringMessage(null, StringMessage.setNumberOfPlayersMessage);
+            connection.asyncSend(setPlayersNumber);
+        } else
+            lobby(connection, connection.getCredentials());
     }
 
     /**
@@ -205,6 +207,11 @@ public class Server {
     }
 
     //getters & setters
+
+
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
+    }
 
     public void setNumberOfPlayers(int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.PSP54.client.gui;
 
 
+import it.polimi.ingsw.PSP54.utils.choices.NumberOfPlayers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -45,7 +46,7 @@ public class NumberOfPlayersSceneController {
         twoButton.setVisible(false);
         threeButton.setVisible(false);
         waitingLabel.setVisible(true);
-        guiManager.sendObject(2);
+        guiManager.sendObject(new NumberOfPlayers(3));
         System.out.println("Ho scelto due giocatori");
     }
 
@@ -58,7 +59,7 @@ public class NumberOfPlayersSceneController {
         twoButton.setVisible(false);
         threeButton.setVisible(false);
         waitingLabel.setVisible(true);
-        guiManager.sendObject(3);
+        guiManager.sendObject(new NumberOfPlayers(3));
         System.out.println("Ho scelto tre giocatori");
     }
 
