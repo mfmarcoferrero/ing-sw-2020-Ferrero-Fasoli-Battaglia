@@ -33,16 +33,13 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     private boolean gameMaster  = false;
     private int gameID;
     private VirtualView virtualView;
-    private ScheduledExecutorService pingService = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService pingService = Executors.newScheduledThreadPool(1);
 
     public Connection(Socket socket, Server server) {
         this.socket = socket;
         this.server = server;
     }
 
-    /**
-     *
-     */
     private static class PingSender implements Runnable {
 
         private final ObjectOutputStream outputStream;
@@ -51,6 +48,9 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
             this.outputStream = outputStream;
         }
 
+        /**
+         * Sends a PingMessage via socket.
+         */
         @Override
         public void run() {
             synchronized (outputStream) {
@@ -66,8 +66,8 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
     }
 
     /**
-     *
-     * @param output
+     * Launches a scheduled executor service that will handle the sending of ping messages.
+     * @param output the ObjectOutputStream associated with the open socket.
      */
     public void ping(ObjectOutputStream output) {
         pingService.scheduleAtFixedRate(new PingSender(output), 0, 2500, TimeUnit.MILLISECONDS);

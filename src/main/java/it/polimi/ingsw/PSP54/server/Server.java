@@ -208,7 +208,6 @@ public class Server {
 
     //getters & setters
 
-
     public int getNumberOfPlayers() {
         return numberOfPlayers;
     }
