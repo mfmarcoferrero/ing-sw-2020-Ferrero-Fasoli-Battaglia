@@ -34,6 +34,31 @@ public class Client extends Observable<GameMessage> {
         this.port = port;
     }
 
+    private static class PingSender implements Runnable {
+
+        private final ObjectOutputStream outputStream;
+
+        public PingSender(ObjectOutputStream outputStream) {
+            this.outputStream = outputStream;
+        }
+
+        /**
+         * Sends a PingMessage via socket.
+         */
+        @Override
+        public void run() {
+            synchronized (outputStream) {
+                try {
+                    outputStream.reset();
+                    outputStream.writeObject(new PingMessage());
+                    outputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     /**
      * Instantiates a thread that reads incoming messages from the client.
      * @param socketIn the socket from which the messages arrive.
@@ -111,33 +136,8 @@ public class Client extends Observable<GameMessage> {
     }
 
     /**
-     *
-     */
-    private static class PingSender implements Runnable {
-
-        private final ObjectOutputStream outputStream;
-
-        public PingSender(ObjectOutputStream outputStream) {
-            this.outputStream = outputStream;
-        }
-
-        @Override
-        public void run() {
-            synchronized (outputStream) {
-                try {
-                    outputStream.reset();
-                    outputStream.writeObject(new PingMessage());
-                    outputStream.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    /**
-     *
-     * @param output
+     * Launches a scheduled executor service that will handle the sending of ping messages.
+     * @param output the ObjectOutputStream associated with the open socket.
      */
     public void ping(ObjectOutputStream output) {
         pingService.scheduleAtFixedRate(new PingSender(output), 0, 1000, TimeUnit.MILLISECONDS);
@@ -186,6 +186,8 @@ public class Client extends Observable<GameMessage> {
             }
         }
     }
+
+    //getters & setters
 
     public Socket getSocket() {
         return socket;

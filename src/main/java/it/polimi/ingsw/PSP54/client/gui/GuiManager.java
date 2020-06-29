@@ -386,7 +386,7 @@ public class GuiManager implements Observer<GameMessage> {
             try {
                 client.getSocket().setSoTimeout(5000);
             } catch (SocketException e) {
-                e.printStackTrace(); //TODO
+                e.printStackTrace();
             }
         }
     }

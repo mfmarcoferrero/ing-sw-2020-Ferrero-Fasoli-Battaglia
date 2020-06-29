@@ -707,7 +707,7 @@ public class CliView implements Observer<GameMessage> {
             try {
                 client.getSocket().setSoTimeout(5000);
             } catch (SocketException e) {
-                e.printStackTrace(); //TODO
+                e.printStackTrace();
             }
         }
     }

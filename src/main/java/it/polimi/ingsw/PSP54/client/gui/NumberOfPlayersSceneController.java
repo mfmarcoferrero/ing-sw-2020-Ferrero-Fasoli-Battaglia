@@ -46,7 +46,7 @@ public class NumberOfPlayersSceneController {
         twoButton.setVisible(false);
         threeButton.setVisible(false);
         waitingLabel.setVisible(true);
-        guiManager.sendObject(new NumberOfPlayers(3));
+        guiManager.sendObject(new NumberOfPlayers(2));
         System.out.println("Ho scelto due giocatori");
     }
 
