@@ -29,7 +29,6 @@ public class Client extends Observable<GameMessage> {
     ScheduledExecutorService pingService = Executors.newScheduledThreadPool(1);
     public Thread readingTask;
 
-
     public Client(int port) {
         this.port = port;
     }
@@ -37,8 +36,10 @@ public class Client extends Observable<GameMessage> {
     private static class PingSender implements Runnable {
 
         private final ObjectOutputStream outputStream;
+        private final Client client;
 
-        public PingSender(ObjectOutputStream outputStream) {
+        public PingSender(Client client, ObjectOutputStream outputStream) {
+            this.client = client;
             this.outputStream = outputStream;
         }
 
@@ -53,10 +54,19 @@ public class Client extends Observable<GameMessage> {
                     outputStream.writeObject(new PingMessage());
                     outputStream.flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    client.endClient();
                 }
             }
         }
+    }
+
+    /**
+     *
+     */
+    public void endClient(){
+        GameMessage connectionClosed = new StringMessage(null, StringMessage.closedConnection);
+        notify(connectionClosed);
+        setActive(false);
     }
 
     /**
@@ -72,9 +82,7 @@ public class Client extends Observable<GameMessage> {
                         notify((GameMessage)inputObject);
                  }
              } catch (Exception e) {
-                 GameMessage connectionClosed = new StringMessage(null, StringMessage.closedConnection);
-                 notify(connectionClosed);
-                 setActive(false);
+                 endClient();
              }
          });
         readingTask.start();
@@ -91,7 +99,7 @@ public class Client extends Observable<GameMessage> {
             socketOut.writeObject(message);
             socketOut.flush();
         } catch(IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -140,7 +148,7 @@ public class Client extends Observable<GameMessage> {
      * @param output the ObjectOutputStream associated with the open socket.
      */
     public void ping(ObjectOutputStream output) {
-        pingService.scheduleAtFixedRate(new PingSender(output), 0, 1000, TimeUnit.MILLISECONDS);
+        pingService.scheduleAtFixedRate(new PingSender(this, output), 0, 1000, TimeUnit.MILLISECONDS);
     }
 
 

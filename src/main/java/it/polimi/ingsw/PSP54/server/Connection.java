@@ -85,7 +85,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                 out.writeObject(message);
                 out.flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
     }

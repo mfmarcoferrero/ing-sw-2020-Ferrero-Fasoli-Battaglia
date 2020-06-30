@@ -395,6 +395,8 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         setWinner(currentPlayer);
         GameMessage winMessage = new WinMessage(null, currentPlayer);
         notify(winMessage);
+        for (Player player : players)
+            removePlayer(player);
     }
 
     /**
@@ -402,14 +404,14 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * @param currentPlayer the player that has lost.
      */
     public void performLoss(Player currentPlayer) {
-        if (players.size() == 3) {
+        /*if (players.size() == 3) {
             for (Player player : players) {
                 if (Objects.equals(player, currentPlayer)) {
                     GameMessage loseMessage = new LoseMessage(currentPlayer.getVirtualViewID(), currentPlayer);
                     notify(loseMessage);
                 } else {
-                    GameMessage lose = new StringMessage(player.getVirtualViewID(), currentPlayer.getPlayerName() + StringMessage.loseMessage);
-                    notify(lose);
+                    GameMessage opponentLost = new StringMessage(player.getVirtualViewID(), currentPlayer.getPlayerName() + StringMessage.loseMessage);
+                    notify(opponentLost);
                 }
             }
             removePlayer(currentPlayer);
@@ -419,7 +421,21 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             GameMessage winMessage = new WinMessage(null, players.lastElement());
             notify(winMessage);
             notifyBoard();
+        }*/
+
+        if (players.size() == 2) {
+            GameMessage winMessage = new WinMessage(null, currentPlayer);
+            notify(winMessage);
+            for (Player player : players)
+                removePlayer(player);
+        }else {
+            GameMessage loseMessage = new LoseMessage(null, currentPlayer);
+            notify(loseMessage);
+            endTurn(currentPlayer);
+            removePlayer(currentPlayer);
+            notify(new BoardMessage(null, board.clone()));
         }
+
     }
 
     /**
@@ -429,9 +445,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
     public void removePlayer(Player player) {
         player.getWorker(true).getPos().setWorker(null);
         player.getWorker(false).getPos().setWorker(null);
-        int i = players.indexOf(player);
         players.remove(player);
-        setCurrentPlayer(players.elementAt(i));
     }
 
     //setters & getters

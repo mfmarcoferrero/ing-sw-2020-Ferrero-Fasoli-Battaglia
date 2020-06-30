@@ -16,7 +16,7 @@ public class CliView implements Observer<GameMessage> {
     private final Scanner inputReader = new Scanner(System.in);
     private final PrintStream output = new PrintStream(System.out);
     private final Client client;
-    private HashMap<String, Integer> Credentials;
+    private HashMap<String, Integer> credentials;
     private static int numberOfPlayers;
     private boolean maleSelected;
 
@@ -587,16 +587,23 @@ public class CliView implements Observer<GameMessage> {
      * @param winner the player that has won.
      */
     public void endOfMatch(Player winner) {
-        output.println(winner.getPlayerName() + " IS THE WINNER");
+        if (getCredentials().containsKey(winner.getPlayerName()))
+            output.println("YOU WON!");
+        else
+            output.println(winner.getPlayerName() + " IS THE WINNER");
         playAgain();
     }
 
     /**
      * Handles the loosing of a player.
      */
-    public void losingPlayer() {
-        output.println("YOU LOSE");
-        playAgain();
+    public void losingPlayer(Player loser) {
+        if (getCredentials().containsKey(loser.getPlayerName())) {
+            output.println("YOU LOST!");
+            playAgain();
+        }
+        else
+            output.println(loser.getPlayerName() + " HAS LOST!");
     }
 
 	/**
@@ -691,7 +698,7 @@ public class CliView implements Observer<GameMessage> {
             sendStartPlayerSelection(startIndex);
         }
         if (message instanceof LoseMessage) {
-            losingPlayer();
+            losingPlayer(((LoseMessage)message).getPlayer());
         }
         if (message instanceof WinMessage) {
             endOfMatch(((WinMessage) message).getPlayer());
@@ -723,11 +730,11 @@ public class CliView implements Observer<GameMessage> {
     }
 
     public HashMap<String, Integer> getCredentials() {
-        return Credentials;
+        return credentials;
     }
 
     public void setCredentials(HashMap<String, Integer> credentials) {
-        this.Credentials = credentials;
+        this.credentials = credentials;
     }
 
     public int getNumberOfPlayers() {

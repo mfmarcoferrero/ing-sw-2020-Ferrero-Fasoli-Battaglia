@@ -5,11 +5,11 @@ import it.polimi.ingsw.PSP54.server.model.Player;
 import java.io.Serializable;
 
 /**
- * Represents the victory notification for a player.
+ * Represents the notification of a player's victory.
  */
 public class WinMessage extends GameMessage implements Serializable, Cloneable {
+
     private final Player p;
-    private String message;
 
     public WinMessage(Integer virtualViewID, Player pl) {
         super(virtualViewID);

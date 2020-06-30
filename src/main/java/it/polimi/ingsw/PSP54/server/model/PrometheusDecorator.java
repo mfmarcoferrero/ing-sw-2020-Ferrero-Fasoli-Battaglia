@@ -74,8 +74,12 @@ public class PrometheusDecorator extends GodDecorator{
     public void build(Worker worker, Box dest) throws InvalidBuildingException {
         super.build(worker, dest);
 
-        if (usedPower)
+        if (usedPower) {
             getCurrentWorker().setMoveToken(1);
+            if (setWorkerBoxesToMove(getCurrentWorker()).isEmpty()){
+                getGame().performLoss(this);
+            }
+        }
     }
 
     /**
@@ -87,8 +91,16 @@ public class PrometheusDecorator extends GodDecorator{
     public void chose(boolean choice) {
         if (choice) {
             setUsedPower(true);
-            getCurrentWorker().setBuildToken(1);
-            getCurrentWorker().setMoveToken(0);
+            if (setWorkerBoxesToMove(getCurrentWorker()).isEmpty()) {
+                GameMessage cantUsePower = new StringMessage(getVirtualViewID(), StringMessage.cantUsePower);
+                getGame().notify(cantUsePower);
+                setUsedPower(false);
+                getCurrentWorker().setMoveToken(1);
+                getCurrentWorker().setBuildToken(0);
+            }else {
+                getCurrentWorker().setBuildToken(1);
+                getCurrentWorker().setMoveToken(0);
+            }
         }
         else {
             setUsedPower(false);
