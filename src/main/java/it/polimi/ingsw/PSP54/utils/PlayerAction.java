@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP54.utils;
 
+import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 
 import java.io.Serializable;
@@ -9,12 +10,17 @@ import java.io.Serializable;
  */
 public class PlayerAction implements Serializable,Cloneable {
 
-    private final int virtualViewID;
-    private final PlayerChoice choice;
+    private int virtualViewID;
+    private PlayerChoice choice;
+    private Player player;
 
     public PlayerAction(int virtualViewID, PlayerChoice choice) {
         this.virtualViewID = virtualViewID;
         this.choice = choice;
+    }
+
+    public PlayerAction(Player player) {
+        this.player = player;
     }
 
     public int getVirtualViewID() {
@@ -25,4 +31,7 @@ public class PlayerAction implements Serializable,Cloneable {
         return choice;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
 }

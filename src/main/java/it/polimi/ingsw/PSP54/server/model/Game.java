@@ -1,6 +1,9 @@
 package it.polimi.ingsw.PSP54.server.model;
 
 import it.polimi.ingsw.PSP54.observer.Observable;
+import it.polimi.ingsw.PSP54.server.Server;
+import it.polimi.ingsw.PSP54.server.controller.Controller;
+import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.*;
 import it.polimi.ingsw.PSP54.utils.messages.*;
@@ -404,25 +407,6 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * @param currentPlayer the player that has lost.
      */
     public void performLoss(Player currentPlayer) {
-        /*if (players.size() == 3) {
-            for (Player player : players) {
-                if (Objects.equals(player, currentPlayer)) {
-                    GameMessage loseMessage = new LoseMessage(currentPlayer.getVirtualViewID(), currentPlayer);
-                    notify(loseMessage);
-                } else {
-                    GameMessage opponentLost = new StringMessage(player.getVirtualViewID(), currentPlayer.getPlayerName() + StringMessage.loseMessage);
-                    notify(opponentLost);
-                }
-            }
-            removePlayer(currentPlayer);
-        } else if (players.size() == 2) {
-            players.remove(currentPlayer);
-            players.add(0, currentPlayer);
-            GameMessage winMessage = new WinMessage(null, players.lastElement());
-            notify(winMessage);
-            notifyBoard();
-        }*/
-
         if (players.size() == 2) {
             GameMessage winMessage = new WinMessage(null, currentPlayer);
             notify(winMessage);
@@ -433,9 +417,9 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
             notify(loseMessage);
             endTurn(currentPlayer);
             removePlayer(currentPlayer);
-            notify(new BoardMessage(null, board.clone()));
+            for (Player player : players)
+                notify(new BoardMessage(player.getVirtualViewID(), board.clone()));
         }
-
     }
 
     /**

@@ -3,9 +3,12 @@ package it.polimi.ingsw.PSP54.server.virtualView;
 import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
+import it.polimi.ingsw.PSP54.server.controller.Controller;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+import it.polimi.ingsw.PSP54.utils.messages.LoseMessage;
 import it.polimi.ingsw.PSP54.utils.messages.OpponentMessage;
+import it.polimi.ingsw.PSP54.utils.messages.WinMessage;
 
 import java.util.Vector;
 
@@ -15,6 +18,7 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
     private final int id;
     private final Connection connection;
     private final PlayerAction playerCredentials;
+    private Controller controller;
 
     /**
      * Instantiates a VirtualView Object for each player in a match.
@@ -72,13 +76,29 @@ public class VirtualView extends Observable<PlayerAction> implements Observer<Ga
      */
     @Override
     public void update(GameMessage message) {
-        if (message.getVirtualViewID() == null || message.getVirtualViewID() == getId())
+        if (message.getVirtualViewID() == null || message.getVirtualViewID() == getId()) {
             sendMessage(message);
+            if (message instanceof LoseMessage) {
+                if (((LoseMessage) message).getPlayer().getVirtualViewID() == getId())
+                    controller.disableNotifications(this);
+            }
+            if (message instanceof WinMessage) {
+                controller.disableNotifications(this);
+            }
+        }
     }
 
     //getters & setter
 
     public int getId() {
         return id;
+    }
+
+    public Controller getController() {
+        return controller;
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 }

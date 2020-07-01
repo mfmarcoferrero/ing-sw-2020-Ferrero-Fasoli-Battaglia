@@ -77,7 +77,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
      * Sends an object via socket.
      * @param message the object to be sent.
      */
-    public synchronized void send(Object message) {
+    public void send(Object message) {
         //noinspection SynchronizeOnNonFinalField
         synchronized (out) {
             try {
@@ -85,7 +85,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                 out.writeObject(message);
                 out.flush();
             } catch (IOException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
         }
     }

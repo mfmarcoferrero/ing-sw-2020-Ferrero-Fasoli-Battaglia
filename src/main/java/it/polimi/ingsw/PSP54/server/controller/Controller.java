@@ -107,6 +107,10 @@ public class Controller implements Observer<PlayerAction> {
         game.performChoice(action);
     }
 
+    public void disableNotifications(VirtualView virtualView) {
+        game.removeObserver(virtualView);
+    }
+
     /**
      * Called whenever the observed object is changed.
      * Calls different methods depending on the type of the PlayerChoice contained in the PlayerAction Message.
