@@ -10,17 +10,12 @@ import java.io.Serializable;
  */
 public class PlayerAction implements Serializable,Cloneable {
 
-    private int virtualViewID;
-    private PlayerChoice choice;
-    private Player player;
+    private final int virtualViewID;
+    private final PlayerChoice choice;
 
     public PlayerAction(int virtualViewID, PlayerChoice choice) {
         this.virtualViewID = virtualViewID;
         this.choice = choice;
-    }
-
-    public PlayerAction(Player player) {
-        this.player = player;
     }
 
     public int getVirtualViewID() {
@@ -31,7 +26,4 @@ public class PlayerAction implements Serializable,Cloneable {
         return choice;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
 }
