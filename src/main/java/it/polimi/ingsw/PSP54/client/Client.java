@@ -136,7 +136,7 @@ public class Client extends Observable<GameMessage> {
         boolean isReachable;
         try {
             InetAddress server = InetAddress.getByName(ipAddr);
-            isReachable = server.isReachable(1000);
+            isReachable = server.isReachable(2000);
         } catch (IOException e) {
             isReachable = false;
         }
