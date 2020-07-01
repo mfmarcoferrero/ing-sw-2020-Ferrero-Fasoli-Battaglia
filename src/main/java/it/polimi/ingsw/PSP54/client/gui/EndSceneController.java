@@ -3,7 +3,6 @@ package it.polimi.ingsw.PSP54.client.gui;
 import it.polimi.ingsw.PSP54.utils.choices.NewGameChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.StopPlayingChoice;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -15,7 +14,6 @@ import javafx.scene.text.Font;
 
 public class EndSceneController {
     private GuiManager guiManager;
-    private ActionEvent event;
     @FXML Label winOrLoseLabel;
     @FXML Label joinANewGameLabel;
     @FXML Label winnerNameLabel;
@@ -36,27 +34,30 @@ public class EndSceneController {
      * Set font for buttons and labels
      * @param winnerName
      */
-    public void setFont(String winnerName){
-        if (guiManager.isWinner()) {
-            if (winnerName.equals(guiManager.getMyName())){
+    public void setFont(String winnerName, boolean endForDisconnection){
+        if (endForDisconnection){
+            winOrLoseLabel.setText("ONE OF THE PLAYERS LOST CONNECTION !");
+            winOrLoseLabel.setFont(Font.font("papyrus", 40));
+        }
+        else{
+            if (guiManager.isWinner()) {
                 winOrLoseLabel.setText("YOU WIN !");
                 winOrLoseLabel.setFont(Font.font("papyrus", 50));
-                winnerNameLabel.setVisible(false);
             }
-            else
-                winOrLoseLabel.setText("YOU LOSE !  ");
+            else {
+                winOrLoseLabel.setText("YOU LOSE !");
                 winOrLoseLabel.setFont(Font.font("papyrus", 50));
-                winnerNameLabel.setText("THE WINNER IS: " + winnerName.toUpperCase());
-                winnerNameLabel.setFont(Font.font("papyrus", 28));
-                winnerNameLabel.setAlignment(Pos.CENTER);
+                if (winnerName != null) {
+                    winnerNameLabel.setText("THE WINNER IS: " + winnerName.toUpperCase());
+                    winnerNameLabel.setFont(Font.font("papyrus", 28));
+                    winnerNameLabel.setVisible(true);
+                }
+            }
+            winOrLoseLabel.setAlignment(Pos.CENTER);
+            joinANewGameLabel.setFont(Font.font("papyrus", 25));
+            yesButton.setFont(Font.font("papyrus", 23));
+            noButton.setFont(Font.font("papyrus", 23));
         }
-        if (guiManager.isLoser()){
-            winOrLoseLabel.setText(winnerName.toUpperCase() + " LOSE !");
-        }
-        winOrLoseLabel.setAlignment(Pos.CENTER);
-        joinANewGameLabel.setFont(Font.font("papyrus", 25));
-        yesButton.setFont(Font.font("papyrus", 23));
-        noButton.setFont(Font.font("papyrus", 23));
     }
 
     /**
@@ -93,13 +94,4 @@ public class EndSceneController {
         ((Node) event.getSource()).getScene().setCursor(Cursor.DEFAULT);
     }
 
-    /**
-     * Load log_in.fxml on current stage
-     */
-    public void setLogInScene(){
-        LogInSceneController logInSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/log_in.fxml");
-        if (logInSceneController != null){
-            logInSceneController.setFont();
-        }
-    }
 }

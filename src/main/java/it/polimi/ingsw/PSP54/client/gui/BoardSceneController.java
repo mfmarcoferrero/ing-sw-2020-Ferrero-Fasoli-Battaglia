@@ -443,12 +443,9 @@ public class BoardSceneController {
      * @param winnerName
      */
     public void setEndScene(String winnerName){
-        guiManager.getStage().setWidth(600);
-        guiManager.getStage().setHeight(350);
-        guiManager.getStage().centerOnScreen();
         EndSceneController endSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/end_scene.fxml");
         if (endSceneController != null){
-            endSceneController.setFont(winnerName);
+            endSceneController.setFont(winnerName,false);
         }
     }
 

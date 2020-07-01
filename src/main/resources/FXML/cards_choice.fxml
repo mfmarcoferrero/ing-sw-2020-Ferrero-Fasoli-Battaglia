@@ -6,11 +6,10 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="900.0" style="-fx-background-color: #0896C2;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.CardsChoiceSceneController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1065.0" style="-fx-background-color: #0896C2;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP54.client.gui.CardsChoiceSceneController">
    <children>
-      <AnchorPane layoutX="186.0" layoutY="170.0">
+      <AnchorPane layoutX="269.0" layoutY="195.0">
          <children>
             <ImageView fx:id="firstCardImage" fitHeight="210.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -20,7 +19,7 @@
             <Button fx:id="firstCardButton" layoutX="-1.0" mnemonicParsing="false" onAction="#firstCardButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" opacity="0.0" prefHeight="210.0" prefWidth="125.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="386.0" layoutY="170.0" prefHeight="163.0" prefWidth="98.0">
+      <AnchorPane layoutX="469.0" layoutY="195.0" prefHeight="163.0" prefWidth="98.0">
          <children>
             <ImageView fx:id="secondCardImage" fitHeight="210.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -30,7 +29,7 @@
             <Button fx:id="secondCardButton" layoutX="1.0" mnemonicParsing="false" onAction="#secondCardButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" opacity="0.0" prefHeight="210.0" prefWidth="125.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="589.0" layoutY="170.0">
+      <AnchorPane layoutX="672.0" layoutY="195.0">
          <children>
             <ImageView fx:id="thirdCardImage" fitHeight="210.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -40,7 +39,7 @@
             <Button fx:id="thirdCardButton" mnemonicParsing="false" onAction="#thirdCardButtonPressed" onMouseEntered="#setHandCursor" onMouseExited="#setDefaultCursor" opacity="0.0" prefHeight="210.0" prefWidth="125.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
-      <Label fx:id="chooseYourPowerLabel" layoutX="310.0" layoutY="61.0" text="CHOOSE YOUR POWER">
+      <Label fx:id="chooseYourPowerLabel" layoutX="278.0" layoutY="66.0" prefHeight="65.0" prefWidth="510.0" text="CHOOSE YOUR POWER">
          </Label>
    </children>
 </Pane>

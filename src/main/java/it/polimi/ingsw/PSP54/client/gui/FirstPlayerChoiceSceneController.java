@@ -3,6 +3,7 @@ package it.polimi.ingsw.PSP54.client.gui;
 import it.polimi.ingsw.PSP54.utils.choices.StartPlayerChoice;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -33,7 +34,8 @@ public class FirstPlayerChoiceSceneController {
     }
 
     public void setFont(){
-        chooseNumberOfPlayersLabel.setFont(Font.font("papyrus",35));
+        chooseNumberOfPlayersLabel.setFont(Font.font("papyrus",40));
+        chooseNumberOfPlayersLabel.setAlignment(Pos.CENTER);
         if (guiManager.getPlayers().size() == 2){
             firstPlayerButton.setText(guiManager.getPlayers().get(0).getPlayerName().toUpperCase());
             firstPlayerButton.setFont(Font.font("papyrus",16));
@@ -100,7 +102,6 @@ public class FirstPlayerChoiceSceneController {
      * Load board.fxml on current stage
      */
     public void setBoardScene() {
-        guiManager.setBoardSceneSize();
         BoardSceneController boardSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/board.fxml");
         if (boardSceneController != null){
             boardSceneController.setBoardScene();

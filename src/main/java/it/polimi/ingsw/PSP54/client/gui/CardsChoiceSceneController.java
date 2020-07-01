@@ -4,6 +4,7 @@ import it.polimi.ingsw.PSP54.utils.choices.PowerChoice;
 import it.polimi.ingsw.PSP54.utils.messages.AvailableCardsMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -38,7 +39,8 @@ public class CardsChoiceSceneController {
     }
 
     public void setFont(){
-        chooseYourPowerLabel.setFont(Font.font("papyrus",34));
+        chooseYourPowerLabel.setFont(Font.font("papyrus",40));
+        chooseYourPowerLabel.setAlignment(Pos.CENTER);
     }
 
     /**
@@ -134,7 +136,6 @@ public class CardsChoiceSceneController {
      * Load board.fxml on current stage
      */
     public void setBoardScene() {
-        guiManager.setBoardSceneSize();
         BoardSceneController boardSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/board.fxml");
         if (boardSceneController != null){
             boardSceneController.setBoardScene();

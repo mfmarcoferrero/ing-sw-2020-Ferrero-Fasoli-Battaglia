@@ -41,7 +41,7 @@ public class LogInSceneController {
     public void setFont(){
 
         try {
-            joinAGameLabel.setFont(Font.font("papyrus",41));
+            joinAGameLabel.setFont(Font.font("papyrus",45));
             ageLabel.setFont(Font.font("papyrus", 23));
             nameLabel.setFont(Font.font("papyrus",23));
             startButton.setFont(Font.font("papyrus",17));

@@ -34,7 +34,7 @@ public class NumberOfPlayersSceneController {
         twoButton.setFont(Font.font("papyrus",18));
         threeButton.setFont(Font.font("papyrus",18));
         waitingLabel.setFont(Font.font("papyrus",21));
-        chooseNumberOfPlayersLabel.setFont(Font.font("papyrus",29));
+        chooseNumberOfPlayersLabel.setFont(Font.font("papyrus",40));
     }
 
     /**

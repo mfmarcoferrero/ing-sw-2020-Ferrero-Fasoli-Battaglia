@@ -611,7 +611,7 @@ public class CliView implements Observer<GameMessage> {
 	 */
 	public void playAgain() {
 		boolean loop=true;
-		output.println("do you want to play again? [Enter y/n]");
+		output.println("Do you want to play again? [Enter y/n]");
 		while (loop) {
 			String Choice = inputReader.next();
 			if(Choice.equals("y")) {

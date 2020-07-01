@@ -150,12 +150,6 @@ public class GuiManager implements Observer<GameMessage> {
         return loader.getController();
     }
 
-    public void setBoardSceneSize(){
-        stage.setWidth(1065);
-        stage.setHeight(620);
-        stage.centerOnScreen();
-    }
-
     /**
      * Load an image from resources/icons in an ImageView
      * @param val
@@ -303,19 +297,12 @@ public class GuiManager implements Observer<GameMessage> {
                     });
                     break;
                 case StringMessage.endForDisconnection:
-                    /* TODO: Play Again?
-                            if(true)
-                                PlayerChoice playAgain = new NewGameChoice();
-                                client.asyncSend(playAgain);
-                            else
-                                System.exit(0);
-                    Platform.runLater(() -> stage.close());
-                    Client c = new Client(12345);
-                    try {
-                        c.startClient();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }*/
+                    Platform.runLater(() -> {
+                        endSceneController = setLayout(stage.getScene(),"FXML/end_scene.fxml");
+                        if (endSceneController != null){
+                            endSceneController.setFont(null,true);
+                        }
+                    });
                     break;
                 case StringMessage.closedConnection:
                     System.exit(0);
@@ -373,12 +360,18 @@ public class GuiManager implements Observer<GameMessage> {
         }
         if (message instanceof WinMessage){
             System.out.println("YOU WIN !");
-            winner = true;
+            System.out.println("MY NAME: " + myName);
+            System.out.println("WINNER NAME: " + ((WinMessage) message).getPlayer().getPlayerName());
+            if (((WinMessage) message).getPlayer().getPlayerName().equals(myName)) {
+                winner = true;
+            }
+            else
+                loser = true;
             Platform.runLater(() -> boardSceneController.setEndScene(((WinMessage) message).getPlayer().getPlayerName()));
         }
         if (message instanceof LoseMessage){
             System.out.println("YOU LOSE !");
-            loser = false;
+            loser = true;
             Platform.runLater(() -> boardSceneController.setEndScene(((LoseMessage) message).getPlayer().getPlayerName()));
         }
         if (message instanceof LobbyAccessMessage) {

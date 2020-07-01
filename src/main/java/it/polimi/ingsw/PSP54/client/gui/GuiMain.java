@@ -15,12 +15,15 @@ public class GuiMain extends Application implements Runnable{
     @Override
     public void start(Stage stage) {
         mainStage = stage;
-        stage.setScene(new Scene(new Pane(),900,550));
+        stage.setScene(new Scene(new Pane(),1065,600));
         LogInSceneController logInSceneController = GuiManager.setLayout(stage.getScene(), "FXML/log_in.fxml");
         logInSceneController.setFont();
         logInSceneController.getGuiManager().setStage(stage);
         stage.setTitle("Santorini");
         stage.setResizable(false);
+        stage.setOnCloseRequest(event -> {
+                    System.exit(0);
+                });
         stage.show();
     }
 

@@ -3,6 +3,7 @@ package it.polimi.ingsw.PSP54.client.gui;
 import it.polimi.ingsw.PSP54.server.model.Game;
 import it.polimi.ingsw.PSP54.utils.choices.ExtractedCardsChoice;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -42,12 +43,13 @@ public class DeckChoiceSceneController {
     public void setDeckChoiceScene(){
         if (guiManager.getNumberOfPlayers() == 2) {
             choiceLabel.setText("CHOOSE 2 POWER CARDS");
-            choiceLabel.setFont(Font.font("papyrus",30));
+            choiceLabel.setFont(Font.font("papyrus",35));
         }
         if (guiManager.getNumberOfPlayers() == 3){
             choiceLabel.setText("CHOOSE 3 POWER CARDS");
-            choiceLabel.setFont(Font.font("papyrus",30));
+            choiceLabel.setFont(Font.font("papyrus",35));
         }
+        choiceLabel.setAlignment(Pos.CENTER);
     }
 
     public void setHandCursor(MouseEvent event){
