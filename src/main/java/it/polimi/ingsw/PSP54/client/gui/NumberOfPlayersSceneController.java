@@ -39,7 +39,7 @@ public class NumberOfPlayersSceneController {
 
     /**
      * Send 2 as the number of players when button is pressed
-     * @param event
+     * @param event the event that trigger
      */
     public void twoButtonPressed (ActionEvent event) {
         this.event = event;
@@ -52,7 +52,7 @@ public class NumberOfPlayersSceneController {
 
     /**
      * Send 3 as the number of players when button is pressed
-     * @param event
+     * @param event the event that trigger
      */
     public void threeButtonPressed (ActionEvent event) {
         this.event = event;
@@ -65,7 +65,7 @@ public class NumberOfPlayersSceneController {
 
     /**
      * Set hand cursor when mouse enter on a button
-     * @param event
+     * @param event the event that trigger
      */
     public void setHandCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.HAND);
@@ -73,7 +73,7 @@ public class NumberOfPlayersSceneController {
 
     /**
      * Set default cursor when mouse exit from a button
-     * @param event
+     * @param event the event that trigger
      */
     public void setDefaultCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);

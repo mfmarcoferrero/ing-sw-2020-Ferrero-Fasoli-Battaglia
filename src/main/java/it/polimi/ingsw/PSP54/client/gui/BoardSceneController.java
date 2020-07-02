@@ -24,10 +24,8 @@ import java.util.Vector;
 public class BoardSceneController {
 
     private GuiManager guiManager;
-    private ImageView[][] imageBoxes = new ImageView[5][5];
-    private ImageView[][] imageWorkerMap = new ImageView[5][5];
-    private ImageView myCardImage;
-    private MouseEvent event;
+    private final ImageView[][] imageBoxes = new ImageView[5][5];
+    private final ImageView[][] imageWorkerMap = new ImageView[5][5];
     @FXML private GridPane gridPane;
     @FXML private ImageView cardImage_1;
     @FXML private ImageView cardImage_2;
@@ -194,7 +192,7 @@ public class BoardSceneController {
 
     /**
      * Set main label text used for messages that reference to player's action
-     * @param message
+     * @param message message to show
      */
     public void setMessageLabel(String message){
         messageLabel.setText(message);
@@ -203,7 +201,7 @@ public class BoardSceneController {
 
     /**
      * Set ImageView with the image every player's card
-     * @param cardValues
+     * @param cardValues the number of the card
      */
     public void setImageCards(Vector<Integer> cardValues){
         if (cardValues.size() == 3) {
@@ -221,7 +219,7 @@ public class BoardSceneController {
 
     /**
      * Set label texts that represent players names
-     * @param playerNames
+     * @param playerNames the name of the players
      */
     public void setLabelNames(Vector<String> playerNames){
         if (playerNames.size() == 3) {
@@ -235,7 +233,7 @@ public class BoardSceneController {
             labelPlayer_3.setVisible(false);
         }
         underlineMyName();
-        myCardImage = getMyCardImage();
+        ImageView myCardImage = getMyCardImage();
     }
 
     /**
@@ -331,16 +329,13 @@ public class BoardSceneController {
         if (guiManager.isBooleanChoice()){
             guiManager.sendObject(new BooleanChoice(true));
             guiManager.setBooleanChoice(false);
-            panelMessageLabel.setVisible(false);
-            firstButton.setVisible(false);
-            secondButton.setVisible(false);
         }
         else {
             guiManager.sendObject(new WorkerChoice(true));
-            panelMessageLabel.setVisible(false);
-            firstButton.setVisible(false);
-            secondButton.setVisible(false);
         }
+        panelMessageLabel.setVisible(false);
+        firstButton.setVisible(false);
+        secondButton.setVisible(false);
     }
 
     /**
@@ -351,25 +346,21 @@ public class BoardSceneController {
         if (guiManager.isBooleanChoice()){
             guiManager.sendObject(new BooleanChoice(false));
             guiManager.setBooleanChoice(false);
-            panelMessageLabel.setVisible(false);
-            firstButton.setVisible(false);
-            secondButton.setVisible(false);
         }
         else {
             guiManager.sendObject(new WorkerChoice(false));
-            panelMessageLabel.setVisible(false);
-            firstButton.setVisible(false);
-            secondButton.setVisible(false);
         }
+        panelMessageLabel.setVisible(false);
+        firstButton.setVisible(false);
+        secondButton.setVisible(false);
     }
 
     /**
      * If a GridPane element is clicked, a new Move or Build message is sent with GridPane coordinates
-     * @param event
+     * @param event the event that trigger
      */
     public void boxClicked(MouseEvent event){
         Node source = (Node)event.getSource();
-        this.event = event;
         mouseExitFromBox(event);
         if (guiManager.isBoxChoice()) {
             if (guiManager.isFirstWorkerSet() || guiManager.isSecondWorkerSet() || guiManager.isMoveChoice()) {
@@ -396,11 +387,11 @@ public class BoardSceneController {
     /**
      * If a box can be clicked, when cursor enter on a GridPane element hand cursor and
      * red background is set on that box
-     * @param event
+     * @param event the event that trigger
      */
     public void mouseEnterOnBox(MouseEvent event){
         if (guiManager.isBoxChoice()) {
-            ((Node) event.getSource()).setStyle("-fx-background-color: #E4001F;");
+            ((Node) event.getSource()).setStyle("-fx-background-color: #e4001f;");
             ((Node) event.getSource()).setOpacity(0.6);
             ((Node) event.getSource()).getScene().setCursor(Cursor.HAND);
         }
@@ -408,7 +399,7 @@ public class BoardSceneController {
 
     /**
      * When cursor exit from GridPane element default cursor and no background colour is set
-     * @param event
+     * @param event the event that trigger
      */
     public void mouseExitFromBox(MouseEvent event){
         if (guiManager.isBoxChoice()) {
@@ -424,7 +415,7 @@ public class BoardSceneController {
 
     /**
      * When mouse enter on a button hand cursor is set
-     * @param event
+     * @param event the event that trigger
      */
     public void mouseEnterOnButton(MouseEvent event){
         ((Node) event.getSource()).getScene().setCursor(Cursor.HAND);
@@ -432,7 +423,7 @@ public class BoardSceneController {
 
     /**
      * When mouse exit from a button default cursor is set
-     * @param event
+     * @param event the event that trigger
      */
     public void mouseExitFromButton(MouseEvent event){
         ((Node) event.getSource()).getScene().setCursor(Cursor.DEFAULT);
@@ -440,7 +431,7 @@ public class BoardSceneController {
 
     /**
      * Load end_scene.fxml on current stage and set end_scene font
-     * @param winnerName
+     * @param winnerName the name of the player that has win the game
      */
     public void setEndScene(String winnerName){
         EndSceneController endSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/end_scene.fxml");

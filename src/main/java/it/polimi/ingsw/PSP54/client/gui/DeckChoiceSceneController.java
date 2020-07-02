@@ -18,7 +18,7 @@ public class DeckChoiceSceneController {
     private GuiManager guiManager;
     private int cardSelected = 0;
     private MouseEvent event;
-    private HashMap<Integer,String> extractedCards = new HashMap<>();
+    private final HashMap<Integer,String> extractedCards = new HashMap<>();
     @FXML private Label choiceLabel;
     @FXML private ImageView apolloImageView;
     @FXML private ImageView artemisImageView;

@@ -3,14 +3,10 @@ package it.polimi.ingsw.PSP54.server.virtualView;
 import it.polimi.ingsw.PSP54.observer.Observable;
 import it.polimi.ingsw.PSP54.observer.Observer;
 import it.polimi.ingsw.PSP54.server.Connection;
-import it.polimi.ingsw.PSP54.server.controller.Controller;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
-import it.polimi.ingsw.PSP54.utils.messages.LoseMessage;
 import it.polimi.ingsw.PSP54.utils.messages.OpponentMessage;
-import it.polimi.ingsw.PSP54.utils.messages.WinMessage;
 
-import java.io.Serializable;
 import java.util.Vector;
 
 

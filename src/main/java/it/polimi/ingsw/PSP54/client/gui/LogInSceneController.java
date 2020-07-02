@@ -1,7 +1,6 @@
 package it.polimi.ingsw.PSP54.client.gui;
 
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -115,7 +114,7 @@ public class LogInSceneController {
 
     /**
      * Set hand cursor when mouse enter on a button
-     * @param event
+     * @param event the event that trigger
      */
     public void setHandCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.HAND);
@@ -123,7 +122,7 @@ public class LogInSceneController {
 
     /**
      * Set default cursor when mouse exit from a button
-     * @param event
+     * @param event the event that trigger
      */
     public void setDefaultCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);

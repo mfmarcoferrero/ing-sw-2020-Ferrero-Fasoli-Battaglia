@@ -9,7 +9,6 @@ import it.polimi.ingsw.PSP54.utils.choices.EndGameChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
-import it.polimi.ingsw.PSP54.utils.messages.LobbyAccessMessage;
 import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
 
 import java.io.IOException;

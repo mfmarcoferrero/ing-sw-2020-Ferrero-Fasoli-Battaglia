@@ -18,7 +18,6 @@ import java.util.Vector;
 public class CardsChoiceSceneController {
 
     private GuiManager guiManager;
-    private ActionEvent event;
     private Vector<Integer> extractedCards;
     @FXML private ImageView firstCardImage;
     @FXML private ImageView secondCardImage;
@@ -45,7 +44,7 @@ public class CardsChoiceSceneController {
 
     /**
      * Set card images for the scene, changing layout when cards to display are 2 or 3
-     * @param cardsToDisplay
+     * @param cardsToDisplay the card that has to be displayed
      */
     public void setCardsToDisplay (AvailableCardsMessage cardsToDisplay){
         extractedCards = new Vector<>(cardsToDisplay.getCards().keySet());
@@ -65,10 +64,9 @@ public class CardsChoiceSceneController {
     /**
      * Called when first button is pressed
      * Send a new CardChoice with the card value of this image
-     * @param event
+     * @param event the event that trigger
      */
     public void firstCardButtonPressed(ActionEvent event){
-        this.event = event;
         firstCardButton.setDisable(true);
         secondCardButton.setDisable(true);
         thirdCardButton.setDisable(true);
@@ -80,10 +78,9 @@ public class CardsChoiceSceneController {
     /**
      * Called when second button is pressed
      * Send a new CardChoice with the card value of this image
-     * @param event
+     * @param event the event that trigger
      */
     public void secondCardButtonPressed(ActionEvent event){
-        this.event = event;
         firstCardButton.setDisable(true);
         secondCardButton.setDisable(true);
         thirdCardButton.setDisable(true);
@@ -95,10 +92,9 @@ public class CardsChoiceSceneController {
     /**
      * Called when third button is pressed
      * Send a new CardChoice with the card value of this image
-     * @param event
+     * @param event the event that trigger
      */
     public void thirdCardButtonPressed(ActionEvent event){
-        this.event = event;
         firstCardButton.setDisable(true);
         secondCardButton.setDisable(true);
         thirdCardButton.setDisable(true);
@@ -114,7 +110,7 @@ public class CardsChoiceSceneController {
 
     /**
      * Set hand cursor when mouse enter on a button
-     * @param event
+     * @param event the event that trigger
      */
     public void setHandCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.HAND);
@@ -122,7 +118,7 @@ public class CardsChoiceSceneController {
 
     /**
      * Set default cursor when mouse exit from a button
-     * @param event
+     * @param event the event that trigger
      */
     public void setDefaultCursor(MouseEvent event){
         try {

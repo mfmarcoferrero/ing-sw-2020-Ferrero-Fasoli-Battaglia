@@ -11,14 +11,10 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 
-import java.util.HashMap;
-
 public class FirstPlayerChoiceSceneController {
 
     private GuiManager guiManager;
-    private int cardSelected = 0;
     private ActionEvent event;
-    private HashMap<Integer,String> extractedCards = new HashMap<>();
     @FXML private Label chooseNumberOfPlayersLabel;
     @FXML private Button firstPlayerButton;
     @FXML private Button secondPlayerButton;
@@ -55,7 +51,7 @@ public class FirstPlayerChoiceSceneController {
 
     /**
      * Set hand cursor when mouse enter on a button
-     * @param event
+     * @param event the event that trigger
      */
     public void setHandCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.HAND);
@@ -63,7 +59,7 @@ public class FirstPlayerChoiceSceneController {
 
     /**
      * Set default cursor when mouse exit from a button
-     * @param event
+     * @param event the event that trigger
      */
     public void setDefaultCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
