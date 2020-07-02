@@ -1,7 +1,7 @@
 #PROGETTO INGEGNERIA DEL SOFTWARE - A.A. 2019-2020
 
 
-#1.Introductions
+#1.Introduction
 This is a Java-based implementation of the [Santorini board game](https://en.wikipedia.org/wiki/Santorini_(game)) as a distributed Client-Server application, developed following the Model-View-Controller architectural pattern.
 Network has been managed using sockets. The client-side application offers both a User Interface from Command Line and a Graphical one, developed with JavaFX.
 It is possible to play matches up to 3 players using all the Simple Gods in the game except for Hermes. 
@@ -21,11 +21,11 @@ _Advanced Features_
 
 #3.JAR
 The JAR files in `/deliveries/final/jar` have been built using Maven, a tool designed for managing Java-based projects' lifecycle.
-In order to launch the JARs you need to run this command from terminal: 
+In order to launch the JARs you need have Java installed and run this command from terminal: 
 ```
 java -jar /path/to/santorini.jar
 ```
-By running the client application you can initially choose the User Interface you want to use, then enter the IP Address of the Server application.
+By running the client application you initially need to choose the User Interface you want to use, then enter the IP Address of the Server application.
 
 #4.Build from source
 Get the code (if you haven't already):
@@ -42,9 +42,9 @@ mvn package -P server
 mvn package -P client
 ```
 With this done you should find the generated files in the `/target` directory.
-Alternatively you can also use the graphic interface of the maven plugin inside intelliJ: by ticking one profile at a time, select the `package` voice under `santorini/Lifecycle` and running the Maven Build.  
+Alternatively you can also use the graphic interface of the maven plugin inside intelliJ: by ticking one profile at a time, selecting the `package` voice under `/santorini/Lifecycle` and running the Maven Build.  
 The JARs are built through Maven in 2 different "flavours": *lightweight* and *with-dependencies*. 
-Due to the JavaFX dependencies in order to use the Graphic User Interface you need to run the *with-dependencies* client JAR.
+Due to JavaFX dependencies, in order to use the Graphic User Interface you need to run the *with-dependencies* client JAR.
 Server's JAR can be ran in both configurations with no effective foreclosure.
 
 #5.Test Coverage
