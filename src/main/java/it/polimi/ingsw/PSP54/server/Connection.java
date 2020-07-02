@@ -83,7 +83,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                 out.writeObject(message);
                 out.flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                e.printStackTrace(); //TODO: comment
             }
         }
     }
@@ -121,7 +121,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                         Connection.this.notify((PlayerChoice) inputObject);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace(); //TODO: comment
                 setActive(false);
             }
         });
