@@ -11,10 +11,13 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 
+import java.util.HashMap;
+
 public class FirstPlayerChoiceSceneController {
 
     private GuiManager guiManager;
-    private ActionEvent event;
+    private int cardSelected = 0;
+    private HashMap<Integer,String> extractedCards = new HashMap<>();
     @FXML private Label chooseNumberOfPlayersLabel;
     @FXML private Button firstPlayerButton;
     @FXML private Button secondPlayerButton;
@@ -51,7 +54,7 @@ public class FirstPlayerChoiceSceneController {
 
     /**
      * Set hand cursor when mouse enter on a button
-     * @param event the event that trigger
+     * @param event
      */
     public void setHandCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.HAND);
@@ -59,30 +62,36 @@ public class FirstPlayerChoiceSceneController {
 
     /**
      * Set default cursor when mouse exit from a button
-     * @param event the event that trigger
+     * @param event
      */
     public void setDefaultCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
     }
 
-    public void firstPlayerButtonPressed(ActionEvent event) {
-        this.event = event;
+    /**
+     * The player corresponding to this button starts the game
+     */
+    public void firstPlayerButtonPressed() {
         guiManager.sendObject(new StartPlayerChoice(0));
         firstPlayerButton.setDisable(true);
         secondPlayerButton.setDisable(true);
         thirdPlayerButton.setDisable(true);
     }
 
-    public void secondPlayerButtonPressed(ActionEvent event) {
-        this.event = event;
+    /**
+     * The player corresponding to this button starts the game
+     */
+    public void secondPlayerButtonPressed() {
         guiManager.sendObject(new StartPlayerChoice(1));
         firstPlayerButton.setDisable(true);
         secondPlayerButton.setDisable(true);
         thirdPlayerButton.setDisable(true);
     }
 
-    public void thirdPlayerButtonPressed(ActionEvent event) {
-        this.event = event;
+    /**
+     * The player corresponding to this button starts the game
+     */
+    public void thirdPlayerButtonPressed() {
         if (guiManager.getPlayers().size() == 2) {
             guiManager.sendObject(new StartPlayerChoice(1));
         }

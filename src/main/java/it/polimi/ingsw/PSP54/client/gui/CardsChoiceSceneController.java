@@ -44,7 +44,7 @@ public class CardsChoiceSceneController {
 
     /**
      * Set card images for the scene, changing layout when cards to display are 2 or 3
-     * @param cardsToDisplay the card that has to be displayed
+     * @param cardsToDisplay
      */
     public void setCardsToDisplay (AvailableCardsMessage cardsToDisplay){
         extractedCards = new Vector<>(cardsToDisplay.getCards().keySet());
@@ -64,7 +64,7 @@ public class CardsChoiceSceneController {
     /**
      * Called when first button is pressed
      * Send a new CardChoice with the card value of this image
-     * @param event the event that trigger
+     * @param event
      */
     public void firstCardButtonPressed(ActionEvent event){
         firstCardButton.setDisable(true);
@@ -78,7 +78,7 @@ public class CardsChoiceSceneController {
     /**
      * Called when second button is pressed
      * Send a new CardChoice with the card value of this image
-     * @param event the event that trigger
+     * @param event
      */
     public void secondCardButtonPressed(ActionEvent event){
         firstCardButton.setDisable(true);
@@ -92,7 +92,7 @@ public class CardsChoiceSceneController {
     /**
      * Called when third button is pressed
      * Send a new CardChoice with the card value of this image
-     * @param event the event that trigger
+     * @param event
      */
     public void thirdCardButtonPressed(ActionEvent event){
         firstCardButton.setDisable(true);
@@ -110,7 +110,7 @@ public class CardsChoiceSceneController {
 
     /**
      * Set hand cursor when mouse enter on a button
-     * @param event the event that trigger
+     * @param event
      */
     public void setHandCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.HAND);
@@ -118,7 +118,7 @@ public class CardsChoiceSceneController {
 
     /**
      * Set default cursor when mouse exit from a button
-     * @param event the event that trigger
+     * @param event
      */
     public void setDefaultCursor(MouseEvent event){
         try {

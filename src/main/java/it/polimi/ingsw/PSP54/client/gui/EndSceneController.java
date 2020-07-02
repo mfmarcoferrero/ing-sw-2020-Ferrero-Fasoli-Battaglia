@@ -28,11 +28,12 @@ public class EndSceneController {
     public void initialize() {
         guiManager = GuiManager.getInstance();
         guiManager.setEndSceneController(this);
+        guiManager.setBoard(null);
     }
 
     /**
      * Set font for buttons and labels
-     * @param winnerName the name of the winner
+     * @param winnerName
      */
     public void setFont(String winnerName, boolean endForDisconnection){
         if (endForDisconnection){
@@ -45,11 +46,12 @@ public class EndSceneController {
                 winOrLoseLabel.setFont(Font.font("papyrus", 50));
             }
             else {
-                winOrLoseLabel.setText("YOU LOST !");
+                winOrLoseLabel.setText("YOU LOSE !");
                 winOrLoseLabel.setFont(Font.font("papyrus", 50));
                 if (winnerName != null) {
                     winnerNameLabel.setText("THE WINNER IS: " + winnerName.toUpperCase());
                     winnerNameLabel.setFont(Font.font("papyrus", 28));
+                    winnerNameLabel.setAlignment(Pos.CENTER);
                     winnerNameLabel.setVisible(true);
                 }
             }
@@ -80,7 +82,7 @@ public class EndSceneController {
 
     /**
      * Set hand cursor on mouse entered on button
-     * @param event the event that trigger
+     * @param event
      */
     public void setHandCursor(MouseEvent event){
         ((Node) event.getSource()).getScene().setCursor(Cursor.HAND);
@@ -88,7 +90,7 @@ public class EndSceneController {
 
     /**
      * Set default cursor on mouse exit on button
-     * @param event the event that trigger
+     * @param event
      */
     public void setDefaultCursor(MouseEvent event){
         ((Node) event.getSource()).getScene().setCursor(Cursor.DEFAULT);

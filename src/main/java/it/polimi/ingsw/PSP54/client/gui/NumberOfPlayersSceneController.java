@@ -14,7 +14,6 @@ import javafx.scene.text.Font;
 public class NumberOfPlayersSceneController {
 
     private GuiManager guiManager;
-    private ActionEvent event;
 
     @FXML private Button twoButton;
     @FXML private Button threeButton;
@@ -39,10 +38,8 @@ public class NumberOfPlayersSceneController {
 
     /**
      * Send 2 as the number of players when button is pressed
-     * @param event the event that trigger
      */
-    public void twoButtonPressed (ActionEvent event) {
-        this.event = event;
+    public void twoButtonPressed () {
         twoButton.setVisible(false);
         threeButton.setVisible(false);
         waitingLabel.setVisible(true);
@@ -52,10 +49,8 @@ public class NumberOfPlayersSceneController {
 
     /**
      * Send 3 as the number of players when button is pressed
-     * @param event the event that trigger
      */
-    public void threeButtonPressed (ActionEvent event) {
-        this.event = event;
+    public void threeButtonPressed () {
         twoButton.setVisible(false);
         threeButton.setVisible(false);
         waitingLabel.setVisible(true);
@@ -65,7 +60,7 @@ public class NumberOfPlayersSceneController {
 
     /**
      * Set hand cursor when mouse enter on a button
-     * @param event the event that trigger
+     * @param event
      */
     public void setHandCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.HAND);
@@ -73,7 +68,7 @@ public class NumberOfPlayersSceneController {
 
     /**
      * Set default cursor when mouse exit from a button
-     * @param event the event that trigger
+     * @param event
      */
     public void setDefaultCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
@@ -89,6 +84,9 @@ public class NumberOfPlayersSceneController {
         }
     }
 
+    /**
+     * Load deck_choice.fxml on current stage
+     */
     public void setDeckChoiceScene(){
         DeckChoiceSceneController deckChoiceSceneController = GuiManager.setLayout(guiManager.getStage().getScene(),"FXML/deck_choice.fxml");
         if (deckChoiceSceneController != null){

@@ -47,8 +47,8 @@ public class GuiManager implements Observer<GameMessage> {
      * Create a static instance of a GuiManager
      * Using a singleton pattern every controller of a scene can get the only GuiManager
      * instance related to a single client
-     * @param client the player
-     * @return the reult of the function
+     * @param client
+     * @return
      */
     public static GuiManager getInstance(Client client) {
         if (instance == null){
@@ -60,7 +60,7 @@ public class GuiManager implements Observer<GameMessage> {
 
     /**
      * Get the static instance of this class
-     * @return the return of the function
+     * @return
      */
     public static GuiManager getInstance() {
         return instance;
@@ -69,7 +69,7 @@ public class GuiManager implements Observer<GameMessage> {
     /**
      * Called from a LogInSceneController
      * Save the reference to this controller in GuiManager static instance
-     * @param logInSceneController the scene used for the login
+     * @param logInSceneController
      */
     void setLogInSceneController(LogInSceneController logInSceneController) {
         this.logInSceneController = logInSceneController;
@@ -78,7 +78,7 @@ public class GuiManager implements Observer<GameMessage> {
     /**
      * Called from a NumberOfPlayersSceneController
      * Save the reference to this controller in GuiManager static instance
-     * @param numberOfPlayersSceneController the scene used to acquire the number of players
+     * @param numberOfPlayersSceneController
      */
     void setNumberOfPlayersSceneController(NumberOfPlayersSceneController numberOfPlayersSceneController) {
         this.numberOfPlayersSceneController = numberOfPlayersSceneController;
@@ -87,7 +87,7 @@ public class GuiManager implements Observer<GameMessage> {
     /**
      * Called from a BoardSceneController
      * Save the reference to this controller in GuiManager static instance
-     * @param boardSceneController the image of the board
+     * @param boardSceneController
      */
     void setBoardSceneController(BoardSceneController boardSceneController){
         this.boardSceneController = boardSceneController;
@@ -96,7 +96,7 @@ public class GuiManager implements Observer<GameMessage> {
     /**
      * Called from a CardsChoiceSceneController
      * Save the reference to this controller in GuiManager static instance
-     * @param cardsChoiceSceneController the scene used to acquire the card
+     * @param cardsChoiceSceneController
      */
     void setCardsChoiceSceneController(CardsChoiceSceneController cardsChoiceSceneController){
         this.cardsChoiceSceneController = cardsChoiceSceneController;
@@ -105,7 +105,7 @@ public class GuiManager implements Observer<GameMessage> {
     /**
      * Called from a DeckChoiceSceneController
      * Save the reference to this controller in GuiManager static instance
-     * @param deckChoiceSceneController the scene to choose the card for the match
+     * @param deckChoiceSceneController
      */
     void setDeckChoiceSceneController(DeckChoiceSceneController deckChoiceSceneController){
         this.deckChoiceSceneController = deckChoiceSceneController;
@@ -114,7 +114,7 @@ public class GuiManager implements Observer<GameMessage> {
     /**
      * Called from a FirstPlayerChoiceSceneController
      * Save the reference to this controller in GuiManager static instance
-     * @param firstPlayerChoiceSceneController the scene used to choose the player who start to play
+     * @param firstPlayerChoiceSceneController
      */
     void setFirstPlayerChoiceSceneController(FirstPlayerChoiceSceneController firstPlayerChoiceSceneController){
         this.firstPlayerChoiceSceneController = firstPlayerChoiceSceneController;
@@ -123,7 +123,7 @@ public class GuiManager implements Observer<GameMessage> {
     /**
      * Called from a EndSceneController
      * Save the reference to this controller in GuiManager static instance
-     * @param endSceneController the scene of the ending
+     * @param endSceneController
      */
     void setEndSceneController(EndSceneController endSceneController){
         this.endSceneController = endSceneController;
@@ -131,7 +131,7 @@ public class GuiManager implements Observer<GameMessage> {
 
     /**
      * Load a fxml file in a scene
-     * @param scene a scene of the gui
+     * @param scene
      * @param path of fxml file
      * @param <T>
      * @return
@@ -152,8 +152,8 @@ public class GuiManager implements Observer<GameMessage> {
 
     /**
      * Load an image from resources/icons in an ImageView
-     * @param val val of the image
-     * @param imageView used to show the image
+     * @param val
+     * @param imageView
      */
     public void setCardImage(int val, ImageView imageView) {
         if (val == Game.APOLLO){
@@ -289,10 +289,12 @@ public class GuiManager implements Observer<GameMessage> {
                     });
                     break;
                 case StringMessage.workerCantMove:
-                    Platform.runLater(() -> Platform.runLater(() -> {
-                        boardSceneController.setMessageLabel("THIS WORKER CAN'T MOVE. CHOOSE AGAIN ! ");
-                        boardSceneController.showMaleOrFemaleMessage();
-                    }));
+                    Platform.runLater(() -> {
+                        Platform.runLater(() -> {
+                            boardSceneController.setMessageLabel("THIS WORKER CAN'T MOVE. CHOOSE AGAIN ! ");
+                            boardSceneController.showMaleOrFemaleMessage();
+                        });
+                    });
                     break;
                 case StringMessage.endForDisconnection:
                     Platform.runLater(() -> {
@@ -349,17 +351,12 @@ public class GuiManager implements Observer<GameMessage> {
         }
         if (message instanceof OpponentMessage){
             numberOfPlayers = ((OpponentMessage) message).getNumberOfPlayers();
-            System.out.println("Number of Players: " + numberOfPlayers);
-            System.out.println("My name is: " + myName);
         }
         if (message instanceof PlayersMessage){
             players = ((PlayersMessage) message).getPlayers();
             Platform.runLater(() -> deckChoiceSceneController.setFirstPlayerChoiceScene());
         }
         if (message instanceof WinMessage){
-            System.out.println("WE HAVE A WINNER !");
-            System.out.println("MY NAME: " + myName);
-            System.out.println("WINNER NAME: " + ((WinMessage) message).getPlayer().getPlayerName());
             if (((WinMessage) message).getPlayer().getPlayerName().equals(myName)) {
                 winner = true;
             }
@@ -368,8 +365,6 @@ public class GuiManager implements Observer<GameMessage> {
             Platform.runLater(() -> boardSceneController.setEndScene(((WinMessage) message).getPlayer().getPlayerName()));
         }
         if (message instanceof LoseMessage){
-            System.out.println("WE HAVE A LOSER !");
-            System.out.println("LOSER NAME: " + ((LoseMessage) message).getPlayer().getPlayerName());
             if (((LoseMessage) message).getPlayer().getPlayerName().equals(myName)) {
                 loser = true;
                 Platform.runLater(() -> boardSceneController.setEndScene(null));
@@ -389,7 +384,7 @@ public class GuiManager implements Observer<GameMessage> {
 
     /**
      * Send an object to server
-     * @param message the message to send
+     * @param message
      */
     public void sendObject(Object message){
         instance.client.asyncSend(message);
@@ -490,5 +485,13 @@ public class GuiManager implements Observer<GameMessage> {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void setCardExtractor(boolean cardExtractor) {
+        this.cardExtractor = cardExtractor;
+    }
+
+    public void setBoard(BoardMessage board) {
+        this.board = board;
     }
 }
