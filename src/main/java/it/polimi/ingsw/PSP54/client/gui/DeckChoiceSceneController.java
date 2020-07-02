@@ -17,7 +17,6 @@ public class DeckChoiceSceneController {
 
     private GuiManager guiManager;
     private int cardSelected = 0;
-    private MouseEvent event;
     private HashMap<Integer,String> extractedCards = new HashMap<>();
     @FXML private Label choiceLabel;
     @FXML private ImageView apolloImageView;
@@ -40,7 +39,11 @@ public class DeckChoiceSceneController {
         guiManager.setDeckChoiceSceneController(this);
     }
 
+    /**
+     * Set main label text changing on the number of players
+     */
     public void setDeckChoiceScene(){
+        guiManager.setCardExtractor(true);
         if (guiManager.getNumberOfPlayers() == 2) {
             choiceLabel.setText("CHOOSE 2 POWER CARDS");
             choiceLabel.setFont(Font.font("papyrus",35));
@@ -58,6 +61,12 @@ public class DeckChoiceSceneController {
     public void setDefaultCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
     }
+
+    /**
+     * When the number of cards selected is equal to the number of players,
+     * every imageView is set disable and a new ExctractedCardsChoice instance sent to server
+     * @param imageViewClicked
+     */
     public void cardImageClicked(ImageView imageViewClicked) {
         cardSelected++;
         imageViewClicked.setOpacity(0.5);
@@ -74,48 +83,39 @@ public class DeckChoiceSceneController {
             guiManager.sendObject(new ExtractedCardsChoice(extractedCards));
         }
     }
-    public void apolloImageClicked(MouseEvent event){
-        this.event = event;
+    public void apolloImageClicked(){
         extractedCards.put(Game.APOLLO, "Apollo");
         cardImageClicked(apolloImageView);
     }
-    public void artemisImageClicked(MouseEvent event){
-        this.event = event;
+    public void artemisImageClicked(){
         extractedCards.put(Game.ARTEMIS, "Artemis");
         cardImageClicked(artemisImageView);
     }
-    public void athenaImageClicked(MouseEvent event){
-        this.event = event;
+    public void athenaImageClicked(){
         extractedCards.put(Game.ATHENA, "Athena");
         cardImageClicked(athenaImageView);
     }
-    public void atlasImageClicked(MouseEvent event){
-        this.event = event;
+    public void atlasImageClicked(){
         extractedCards.put(Game.ATLAS, "Atlas");
         cardImageClicked(atlasImageView);
     }
-    public void demeterImageClicked(MouseEvent event){
-        this.event = event;
+    public void demeterImageClicked(){
         extractedCards.put(Game.DEMETER, "Demeter");
         cardImageClicked(demeterImageView);
     }
-    public void hephaestusImageClicked(MouseEvent event){
-        this.event = event;
+    public void hephaestusImageClicked(){
         extractedCards.put(Game.HEPHAESTUS, "Hephaestus");
         cardImageClicked(hephaestusImageView);
     }
-    public void minotaurImageClicked(MouseEvent event){
-        this.event = event;
+    public void minotaurImageClicked(){
         extractedCards.put(Game.MINOTAUR, "Minotaur");
         cardImageClicked(minotaurImageView);
     }
-    public void panImageClicked(MouseEvent event){
-        this.event = event;
+    public void panImageClicked(){
         extractedCards.put(Game.PAN, "Pan");
         cardImageClicked(panImageView);
     }
-    public void prometheusImageClicked(MouseEvent event){
-        this.event = event;
+    public void prometheusImageClicked(){
         extractedCards.put(Game.PROMETHEUS, "Prometheus");
         cardImageClicked(prometheusImageView);
     }

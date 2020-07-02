@@ -16,7 +16,6 @@ import java.util.*;
 public class Game extends Observable<GameMessage> implements Serializable, Cloneable {
 
     public static final int APOLLO = 0, ARTEMIS = 1, ATHENA = 2, ATLAS = 3, DEMETER = 4, HEPHAESTUS = 5, MINOTAUR = 6, PAN = 7, PROMETHEUS = 8;
-    public static final int SIMPLE_GOD_CARD_NUMBER = 9;
     public static final int BOARD_SIZE = 5;
     public static final String[] colors = {"blue", "red", "yellow"};
     private final Box[][] board;

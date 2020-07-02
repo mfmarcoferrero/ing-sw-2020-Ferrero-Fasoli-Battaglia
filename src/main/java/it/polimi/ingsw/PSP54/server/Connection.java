@@ -25,7 +25,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
 
     private final Socket socket;
     private ObjectOutputStream out;
-    private ObjectInputStream in;
     private final Server server;
     private PlayerCredentials credentials;
     private boolean active = true;
@@ -162,7 +161,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
         int i=0;
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             boolean namExist;
             do {
                 if (i == 0) {
@@ -179,7 +178,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
             if (gameMaster || this == server.currentConnections.firstElement()) {
                 GameMessage setPlayersNumber = new StringMessage(null, StringMessage.setNumberOfPlayersMessage);
                 asyncSend(setPlayersNumber);
-                server.setNumberOfPlayers(((NumberOfPlayers)in.readObject()).getNumberOfPlayers());
+                server.setNumberOfPlayers(((NumberOfPlayers) in.readObject()).getNumberOfPlayers());
             }
             GameMessage lobbyAccessMessage = new LobbyAccessMessage(null);
             send(lobbyAccessMessage);
@@ -224,10 +223,6 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
 
     public void setCredentials(PlayerCredentials credentials) {
         this.credentials = credentials;
-    }
-
-    public VirtualView getVirtualView() {
-        return virtualView;
     }
 
     public void setVirtualView(VirtualView virtualView) {

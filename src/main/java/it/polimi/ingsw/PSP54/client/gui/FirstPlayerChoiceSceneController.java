@@ -17,7 +17,6 @@ public class FirstPlayerChoiceSceneController {
 
     private GuiManager guiManager;
     private int cardSelected = 0;
-    private ActionEvent event;
     private HashMap<Integer,String> extractedCards = new HashMap<>();
     @FXML private Label chooseNumberOfPlayersLabel;
     @FXML private Button firstPlayerButton;
@@ -69,24 +68,30 @@ public class FirstPlayerChoiceSceneController {
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);
     }
 
-    public void firstPlayerButtonPressed(ActionEvent event) {
-        this.event = event;
+    /**
+     * The player corresponding to this button starts the game
+     */
+    public void firstPlayerButtonPressed() {
         guiManager.sendObject(new StartPlayerChoice(0));
         firstPlayerButton.setDisable(true);
         secondPlayerButton.setDisable(true);
         thirdPlayerButton.setDisable(true);
     }
 
-    public void secondPlayerButtonPressed(ActionEvent event) {
-        this.event = event;
+    /**
+     * The player corresponding to this button starts the game
+     */
+    public void secondPlayerButtonPressed() {
         guiManager.sendObject(new StartPlayerChoice(1));
         firstPlayerButton.setDisable(true);
         secondPlayerButton.setDisable(true);
         thirdPlayerButton.setDisable(true);
     }
 
-    public void thirdPlayerButtonPressed(ActionEvent event) {
-        this.event = event;
+    /**
+     * The player corresponding to this button starts the game
+     */
+    public void thirdPlayerButtonPressed() {
         if (guiManager.getPlayers().size() == 2) {
             guiManager.sendObject(new StartPlayerChoice(1));
         }

@@ -18,7 +18,6 @@ import java.util.Vector;
 public class CardsChoiceSceneController {
 
     private GuiManager guiManager;
-    private ActionEvent event;
     private Vector<Integer> extractedCards;
     @FXML private ImageView firstCardImage;
     @FXML private ImageView secondCardImage;
@@ -68,7 +67,6 @@ public class CardsChoiceSceneController {
      * @param event
      */
     public void firstCardButtonPressed(ActionEvent event){
-        this.event = event;
         firstCardButton.setDisable(true);
         secondCardButton.setDisable(true);
         thirdCardButton.setDisable(true);
@@ -83,7 +81,6 @@ public class CardsChoiceSceneController {
      * @param event
      */
     public void secondCardButtonPressed(ActionEvent event){
-        this.event = event;
         firstCardButton.setDisable(true);
         secondCardButton.setDisable(true);
         thirdCardButton.setDisable(true);
@@ -98,7 +95,6 @@ public class CardsChoiceSceneController {
      * @param event
      */
     public void thirdCardButtonPressed(ActionEvent event){
-        this.event = event;
         firstCardButton.setDisable(true);
         secondCardButton.setDisable(true);
         thirdCardButton.setDisable(true);

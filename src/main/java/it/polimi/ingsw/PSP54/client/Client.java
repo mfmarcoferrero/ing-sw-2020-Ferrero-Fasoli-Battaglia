@@ -25,7 +25,6 @@ public class Client extends Observable<GameMessage> {
     private final int port;
     private Socket socket;
     private ObjectOutputStream socketOut;
-    private ObjectInputStream socketIn;
     ScheduledExecutorService pingService = Executors.newScheduledThreadPool(1);
     public Thread readingTask;
 
@@ -174,7 +173,7 @@ public class Client extends Observable<GameMessage> {
         }
         setSocket(new Socket(ip, port));
         System.out.println("Connection established");
-        socketIn = new ObjectInputStream(socket.getInputStream());
+        ObjectInputStream socketIn = new ObjectInputStream(socket.getInputStream());
         setSocketOut(new ObjectOutputStream(socket.getOutputStream()));
         try {
             Thread t = asyncReadFromSocket(socketIn);

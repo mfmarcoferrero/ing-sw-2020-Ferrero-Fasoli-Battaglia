@@ -28,6 +28,7 @@ public class EndSceneController {
     public void initialize() {
         guiManager = GuiManager.getInstance();
         guiManager.setEndSceneController(this);
+        guiManager.setBoard(null);
     }
 
     /**
@@ -45,11 +46,12 @@ public class EndSceneController {
                 winOrLoseLabel.setFont(Font.font("papyrus", 50));
             }
             else {
-                winOrLoseLabel.setText("YOU LOST !");
+                winOrLoseLabel.setText("YOU LOSE !");
                 winOrLoseLabel.setFont(Font.font("papyrus", 50));
                 if (winnerName != null) {
                     winnerNameLabel.setText("THE WINNER IS: " + winnerName.toUpperCase());
                     winnerNameLabel.setFont(Font.font("papyrus", 28));
+                    winnerNameLabel.setAlignment(Pos.CENTER);
                     winnerNameLabel.setVisible(true);
                 }
             }

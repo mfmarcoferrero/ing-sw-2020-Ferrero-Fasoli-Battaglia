@@ -1,6 +1,5 @@
 package it.polimi.ingsw.PSP54.utils;
 
-import it.polimi.ingsw.PSP54.server.model.Player;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerChoice;
 
 import java.io.Serializable;

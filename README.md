@@ -55,8 +55,8 @@ The coverage made to test the model methods can be seen in`deliveries/report/fin
 
 #6.UML
 The UML diagrams in the project represents both the structure initially designed for the implementation of the model package, and a more detailed scheme of each package and the classes in it:
-- [Initial-Model-UML](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/blob/master/deliveries/) (`deliveries/uml/GeneralUml`)
-- [Final-Detailed-UML](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/blob/master/deliveries/) (`deliveries/uml/PackagesUml`)
+- [Initial-Model-UML](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/blob/master/deliveries/final/GeneralUmml) (`deliveries/final/uml/GeneralUml`)
+- [Final-Detailed-UML](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/blob/master/deliveries/final/PackagesUml) (`deliveries/final/uml/PackagesUml`)
   
 #7.JavaDoc
 The JavaDoc documentation provides a description of each class and method, except for the more trivial getters and setters.

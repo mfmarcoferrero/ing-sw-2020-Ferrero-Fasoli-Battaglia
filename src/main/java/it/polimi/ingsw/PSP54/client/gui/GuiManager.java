@@ -351,17 +351,12 @@ public class GuiManager implements Observer<GameMessage> {
         }
         if (message instanceof OpponentMessage){
             numberOfPlayers = ((OpponentMessage) message).getNumberOfPlayers();
-            System.out.println("Number of Players: " + numberOfPlayers);
-            System.out.println("My name is: " + myName);
         }
         if (message instanceof PlayersMessage){
             players = ((PlayersMessage) message).getPlayers();
             Platform.runLater(() -> deckChoiceSceneController.setFirstPlayerChoiceScene());
         }
         if (message instanceof WinMessage){
-            System.out.println("WE HAVE A WINNER !");
-            System.out.println("MY NAME: " + myName);
-            System.out.println("WINNER NAME: " + ((WinMessage) message).getPlayer().getPlayerName());
             if (((WinMessage) message).getPlayer().getPlayerName().equals(myName)) {
                 winner = true;
             }
@@ -370,8 +365,6 @@ public class GuiManager implements Observer<GameMessage> {
             Platform.runLater(() -> boardSceneController.setEndScene(((WinMessage) message).getPlayer().getPlayerName()));
         }
         if (message instanceof LoseMessage){
-            System.out.println("WE HAVE A LOSER !");
-            System.out.println("LOSER NAME: " + ((LoseMessage) message).getPlayer().getPlayerName());
             if (((LoseMessage) message).getPlayer().getPlayerName().equals(myName)) {
                 loser = true;
                 Platform.runLater(() -> boardSceneController.setEndScene(null));
@@ -424,10 +417,6 @@ public class GuiManager implements Observer<GameMessage> {
 
     public boolean isFirstWorkerSet() {
         return firstWorkerSet;
-    }
-
-    public void setFirstWorkerSet(boolean firstWorkerSet) {
-        this.firstWorkerSet = firstWorkerSet;
     }
 
     public boolean isSecondWorkerSet() {
@@ -496,5 +485,13 @@ public class GuiManager implements Observer<GameMessage> {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void setCardExtractor(boolean cardExtractor) {
+        this.cardExtractor = cardExtractor;
+    }
+
+    public void setBoard(BoardMessage board) {
+        this.board = board;
     }
 }
