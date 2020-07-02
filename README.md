@@ -1,55 +1,68 @@
 #PROGETTO INGEGNERIA DEL SOFTWARE - A.A. 2019-2020
 
 
-#1.Introduzione
-L'obbiettivo del progetto è quello di implementare il gioco da tavola Santorini, creando un applicazione distribuita Client-Server e utilizzando il pattern architetturale MVC.
-La gestione della rete è stata fatta utilizzando i socket. L'interfaccia utente è stata progettata per poter interagire da linea di comando (CLI), ma anche tramite interfaccia grafica (GUI), sfruttando la libreria di Java, JavaFX.
-E' possibile giocare utilizzando le regole complete, definite come da specifica.
+#1.Introductions
+This is a Java-based implementation of the [Santorini board game](https://en.wikipedia.org/wiki/Santorini_(game)) as a distributed Client-Server application, developed following the Model-View-Controller architectural pattern.
+Network has been managed using sockets. The client-side application offers both a User Interface from Command Line and a Graphical one, developed with JavaFX.
+It is possible to play matches up to 3 players using all the Simple Gods in the game except for Hermes. 
 
-#2.Funzionalità
-_Funzionalità Base_
+#2.Features
+_Base Features_
 - [x] CLI
 - [x] Socket
 - [x] GUI
-- [x] Regole Complete
+- [x] Complete Rule
 
-_Funzionalità Avanzate_
-- [x] Partite multiple
-- [ ] Persistenza
-- [ ] Divinità avanzate
+_Advanced Features_
+- [x] Multiple Games
+- [ ] Persistence
+- [ ] Advanced Gods
 - [ ] Undo
 
-#3.Jar
-I jar del progetto, presenti nella directory `/deliveries`, sono stati generati tramite il plugin Maven, strumento utilizzato per la gestione di progetti basati su Java.
-E' necessario lanciare i jar dal terminale tramite i seguenti comandi: 
-###Server
+#3.JAR
+The JAR files in `/deliveries/final/jar` have been built using Maven, a tool designed for managing Java-based projects' lifecycle.
+In order to launch the JARs you need to run this command from terminal: 
 ```
-java -jar serverMain.jar
+java -jar /path/to/santorini.jar
 ```
-###Client
+By running the client application you can initially choose the User Interface you want to use, then enter the IP Address of the Server application.
+
+#4.Build from source
+Get the code (if you haven't already):
 ```
-java -jar serverMain.jar
+git clone https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia && cd ing-sw-2020-Ferrero-Fasoli-Battaglia
 ```
-Eseguendo il client si può inizialmente scegliere il tipo di interfaccia con cui giocare e, successivamente,
-l'indirizzo IP del server con cui ci si vuole connettere. Se si vuole giocare utilizzando un server su localhost è necessario utilizzare come indirizzo 127.0.0.1`
-#4.Test Coverage
-La copertura effettuata per testare i metodi del model si può osservare in `deliveries/report/final`. La copertura dei test è:
+If present, clean Maven's `/target` directory:
+```
+mvn clean
+```
+Generate the JAR using Maven's Profiles:
+```
+mvn package -P server
+mvn package -P client
+```
+With this done you should find the generated files in the `/target` directory.
+Alternatively you can also use the graphic interface of the maven plugin inside intelliJ: by ticking one profile at a time, select the `package` voice under `santorini/Lifecycle` and running the Maven Build.  
+The JARs are built through Maven in 2 different "flavours": *lightweight* and *with-dependencies*. 
+Due to the JavaFX dependencies in order to use the Graphic User Interface you need to run the *with-dependencies* client JAR.
+Server's JAR can be ran in both configurations with no effective foreclosure.
+
+#5.Test Coverage
+The coverage made to test the model methods can be seen in`deliveries/report/final`. The tests Coverage is:
 
 - Class coverage 100%
 - Method coverage 90%
 
-#5.UML
-I diagrammi UML del progetto rappresentano, nel primo caso, la struttura inizialmente pensata per l'implementazione delle classi del model,
- mentre nel secondo caso uno schema più approfondito di ciascun package e delle classi presenti.:
-- [UML_Iniziali](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/blob/master/deliveries/Model-UML-ver-2-decorator.png) (`deliveries/uml/GeneralUml`)
-- [UML_Finali](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/blob/master/deliveries/Model-UML-ver-2-decorator.png) (`deliveries/uml/PackagesUml`)
+#6.UML
+The UML diagrams in the project represents both the structure initially designed for the implementation of the model package, and a more detailed scheme of each package and the classes in it:
+- [Initial-Model-UML](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/blob/master/deliveries/) (`deliveries/uml/GeneralUml`)
+- [Final-Detailed-UML](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/blob/master/deliveries/) (`deliveries/uml/PackagesUml`)
   
-#6.JavaDoc
-La documentazione JavaDoc creata fornisce una descrizione delle classi e dei metodi, escludendo i metodi getter e setter.
-E' possibile osservarla nella directory `/src/Doc` oppure al seguente link: [JavaDoc](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/tree/master/src/Doc)
+#7.JavaDoc
+The JavaDoc documentation provides a description of each class and method, except for the more trivial getters and setters.
+You can view it in the `/ src / Doc` directory or at the following link: [JavaDoc](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/tree/master/src/Doc)
 
-
-#Componenti del Gruppo
+#Group Members
 
 [Alessandro Battaglia](https://github.com/10524334)
 
