@@ -3,6 +3,7 @@ package it.polimi.ingsw.PSP54.client.gui;
 import it.polimi.ingsw.PSP54.utils.choices.PlayerCredentials;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -18,7 +19,6 @@ public class LogInSceneController {
     private String nickname;
     private int age;
     private GuiManager guiManager;
-    private ActionEvent event;
     @FXML private ImageView islandImageView;
     @FXML private TextField nicknameField;
     @FXML private TextField ageField;
@@ -56,18 +56,20 @@ public class LogInSceneController {
     /**
      * Called when start button is pressed
      * If both texfields are not empty, player credentials are send
-     * @param event
      */
-    public void startButtonPressed(ActionEvent event) {
-        this.event = event;
+    public void startButtonPressed() {
         if (!nicknameField.getText().trim().isEmpty() && !ageField.getText().trim().isEmpty()) {
             startButton.setVisible(false);
             waitingLabel.setVisible(true);
             invalidNameLabel.setVisible(false);
             saveNickname();
-            saveAge();
-            PlayerCredentials playerMessage = new PlayerCredentials(nickname,age);
-            guiManager.sendObject(playerMessage);
+            try {
+                saveAge();
+                PlayerCredentials playerMessage = new PlayerCredentials(nickname,age);
+                guiManager.sendObject(playerMessage);
+            } catch (NumberFormatException e){
+                setInvalidAgeLabel();
+            }
         }
     }
 
@@ -77,6 +79,19 @@ public class LogInSceneController {
     public void setInvalidNameLabel(){
         startButton.setVisible(true);
         waitingLabel.setVisible(false);
+        invalidNameLabel.setText("A user with this nickname already exists. Try with a new one.");
+        invalidNameLabel.setAlignment(Pos.CENTER);
+        invalidNameLabel.setVisible(true);
+    }
+
+    /**
+     * Called when a not numeric string is entered in age field
+     */
+    public void setInvalidAgeLabel(){
+        startButton.setVisible(true);
+        waitingLabel.setVisible(false);
+        invalidNameLabel.setText("Enter a number in age field");
+        invalidNameLabel.setAlignment(Pos.CENTER);
         invalidNameLabel.setVisible(true);
     }
 
