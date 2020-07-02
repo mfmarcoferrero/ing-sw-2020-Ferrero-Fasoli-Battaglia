@@ -265,7 +265,7 @@ public class GameTest {
     @Test
     public void performChoice_AtlasChoice_CorrectOutput() {
 
-        players.get(0).assignPower(Game.ATLAS);
+        players.set(0, players.get(0).assignPower(Game.ATLAS));
         Worker atlasMaleWorker = players.get(0).getWorker(true);
         Worker atlasFemaleWorker = players.get(0).getWorker(false);
 
@@ -282,8 +282,35 @@ public class GameTest {
 
         choice = new MoveChoice(1, 1);
         game.performMove(new PlayerAction(0, choice));
+
+        choice = new BuildChoice(2, 2);
+        game.performBuild(new PlayerAction(0, choice));
+
+        choice = new BooleanChoice(true);
+        game.performChoice(new PlayerAction(0, choice));
+
+        assertTrue(board[2][2].isDome());
     }
 
+    @Test
+    public void checkTokens_LoserPassed_NoMoreInTheGame() {
 
+        players.get(0).getWorker(true).setPos(board[2][2]);
+        board[2][2].setWorker(players.get(0).getWorker(true));
+        players.get(0).getWorker(false).setPos(board[3][2]);
+        board[3][2].setWorker(players.get(0).getWorker(true));
+
+        game.setCurrentPlayer(players.get(0));
+
+        PlayerChoice choice = new WorkerChoice(false);
+        game.performWorkerChoice(new PlayerAction(0, choice));
+
+        players.get(0).setLoser(true);
+
+        game.checkTokens(game.getCurrentPlayer().getCurrentWorker());
+
+        assertEquals(2, players.size());
+
+    }
     
 }
