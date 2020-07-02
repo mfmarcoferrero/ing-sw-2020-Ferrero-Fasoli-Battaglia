@@ -10,7 +10,7 @@ public class WorkerTest extends TestCase {
     public void testGetMale() {
         boolean check;
         check=worker.getMale();
-        assertEquals(check,true);
+        assertTrue(check);
     }
 
     public void testGetOwner() {
