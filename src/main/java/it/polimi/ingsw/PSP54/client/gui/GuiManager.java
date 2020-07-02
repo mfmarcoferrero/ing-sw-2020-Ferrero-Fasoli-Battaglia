@@ -351,7 +351,7 @@ public class GuiManager implements Observer<GameMessage> {
         }
         if (message instanceof OpponentMessage){
             numberOfPlayers = ((OpponentMessage) message).getNumberOfPlayers();
-            System.out.println("Il numero di giocatori è: " + numberOfPlayers);
+            System.out.println("Number of Players: " + numberOfPlayers);
             System.out.println("My name is: " + myName);
         }
         if (message instanceof PlayersMessage){
@@ -359,7 +359,7 @@ public class GuiManager implements Observer<GameMessage> {
             Platform.runLater(() -> deckChoiceSceneController.setFirstPlayerChoiceScene());
         }
         if (message instanceof WinMessage){
-            System.out.println("YOU WIN !");
+            System.out.println("WE HAVE A WINNER !");
             System.out.println("MY NAME: " + myName);
             System.out.println("WINNER NAME: " + ((WinMessage) message).getPlayer().getPlayerName());
             if (((WinMessage) message).getPlayer().getPlayerName().equals(myName)) {
@@ -370,9 +370,12 @@ public class GuiManager implements Observer<GameMessage> {
             Platform.runLater(() -> boardSceneController.setEndScene(((WinMessage) message).getPlayer().getPlayerName()));
         }
         if (message instanceof LoseMessage){
-            System.out.println("YOU LOSE !");
-            loser = true;
-            Platform.runLater(() -> boardSceneController.setEndScene(((LoseMessage) message).getPlayer().getPlayerName()));
+            System.out.println("WE HAVE A LOSER !");
+            System.out.println("LOSER NAME: " + ((LoseMessage) message).getPlayer().getPlayerName());
+            if (((LoseMessage) message).getPlayer().getPlayerName().equals(myName)) {
+                loser = true;
+                Platform.runLater(() -> boardSceneController.setEndScene(null));
+            }
         }
         if (message instanceof LobbyAccessMessage) {
             client.ping(client.getSocketOut());
@@ -495,4 +498,3 @@ public class GuiManager implements Observer<GameMessage> {
         this.stage = stage;
     }
 }
-

@@ -16,6 +16,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     private final Worker[] workers = new Worker[2];
     private Worker currentWorker;
     private boolean playing;
+    private boolean loser;
 
 
     /**
@@ -29,6 +30,7 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
         this.workers[0] = new Worker(true, this, null);
         this.workers[1] = new Worker(false, this, null);
         this.playing = false;
+        this.loser = false;
     }
 
     /**
@@ -346,5 +348,15 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     @Override
     public void setPlaying(boolean playing) {
         this.playing = playing;
+    }
+
+    @Override
+    public boolean isLoser() {
+        return loser;
+    }
+
+    @Override
+    public void setLoser(boolean loser) {
+        this.loser = loser;
     }
 }

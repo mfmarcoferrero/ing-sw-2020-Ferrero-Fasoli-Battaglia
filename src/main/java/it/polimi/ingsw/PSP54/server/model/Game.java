@@ -1,9 +1,7 @@
 package it.polimi.ingsw.PSP54.server.model;
 
 import it.polimi.ingsw.PSP54.observer.Observable;
-import it.polimi.ingsw.PSP54.server.Server;
 import it.polimi.ingsw.PSP54.server.controller.Controller;
-import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 import it.polimi.ingsw.PSP54.utils.PlayerAction;
 import it.polimi.ingsw.PSP54.utils.choices.*;
 import it.polimi.ingsw.PSP54.utils.messages.*;
@@ -233,30 +231,40 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * @param currentWorker the worker chosen by the player at the beginning of his turn.
      */
     public void checkTokens(Worker currentWorker) {
-
-        if (currentWorker.getMoveToken() >= 1 && currentWorker.getBuildToken() == 0) {
-            ArrayList<Box> valid = currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
-            if (valid.isEmpty()) {
-                GameMessage cantMove = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.workerCantMove);
-                notify(cantMove);
-            } else {
+        if (!currentPlayer.isLoser()) {
+            if (currentWorker.getMoveToken() >= 1 && currentWorker.getBuildToken() == 0) {
+                ArrayList<Box> valid = currentPlayer.setWorkerBoxesToMove(currentPlayer.getCurrentWorker());
+                if (valid.isEmpty()) {
+                    GameMessage cantMove = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.workerCantMove);
+                    notify(cantMove);
+                } else {
+                    GameMessage available = new AvailableBoxesMessage(currentPlayer.getVirtualViewID(), valid);
+                    notify(available);
+                    GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
+                    notify(move);
+                }
+            } else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() >= 1) {
+                ArrayList<Box> valid = currentPlayer.setWorkerBoxesToBuild(currentWorker);
                 GameMessage available = new AvailableBoxesMessage(currentPlayer.getVirtualViewID(), valid);
                 notify(available);
-                GameMessage move = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.moveMessage);
-                notify(move);
-            }
-        } else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() >= 1) {
-            ArrayList<Box> valid = currentPlayer.setWorkerBoxesToBuild(currentWorker);
-            GameMessage available = new AvailableBoxesMessage(currentPlayer.getVirtualViewID(), valid);
-            notify(available);
-            if (valid.isEmpty())
-                performLoss(currentPlayer);
-            else {
-                GameMessage build = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildMessage);
-                notify(build);
-            }
-        } else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() == 0)
-            endTurn(currentPlayer);
+                if (valid.isEmpty()) {
+                    performLoss(currentPlayer);
+                    checkTokens(currentPlayer.getCurrentWorker());
+                }
+                else {
+                    GameMessage build = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.buildMessage);
+                    notify(build);
+                }
+            } else if (currentWorker.getMoveToken() == 0 && currentWorker.getBuildToken() == 0)
+                endTurn(currentPlayer);
+        } else {
+            int i = players.indexOf(currentPlayer);
+            players.remove(currentPlayer);
+            if (i == 2)
+                setCurrentPlayer(players.get(0));
+            else
+                setCurrentPlayer(players.get(i));
+        }
     }
 
     /**
@@ -372,7 +380,7 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * Notifies observers with a BoardMessage object.
      */
     protected void notifyBoard() {
-        GameMessage board = new BoardMessage(null, getBoard());
+        GameMessage board = new BoardMessage(null, getBoard().clone());
         notify(board);
     }
 
@@ -407,6 +415,8 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * @param currentPlayer the player that has lost.
      */
     public void performLoss(Player currentPlayer) {
+        currentPlayer.setLoser(true);
+        currentPlayer.setPlaying(false);
         if (players.size() == 2) {
             GameMessage winMessage = new WinMessage(null, currentPlayer);
             notify(winMessage);
@@ -415,10 +425,10 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
         }else {
             GameMessage loseMessage = new LoseMessage(null, currentPlayer);
             notify(loseMessage);
-            endTurn(currentPlayer);
             removePlayer(currentPlayer);
             for (Player player : players)
-                notify(new BoardMessage(player.getVirtualViewID(), board.clone()));
+                if (!player.equals(currentPlayer))
+                    notify(new BoardMessage(player.getVirtualViewID(), board.clone()));
         }
     }
 
@@ -427,9 +437,11 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * @param player the player to be removed.
      */
     public void removePlayer(Player player) {
-        player.getWorker(true).getPos().setWorker(null);
-        player.getWorker(false).getPos().setWorker(null);
-        players.remove(player);
+        if (player.getWorker(true).getPos() != null && player.getWorker(false).getPos() != null) {
+            player.getWorker(true).getPos().setWorker(null);
+            player.getWorker(false).getPos().setWorker(null);
+            Controller.disableNotifications(this, player.getVirtualViewID());
+        }
     }
 
     //setters & getters
@@ -451,19 +463,21 @@ public class Game extends Observable<GameMessage> implements Serializable, Clone
      * @param currentPlayer the member of the players Vector which is going to play.
      */
     public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
         if (currentPlayer.getWorker(true).getPos() == null || currentPlayer.getWorker(false) == null) {
             currentPlayer.setPlaying(true);
-            this.currentPlayer = currentPlayer;
+
             GameMessage yourTurn = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.turnMessage);
             notify(yourTurn);
         } else {
             ArrayList<Box> validMoveMale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(true));
             ArrayList<Box> validMoveFemale = currentPlayer.setWorkerBoxesToMove(currentPlayer.getWorker(false));
-            if (validMoveMale.isEmpty() && validMoveFemale.isEmpty())
+            if (validMoveMale.isEmpty() && validMoveFemale.isEmpty()) {
                 performLoss(currentPlayer);
-            if (!validMoveMale.isEmpty() || !validMoveFemale.isEmpty()) {
+                checkTokens(currentPlayer.getCurrentWorker());
+            }
+            else {
                 currentPlayer.setPlaying(true);
-                this.currentPlayer = currentPlayer;
                 GameMessage yourTurn = new StringMessage(currentPlayer.getVirtualViewID(), StringMessage.turnMessage);
                 notify(yourTurn);
             }

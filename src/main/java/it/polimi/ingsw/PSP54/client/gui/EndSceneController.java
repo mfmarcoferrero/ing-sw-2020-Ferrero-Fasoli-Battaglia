@@ -45,7 +45,7 @@ public class EndSceneController {
                 winOrLoseLabel.setFont(Font.font("papyrus", 50));
             }
             else {
-                winOrLoseLabel.setText("YOU LOSE !");
+                winOrLoseLabel.setText("YOU LOST !");
                 winOrLoseLabel.setFont(Font.font("papyrus", 50));
                 if (winnerName != null) {
                     winnerNameLabel.setText("THE WINNER IS: " + winnerName.toUpperCase());

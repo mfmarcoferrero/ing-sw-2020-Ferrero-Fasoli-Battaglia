@@ -131,7 +131,6 @@ public class Server {
                     virtualViews.get(i).addObserver(controller);
                     model.addObserver(virtualViews.get(i));
                     virtualViews.get(i).addPlayer();
-                    virtualViews.get(i).setController(controller);
                 }
                 waitingConnection.clear();
                 setNumberOfGames(numberOfGames + 1);

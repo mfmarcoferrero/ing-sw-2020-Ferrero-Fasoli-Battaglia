@@ -606,29 +606,29 @@ public class CliView implements Observer<GameMessage> {
             output.println(loser.getPlayerName() + " HAS LOST!");
     }
 
-	/**
-	 * Asks the player if he wants to play again, if so adds him to a new lobby, closes the connection otherwise.
-	 */
-	public void playAgain() {
-		boolean loop=true;
-		output.println("Do you want to play again? [Enter y/n]");
-		while (loop) {
-			String Choice = inputReader.next();
-			if(Choice.equals("y")) {
+    /**
+     * Asks the player if he wants to play again, if so adds him to a new lobby, closes the connection otherwise.
+     */
+    public void playAgain() {
+        boolean loop=true;
+        output.println("Do you want to play again? [Enter y/n]");
+        while (loop) {
+            String Choice = inputReader.next();
+            if(Choice.equals("y")) {
                 loop = false;
                 PlayerChoice playAgain = new NewGameChoice();
                 client.asyncSend(playAgain);
-			}
-			else if(Choice.equals("n")){
+            }
+            else if(Choice.equals("n")){
                 loop = false;
-				PlayerChoice stopPlaying = new StopPlayingChoice();
-				client.asyncSend(stopPlaying);
-				client.setActive(false);
-				System.exit(0);
-			} else
-				output.println("Incorrect Input!");
-		}
-	}
+                PlayerChoice stopPlaying = new StopPlayingChoice();
+                client.asyncSend(stopPlaying);
+                client.setActive(false);
+                System.exit(0);
+            } else
+                output.println("Incorrect Input!");
+        }
+    }
 
     /**
      * Called whenever the observed object is changed.

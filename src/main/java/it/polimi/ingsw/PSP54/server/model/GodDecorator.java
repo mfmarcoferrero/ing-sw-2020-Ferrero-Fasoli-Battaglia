@@ -151,5 +151,15 @@ public abstract class GodDecorator implements Player, Serializable, Cloneable {
     public void setVirtualViewId(int virtualViewId) {
         playerToDecorate.setVirtualViewId(virtualViewId);
     }
+
+    @Override
+    public boolean isLoser() {
+        return playerToDecorate.isLoser();
+    }
+
+    @Override
+    public void setLoser(boolean loser) {
+        playerToDecorate.setLoser(loser);
+    }
 }
 

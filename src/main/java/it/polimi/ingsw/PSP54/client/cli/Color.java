@@ -14,9 +14,9 @@ public enum Color {
     ANSI_RESET("\u001B[0m"),
     ANSI_DOME("\u001B[38;5;20m"),
     ANSI_DOME_BACKGROUND("\u001B[48;5;20m"),
-    ANSI_P1("\u001B[38;5;14m"),
-    ANSI_P2("\u001B[38;5;9m"),
-    ANSI_P3("\u001B[38;5;11m");
+    ANSI_P1("\u001B[38;5;18m"),
+    ANSI_P2("\u001B[38;5;124m"),
+    ANSI_P3("\u001B[38;5;214m");
     //ANSI_BACKGROUND_RESET("\u001B[48;5;0m");
     private final String escape;
 

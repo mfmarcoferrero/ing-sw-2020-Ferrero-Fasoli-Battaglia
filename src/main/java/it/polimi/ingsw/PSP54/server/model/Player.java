@@ -125,4 +125,8 @@ public interface Player {
     boolean isPlaying();
 
     void setPlaying(boolean playing);
+
+    boolean isLoser();
+
+    void setLoser(boolean loser);
 }

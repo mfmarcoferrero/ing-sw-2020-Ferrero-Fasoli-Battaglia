@@ -22,7 +22,7 @@ public class AthenaDecorator extends GodDecorator {
      */
     private void assignAthenaSideEffect(Vector<Player> players){
 
-        int numberOfPlayers = players.capacity();
+        int numberOfPlayers = players.size();
 
         for (int i = 0; i < numberOfPlayers; i++) {
             if (players.get(i) != this){
@@ -38,7 +38,7 @@ public class AthenaDecorator extends GodDecorator {
      */
     private void reassignPreviousPowers(Vector<Player> players){
 
-        int numberOfPlayers = players.capacity();
+        int numberOfPlayers = players.size();
 
         for (int i = 0; i < numberOfPlayers; i++) {
             if (players.get(i) != this){

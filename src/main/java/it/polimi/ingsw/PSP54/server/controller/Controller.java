@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class Controller implements Observer<PlayerAction> {
 
     private final Game game;
-    private final ArrayList<VirtualView> virtualViewList = new ArrayList<>();
+    private static final ArrayList<VirtualView> virtualViewList = new ArrayList<>();
     private boolean gameEnded = false;
 
     public Controller (Game game) {
@@ -25,7 +25,7 @@ public class Controller implements Observer<PlayerAction> {
      * @param virtualView the VirtualView to add.
      */
     public void addVirtualView (VirtualView virtualView) {
-        this.virtualViewList.add(virtualView.getId(),virtualView);
+        virtualViewList.add(virtualView.getId(),virtualView);
     }
 
     /**
@@ -109,10 +109,10 @@ public class Controller implements Observer<PlayerAction> {
 
     /**
      * Removes a VirtualView from the Game's ObserversList.
-     * @param virtualView the VirtualView to remove.
+     * @param virtualViewID the VirtualView to remove.
      */
-    public void disableNotifications(VirtualView virtualView) {
-        game.removeObserver(virtualView);
+    public static void disableNotifications(Game game, int virtualViewID) {
+        game.removeObserver(virtualViewList.get(virtualViewID));
     }
 
     /**

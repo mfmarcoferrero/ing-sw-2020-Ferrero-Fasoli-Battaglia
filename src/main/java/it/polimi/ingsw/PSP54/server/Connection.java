@@ -1,6 +1,5 @@
 package it.polimi.ingsw.PSP54.server;
 
-import it.polimi.ingsw.PSP54.client.gui.NumberOfPlayersSceneController;
 import it.polimi.ingsw.PSP54.observer.*;
 import it.polimi.ingsw.PSP54.server.virtualView.VirtualView;
 
@@ -70,7 +69,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
      * @param output the ObjectOutputStream associated with the open socket.
      */
     public void ping(ObjectOutputStream output) {
-        pingService.scheduleAtFixedRate(new PingSender(output), 0, 2500, TimeUnit.MILLISECONDS);
+        pingService.scheduleAtFixedRate(new PingSender(output), 0, 2000, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -123,6 +122,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                         Connection.this.notify((PlayerChoice) inputObject);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 setActive(false);
             }
         });

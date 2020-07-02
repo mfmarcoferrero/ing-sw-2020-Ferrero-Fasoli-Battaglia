@@ -74,17 +74,17 @@ public class Client extends Observable<GameMessage> {
      * @param socketIn the socket from which the messages arrive.
      */
     public synchronized Thread asyncReadFromSocket(final ObjectInputStream socketIn){
-         readingTask = new Thread(() -> {
-             try {
-                 while (isActive()) {
-                     Object inputObject = socketIn.readObject();
-                     if (inputObject instanceof GameMessage)
+        readingTask = new Thread(() -> {
+            try {
+                while (isActive()) {
+                    Object inputObject = socketIn.readObject();
+                    if (inputObject instanceof GameMessage)
                         notify((GameMessage)inputObject);
-                 }
-             } catch (Exception e) {
-                 endClient();
-             }
-         });
+                }
+            } catch (Exception e) {
+                endClient();
+            }
+        });
         readingTask.start();
         return readingTask;
     }
@@ -148,7 +148,7 @@ public class Client extends Observable<GameMessage> {
      * @param output the ObjectOutputStream associated with the open socket.
      */
     public void ping(ObjectOutputStream output) {
-        pingService.scheduleAtFixedRate(new PingSender(this, output), 0, 1000, TimeUnit.MILLISECONDS);
+        pingService.scheduleAtFixedRate(new PingSender(this, output), 0, 1500, TimeUnit.MILLISECONDS);
     }
 
 
