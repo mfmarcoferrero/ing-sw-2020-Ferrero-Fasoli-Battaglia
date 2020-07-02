@@ -1,0 +1,162 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: HephaestusDecorator</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP54.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: HephaestusDecorator (it.polimi.ingsw.PSP54.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HephaestusDecorator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (29/ 29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP54.server.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP54.utils.messages.GameMessage;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP54.utils.messages.StringMessage;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;/**
+<i>7</i>&nbsp; * Class representing the Hephaestus God Card.
+<i>8</i>&nbsp; * From Santorini&#39;s rules: &quot;Your Build: Your Worker may build one additional block (not dome) on top of your first block.&quot;
+<i>9</i>&nbsp; */
+<i>10</i>&nbsp;public class HephaestusDecorator extends GodDecorator {
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;    private Box lastBuilding;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    public HephaestusDecorator(Player player) {
+<b class="fc"><i>15</i>&nbsp;        super(player);</b>
+<b class="fc"><i>16</i>&nbsp;    }</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Method used to perform a move action.
+<i>20</i>&nbsp;     * Calls the super method and sets the buildToken to 2.
+<i>21</i>&nbsp;     * @param worker selected worker which the player wants to move.
+<i>22</i>&nbsp;     * @param dest selected destination box.
+<i>23</i>&nbsp;     * @throws InvalidMoveException if the move can&#39;t be done.
+<i>24</i>&nbsp;     */
+<i>25</i>&nbsp;    @Override
+<i>26</i>&nbsp;    public void move(Worker worker, Box dest) throws InvalidMoveException {
+<b class="fc"><i>27</i>&nbsp;        super.move(worker, dest);</b>
+<b class="fc"><i>28</i>&nbsp;        worker.setBuildToken(2);</b>
+<b class="fc"><i>29</i>&nbsp;    }</b>
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    /**
+<i>32</i>&nbsp;     * Method used to perform a build action.
+<i>33</i>&nbsp;     * Calls the super method and eventually notifies a message to the player in accordance to the building possibilities.
+<i>34</i>&nbsp;     * @param worker selected worker which the player wants to move.
+<i>35</i>&nbsp;     * @param dest selected box where to build.
+<i>36</i>&nbsp;     * @throws InvalidBuildingException if the build can&#39;t be done.
+<i>37</i>&nbsp;     */
+<i>38</i>&nbsp;    @Override
+<i>39</i>&nbsp;    public void build(Worker worker, Box dest) throws InvalidBuildingException {
+<b class="fc"><i>40</i>&nbsp;        super.build(worker, dest);</b>
+<b class="fc"><i>41</i>&nbsp;        if (lastBuilding == null &amp;&amp; !dest.isDome() &amp;&amp; dest.getLevel() &lt; 3) {</b>
+<b class="fc"><i>42</i>&nbsp;            setLastBuilding(dest);</b>
+<b class="fc"><i>43</i>&nbsp;            worker.setBuildToken(-1);</b>
+<b class="fc"><i>44</i>&nbsp;            GameMessage buildAgain = new StringMessage(getVirtualViewID(), StringMessage.buildAgain);</b>
+<b class="fc"><i>45</i>&nbsp;            getGame().notify(buildAgain);</b>
+<b class="fc"><i>46</i>&nbsp;        } else</b>
+<b class="fc"><i>47</i>&nbsp;            worker.setBuildToken(0);</b>
+<b class="fc"><i>48</i>&nbsp;    }</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    /**
+<i>51</i>&nbsp;     * Method used to perform a binary choice.
+<i>52</i>&nbsp;     * If choice is true builds another level on the previously built box, otherwise set them to zero.
+<i>53</i>&nbsp;     * @param choice the player&#39;s choice.
+<i>54</i>&nbsp;     */
+<i>55</i>&nbsp;    @Override
+<i>56</i>&nbsp;    public void chose(boolean choice) {
+<b class="fc"><i>57</i>&nbsp;        if (choice){</b>
+<b class="fc"><i>58</i>&nbsp;            getCurrentWorker().setBuildToken(1);</b>
+<i>59</i>&nbsp;            try {
+<b class="fc"><i>60</i>&nbsp;                super.build(getCurrentWorker(), getLastBuilding());</b>
+<b class="fc"><i>61</i>&nbsp;                setLastBuilding(null);</b>
+<b class="fc"><i>62</i>&nbsp;            } catch (InvalidBuildingException e) {</b>
+<b class="fc"><i>63</i>&nbsp;                getCurrentWorker().setBuildToken(0);</b>
+<b class="fc"><i>64</i>&nbsp;                GameMessage invalidBuild = new StringMessage(getVirtualViewID(), &quot;You can&#39;t build again here!&quot;);</b>
+<b class="fc"><i>65</i>&nbsp;                getGame().notify(invalidBuild);</b>
+<b class="fc"><i>66</i>&nbsp;                getGame().endTurn(this);</b>
+<b class="fc"><i>67</i>&nbsp;            }</b>
+<i>68</i>&nbsp;        }else
+<b class="fc"><i>69</i>&nbsp;            getCurrentWorker().setBuildToken(0);</b>
+<b class="fc"><i>70</i>&nbsp;    }</b>
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    public Box getLastBuilding() {
+<b class="fc"><i>73</i>&nbsp;        return lastBuilding;</b>
+<i>74</i>&nbsp;    }
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;    public void setLastBuilding(Box lastBuilding) {
+<b class="fc"><i>77</i>&nbsp;        this.lastBuilding = lastBuilding;</b>
+<b class="fc"><i>78</i>&nbsp;    }</b>
+<i>79</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:06</div>
+</div>
+</body>
+</html>
