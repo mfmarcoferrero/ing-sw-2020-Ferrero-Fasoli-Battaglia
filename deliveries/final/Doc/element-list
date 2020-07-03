@@ -1,0 +1,13 @@
+module:it.polimi.ingsw.PSP54
+it.polimi.ingsw.PSP54
+it.polimi.ingsw.PSP54.client
+it.polimi.ingsw.PSP54.client.cli
+it.polimi.ingsw.PSP54.client.gui
+it.polimi.ingsw.PSP54.observer
+it.polimi.ingsw.PSP54.server
+it.polimi.ingsw.PSP54.server.controller
+it.polimi.ingsw.PSP54.server.model
+it.polimi.ingsw.PSP54.server.virtualView
+it.polimi.ingsw.PSP54.utils
+it.polimi.ingsw.PSP54.utils.choices
+it.polimi.ingsw.PSP54.utils.messages
