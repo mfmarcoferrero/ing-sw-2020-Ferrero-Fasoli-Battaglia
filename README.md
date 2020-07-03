@@ -1,12 +1,12 @@
-#PROGETTO INGEGNERIA DEL SOFTWARE - A.A. 2019-2020
+# PROGETTO INGEGNERIA DEL SOFTWARE - A.A. 2019-2020
 
 
-#1.Introduction
+## 1.Introduction
 This is a Java-based implementation of the [Santorini board game](https://en.wikipedia.org/wiki/Santorini_(game)) as a distributed Client-Server application, developed following the Model-View-Controller architectural pattern.
 Network has been managed using sockets. The client-side application offers both a User Interface from Command Line and a Graphical one, developed with JavaFX.
 It is possible to play matches up to 3 players using all the Simple Gods in the game except for Hermes. 
 
-#2.Features
+## 2.Features
 _Base Features_
 - [x] CLI
 - [x] Socket
@@ -19,7 +19,7 @@ _Advanced Features_
 - [ ] Advanced Gods
 - [ ] Undo
 
-#3.JAR
+## 3.JAR
 The JAR files in `/deliveries/final/jar` have been built using Maven, a tool designed for managing Java-based projects' lifecycle.
 In order to launch the JARs you need have Java installed and run this command from terminal: 
 ```
@@ -27,7 +27,7 @@ java -jar /path/to/santorini.jar
 ```
 By running the client application you initially need to choose the User Interface you want to use, then enter the IP Address of the Server application.
 
-#4.Build from source
+## 4.Build from source
 Get the code (if you haven't already):
 ```
 git clone https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia && cd ing-sw-2020-Ferrero-Fasoli-Battaglia
@@ -47,22 +47,22 @@ The JARs are built through Maven in 2 different "flavours": *lightweight* and *w
 Due to JavaFX dependencies, in order to use the Graphic User Interface you need to run the *with-dependencies* client JAR.
 Server's JAR can be ran in both configurations with no effective foreclosure.
 
-#5.Test Coverage
-The coverage made to test the model methods can be seen in`deliveries/report/final`. The tests Coverage is:
+## 5.Test Coverage
+The coverage made to test the model methods can be seen in`/deliveries/report/final`. The tests Coverage is:
 
 - Class coverage 100%
 - Method coverage 90%
 
-#6.UML
+## 6.UML
 The UML diagrams in the project represents both the structure initially designed for the implementation of the model package, and a more detailed scheme of each package and the classes in it:
-- [Initial-Model-UML](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/blob/master/deliveries/final/GeneralUmml) (`deliveries/final/uml/GeneralUml`)
-- [Final-Detailed-UML](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/blob/master/deliveries/final/PackagesUml) (`deliveries/final/uml/PackagesUml`)
+- [Initial-Model-UML](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/tree/master/deliveries/final/uml/GeneralUml) (`deliveries/final/uml/GeneralUml`)
+- [Final-Detailed-UML](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/tree/master/deliveries/final/uml/PackagesUml) (`deliveries/final/uml/PackagesUml`)
   
-#7.JavaDoc
+## 7.JavaDoc
 The JavaDoc documentation provides a description of each class and method, except for the more trivial getters and setters.
-You can view it in the `/ src / Doc` directory or at the following link: [JavaDoc](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/tree/master/src/Doc)
+You can view it in the `/deliveries/final/Doc` directory or at the following link: [JavaDoc](https://github.com/mfmarcoferrero/ing-sw-2020-Ferrero-Fasoli-Battaglia/tree/deliveries/final/Doc)
 
-#Group Members
+## Group Members
 
 [Alessandro Battaglia](https://github.com/10524334)
 
