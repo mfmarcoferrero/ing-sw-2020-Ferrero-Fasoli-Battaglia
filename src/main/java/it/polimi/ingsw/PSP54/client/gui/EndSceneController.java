@@ -33,7 +33,8 @@ public class EndSceneController {
 
     /**
      * Set font for buttons and labels
-     * @param winnerName
+     * @param winnerName name of winner player
+     * @param endForDisconnection true if a player lose connection
      */
     public void setFont(String winnerName, boolean endForDisconnection){
         if (endForDisconnection){
@@ -82,7 +83,7 @@ public class EndSceneController {
 
     /**
      * Set hand cursor on mouse entered on button
-     * @param event
+     * @param event for action on this stage
      */
     public void setHandCursor(MouseEvent event){
         ((Node) event.getSource()).getScene().setCursor(Cursor.HAND);
@@ -90,7 +91,7 @@ public class EndSceneController {
 
     /**
      * Set default cursor on mouse exit on button
-     * @param event
+     * @param event for action on this stage
      */
     public void setDefaultCursor(MouseEvent event){
         ((Node) event.getSource()).getScene().setCursor(Cursor.DEFAULT);

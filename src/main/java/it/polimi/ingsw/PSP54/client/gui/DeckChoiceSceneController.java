@@ -65,7 +65,7 @@ public class DeckChoiceSceneController {
     /**
      * When the number of cards selected is equal to the number of players,
      * every imageView is set disable and a new ExctractedCardsChoice instance sent to server
-     * @param imageViewClicked
+     * @param imageViewClicked imageView clicked on this scene
      */
     public void cardImageClicked(ImageView imageViewClicked) {
         cardSelected++;

@@ -47,8 +47,8 @@ public class GuiManager implements Observer<GameMessage> {
      * Create a static instance of a GuiManager
      * Using a singleton pattern every controller of a scene can get the only GuiManager
      * instance related to a single client
-     * @param client
-     * @return
+     * @param client client that wants to use gui
+     * @return the only instance of GuiManager
      */
     public static GuiManager getInstance(Client client) {
         if (instance == null){
@@ -60,7 +60,7 @@ public class GuiManager implements Observer<GameMessage> {
 
     /**
      * Get the static instance of this class
-     * @return
+     * @return the only instance of GuiManager
      */
     public static GuiManager getInstance() {
         return instance;
@@ -152,8 +152,8 @@ public class GuiManager implements Observer<GameMessage> {
 
     /**
      * Load an image from resources/icons in an ImageView
-     * @param val
-     * @param imageView
+     * @param val value of power
+     * @param imageView ImageView to load the image
      */
     public void setCardImage(int val, ImageView imageView) {
         if (val == Game.APOLLO){
@@ -384,7 +384,7 @@ public class GuiManager implements Observer<GameMessage> {
 
     /**
      * Send an object to server
-     * @param message
+     * @param message GameMessage to send
      */
     public void sendObject(Object message){
         instance.client.asyncSend(message);

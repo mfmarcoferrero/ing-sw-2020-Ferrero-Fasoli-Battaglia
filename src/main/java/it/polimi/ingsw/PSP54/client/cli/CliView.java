@@ -404,6 +404,7 @@ public class CliView implements Observer<GameMessage> {
 
     /**
      * Asks an integer until input is valid.
+     * @param errorMessage message to print for error.
      * @return the given number.
      */
     public int acquireInteger(String errorMessage) {
@@ -458,6 +459,7 @@ public class CliView implements Observer<GameMessage> {
 
     /**
      * Asks the player which power he wants and sends the choice via socket.
+     * @param extractedCards chosen cards.
      */
     public void acquireAndSendCardSelection(HashMap<Integer, String> extractedCards) {
         ArrayList<String> cardsNames = new ArrayList<>(extractedCards.values());
@@ -596,6 +598,7 @@ public class CliView implements Observer<GameMessage> {
 
     /**
      * Handles the loosing of a player.
+     * @param loser player that lose the game
      */
     public void losingPlayer(Player loser) {
         if (getCredentials().containsKey(loser.getPlayerName())) {

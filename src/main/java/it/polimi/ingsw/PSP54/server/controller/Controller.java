@@ -110,6 +110,7 @@ public class Controller implements Observer<PlayerAction> {
     /**
      * Removes a VirtualView from the Game's ObserversList.
      * @param virtualViewID the VirtualView to remove.
+     * @param game where is removed the VirtualView
      */
     public static void disableNotifications(Game game, int virtualViewID) {
         game.removeObserver(virtualViewList.get(virtualViewID));
