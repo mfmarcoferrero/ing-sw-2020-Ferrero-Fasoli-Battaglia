@@ -71,6 +71,7 @@ public class Client extends Observable<GameMessage> {
     /**
      * Instantiates a thread that reads incoming messages from the client.
      * @param socketIn the socket from which the messages arrive.
+     * @return a reading task
      */
     public synchronized Thread asyncReadFromSocket(final ObjectInputStream socketIn){
         readingTask = new Thread(() -> {

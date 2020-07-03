@@ -54,7 +54,7 @@ public class FirstPlayerChoiceSceneController {
 
     /**
      * Set hand cursor when mouse enter on a button
-     * @param event
+     * @param event for action on this stage
      */
     public void setHandCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.HAND);
@@ -62,7 +62,7 @@ public class FirstPlayerChoiceSceneController {
 
     /**
      * Set default cursor when mouse exit from a button
-     * @param event
+     * @param event for action on this stage
      */
     public void setDefaultCursor(MouseEvent event){
         ((Node)event.getSource()).getScene().setCursor(Cursor.DEFAULT);

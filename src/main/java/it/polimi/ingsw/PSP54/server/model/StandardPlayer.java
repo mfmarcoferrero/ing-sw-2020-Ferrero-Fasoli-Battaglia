@@ -22,6 +22,8 @@ public class StandardPlayer implements Player, Serializable, Cloneable {
     /**
      * Instantiates a new Player with corresponding workers.
      * @param playerName the name of the Player.
+     * @param age age of the Player.
+     * @param virtualViewId VirtualView of the player.
      */
     public StandardPlayer(String playerName, int age, int virtualViewId) {
         this.playerName = playerName;
