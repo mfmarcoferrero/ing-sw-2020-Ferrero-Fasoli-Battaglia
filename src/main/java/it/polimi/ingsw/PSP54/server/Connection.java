@@ -57,7 +57,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                     outputStream.writeObject(new PingMessage());
                     outputStream.flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
         }
@@ -83,7 +83,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                 out.writeObject(message);
                 out.flush();
             } catch (IOException e) {
-                e.printStackTrace(); //TODO: comment
+                //e.printStackTrace();
             }
         }
     }
@@ -121,7 +121,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
                         Connection.this.notify((PlayerChoice) inputObject);
                 }
             } catch (Exception e) {
-                e.printStackTrace(); //TODO: comment
+                //e.printStackTrace();
                 setActive(false);
             }
         });
@@ -188,7 +188,7 @@ public class Connection extends Observable<PlayerChoice> implements Runnable {
             Thread t0 = asyncReadFromSocket(in);
             t0.join();
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } finally {
             pingService.shutdown();
             close();
